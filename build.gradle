@@ -1,0 +1,46 @@
+plugins {
+    // Apply the java plugin to add support for Java
+    id 'java'
+
+    // Apply the application plugin to add support for building a CLI application.
+    id 'application'
+
+	/* Project specific plugins */
+	id 'jacoco'
+}
+
+repositories {
+    jcenter()
+}
+
+dependencies {
+    // This dependency is used by the application.
+    implementation 'com.google.guava:guava:28.2-jre'
+
+    // Use JUnit Jupiter API for testing.
+    testImplementation 'org.junit.jupiter:junit-jupiter-api:5.6.0'
+
+    // Use JUnit Jupiter Engine for testing.
+    testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.6.0'
+}
+
+application {
+    mainClassName = 'at.fhv.teamb.symphoniacus.App'
+}
+
+test {
+    useJUnitPlatform()
+}
+
+/* JaCoCo configuration */
+jacoco {
+    toolVersion = '0.8.5'
+}
+
+jacocoTestReport {
+    reports {
+        xml.enabled true
+    }
+}
+
+build.dependsOn jacocoTestReport
