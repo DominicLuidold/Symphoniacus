@@ -7,6 +7,7 @@ plugins {
 
 	/* Project specific plugins */
 	id 'jacoco'
+    id 'org.openjfx.javafxplugin' version '0.0.8'
 }
 
 repositories {
@@ -22,14 +23,24 @@ dependencies {
 
     // Use JUnit Jupiter Engine for testing.
     testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.6.0'
+
+    /* Project specific dependencies */
+    testCompile 'org.testfx:testfx-core:4.0.16-alpha'
+    testCompile 'org.testfx:testfx-junit5:4.0.16-alpha'
 }
 
 application {
-    mainClassName = 'at.fhv.teamb.symphoniacus.App'
+    mainClassName = 'at.fhv.teamb.symphoniacus.Main'
 }
 
 test {
     useJUnitPlatform()
+}
+
+/* JavaFX configuration */
+javafx {
+    version = '11.0.2'
+    modules = [ 'javafx.controls' ]
 }
 
 /* JaCoCo configuration */
