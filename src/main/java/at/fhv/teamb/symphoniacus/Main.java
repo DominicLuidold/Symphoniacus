@@ -1,13 +1,11 @@
 package at.fhv.teamb.symphoniacus;
 
+import at.fhv.teamb.symphoniacus.controllers.UserController;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.control.Label;
-import javafx.scene.layout.StackPane;
 import javafx.stage.Stage;
-import javafx.scene.control.*;
 
 import java.io.IOException;
 
@@ -34,10 +32,10 @@ public class Main extends Application {
         */
 
         try {
-            Parent root = FXMLLoader.load(getClass().getResource("/basic_frame.fxml"));
-
+            Parent root = FXMLLoader.load(getClass().getResource("/view/basic_frame.fxml"));
+            UserController controller = new UserController();
             Scene scene = new Scene(root);
-            stage.setTitle("Mailer");
+            stage.setTitle("Symphoniacus");
             stage.setScene(scene);
             stage.show();
 
