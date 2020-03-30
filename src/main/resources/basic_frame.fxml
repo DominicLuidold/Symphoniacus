@@ -1,72 +1,62 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.geometry.*?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.text.*?>
 
-<VBox prefHeight="400.0" prefWidth="640.0" xmlns="http://javafx.com/javafx/10.0.2-internal" xmlns:fx="http://javafx.com/fxml/1">
+<VBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/10.0.2-internal" xmlns:fx="http://javafx.com/fxml/1">
   <children>
-      <HBox prefHeight="100.0" prefWidth="200.0">
-         <children>
-            <MenuBar>
-               <menus>
-                  <Menu mnemonicParsing="false" text="danijel">
-                     <items>
-                        <MenuItem mnemonicParsing="false" text="New" />
-                        <MenuItem mnemonicParsing="false" text="Open…" />
-                        <Menu mnemonicParsing="false" text="Open Recent" />
-                        <SeparatorMenuItem mnemonicParsing="false" />
-                        <MenuItem mnemonicParsing="false" text="Close" />
-                        <MenuItem mnemonicParsing="false" text="Save" />
-                        <MenuItem mnemonicParsing="false" text="Save As…" />
-                        <MenuItem mnemonicParsing="false" text="Revert" />
-                        <SeparatorMenuItem mnemonicParsing="false" />
-                        <MenuItem mnemonicParsing="false" text="Preferences…" />
-                        <SeparatorMenuItem mnemonicParsing="false" />
-                        <MenuItem mnemonicParsing="false" text="Quit" />
-                     </items>
-                  </Menu>
-                  <Menu mnemonicParsing="false" text="stinkt">
-                     <items>
-                        <MenuItem mnemonicParsing="false" text="Undo" />
-                        <MenuItem mnemonicParsing="false" text="Redo" />
-                        <SeparatorMenuItem mnemonicParsing="false" />
-                        <MenuItem mnemonicParsing="false" text="Cut" />
-                        <MenuItem mnemonicParsing="false" text="Copy" />
-                        <MenuItem mnemonicParsing="false" text="Paste" />
-                        <MenuItem mnemonicParsing="false" text="Delete" />
-                        <SeparatorMenuItem mnemonicParsing="false" />
-                        <MenuItem mnemonicParsing="false" text="Select All" />
-                        <MenuItem mnemonicParsing="false" text="Unselect All" />
-                     </items>
-                  </Menu>
-                  <Menu mnemonicParsing="false" text="hard">
-                     <items>
-                        <MenuItem mnemonicParsing="false" text="About MyHelloApp" />
-                     </items>
-                  </Menu>
-               </menus>
-            </MenuBar>
-         </children>
-      </HBox>
     <AnchorPane maxHeight="-1.0" maxWidth="-1.0" prefHeight="-1.0" prefWidth="-1.0" VBox.vgrow="ALWAYS">
       <children>
-        <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="512.0" prefWidth="613.0" />
-        <Label alignment="CENTER" layoutX="155.0" layoutY="177.0" style="&#10;" text="Drag components from Library here…" textAlignment="CENTER" textFill="#9f9f9f" wrapText="false" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
-          <font>
-            <Font size="18.0" />
-          </font>
-        </Label>
-            <TabPane prefHeight="277.0" prefWidth="640.0" tabClosingPolicy="UNAVAILABLE" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
-              <tabs>
-                <Tab text="Untitled Tab 1" />
-                <Tab text="Wünsche">
-                  <content>
-                    <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="428.0" prefWidth="640.0" />
-                  </content>
-                </Tab>
-              </tabs>
-            </TabPane>
+            <AnchorPane prefHeight="26.0" prefWidth="600.0" AnchorPane.bottomAnchor="373.6" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+               <children>
+                  <HBox prefHeight="31.0" prefWidth="640.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                     <children>
+                        <TextFlow prefHeight="200.0" prefWidth="200.0" textAlignment="CENTER" />
+                        <TextFlow prefHeight="200.0" prefWidth="200.0" textAlignment="CENTER" />
+                        <MenuBar nodeOrientation="RIGHT_TO_LEFT" HBox.hgrow="ALWAYS">
+                          <menus>
+                            <Menu mnemonicParsing="false" text="plh_Username">
+                                 <items>
+                                <MenuItem mnemonicParsing="false" text="plh_Logout" />
+                                 </items>
+                            </Menu>
+                          </menus>
+                           <HBox.margin>
+                              <Insets />
+                           </HBox.margin>
+                        </MenuBar>
+                     </children>
+                  </HBox>
+               </children>
+            </AnchorPane>
+            <AnchorPane prefHeight="200.0" prefWidth="200.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="25.0">
+               <children>
+                  <TabPane layoutY="6.0" prefHeight="194.0" prefWidth="600.0" tabClosingPolicy="UNAVAILABLE" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                    <tabs>
+                      <Tab text="Dienstplan">
+                           <content>
+                              <AnchorPane prefHeight="200.0" prefWidth="200.0">
+                                 <children>
+                                    <Label alignment="CENTER" layoutX="244.0" layoutY="165.0" text="plhKalender" />
+                                 </children>
+                              </AnchorPane>
+                           </content>
+                        </Tab>
+                      <Tab text="Wünsche">
+                        <content>
+                          <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="428.0" prefWidth="640.0">
+                                 <children>
+                                    <Label layoutX="276.0" layoutY="165.0" text="plhWünsche" />
+                                 </children>
+                              </AnchorPane>
+                        </content>
+                      </Tab>
+                    </tabs>
+                  </TabPane>
+               </children>
+            </AnchorPane>
       </children>
     </AnchorPane>
   </children>
