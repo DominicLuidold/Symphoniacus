@@ -28,6 +28,9 @@ dependencies {
     testCompile 'org.testfx:testfx-core:4.0.16-alpha'
     testCompile 'org.testfx:testfx-junit5:4.0.16-alpha'
 
+    //JFoenix
+    compile 'com.jfoenix:jfoenix:9.0.8'
+
 }
 
 
