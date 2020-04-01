@@ -1,11 +1,11 @@
 package at.fhv.teamb.symphoniacus;
 
-import at.fhv.teamb.symphoniacus.controllers.UserController;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
+
 import java.io.IOException;
 
 public class Main extends Application {
@@ -16,18 +16,14 @@ public class Main extends Application {
 
     @Override
     public void start(Stage stage) {
-
-
         try {
             Parent root = FXMLLoader.load(getClass().getResource("/view/basic_frame.fxml"));
             Scene scene = new Scene(root);
             stage.setTitle("Symphoniacus");
             stage.setScene(scene);
             stage.show();
-
-        }catch (IOException e){
+        } catch (IOException e) {
             e.fillInStackTrace();
         }
-
     }
 }
