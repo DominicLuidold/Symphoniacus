@@ -18,3 +18,9 @@ build
 
 # IntelliJ
 .idea
+
+# Eclipse
+.project
+.classpath
+.settings/
+bin
