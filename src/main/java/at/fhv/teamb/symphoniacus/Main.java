@@ -7,6 +7,8 @@ import javafx.scene.Scene;
 import javafx.stage.Stage;
 
 import java.io.IOException;
+import java.util.Locale;
+import java.util.ResourceBundle;
 
 public class Main extends Application {
 
@@ -17,7 +19,9 @@ public class Main extends Application {
     @Override
     public void start(Stage stage) {
         try {
-            Parent root = FXMLLoader.load(getClass().getResource("/view/basic_frame.fxml"));
+            ResourceBundle bundle = ResourceBundle.getBundle("bundles.language", new Locale("en", "US"));
+            Parent root = FXMLLoader.load(getClass().getResource("/view/basic_frame.fxml"), bundle);
+
             Scene scene = new Scene(root);
             stage.setTitle("Symphoniacus");
             stage.setScene(scene);
