@@ -27,7 +27,12 @@ dependencies {
     /* Project specific dependencies */
     testCompile 'org.testfx:testfx-core:4.0.16-alpha'
     testCompile 'org.testfx:testfx-junit5:4.0.16-alpha'
+
+    //JFoenix
+    compile 'com.jfoenix:jfoenix:9.0.8'
+
 }
+
 
 application {
     mainClassName = 'at.fhv.teamb.symphoniacus.Main'
@@ -40,7 +45,7 @@ test {
 /* JavaFX configuration */
 javafx {
     version = '11.0.2'
-    modules = [ 'javafx.controls' ]
+    modules = [ 'javafx.controls', 'javafx.fxml', 'javafx.graphics' ]
 }
 
 /* JaCoCo configuration */
