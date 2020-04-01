@@ -25,14 +25,12 @@ dependencies {
     testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.6.0'
 
     /* Project specific dependencies */
-    testCompile 'org.testfx:testfx-core:4.0.16-alpha'
-    testCompile 'org.testfx:testfx-junit5:4.0.16-alpha'
-
-    //JFoenix
     compile 'com.jfoenix:jfoenix:9.0.8'
 
+    testCompile 'org.testfx:testfx-core:4.0.16-alpha'
+    testCompile 'org.testfx:testfx-junit5:4.0.16-alpha'
+    testCompile 'org.mockito:mockito-core:3.3.3'
 }
-
 
 application {
     mainClassName = 'at.fhv.teamb.symphoniacus.Main'
