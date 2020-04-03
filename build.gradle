@@ -27,7 +27,8 @@ dependencies {
     /* Project specific dependencies */
     compile 'com.jfoenix:jfoenix:9.0.8'
     compile 'mysql:mysql-connector-java:5.1.13'
-	compile "org.hibernate:hibernate-core:5.4.13.Final"
+	compile 'org.hibernate:hibernate-core:5.4.13.Final'
+	compile 'javax.persistence:javax.persistence-api:2.2'
 
     testCompile 'org.testfx:testfx-core:4.0.16-alpha'
     testCompile 'org.testfx:testfx-junit5:4.0.16-alpha'
