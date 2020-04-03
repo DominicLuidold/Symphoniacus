@@ -43,7 +43,7 @@
                <children>
                   <TabPane layoutY="9.0" prefHeight="356.0" prefWidth="600.0" tabClosingPolicy="UNAVAILABLE" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
                     <tabs>
-                      <Tab text="%menu.tab.duty_roster">
+                      <Tab text="%menu.tab.duty.roster.title">
                            <content>
                               <AnchorPane prefHeight="200.0" prefWidth="200.0">
                                  <children>
@@ -52,7 +52,7 @@
                               </AnchorPane>
                            </content>
                         </Tab>
-                      <Tab text="%menu.tab.duty_wish">
+                      <Tab text="%menu.tab.duty.wish.title">
                         <content>
                           <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="428.0" prefWidth="640.0">
                                  <children>
