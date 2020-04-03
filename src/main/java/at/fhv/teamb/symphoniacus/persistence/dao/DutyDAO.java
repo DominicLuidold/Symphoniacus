@@ -11,10 +11,10 @@ import java.util.Optional;
 
 public class DutyDAO implements DAO<Duty> {
 
-    protected EntityManager em;
+    protected EntityManager _em;
 
     public DutyDAO(EntityManagerFactory entityManagerFactory) {
-        em = entityManagerFactory.createEntityManager();
+        _em = entityManagerFactory.createEntityManager();
     }
 
     @Override
@@ -24,7 +24,7 @@ public class DutyDAO implements DAO<Duty> {
 
     @Override
     public List<Duty> findAll() {
-        TypedQuery<Duty> query = em.createQuery("from Duty", Duty.class);
+        TypedQuery<Duty> query = _em.createQuery("from Duty", Duty.class);
         query.setMaxResults(300);
         return query.getResultList();
     }
