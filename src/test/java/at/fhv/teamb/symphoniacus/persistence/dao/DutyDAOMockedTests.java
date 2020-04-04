@@ -1,5 +1,6 @@
 package at.fhv.teamb.symphoniacus.persistence.dao;
 
+import at.fhv.teamb.symphoniacus.persistence.model.Duty;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInstance;
