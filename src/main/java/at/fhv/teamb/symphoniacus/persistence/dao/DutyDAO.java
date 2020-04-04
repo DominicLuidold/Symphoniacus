@@ -58,8 +58,6 @@ public class DutyDAO implements DAO<Duty> {
         query.setMaxResults(300);
         query.setParameter("start", start);
         query.setParameter("end", start.plusDays(6));
-        System.out.println(start);
-        System.out.println(start.plusDays(6));
         return query.getResultList();
     }
 
