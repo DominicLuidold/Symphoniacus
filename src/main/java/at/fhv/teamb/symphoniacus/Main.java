@@ -19,7 +19,9 @@ public class Main extends Application {
     @Override
     public void start(Stage stage) {
         try {
-            ResourceBundle bundle = ResourceBundle.getBundle("bundles.language", new Locale("en", "US"));
+            Locale locale = new Locale("en", "UK");
+            Locale.setDefault(locale);
+            ResourceBundle bundle = ResourceBundle.getBundle("bundles.language", locale);
             Parent root = FXMLLoader.load(getClass().getResource("/view/mainWindow.fxml"), bundle);
 
             Scene scene = new Scene(root);
