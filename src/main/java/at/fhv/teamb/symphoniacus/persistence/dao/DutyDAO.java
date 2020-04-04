@@ -1,7 +1,6 @@
 package at.fhv.teamb.symphoniacus.persistence.dao;
 
 import at.fhv.teamb.symphoniacus.persistence.DAO;
-import at.fhv.teamb.symphoniacus.persistence.model.Duty;
 
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
@@ -18,7 +17,7 @@ public class DutyDAO implements DAO<Duty> {
     }
 
     @Override
-    public Optional<Duty> find(Object key) {
+    public Optional<Duty> find(int dutyId) {
         return Optional.empty();
     }
 
