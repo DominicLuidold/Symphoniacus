@@ -1,0 +1,53 @@
+package at.fhv.teamb.symphoniacus.persistence.model;
+
+import javax.persistence.*;
+
+@Entity
+@Table(name = "dutyCategory")
+public class DutyCategory {
+    @Id
+    @Column(name = "dutyCategoryId")
+    private Integer dutyCategoryId;
+
+    @Column(name = "type")
+    private String type;
+
+    @Column(name = "isRehearsal")
+    private null isRehearsal;
+
+    @Column(name = "points")
+    private Integer points;
+
+
+    public Integer getDutyCategoryId() {
+        return this.dutyCategoryId;
+    }
+
+    public void setDutyCategoryId(Integer dutyCategoryId) {
+        this.dutyCategoryId = dutyCategoryId;
+    }
+
+    public String getType() {
+        return this.type;
+    }
+
+    public void setType(String type) {
+        this.type = type;
+    }
+
+    public null getIsRehearsal() {
+        return this.isRehearsal;
+    }
+
+    public void setIsRehearsal(null isRehearsal) {
+        this.isRehearsal = isRehearsal;
+    }
+
+    public Integer getPoints() {
+        return this.points;
+    }
+
+    public void setPoints(Integer points) {
+        this.points = points;
+    }
+}
