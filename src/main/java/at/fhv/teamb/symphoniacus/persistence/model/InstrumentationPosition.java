@@ -12,8 +12,8 @@ public class InstrumentationPosition {
     @Column(name = "sectionInstrumentationId")
     private Integer sectionInstrumentationId;
 
-    @Column(name = "instumentaionId")
-    private Integer instumentaionId;
+    @Column(name = "instrumentationId")
+    private Integer instrumentationId;
 
     @Column(name = "position")
     private String position;
@@ -35,12 +35,12 @@ public class InstrumentationPosition {
         this.sectionInstrumentationId = sectionInstrumentationId;
     }
 
-    public Integer getInstumentaionId() {
-        return this.instumentaionId;
+    public Integer getInstrumentationId() {
+        return this.instrumentationId;
     }
 
-    public void setInstumentaionId(Integer instumentaionId) {
-        this.instumentaionId = instumentaionId;
+    public void setInstrumentationId(Integer instrumentationId) {
+        this.instrumentationId = instrumentationId;
     }
 
     public String getPosition() {

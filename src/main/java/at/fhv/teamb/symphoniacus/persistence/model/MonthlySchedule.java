@@ -1,6 +1,9 @@
 package at.fhv.teamb.symphoniacus.persistence.model;
 
+import at.fhv.teamb.symphoniacus.persistence.converters.BooleanConverter;
+
 import javax.persistence.*;
+import java.time.LocalDate;
 
 @Entity
 @Table(name = "monthlySchedule")
@@ -16,16 +19,17 @@ public class MonthlySchedule {
     private Integer year;
 
     @Column(name = "publishDate")
-    private java.sql.Date publishDate;
+    private LocalDate publishDate;
 
     @Column(name = "endDateClassification")
-    private java.sql.Date endDateClassification;
+    private LocalDate endDateClassification;
 
     @Column(name = "isPublished")
-    private null isPublished;
+    @Convert(converter = BooleanConverter.class)
+    private Boolean isPublished;
 
     @Column(name = "endWish")
-    private java.sql.Date endWish;
+    private LocalDate endWish;
 
 
     public Integer getMonthlyScheduleId() {
@@ -52,35 +56,35 @@ public class MonthlySchedule {
         this.year = year;
     }
 
-    public java.sql.Date getPublishDate() {
+    public LocalDate getPublishDate() {
         return this.publishDate;
     }
 
-    public void setPublishDate(java.sql.Date publishDate) {
+    public void setPublishDate(LocalDate publishDate) {
         this.publishDate = publishDate;
     }
 
-    public java.sql.Date getEndDateClassification() {
+    public LocalDate getEndDateClassification() {
         return this.endDateClassification;
     }
 
-    public void setEndDateClassification(java.sql.Date endDateClassification) {
+    public void setEndDateClassification(LocalDate endDateClassification) {
         this.endDateClassification = endDateClassification;
     }
 
-    public null getIsPublished() {
+    public Boolean getIsPublished() {
         return this.isPublished;
     }
 
-    public void setIsPublished(null isPublished) {
+    public void setIsPublished(Boolean isPublished) {
         this.isPublished = isPublished;
     }
 
-    public java.sql.Date getEndWish() {
+    public LocalDate getEndWish() {
         return this.endWish;
     }
 
-    public void setEndWish(java.sql.Date endWish) {
+    public void setEndWish(LocalDate endWish) {
         this.endWish = endWish;
     }
 }

@@ -1,3 +1,4 @@
+package at.fhv.teamb.symphoniacus.persistence.model;
 
 import javax.persistence.*;
 

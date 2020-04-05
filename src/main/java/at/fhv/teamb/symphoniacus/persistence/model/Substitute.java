@@ -9,8 +9,8 @@ public class Substitute {
     @Column(name = "substituteId")
     private Integer substituteId;
 
-    @Column(name = "musicanId")
-    private Integer musicanId;
+    @Column(name = "musicianId")
+    private Integer musicianId;
 
     @Column(name = "firstName")
     private String firstName;
@@ -36,12 +36,12 @@ public class Substitute {
         this.substituteId = substituteId;
     }
 
-    public Integer getMusicanId() {
-        return this.musicanId;
+    public Integer getMusicianId() {
+        return this.musicianId;
     }
 
-    public void setMusicanId(Integer musicanId) {
-        this.musicanId = musicanId;
+    public void setMusicianId(Integer musicianId) {
+        this.musicianId = musicianId;
     }
 
     public String getFirstName() {

@@ -6,33 +6,33 @@ import javax.persistence.*;
 @Table(name = "negativeDutyWish")
 public class NegativeDutyWish {
     @Id
-    @Column(name = "nagativeDutyId")
-    private Integer nagativeDutyId;
+    @Column(name = "negativeDutyId")
+    private Integer negativeDutyId;
 
-    @Column(name = "musicanId")
-    private Integer musicanId;
+    @Column(name = "musicianId")
+    private Integer musicianId;
 
     @Column(name = "description")
     private String description;
 
-    @Column(name = "seriesOfPerformaceId")
-    private Integer seriesOfPerformaceId;
+    @Column(name = "seriesOfPerformancesId")
+    private Integer seriesOfPerformancesId;
 
 
-    public Integer getNagativeDutyId() {
-        return this.nagativeDutyId;
+    public Integer getNegativeDutyId() {
+        return this.negativeDutyId;
     }
 
-    public void setNagativeDutyId(Integer nagativeDutyId) {
-        this.nagativeDutyId = nagativeDutyId;
+    public void setNegativeDutyId(Integer negativeDutyId) {
+        this.negativeDutyId = negativeDutyId;
     }
 
-    public Integer getMusicanId() {
-        return this.musicanId;
+    public Integer getMusicianId() {
+        return this.musicianId;
     }
 
-    public void setMusicanId(Integer musicanId) {
-        this.musicanId = musicanId;
+    public void setMusicianId(Integer musicianId) {
+        this.musicianId = musicianId;
     }
 
     public String getDescription() {
@@ -43,11 +43,11 @@ public class NegativeDutyWish {
         this.description = description;
     }
 
-    public Integer getSeriesOfPerformaceId() {
-        return this.seriesOfPerformaceId;
+    public Integer getSeriesOfPerformancesId() {
+        return this.seriesOfPerformancesId;
     }
 
-    public void setSeriesOfPerformaceId(Integer seriesOfPerformaceId) {
-        this.seriesOfPerformaceId = seriesOfPerformaceId;
+    public void setSeriesOfPerformancesId(Integer seriesOfPerformancesId) {
+        this.seriesOfPerformancesId = seriesOfPerformancesId;
     }
 }

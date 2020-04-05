@@ -3,25 +3,25 @@ package at.fhv.teamb.symphoniacus.persistence.model;
 import javax.persistence.*;
 
 @Entity
-@Table(name = "seriesOfPerfomances_musicalPiece")
-public class SeriesOfPerfomancesMusicalPiece {
+@Table(name = "seriesOfPerformances_musicalPiece")
+public class SeriesOfPerformancesMusicalPiece {
     @Id
-    @Column(name = "seriesOfPerfomances_musicalPieceId")
-    private Integer seriesOfPerfomancesMusicalPieceId;
+    @Column(name = "seriesOfPerformances_musicalPieceId")
+    private Integer seriesOfPerformancesMusicalPieceId;
 
     @Column(name = "musicalPieceId")
     private Integer musicalPieceId;
 
-    @Column(name = "seriesOfPerfomancesId")
-    private Integer seriesOfPerfomancesId;
+    @Column(name = "seriesOfPerformancesId")
+    private Integer seriesOfPerformancesId;
 
 
-    public Integer getSeriesOfPerfomancesMusicalPieceId() {
-        return this.seriesOfPerfomancesMusicalPieceId;
+    public Integer getSeriesOfPerformancesMusicalPieceId() {
+        return this.seriesOfPerformancesMusicalPieceId;
     }
 
-    public void setSeriesOfPerfomancesMusicalPieceId(Integer seriesOfPerfomancesMusicalPieceId) {
-        this.seriesOfPerfomancesMusicalPieceId = seriesOfPerfomancesMusicalPieceId;
+    public void setSeriesOfPerformancesMusicalPieceId(Integer seriesOfPerformancesMusicalPieceId) {
+        this.seriesOfPerformancesMusicalPieceId = seriesOfPerformancesMusicalPieceId;
     }
 
     public Integer getMusicalPieceId() {
@@ -32,11 +32,11 @@ public class SeriesOfPerfomancesMusicalPiece {
         this.musicalPieceId = musicalPieceId;
     }
 
-    public Integer getSeriesOfPerfomancesId() {
-        return this.seriesOfPerfomancesId;
+    public Integer getSeriesOfPerformancesId() {
+        return this.seriesOfPerformancesId;
     }
 
-    public void setSeriesOfPerfomancesId(Integer seriesOfPerfomancesId) {
-        this.seriesOfPerfomancesId = seriesOfPerfomancesId;
+    public void setSeriesOfPerformancesId(Integer seriesOfPerformancesId) {
+        this.seriesOfPerformancesId = seriesOfPerformancesId;
     }
 }

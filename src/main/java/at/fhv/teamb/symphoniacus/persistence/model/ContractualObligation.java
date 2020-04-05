@@ -1,5 +1,7 @@
+package at.fhv.teamb.symphoniacus.persistence.model;
 
 import javax.persistence.*;
+import java.time.LocalDate;
 
 @Entity
 @Table(name = "contractualObligation")
@@ -15,13 +17,13 @@ public class ContractualObligation {
     private Integer pointsPerMonth;
 
     @Column(name = "startDate")
-    private java.sql.Date startDate;
+    private LocalDate startDate;
 
     @Column(name = "endDate")
-    private java.sql.Date endDate;
+    private LocalDate endDate;
 
-    @Column(name = "musicanId")
-    private Integer musicanId;
+    @Column(name = "musicianId")
+    private Integer musicianId;
 
     @Column(name = "instrumentCategoryId")
     private Integer instrumentCategoryId;
@@ -51,28 +53,28 @@ public class ContractualObligation {
         this.pointsPerMonth = pointsPerMonth;
     }
 
-    public java.sql.Date getStartDate() {
+    public LocalDate getStartDate() {
         return this.startDate;
     }
 
-    public void setStartDate(java.sql.Date startDate) {
+    public void setStartDate(LocalDate startDate) {
         this.startDate = startDate;
     }
 
-    public java.sql.Date getEndDate() {
+    public LocalDate getEndDate() {
         return this.endDate;
     }
 
-    public void setEndDate(java.sql.Date endDate) {
+    public void setEndDate(LocalDate endDate) {
         this.endDate = endDate;
     }
 
-    public Integer getMusicanId() {
-        return this.musicanId;
+    public Integer getMusicianId() {
+        return this.musicianId;
     }
 
-    public void setMusicanId(Integer musicanId) {
-        this.musicanId = musicanId;
+    public void setMusicianId(Integer musicianId) {
+        this.musicianId = musicianId;
     }
 
     public Integer getInstrumentCategoryId() {

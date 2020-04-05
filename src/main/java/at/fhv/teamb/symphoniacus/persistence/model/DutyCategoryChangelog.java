@@ -1,30 +1,31 @@
 package at.fhv.teamb.symphoniacus.persistence.model;
 
 import javax.persistence.*;
+import java.time.LocalDate;
 
 @Entity
 @Table(name = "dutyCategoryChangelog")
 public class DutyCategoryChangelog {
     @Id
-    @Column(name = "dutyCategoryChnagelogId")
-    private Integer dutyCategoryChnagelogId;
+    @Column(name = "dutyCategoryChangelogId")
+    private Integer dutyCategoryChangelogId;
 
     @Column(name = "dutyCategoryId")
     private Integer dutyCategoryId;
 
     @Column(name = "startDate")
-    private java.sql.Date startDate;
+    private LocalDate startDate;
 
     @Column(name = "points")
     private Integer points;
 
 
-    public Integer getDutyCategoryChnagelogId() {
-        return this.dutyCategoryChnagelogId;
+    public Integer getDutyCategoryChangelogId() {
+        return this.dutyCategoryChangelogId;
     }
 
-    public void setDutyCategoryChnagelogId(Integer dutyCategoryChnagelogId) {
-        this.dutyCategoryChnagelogId = dutyCategoryChnagelogId;
+    public void setDutyCategoryChangelogId(Integer dutyCategoryChangelogId) {
+        this.dutyCategoryChangelogId = dutyCategoryChangelogId;
     }
 
     public Integer getDutyCategoryId() {
@@ -35,11 +36,11 @@ public class DutyCategoryChangelog {
         this.dutyCategoryId = dutyCategoryId;
     }
 
-    public java.sql.Date getStartDate() {
+    public LocalDate getStartDate() {
         return this.startDate;
     }
 
-    public void setStartDate(java.sql.Date startDate) {
+    public void setStartDate(LocalDate startDate) {
         this.startDate = startDate;
     }
 

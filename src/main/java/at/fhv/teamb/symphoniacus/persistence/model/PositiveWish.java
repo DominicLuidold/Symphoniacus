@@ -12,8 +12,8 @@ public class PositiveWish {
     @Column(name = "seriesOfPerformancesId")
     private Integer seriesOfPerformancesId;
 
-    @Column(name = "musicanId")
-    private Integer musicanId;
+    @Column(name = "musicianId")
+    private Integer musicianId;
 
     @Column(name = "description")
     private String description;
@@ -35,12 +35,12 @@ public class PositiveWish {
         this.seriesOfPerformancesId = seriesOfPerformancesId;
     }
 
-    public Integer getMusicanId() {
-        return this.musicanId;
+    public Integer getMusicianId() {
+        return this.musicianId;
     }
 
-    public void setMusicanId(Integer musicanId) {
-        this.musicanId = musicanId;
+    public void setMusicianId(Integer musicianId) {
+        this.musicianId = musicianId;
     }
 
     public String getDescription() {

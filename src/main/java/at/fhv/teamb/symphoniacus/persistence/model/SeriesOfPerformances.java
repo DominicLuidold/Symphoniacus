@@ -1,36 +1,40 @@
 package at.fhv.teamb.symphoniacus.persistence.model;
 
+import at.fhv.teamb.symphoniacus.persistence.converters.BooleanConverter;
+
 import javax.persistence.*;
+import java.time.LocalDate;
 
 @Entity
-@Table(name = "seriesOfPerfomances")
-public class SeriesOfPerfomances {
+@Table(name = "seriesOfPerformances")
+public class SeriesOfPerformances {
     @Id
-    @Column(name = "seriesOfPerfomancesId")
-    private Integer seriesOfPerfomancesId;
+    @Column(name = "seriesOfPerformancesId")
+    private Integer seriesOfPerformancesId;
 
     @Column(name = "description")
     private String description;
 
     @Column(name = "startDate")
-    private java.sql.Date startDate;
+    private LocalDate startDate;
 
     @Column(name = "endDate")
-    private java.sql.Date endDate;
+    private LocalDate endDate;
 
-    @Column(name = "isTournee")
-    private null isTournee;
+    @Column(name = "isTour")
+    @Convert(converter = BooleanConverter.class)
+    private Boolean isTour;
 
     @Column(name = "instrumentationId")
     private Integer instrumentationId;
 
 
-    public Integer getSeriesOfPerfomancesId() {
-        return this.seriesOfPerfomancesId;
+    public Integer getSeriesOfPerformancesId() {
+        return this.seriesOfPerformancesId;
     }
 
-    public void setSeriesOfPerfomancesId(Integer seriesOfPerfomancesId) {
-        this.seriesOfPerfomancesId = seriesOfPerfomancesId;
+    public void setSeriesOfPerformancesId(Integer seriesOfPerformancesId) {
+        this.seriesOfPerformancesId = seriesOfPerformancesId;
     }
 
     public String getDescription() {
@@ -41,28 +45,28 @@ public class SeriesOfPerfomances {
         this.description = description;
     }
 
-    public java.sql.Date getStartDate() {
+    public LocalDate getStartDate() {
         return this.startDate;
     }
 
-    public void setStartDate(java.sql.Date startDate) {
+    public void setStartDate(LocalDate startDate) {
         this.startDate = startDate;
     }
 
-    public java.sql.Date getEndDate() {
+    public LocalDate getEndDate() {
         return this.endDate;
     }
 
-    public void setEndDate(java.sql.Date endDate) {
+    public void setEndDate(LocalDate endDate) {
         this.endDate = endDate;
     }
 
-    public null getIsTournee() {
-        return this.isTournee;
+    public Boolean getIsTour() {
+        return this.isTour;
     }
 
-    public void setIsTournee(null isTournee) {
-        this.isTournee = isTournee;
+    public void setIsTour(Boolean isTour) {
+        this.isTour = isTour;
     }
 
     public Integer getInstrumentationId() {

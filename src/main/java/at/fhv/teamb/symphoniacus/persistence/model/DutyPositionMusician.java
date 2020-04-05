@@ -2,26 +2,27 @@ package at.fhv.teamb.symphoniacus.persistence.model;
 
 import javax.persistence.*;
 
+
 @Entity
-@Table(name = "dutyPosition_musican")
-public class DutyPositionMusican {
+@Table(name = "dutyPosition_musician")
+public class DutyPositionMusician {
     @Id
-    @Column(name = "dutyPosition_musican")
-    private Integer dutyPositionMusican;
+    @Column(name = "dutyPosition_musician")
+    private Integer dutyPositionMusician;
 
     @Column(name = "dutyPositionId")
     private Integer dutyPositionId;
 
-    @Column(name = "musicanId")
-    private Integer musicanId;
+    @Column(name = "musicianId")
+    private Integer musicianId;
 
 
-    public Integer getDutyPositionMusican() {
-        return this.dutyPositionMusican;
+    public Integer getDutyPositionMusician() {
+        return this.dutyPositionMusician;
     }
 
-    public void setDutyPositionMusican(Integer dutyPositionMusican) {
-        this.dutyPositionMusican = dutyPositionMusican;
+    public void setDutyPositionMusician(Integer dutyPositionMusician) {
+        this.dutyPositionMusician = dutyPositionMusician;
     }
 
     public Integer getDutyPositionId() {
@@ -32,11 +33,11 @@ public class DutyPositionMusican {
         this.dutyPositionId = dutyPositionId;
     }
 
-    public Integer getMusicanId() {
-        return this.musicanId;
+    public Integer getMusicianId() {
+        return this.musicianId;
     }
 
-    public void setMusicanId(Integer musicanId) {
-        this.musicanId = musicanId;
+    public void setMusicianId(Integer musicianId) {
+        this.musicianId = musicianId;
     }
 }

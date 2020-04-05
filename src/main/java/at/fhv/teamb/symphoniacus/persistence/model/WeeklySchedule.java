@@ -1,54 +1,58 @@
 package at.fhv.teamb.symphoniacus.persistence.model;
 
+import at.fhv.teamb.symphoniacus.persistence.converters.BooleanConverter;
+
 import javax.persistence.*;
+import java.time.LocalDate;
 
 @Entity
 @Table(name = "weeklySchedule")
 public class WeeklySchedule {
     @Id
-    @Column(name = "weeklyscheduleId")
-    private Integer weeklyscheduleId;
+    @Column(name = "weeklyScheduleId")
+    private Integer weeklyScheduleId;
 
     @Column(name = "startDate")
-    private java.sql.Date startDate;
+    private LocalDate startDate;
 
     @Column(name = "endDate")
-    private java.sql.Date endDate;
+    private LocalDate endDate;
 
     @Column(name = "year")
     private Integer year;
 
     @Column(name = "publishDate")
-    private java.sql.Date publishDate;
+    private LocalDate publishDate;
 
     @Column(name = "confirmed")
-    private null confirmed;
+    @Convert(converter = BooleanConverter.class)
+    private Boolean confirmed;
 
     @Column(name = "monthlyScheduleId")
     private Integer monthlyScheduleId;
 
 
-    public Integer getWeeklyscheduleId() {
-        return this.weeklyscheduleId;
+    public Integer getWeeklyScheduleId() {
+        return this.weeklyScheduleId;
     }
 
-    public void setWeeklyscheduleId(Integer weeklyscheduleId) {
-        this.weeklyscheduleId = weeklyscheduleId;
+    public void setWeeklyScheduleId(Integer weeklyScheduleId) {
+        this.weeklyScheduleId = weeklyScheduleId;
     }
 
-    public java.sql.Date getStartDate() {
+    public LocalDate getStartDate() {
         return this.startDate;
     }
 
-    public void setStartDate(java.sql.Date startDate) {
+    public void setStartDate(LocalDate startDate) {
         this.startDate = startDate;
     }
 
-    public java.sql.Date getEndDate() {
+    public LocalDate getEndDate() {
         return this.endDate;
     }
 
-    public void setEndDate(java.sql.Date endDate) {
+    public void setEndDate(LocalDate endDate) {
         this.endDate = endDate;
     }
 
@@ -60,19 +64,19 @@ public class WeeklySchedule {
         this.year = year;
     }
 
-    public java.sql.Date getPublishDate() {
+    public LocalDate getPublishDate() {
         return this.publishDate;
     }
 
-    public void setPublishDate(java.sql.Date publishDate) {
+    public void setPublishDate(LocalDate publishDate) {
         this.publishDate = publishDate;
     }
 
-    public null getConfirmed() {
+    public Boolean getConfirmed() {
         return this.confirmed;
     }
 
-    public void setConfirmed(null confirmed) {
+    public void setConfirmed(Boolean confirmed) {
         this.confirmed = confirmed;
     }
 
