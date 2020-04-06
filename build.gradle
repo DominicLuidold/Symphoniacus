@@ -30,9 +30,11 @@ dependencies {
 	compile 'org.hibernate:hibernate-core:5.4.13.Final'
 	compile 'javax.persistence:javax.persistence-api:2.2'
 
+    implementation 'com.calendarfx:view:11.8.3'
+
+    testCompile 'org.mockito:mockito-core:3.3.3'
     testCompile 'org.testfx:testfx-core:4.0.16-alpha'
     testCompile 'org.testfx:testfx-junit5:4.0.16-alpha'
-    testCompile 'org.mockito:mockito-core:3.3.3'
 }
 
 application {
@@ -45,7 +47,7 @@ test {
 
 /* JavaFX configuration */
 javafx {
-    version = '11.0.2'
+    version = '14'
     modules = [ 'javafx.controls', 'javafx.fxml', 'javafx.graphics' ]
 }
 
