@@ -7,7 +7,7 @@ import java.util.*;
 @Table(name = "musicalPiece")
 public class MusicalPiece {
     @Id
-    @GeneratedValue(strategy=GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "musicalPieceId")
     private Integer musicalPieceId;
 
@@ -20,15 +20,15 @@ public class MusicalPiece {
     @Column(name = "category")
     private String category;
 
-
     //One-To-Many Part for SERIESOFPERFORMANCESMUSICALPIECE Table
     @OneToMany(mappedBy = "musicalPiece", orphanRemoval = true)
-    @JoinColumn(name="musicalPieceId")
+    @JoinColumn(name = "musicalPieceId")
     private Set<SeriesOfPerformancesMusicalPiece> seriesOfPerformancesMusicalPieceSet = new HashSet<SeriesOfPerformancesMusicalPiece>();
 
     public Set<SeriesOfPerformancesMusicalPiece> getSeriesOfPerformancesMusicalPiece() {
         return this.seriesOfPerformancesMusicalPieceSet;
     }
+
     public void setSeriesOfPerformancesMusicalPieceSet(Set<SeriesOfPerformancesMusicalPiece> seriesOfPerformancesMusicalPieceSet) {
         this.seriesOfPerformancesMusicalPieceSet = seriesOfPerformancesMusicalPieceSet;
     }
@@ -37,7 +37,6 @@ public class MusicalPiece {
         this.seriesOfPerformancesMusicalPieceSet.add(seriesOfPerformancesMusicalPiece);
         seriesOfPerformancesMusicalPiece.setMusicalPiece(this);
     }
-
 
     //Getters and Setters
     public Integer getMusicalPieceId() {

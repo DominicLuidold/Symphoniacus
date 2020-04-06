@@ -8,7 +8,7 @@ import java.util.Set;
 @Table(name = "section")
 public class Section {
     @Id
-    @GeneratedValue(strategy=GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "sectionId")
     private Integer sectionId;
 
@@ -18,15 +18,16 @@ public class Section {
     @Column(name = "description")
     private String description;
 
-
     //One-To-Many Part for SECTIONMONTHLYSCHEDULE Table
     @OneToMany(mappedBy = "section", orphanRemoval = true)
     @JoinColumn(name = "sectionId")
 
     private Set<SectionMonthlySchedule> sectionMonthlyScheduleSet = new HashSet<SectionMonthlySchedule>();
+
     public Set<SectionMonthlySchedule> getSectionMonthlyScheduleSet() {
         return this.sectionMonthlyScheduleSet;
     }
+
     public void setSectionMonthlyScheduleSet(Set<SectionMonthlySchedule> sectionMonthlyScheduleSet) {
         this.sectionMonthlyScheduleSet = sectionMonthlyScheduleSet;
     }
@@ -35,7 +36,6 @@ public class Section {
         this.sectionMonthlyScheduleSet.add(sectionMonthlySchedule);
         sectionMonthlySchedule.setSection(this);
     }
-
 
     //Getter and Setter
     public Integer getSectionId() {

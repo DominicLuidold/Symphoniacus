@@ -8,7 +8,7 @@ import javax.persistence.*;
 @Table(name = "dutyCategory")
 public class DutyCategory {
     @Id
-    @GeneratedValue(strategy=GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "dutyCategoryId")
     private Integer dutyCategoryId;
 
@@ -21,7 +21,6 @@ public class DutyCategory {
 
     @Column(name = "points")
     private Integer points;
-
 
     public Integer getDutyCategoryId() {
         return this.dutyCategoryId;

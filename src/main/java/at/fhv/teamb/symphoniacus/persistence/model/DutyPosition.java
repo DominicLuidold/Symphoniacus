@@ -8,7 +8,7 @@ import java.util.Set;
 @Table(name = "dutyPosition")
 public class DutyPosition {
     @Id
-    @GeneratedValue(strategy=GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "dutyPositionId")
     private Integer dutyPositionId;
 
@@ -32,19 +32,20 @@ public class DutyPosition {
     public Duty getDuty() {
         return this.duty;
     }
+
     public void setDuty(Duty duty) {
         this.duty = duty;
     }
 
-
     //One-To-Many Part for DUTYPOSITION_MUSICIAN Table
     @OneToMany(mappedBy = "dutyPosition", orphanRemoval = true)
-    @JoinColumn(name="dutyPositionId")
+    @JoinColumn(name = "dutyPositionId")
     private Set<DutyPositionMusician> dutyPositionMusicianSet = new HashSet<DutyPositionMusician>();
 
     public Set<DutyPositionMusician> getDutyPositionMusicianSet() {
         return this.dutyPositionMusicianSet;
     }
+
     public void setDutyPositionMusicianSet(Set<DutyPositionMusician> dutyPositionMusicianSet) {
         this.dutyPositionMusicianSet = dutyPositionMusicianSet;
     }
@@ -53,7 +54,6 @@ public class DutyPosition {
         this.dutyPositionMusicianSet.add(dutyPositionMusician);
         dutyPositionMusician.setDutyPosition(this);
     }
-
 
     //Getters and Setters
     public Integer getDutyPositionId() {

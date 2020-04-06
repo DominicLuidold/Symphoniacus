@@ -2,12 +2,11 @@ package at.fhv.teamb.symphoniacus.persistence.model;
 
 import javax.persistence.*;
 
-
 @Entity
 @Table(name = "dutyPosition_musician")
 public class DutyPositionMusician {
     @Id
-    @GeneratedValue(strategy=GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "dutyPosition_musician")
     private Integer dutyPositionMusician;
 
@@ -17,7 +16,6 @@ public class DutyPositionMusician {
     @Column(name = "musicianId")
     private Integer musicianId;
 
-
     //Many-To-One Part for DUTYPosition Table
     @ManyToOne(fetch = FetchType.LAZY)
     private DutyPosition dutyPosition;
@@ -25,10 +23,10 @@ public class DutyPositionMusician {
     public DutyPosition getDutyPosition() {
         return this.dutyPosition;
     }
+
     public void setDutyPosition(DutyPosition dutyPosition) {
         this.dutyPosition = dutyPosition;
     }
-
 
     //Getters and Setters
     public Integer getDutyPositionMusician() {

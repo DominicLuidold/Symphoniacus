@@ -11,7 +11,7 @@ import java.util.Set;
 @Table(name = "weeklySchedule")
 public class WeeklySchedule {
     @Id
-    @GeneratedValue(strategy=GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "weeklyScheduleId")
     private Integer weeklyScheduleId;
 
@@ -34,7 +34,6 @@ public class WeeklySchedule {
     @Column(name = "monthlyScheduleId")
     private Integer monthlyScheduleId;
 
-
     //Many-To-One Part for MONTHLYSCHEDULE Table
     @ManyToOne(fetch = FetchType.LAZY)
     private MonthlySchedule monthlySchedule;
@@ -42,19 +41,21 @@ public class WeeklySchedule {
     public MonthlySchedule getMonthlySchedule() {
         return this.monthlySchedule;
     }
+
     public void setMonthlySchedule(MonthlySchedule monthlySchedule) {
         this.monthlySchedule = monthlySchedule;
     }
-
 
     //One-To-Many Part for DUTY Table
     @OneToMany(mappedBy = "weeklySchedule", orphanRemoval = true)
     @JoinColumn(name = "weeklyScheduleId")
 
     private Set<Duty> dutySet = new HashSet<Duty>();
+
     public Set<Duty> getDutySet() {
         return this.dutySet;
     }
+
     public void setDutySet(Set<Duty> dutySet) {
         this.dutySet = dutySet;
     }
@@ -63,7 +64,6 @@ public class WeeklySchedule {
         this.dutySet.add(duty);
         duty.setWeeklySchedule(this);
     }
-
 
     //Getters and Setters
     public Integer getWeeklyScheduleId() {

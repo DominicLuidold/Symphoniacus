@@ -9,7 +9,7 @@ import java.time.LocalDate;
 @Table(name = "vacation")
 public class Vacation {
     @Id
-    @GeneratedValue(strategy=GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "vacationId")
     private Integer vacationId;
 
@@ -25,7 +25,6 @@ public class Vacation {
     @Column(name = "isConfirmed")
     @Convert(converter = BooleanConverter.class)
     private Boolean isConfirmed;
-
 
     public Integer getVacationId() {
         return this.vacationId;

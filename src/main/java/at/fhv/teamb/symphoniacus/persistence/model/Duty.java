@@ -5,12 +5,11 @@ import java.time.LocalDateTime;
 import java.util.HashSet;
 import java.util.Set;
 
-
 @Entity
 @Table(name = "duty")
 public class Duty {
     @Id
-    @GeneratedValue(strategy=GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "dutyId")
     private Integer dutyId;
 
@@ -38,15 +37,15 @@ public class Duty {
     @Column(name = "seriesOfPerformancesId")
     private Integer seriesOfPerformancesId;
 
-
     //One-To-Many Part for DUTYPOSITION Table
     @OneToMany(mappedBy = "duty", orphanRemoval = true)
-    @JoinColumn(name="dutyId")
+    @JoinColumn(name = "dutyId")
     private Set<DutyPosition> dutyPositionSet = new HashSet<DutyPosition>();
 
     public Set<DutyPosition> getDutyPositionSet() {
         return this.dutyPositionSet;
     }
+
     public void setDutyPositionSet(Set<DutyPosition> dutyPositionSet) {
         this.dutyPositionSet = dutyPositionSet;
     }
@@ -56,7 +55,6 @@ public class Duty {
         dutyPosition.setDuty(this);
     }
 
-
     //Many-To-One Part for WEEKLYSCHEDULE Table
     @ManyToOne(fetch = FetchType.LAZY)
     private WeeklySchedule weeklySchedule;
@@ -64,10 +62,10 @@ public class Duty {
     public WeeklySchedule getWeeklySchedule() {
         return this.weeklySchedule;
     }
+
     public void setWeeklySchedule(WeeklySchedule weeklySchedule) {
         this.weeklySchedule = weeklySchedule;
     }
-
 
     //Many-To-One Part for SECTIONMONTHLYSCHEDULE Table
     @ManyToOne(fetch = FetchType.LAZY)
@@ -76,10 +74,10 @@ public class Duty {
     public SectionMonthlySchedule getSectionMonthlySchedule() {
         return this.sectionMonthlySchedule;
     }
+
     public void setSectionMonthlySchedule(SectionMonthlySchedule sectionMonthlySchedule) {
         this.sectionMonthlySchedule = sectionMonthlySchedule;
     }
-
 
     //Getters and Setters
     public Integer getDutyId() {

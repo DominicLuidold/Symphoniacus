@@ -11,7 +11,7 @@ import java.util.Set;
 @Table(name = "monthlySchedule")
 public class MonthlySchedule {
     @Id
-    @GeneratedValue(strategy=GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "monthlyScheduleId")
     private Integer monthlyScheduleId;
 
@@ -34,7 +34,6 @@ public class MonthlySchedule {
     @Column(name = "endWish")
     private LocalDate endWish;
 
-
     //One-To-Many Part for SECTIONMONTHLYSCHEDULE Table
     @OneToMany(mappedBy = "monthlySchedule", orphanRemoval = true)
     @JoinColumn(name = "monthlyScheduleId")
@@ -43,6 +42,7 @@ public class MonthlySchedule {
     public Set<SectionMonthlySchedule> getSectionMonthlyScheduleSet() {
         return this.sectionMonthlyScheduleSet;
     }
+
     public void setSectionMonthlyScheduleSet(Set<SectionMonthlySchedule> sectionMonthlyScheduleSet) {
         this.sectionMonthlyScheduleSet = sectionMonthlyScheduleSet;
     }
@@ -52,15 +52,16 @@ public class MonthlySchedule {
         sectionMonthlySchedule.setMonthlySchedule(this);
     }
 
-
     //One-To-Many Part for WEEKLYSCHEDULE Table
     @OneToMany(mappedBy = "monthlySchedule", orphanRemoval = true)
     @JoinColumn(name = "monthlyScheduleId")
 
     private Set<WeeklySchedule> weeklyScheduleSet = new HashSet<WeeklySchedule>();
+
     public Set<WeeklySchedule> getWeeklyScheduleSet() {
         return this.weeklyScheduleSet;
     }
+
     public void setWeeklyScheduleSet(Set<WeeklySchedule> weeklyScheduleSet) {
         this.weeklyScheduleSet = weeklyScheduleSet;
     }
@@ -69,7 +70,6 @@ public class MonthlySchedule {
         this.weeklyScheduleSet.add(weeklySchedule);
         weeklySchedule.setMonthlySchedule(this);
     }
-
 
     //Getters and Setters
     public Integer getMonthlyScheduleId() {

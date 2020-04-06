@@ -9,7 +9,7 @@ import java.time.LocalDate;
 @Table(name = "seriesOfPerformances")
 public class SeriesOfPerformances {
     @Id
-    @GeneratedValue(strategy=GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "seriesOfPerformancesId")
     private Integer seriesOfPerformancesId;
 
@@ -28,7 +28,6 @@ public class SeriesOfPerformances {
 
     @Column(name = "instrumentationId")
     private Integer instrumentationId;
-
 
     public Integer getSeriesOfPerformancesId() {
         return this.seriesOfPerformancesId;

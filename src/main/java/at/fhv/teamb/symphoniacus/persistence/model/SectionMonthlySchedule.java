@@ -10,7 +10,7 @@ import java.util.Set;
 @Table(name = "sectionMonthlySchedule")
 public class SectionMonthlySchedule {
     @Id
-    @GeneratedValue(strategy=GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "sectionMonthlyScheduleId")
     private Integer sectionMonthlyScheduleId;
 
@@ -24,7 +24,6 @@ public class SectionMonthlySchedule {
     @Column(name = "sectionId")
     private Integer sectionId;
 
-
     //Many-To-One Part for MONTHLYSCHEDULE Table
     @ManyToOne(fetch = FetchType.LAZY)
     private MonthlySchedule monthlySchedule;
@@ -32,10 +31,10 @@ public class SectionMonthlySchedule {
     public MonthlySchedule getMonthlySchedule() {
         return this.monthlySchedule;
     }
+
     public void setMonthlySchedule(MonthlySchedule monthlySchedule) {
         this.monthlySchedule = monthlySchedule;
     }
-
 
     //Many-To-One Part for SECTION Table
     @ManyToOne(fetch = FetchType.LAZY)
@@ -44,19 +43,20 @@ public class SectionMonthlySchedule {
     public Section getSection() {
         return this.section;
     }
+
     public void setSection(Section section) {
         this.section = section;
     }
 
-
     //One-To-Many Part for DUTY Table
     @OneToMany(mappedBy = "sectionMonthlySchedule", orphanRemoval = true)
     @JoinColumn(name = "sectionMonthlyScheduleId")
-
     private Set<Duty> dutySet = new HashSet<Duty>();
+
     public Set<Duty> getDutySet() {
         return this.dutySet;
     }
+
     public void setDutySet(Set<Duty> dutySet) {
         this.dutySet = dutySet;
     }
@@ -65,7 +65,6 @@ public class SectionMonthlySchedule {
         this.dutySet.add(duty);
         duty.setSectionMonthlySchedule(this);
     }
-
 
     //Getters and Setters
     public Integer getSectionMonthlyScheduleId() {

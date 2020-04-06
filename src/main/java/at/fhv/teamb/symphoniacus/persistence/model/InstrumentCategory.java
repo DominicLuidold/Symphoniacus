@@ -6,13 +6,12 @@ import javax.persistence.*;
 @Table(name = "instrumentCategory")
 public class InstrumentCategory {
     @Id
-    @GeneratedValue(strategy=GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "instrumentCategoryId")
     private Integer instrumentCategoryId;
 
     @Column(name = "description")
     private String description;
-
 
     public Integer getInstrumentCategoryId() {
         return this.instrumentCategoryId;

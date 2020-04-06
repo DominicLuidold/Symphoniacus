@@ -6,7 +6,7 @@ import javax.persistence.*;
 @Table(name = "negativeDutyWish")
 public class NegativeDutyWish {
     @Id
-    @GeneratedValue(strategy=GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "negativeDutyId")
     private Integer negativeDutyId;
 
@@ -18,7 +18,6 @@ public class NegativeDutyWish {
 
     @Column(name = "seriesOfPerformancesId")
     private Integer seriesOfPerformancesId;
-
 
     public Integer getNegativeDutyId() {
         return this.negativeDutyId;
