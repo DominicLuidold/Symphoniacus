@@ -42,7 +42,6 @@ public class User {
     @Column(name = "streetNumber")
     private String streetNumber;
 
-
     public Integer getUserId() {
         return this.userId;
     }

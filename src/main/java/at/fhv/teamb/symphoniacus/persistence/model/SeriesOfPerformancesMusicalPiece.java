@@ -16,10 +16,22 @@ public class SeriesOfPerformancesMusicalPiece {
     private Integer seriesOfPerformancesId;
 
 
+    ////Many-To-One Part for MUSICALPIECE Table
+    @ManyToOne(fetch = FetchType.LAZY)
+    private MusicalPiece musicalPiece;
+
+    public MusicalPiece getMusicalPiece() {
+        return musicalPiece;
+    }
+    public void setMusicalPiece(MusicalPiece musicalPiece) {
+        this.musicalPiece = musicalPiece;
+    }
+
+
+    //Getters and Setters
     public Integer getSeriesOfPerformancesMusicalPieceId() {
         return this.seriesOfPerformancesMusicalPieceId;
     }
-
     public void setSeriesOfPerformancesMusicalPieceId(Integer seriesOfPerformancesMusicalPieceId) {
         this.seriesOfPerformancesMusicalPieceId = seriesOfPerformancesMusicalPieceId;
     }

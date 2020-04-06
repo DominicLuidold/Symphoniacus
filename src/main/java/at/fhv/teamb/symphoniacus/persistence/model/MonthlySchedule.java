@@ -4,6 +4,8 @@ import at.fhv.teamb.symphoniacus.persistence.converters.BooleanConverter;
 
 import javax.persistence.*;
 import java.time.LocalDate;
+import java.util.HashSet;
+import java.util.Set;
 
 @Entity
 @Table(name = "monthlySchedule")
@@ -32,6 +34,43 @@ public class MonthlySchedule {
     private LocalDate endWish;
 
 
+    //One-To-Many Part for SECTIONMONTHLYSCHEDULE Table
+    @OneToMany(mappedBy = "monthlySchedule", orphanRemoval = true)
+    @JoinColumn(name = "monthlyScheduleId")
+    private Set<SectionMonthlySchedule> sectionMonthlyScheduleSet = new HashSet<SectionMonthlySchedule>();
+
+    public Set<SectionMonthlySchedule> getSectionMonthlyScheduleSet() {
+        return sectionMonthlyScheduleSet;
+    }
+    public void setSectionMonthlyScheduleSet(Set<SectionMonthlySchedule> sectionMonthlyScheduleSet) {
+        this.sectionMonthlyScheduleSet = sectionMonthlyScheduleSet;
+    }
+
+    public void addSectionMonthlySchedule(SectionMonthlySchedule sectionMonthlySchedule) {
+        sectionMonthlyScheduleSet.add(sectionMonthlySchedule);
+        sectionMonthlySchedule.setMonthlySchedule(this);
+    }
+
+
+    //One-To-Many Part for WEEKLYSCHEDULE Table
+    @OneToMany(mappedBy = "monthlySchedule", orphanRemoval = true)
+    @JoinColumn(name = "monthlyScheduleId")
+
+    private Set<WeeklySchedule> weeklyScheduleSet = new HashSet<WeeklySchedule>();
+    public Set<WeeklySchedule> getWeeklyScheduleSet() {
+        return weeklyScheduleSet;
+    }
+    public void setWeeklyScheduleSet(Set<WeeklySchedule> weeklyScheduleSet) {
+        this.weeklyScheduleSet = weeklyScheduleSet;
+    }
+
+    public void addWeeklySchedule(WeeklySchedule weeklySchedule) {
+        weeklyScheduleSet.add(weeklySchedule);
+        weeklySchedule.setMonthlySchedule(this);
+    }
+
+
+    //Getters and Setters
     public Integer getMonthlyScheduleId() {
         return this.monthlyScheduleId;
     }

@@ -1,6 +1,8 @@
 package at.fhv.teamb.symphoniacus.persistence.model;
 
 import javax.persistence.*;
+import java.util.HashSet;
+import java.util.Set;
 
 @Entity
 @Table(name = "section")
@@ -16,6 +18,25 @@ public class Section {
     private String description;
 
 
+    //One-To-Many Part for SECTIONMONTHLYSCHEDULE Table
+    @OneToMany(mappedBy = "section", orphanRemoval = true)
+    @JoinColumn(name = "sectionId")
+
+    private Set<SectionMonthlySchedule> sectionMonthlyScheduleSet = new HashSet<SectionMonthlySchedule>();
+    public Set<SectionMonthlySchedule> getSectionMonthlyScheduleSet() {
+        return sectionMonthlyScheduleSet;
+    }
+    public void setSectionMonthlyScheduleSet(Set<SectionMonthlySchedule> sectionMonthlyScheduleSet) {
+        this.sectionMonthlyScheduleSet = sectionMonthlyScheduleSet;
+    }
+
+    public void addSectionMonthlySchedule(SectionMonthlySchedule sectionMonthlySchedule) {
+        sectionMonthlyScheduleSet.add(sectionMonthlySchedule);
+        sectionMonthlySchedule.setSection(this);
+    }
+
+
+    //Getter and Setter
     public Integer getSectionId() {
         return this.sectionId;
     }

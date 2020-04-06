@@ -1,8 +1,10 @@
 package at.fhv.teamb.symphoniacus.persistence.model;
 
 import javax.persistence.*;
-import java.time.LocalDate;
-import java.time.LocalTime;
+import java.time.LocalDateTime;
+import java.util.HashSet;
+import java.util.Set;
+
 
 @Entity
 @Table(name = "duty")
@@ -26,19 +28,59 @@ public class Duty {
     @Column(name = "timeOfDay")
     private String timeOfDay;
 
-    @Column(name = "date")
-    private LocalDate date;
+    @Column(name = "end")
+    private LocalDateTime end;
 
-    @Column(name = "endTime")
-    private LocalTime endTime;
-
-    @Column(name = "startTime")
-    private LocalTime startTime;
+    @Column(name = "start")
+    private LocalDateTime start;
 
     @Column(name = "seriesOfPerformancesId")
     private Integer seriesOfPerformancesId;
 
 
+    //One-To-Many Part for DUTYPOSITION Table
+    @OneToMany(mappedBy = "duty", orphanRemoval = true)
+    @JoinColumn(name="dutyId")
+    private Set<DutyPosition> dutyPositionSet = new HashSet<DutyPosition>();
+
+    public Set<DutyPosition> getDutyPositionSet() {
+        return dutyPositionSet;
+    }
+    public void setDutyPositionSet(Set<DutyPosition> dutyPositionSet) {
+        this.dutyPositionSet = dutyPositionSet;
+    }
+
+    public void addDutyPosition(DutyPosition dutyPosition) {
+        dutyPositionSet.add(dutyPosition);
+        dutyPosition.setDuty(this);
+    }
+
+
+    //Many-To-One Part for WEEKLYSCHEDULE Table
+    @ManyToOne(fetch = FetchType.LAZY)
+    private WeeklySchedule weeklySchedule;
+
+    public WeeklySchedule getWeeklySchedule() {
+        return weeklySchedule;
+    }
+    public void setWeeklySchedule(WeeklySchedule weeklySchedule) {
+        this.weeklySchedule = weeklySchedule;
+    }
+
+
+    //Many-To-One Part for SECTIONMONTHLYSCHEDULE Table
+    @ManyToOne(fetch = FetchType.LAZY)
+    private SectionMonthlySchedule sectionMonthlySchedule;
+
+    public SectionMonthlySchedule getSectionMonthlySchedule() {
+        return sectionMonthlySchedule;
+    }
+    public void setSectionMonthlySchedule(SectionMonthlySchedule sectionMonthlySchedule) {
+        this.sectionMonthlySchedule = sectionMonthlySchedule;
+    }
+
+
+    //Getters and Setters
     public Integer getDutyId() {
         return this.dutyId;
     }
@@ -87,28 +129,20 @@ public class Duty {
         this.timeOfDay = timeOfDay;
     }
 
-    public LocalDate getDate() {
-        return this.date;
+    public LocalDateTime getEnd() {
+        return this.end;
     }
 
-    public void setDate(LocalDate) {
-        this.date = date;
+    public void setEnd(LocalDateTime end) {
+        this.end = end;
     }
 
-    public LocalTime getEndTime() {
-        return this.endTime;
+    public LocalDateTime getStart() {
+        return this.start;
     }
 
-    public void setEndTime(LocalTime endTime) {
-        this.endTime = endTime;
-    }
-
-    public LocalTime getStartTime() {
-        return this.startTime;
-    }
-
-    public void setStartTime(LocalTime startTime) {
-        this.startTime = startTime;
+    public void setStart(LocalDateTime start) {
+        this.start = start;
     }
 
     public Integer getSeriesOfPerformancesId() {

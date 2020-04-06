@@ -17,6 +17,19 @@ public class DutyPositionMusician {
     private Integer musicianId;
 
 
+    //Many-To-One Part for DUTYPosition Table
+    @ManyToOne(fetch = FetchType.LAZY)
+    private DutyPosition dutyPosition;
+
+    public DutyPosition getDutyPosition() {
+        return dutyPosition;
+    }
+    public void setDutyPosition(DutyPosition dutyPosition) {
+        this.dutyPosition = dutyPosition;
+    }
+
+
+    //Getters and Setters
     public Integer getDutyPositionMusician() {
         return this.dutyPositionMusician;
     }
