@@ -54,7 +54,6 @@ public class DutyPosition {
         dutyPositionMusician.setDutyPosition(this);
     }
 
-    //Getters and Setters
     public Integer getDutyPositionId() {
         return this.dutyPositionId;
     }

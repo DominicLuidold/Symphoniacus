@@ -68,7 +68,6 @@ public class MonthlySchedule {
         weeklySchedule.setMonthlySchedule(this);
     }
 
-    //Getters and Setters
     public Integer getMonthlyScheduleId() {
         return this.monthlyScheduleId;
     }
