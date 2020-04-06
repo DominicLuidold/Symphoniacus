@@ -6,22 +6,22 @@ import javax.persistence.*;
 @Table(name = "instrumentCategory_musician")
 public class InstrumentCategoryMusician {
     @Id
-    @Column(name = "instrumentCategory_musicanId")
-    private Integer instrumentCategoryMusicanId;
+    @Column(name = "instrumentCategory_musicianId")
+    private Integer instrumentCategoryMusicianId;
 
     @Column(name = "instrumentCategoryId")
     private Integer instrumentCategoryId;
 
-    @Column(name = "muscianId")
-    private Integer muscianId;
+    @Column(name = "musicianId")
+    private Integer musicianId;
 
 
-    public Integer getInstrumentCategoryMusicanId() {
-        return this.instrumentCategoryMusicanId;
+    public Integer getInstrumentCategoryMusicianId() {
+        return this.instrumentCategoryMusicianId;
     }
 
-    public void setInstrumentCategoryMusicanId(Integer instrumentCategoryMusicanId) {
-        this.instrumentCategoryMusicanId = instrumentCategoryMusicanId;
+    public void setInstrumentCategoryMusicianId(Integer instrumentCategoryMusicianId) {
+        this.instrumentCategoryMusicianId = instrumentCategoryMusicianId;
     }
 
     public Integer getInstrumentCategoryId() {
@@ -32,11 +32,11 @@ public class InstrumentCategoryMusician {
         this.instrumentCategoryId = instrumentCategoryId;
     }
 
-    public Integer getMuscianId() {
-        return this.muscianId;
+    public Integer getMusicianId() {
+        return this.musicianId;
     }
 
-    public void setMuscianId(Integer muscianId) {
-        this.muscianId = muscianId;
+    public void setMusicianId(Integer musicianId) {
+        this.musicianId = musicianId;
     }
 }

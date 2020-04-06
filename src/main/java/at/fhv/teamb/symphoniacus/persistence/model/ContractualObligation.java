@@ -8,80 +8,80 @@ import java.time.LocalDate;
 public class ContractualObligation {
     @Id
     @Column(name = "contractNr")
-    private Integer _contractNr;
+    private Integer contractNr;
 
     @Column(name = "position")
-    private String _position;
+    private String position;
 
     @Column(name = "PointsPerMonth")
-    private Integer _pointsPerMonth;
+    private Integer pointsPerMonth;
 
     @Column(name = "startDate")
-    private LocalDate _startDate;
+    private LocalDate startDate;
 
     @Column(name = "endDate")
-    private LocalDate _endDate;
+    private LocalDate endDate;
 
-    @Column(name = "musicanId")
-    private Integer _musicanId;
+    @Column(name = "musicianId")
+    private Integer musicianId;
 
     @Column(name = "instrumentCategoryId")
-    private Integer _instrumentCategoryId;
+    private Integer instrumentCategoryId;
 
 
     public Integer getContractNr() {
-        return _contractNr;
+        return this.contractNr;
     }
 
     public void setContractNr(Integer contractNr) {
-        _contractNr = contractNr;
+        this.contractNr = contractNr;
     }
 
     public String getPosition() {
-        return _position;
+        return this.position;
     }
 
     public void setPosition(String position) {
-        _position = position;
+        this.position = position;
     }
 
     public Integer getPointsPerMonth() {
-        return _pointsPerMonth;
+        return this.pointsPerMonth;
     }
 
     public void setPointsPerMonth(Integer pointsPerMonth) {
-        _pointsPerMonth = pointsPerMonth;
+        this.pointsPerMonth = pointsPerMonth;
     }
 
     public LocalDate getStartDate() {
-        return _startDate;
+        return this.startDate;
     }
 
     public void setStartDate(LocalDate startDate) {
-        _startDate = startDate;
+        this.startDate = startDate;
     }
 
     public LocalDate getEndDate() {
-        return _endDate;
+        return this.endDate;
     }
 
     public void setEndDate(LocalDate endDate) {
-        _endDate = endDate;
+        this.endDate = endDate;
     }
 
-    public Integer getMusicanId() {
-        return _musicanId;
+    public Integer getMusicianId() {
+        return this.musicianId;
     }
 
-    public void setMusicanId(Integer musicanId) {
-        _musicanId = musicanId;
+    public void setMusicianId(Integer musicianId) {
+        this.musicianId = musicianId;
     }
 
     public Integer getInstrumentCategoryId() {
-        return _instrumentCategoryId;
+        return this.instrumentCategoryId;
     }
 
     public void setInstrumentCategoryId(Integer instrumentCategoryId) {
-        _instrumentCategoryId = instrumentCategoryId;
+        this.instrumentCategoryId = instrumentCategoryId;
     }
 }

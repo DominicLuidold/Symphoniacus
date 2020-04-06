@@ -1,6 +1,7 @@
 package at.fhv.teamb.symphoniacus.persistence.model;
 
 import javax.persistence.*;
+import java.time.LocalDate;
 
 @Entity
 @Table(name = "negativeDateWish")
@@ -9,17 +10,17 @@ public class NegativeDateWish {
     @Column(name = "negativeDateId")
     private Integer negativeDateId;
 
-    @Column(name = "musicanId")
-    private Integer musicanId;
+    @Column(name = "musicianId")
+    private Integer musicianId;
 
-    @Column(name = "descripition")
-    private String descripition;
+    @Column(name = "description")
+    private String description;
 
     @Column(name = "startDate")
-    private java.sql.Date startDate;
+    private LocalDate startDate;
 
     @Column(name = "endDate")
-    private java.sql.Date endDate;
+    private LocalDate endDate;
 
 
     public Integer getNegativeDateId() {
@@ -30,35 +31,35 @@ public class NegativeDateWish {
         this.negativeDateId = negativeDateId;
     }
 
-    public Integer getMusicanId() {
-        return this.musicanId;
+    public Integer getMusicianId() {
+        return this.musicianId;
     }
 
-    public void setMusicanId(Integer musicanId) {
-        this.musicanId = musicanId;
+    public void setMusicianId(Integer musicianId) {
+        this.musicianId = musicianId;
     }
 
-    public String getDescripition() {
-        return this.descripition;
+    public String getDescription() {
+        return this.description;
     }
 
-    public void setDescripition(String descripition) {
-        this.descripition = descripition;
+    public void setDescription(String description) {
+        this.description = description;
     }
 
-    public java.sql.Date getStartDate() {
+    public LocalDate getStartDate() {
         return this.startDate;
     }
 
-    public void setStartDate(java.sql.Date startDate) {
+    public void setStartDate(LocalDate startDate) {
         this.startDate = startDate;
     }
 
-    public java.sql.Date getEndDate() {
+    public LocalDate getEndDate() {
         return this.endDate;
     }
 
-    public void setEndDate(java.sql.Date endDate) {
+    public void setEndDate(LocalDate endDate) {
         this.endDate = endDate;
     }
 }

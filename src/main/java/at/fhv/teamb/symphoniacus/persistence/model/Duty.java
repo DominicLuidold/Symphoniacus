@@ -9,113 +9,113 @@ import java.time.LocalTime;
 public class Duty {
     @Id
     @Column(name = "dutyId")
-    private Integer _dutyId;
+    private Integer dutyId;
 
     @Column(name = "weeklyScheduleId")
-    private Integer _weeklyScheduleId;
+    private Integer weeklyScheduleId;
 
     @Column(name = "dutyCategoryId")
-    private Integer _dutyCategoryId;
+    private Integer dutyCategoryId;
 
     @Column(name = "sectionMonthlyScheduleId")
-    private Integer _sectionMonthlyScheduleId;
+    private Integer sectionMonthlyScheduleId;
 
     @Column(name = "description")
-    private String _description;
+    private String description;
 
     @Column(name = "timeOfDay")
-    private String _timeOfDay;
+    private String timeOfDay;
 
     @Column(name = "date")
-    private LocalDate _date;
+    private LocalDate date;
 
     @Column(name = "endTime")
-    private LocalTime _endTime;
+    private LocalTime endTime;
 
     @Column(name = "startTime")
-    private LocalTime _startTime;
+    private LocalTime startTime;
 
-    @Column(name = "seriesOfPerfomancesId")
-    private Integer _seriesOfPerfomancesId;
+    @Column(name = "seriesOfPerformancesId")
+    private Integer seriesOfPerformancesId;
 
 
     public Integer getDutyId() {
-        return _dutyId;
+        return this.dutyId;
     }
 
     public void setDutyId(Integer dutyId) {
-        _dutyId = dutyId;
+        this.dutyId = dutyId;
     }
 
     public Integer getWeeklyScheduleId() {
-        return _weeklyScheduleId;
+        return this.weeklyScheduleId;
     }
 
     public void setWeeklyScheduleId(Integer weeklyScheduleId) {
-        _weeklyScheduleId = weeklyScheduleId;
+        this.weeklyScheduleId = weeklyScheduleId;
     }
 
     public Integer getDutyCategoryId() {
-        return _dutyCategoryId;
+        return this.dutyCategoryId;
     }
 
     public void setDutyCategoryId(Integer dutyCategoryId) {
-        _dutyCategoryId = dutyCategoryId;
+        this.dutyCategoryId = dutyCategoryId;
     }
 
     public Integer getSectionMonthlyScheduleId() {
-        return _sectionMonthlyScheduleId;
+        return this.sectionMonthlyScheduleId;
     }
 
     public void setSectionMonthlyScheduleId(Integer sectionMonthlyScheduleId) {
-        _sectionMonthlyScheduleId = sectionMonthlyScheduleId;
+        this.sectionMonthlyScheduleId = sectionMonthlyScheduleId;
     }
 
     public String getDescription() {
-        return _description;
+        return this.description;
     }
 
     public void setDescription(String description) {
-        _description = description;
+        this.description = description;
     }
 
     public String getTimeOfDay() {
-        return _timeOfDay;
+        return this.timeOfDay;
     }
 
     public void setTimeOfDay(String timeOfDay) {
-        _timeOfDay = timeOfDay;
+        this.timeOfDay = timeOfDay;
     }
 
     public LocalDate getDate() {
-        return _date;
+        return this.date;
     }
 
-    public void setDate(LocalDate date) {
-        _date = date;
+    public void setDate(LocalDate) {
+        this.date = date;
     }
 
     public LocalTime getEndTime() {
-        return _endTime;
+        return this.endTime;
     }
 
     public void setEndTime(LocalTime endTime) {
-        _endTime = endTime;
+        this.endTime = endTime;
     }
 
     public LocalTime getStartTime() {
-        return _startTime;
+        return this.startTime;
     }
 
     public void setStartTime(LocalTime startTime) {
-        _startTime = startTime;
+        this.startTime = startTime;
     }
 
-    public Integer getSeriesOfPerfomancesId() {
-        return _seriesOfPerfomancesId;
+    public Integer getSeriesOfPerformancesId() {
+        return this.seriesOfPerformancesId;
     }
 
-    public void setSeriesOfPerfomancesId(Integer seriesOfPerfomancesId) {
-        _seriesOfPerfomancesId = seriesOfPerfomancesId;
+    public void setSeriesOfPerformancesId(Integer seriesOfPerformancesId) {
+        this.seriesOfPerformancesId = seriesOfPerformancesId;
     }
 }

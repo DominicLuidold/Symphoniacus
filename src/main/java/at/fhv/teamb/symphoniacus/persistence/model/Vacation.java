@@ -1,6 +1,9 @@
 package at.fhv.teamb.symphoniacus.persistence.model;
 
+import at.fhv.teamb.symphoniacus.persistence.converters.BooleanConverter;
+
 import javax.persistence.*;
+import java.time.LocalDate;
 
 @Entity
 @Table(name = "vacation")
@@ -9,17 +12,18 @@ public class Vacation {
     @Column(name = "vacationId")
     private Integer vacationId;
 
-    @Column(name = "musicanId")
-    private Integer musicanId;
+    @Column(name = "musicianId")
+    private Integer musicianId;
 
     @Column(name = "startDate")
-    private java.sql.Date startDate;
+    private LocalDate startDate;
 
     @Column(name = "endDate")
-    private java.sql.Date endDate;
+    private LocalDate endDate;
 
     @Column(name = "isConfirmed")
-    private null isConfirmed;
+    @Convert(converter = BooleanConverter.class)
+    private Boolean isConfirmed;
 
 
     public Integer getVacationId() {
@@ -30,35 +34,35 @@ public class Vacation {
         this.vacationId = vacationId;
     }
 
-    public Integer getMusicanId() {
-        return this.musicanId;
+    public Integer getMusicianId() {
+        return this.musicianId;
     }
 
-    public void setMusicanId(Integer musicanId) {
-        this.musicanId = musicanId;
+    public void setMusicianId(Integer musicianId) {
+        this.musicianId = musicianId;
     }
 
-    public java.sql.Date getStartDate() {
+    public LocalDate getStartDate() {
         return this.startDate;
     }
 
-    public void setStartDate(java.sql.Date startDate) {
+    public void setStartDate(LocalDate startDate) {
         this.startDate = startDate;
     }
 
-    public java.sql.Date getEndDate() {
+    public LocalDate getEndDate() {
         return this.endDate;
     }
 
-    public void setEndDate(java.sql.Date endDate) {
+    public void setEndDate(LocalDate endDate) {
         this.endDate = endDate;
     }
 
-    public null getIsConfirmed() {
+    public Boolean getIsConfirmed() {
         return this.isConfirmed;
     }
 
-    public void setIsConfirmed(null isConfirmed) {
+    public void setIsConfirmed(Boolean isConfirmed) {
         this.isConfirmed = isConfirmed;
     }
 }

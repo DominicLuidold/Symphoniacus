@@ -1,5 +1,7 @@
 package at.fhv.teamb.symphoniacus.persistence.model;
 
+import at.fhv.teamb.symphoniacus.persistence.converters.BooleanConverter;
+
 import javax.persistence.*;
 
 @Entity
@@ -13,7 +15,8 @@ public class SectionMonthlySchedule {
     private Integer monthlyScheduleId;
 
     @Column(name = "isPublished")
-    private null isPublished;
+    @Convert(converter = BooleanConverter.class)
+    private Boolean isPublished;
 
     @Column(name = "sectionId")
     private Integer sectionId;
@@ -35,11 +38,11 @@ public class SectionMonthlySchedule {
         this.monthlyScheduleId = monthlyScheduleId;
     }
 
-    public null getIsPublished() {
+    public Boolean getIsPublished() {
         return this.isPublished;
     }
 
-    public void setIsPublished(null isPublished) {
+    public void setIsPublished(Boolean isPublished) {
         this.isPublished = isPublished;
     }
 

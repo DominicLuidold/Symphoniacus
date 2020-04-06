@@ -12,8 +12,8 @@ public class DutyPosition {
     @Column(name = "description")
     private String description;
 
-    @Column(name = "instumentionPositionId")
-    private Integer instumentionPositionId;
+    @Column(name = "instrumentationPositionId")
+    private Integer instrumentationPositionId;
 
     @Column(name = "dutyId")
     private Integer dutyId;
@@ -38,12 +38,12 @@ public class DutyPosition {
         this.description = description;
     }
 
-    public Integer getInstumentionPositionId() {
-        return this.instumentionPositionId;
+    public Integer getInstrumentationPositionId() {
+        return this.instrumentationPositionId;
     }
 
-    public void setInstumentionPositionId(Integer instumentionPositionId) {
-        this.instumentionPositionId = instumentionPositionId;
+    public void setInstrumentationPositionId(Integer instrumentationPositionId) {
+        this.instrumentationPositionId = instrumentationPositionId;
     }
 
     public Integer getDutyId() {

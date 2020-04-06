@@ -7,25 +7,25 @@ import javax.persistence.*;
 public class AdministrativeAssistant {
     @Id
     @Column(name = "userId")
-    private Integer _userId;
+    private Integer userId;
 
     @Column(name = "description")
-    private String _description;
+    private String description;
 
 
     public Integer getUserId() {
-        return _userId;
+        return this.userId;
     }
 
     public void setUserId(Integer userId) {
-        _userId = userId;
+        this.userId = userId;
     }
 
     public String getDescription() {
-        return _description;
+        return this.description;
     }
 
     public void setDescription(String description) {
-        _description = description;
+        this.description = description;
     }
 }
