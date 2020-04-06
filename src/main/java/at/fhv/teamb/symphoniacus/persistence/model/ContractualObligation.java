@@ -29,7 +29,6 @@ public class ContractualObligation {
     @Column(name = "instrumentCategoryId")
     private Integer instrumentCategoryId;
 
-
     public Integer getContractNr() {
         return this.contractNr;
     }

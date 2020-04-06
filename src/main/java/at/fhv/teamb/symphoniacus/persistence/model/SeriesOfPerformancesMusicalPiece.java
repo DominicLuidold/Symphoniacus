@@ -16,7 +16,7 @@ public class SeriesOfPerformancesMusicalPiece {
     @Column(name = "seriesOfPerformancesId")
     private Integer seriesOfPerformancesId;
 
-    ////Many-To-One Part for MUSICALPIECE Table
+    //Many-To-One Part for MUSICALPIECE Table
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "musicalPieceId")
     private MusicalPiece musicalPiece;
@@ -29,7 +29,6 @@ public class SeriesOfPerformancesMusicalPiece {
         this.musicalPiece = musicalPiece;
     }
 
-    //Getters and Setters
     public Integer getSeriesOfPerformancesMusicalPieceId() {
         return this.seriesOfPerformancesMusicalPieceId;
     }

@@ -29,7 +29,6 @@ public class DutyPositionMusician {
         this.dutyPosition = dutyPosition;
     }
 
-    //Getters and Setters
     public Integer getDutyPositionMusician() {
         return this.dutyPositionMusician;
     }

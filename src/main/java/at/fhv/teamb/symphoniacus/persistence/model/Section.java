@@ -35,7 +35,6 @@ public class Section {
         sectionMonthlySchedule.setSection(this);
     }
 
-    //Getter and Setter
     public Integer getSectionId() {
         return this.sectionId;
     }

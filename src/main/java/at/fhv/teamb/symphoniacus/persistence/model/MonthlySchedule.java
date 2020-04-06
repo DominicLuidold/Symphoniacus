@@ -38,6 +38,10 @@ public class MonthlySchedule {
     @OneToMany(mappedBy = "monthlySchedule", orphanRemoval = true)
     private Set<SectionMonthlySchedule> sectionMonthlyScheduleSet = new HashSet<SectionMonthlySchedule>();
 
+    //One-To-Many Part for WEEKLYSCHEDULE Table
+    @OneToMany(mappedBy = "monthlySchedule", orphanRemoval = true)
+    private Set<WeeklySchedule> weeklyScheduleSet = new HashSet<WeeklySchedule>();
+
     public Set<SectionMonthlySchedule> getSectionMonthlyScheduleSet() {
         return this.sectionMonthlyScheduleSet;
     }
@@ -50,10 +54,6 @@ public class MonthlySchedule {
         this.sectionMonthlyScheduleSet.add(sectionMonthlySchedule);
         sectionMonthlySchedule.setMonthlySchedule(this);
     }
-
-    //One-To-Many Part for WEEKLYSCHEDULE Table
-    @OneToMany(mappedBy = "monthlySchedule", orphanRemoval = true)
-    private Set<WeeklySchedule> weeklyScheduleSet = new HashSet<WeeklySchedule>();
 
     public Set<WeeklySchedule> getWeeklyScheduleSet() {
         return this.weeklyScheduleSet;

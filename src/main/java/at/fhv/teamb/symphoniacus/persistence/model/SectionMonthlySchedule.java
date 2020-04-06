@@ -28,6 +28,7 @@ public class SectionMonthlySchedule {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "monthlyScheduleId")
     private MonthlySchedule monthlySchedule;
+
     //Many-To-One Part for SECTION Table
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "sectionId")
@@ -66,7 +67,6 @@ public class SectionMonthlySchedule {
         duty.setSectionMonthlySchedule(this);
     }
 
-    //Getters and Setters
     public Integer getSectionMonthlyScheduleId() {
         return this.sectionMonthlyScheduleId;
     }

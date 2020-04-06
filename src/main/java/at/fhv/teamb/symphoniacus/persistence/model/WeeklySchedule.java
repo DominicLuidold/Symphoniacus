@@ -63,8 +63,7 @@ public class WeeklySchedule {
         this.dutySet.add(duty);
         duty.setWeeklySchedule(this);
     }
-
-    //Getters and Setters
+    
     public Integer getWeeklyScheduleId() {
         return this.weeklyScheduleId;
     }

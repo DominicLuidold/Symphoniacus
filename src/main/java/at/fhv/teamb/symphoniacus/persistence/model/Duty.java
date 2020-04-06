@@ -80,7 +80,6 @@ public class Duty {
         this.sectionMonthlySchedule = sectionMonthlySchedule;
     }
 
-    //Getters and Setters
     public Integer getDutyId() {
         return this.dutyId;
     }
