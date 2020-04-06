@@ -1,6 +1,6 @@
 package at.fhv.teamb.symphoniacus.persistence.model;
 
-import at.fhv.teamb.symphoniacus.persistence.converters.BooleanConverter;
+import at.fhv.teamb.symphoniacus.persistence.converter.BooleanConverter;
 
 import javax.persistence.*;
 import java.util.HashSet;
