@@ -31,12 +31,17 @@ public class WeeklySchedule {
     @Convert(converter = BooleanConverter.class)
     private Boolean confirmed;
 
-    @Column(name = "monthlyScheduleId")
+    @Column(name = "monthlyScheduleId", insertable = false, updatable = false)
     private Integer monthlyScheduleId;
 
     //Many-To-One Part for MONTHLYSCHEDULE Table
     @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "monthlyScheduleId")
     private MonthlySchedule monthlySchedule;
+
+    //One-To-Many Part for DUTY Table
+    @OneToMany(mappedBy = "weeklySchedule", orphanRemoval = true)
+    private Set<Duty> dutySet = new HashSet<Duty>();
 
     public MonthlySchedule getMonthlySchedule() {
         return this.monthlySchedule;
@@ -45,12 +50,6 @@ public class WeeklySchedule {
     public void setMonthlySchedule(MonthlySchedule monthlySchedule) {
         this.monthlySchedule = monthlySchedule;
     }
-
-    //One-To-Many Part for DUTY Table
-    @OneToMany(mappedBy = "weeklySchedule", orphanRemoval = true)
-    @JoinColumn(name = "weeklyScheduleId")
-
-    private Set<Duty> dutySet = new HashSet<Duty>();
 
     public Set<Duty> getDutySet() {
         return this.dutySet;

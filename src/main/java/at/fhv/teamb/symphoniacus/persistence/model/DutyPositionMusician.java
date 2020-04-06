@@ -10,7 +10,7 @@ public class DutyPositionMusician {
     @Column(name = "dutyPosition_musician")
     private Integer dutyPositionMusician;
 
-    @Column(name = "dutyPositionId")
+    @Column(name = "dutyPositionId", insertable = false, updatable = false)
     private Integer dutyPositionId;
 
     @Column(name = "musicianId")
@@ -18,6 +18,7 @@ public class DutyPositionMusician {
 
     //Many-To-One Part for DUTYPosition Table
     @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "dutyPositionId")
     private DutyPosition dutyPosition;
 
     public DutyPosition getDutyPosition() {

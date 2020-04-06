@@ -10,7 +10,7 @@ public class SeriesOfPerformancesMusicalPiece {
     @Column(name = "seriesOfPerformances_musicalPieceId")
     private Integer seriesOfPerformancesMusicalPieceId;
 
-    @Column(name = "musicalPieceId")
+    @Column(name = "musicalPieceId", insertable = false, updatable = false)
     private Integer musicalPieceId;
 
     @Column(name = "seriesOfPerformancesId")
@@ -18,6 +18,7 @@ public class SeriesOfPerformancesMusicalPiece {
 
     ////Many-To-One Part for MUSICALPIECE Table
     @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "musicalPieceId")
     private MusicalPiece musicalPiece;
 
     public MusicalPiece getMusicalPiece() {

@@ -36,7 +36,6 @@ public class MonthlySchedule {
 
     //One-To-Many Part for SECTIONMONTHLYSCHEDULE Table
     @OneToMany(mappedBy = "monthlySchedule", orphanRemoval = true)
-    @JoinColumn(name = "monthlyScheduleId")
     private Set<SectionMonthlySchedule> sectionMonthlyScheduleSet = new HashSet<SectionMonthlySchedule>();
 
     public Set<SectionMonthlySchedule> getSectionMonthlyScheduleSet() {
@@ -54,8 +53,6 @@ public class MonthlySchedule {
 
     //One-To-Many Part for WEEKLYSCHEDULE Table
     @OneToMany(mappedBy = "monthlySchedule", orphanRemoval = true)
-    @JoinColumn(name = "monthlyScheduleId")
-
     private Set<WeeklySchedule> weeklyScheduleSet = new HashSet<WeeklySchedule>();
 
     public Set<WeeklySchedule> getWeeklyScheduleSet() {

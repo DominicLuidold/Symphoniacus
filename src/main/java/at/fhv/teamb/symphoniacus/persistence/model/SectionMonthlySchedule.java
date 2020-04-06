@@ -14,19 +14,28 @@ public class SectionMonthlySchedule {
     @Column(name = "sectionMonthlyScheduleId")
     private Integer sectionMonthlyScheduleId;
 
-    @Column(name = "monthlyScheduleId")
+    @Column(name = "monthlyScheduleId", insertable = false, updatable = false)
     private Integer monthlyScheduleId;
 
     @Column(name = "isPublished")
     @Convert(converter = BooleanConverter.class)
     private Boolean isPublished;
 
-    @Column(name = "sectionId")
+    @Column(name = "sectionId", updatable = false, insertable = false)
     private Integer sectionId;
 
     //Many-To-One Part for MONTHLYSCHEDULE Table
     @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "monthlyScheduleId")
     private MonthlySchedule monthlySchedule;
+    //Many-To-One Part for SECTION Table
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "sectionId")
+    private Section section;
+
+    //One-To-Many Part for DUTY Table
+    @OneToMany(mappedBy = "sectionMonthlySchedule", orphanRemoval = true)
+    private Set<Duty> dutySet = new HashSet<Duty>();
 
     public MonthlySchedule getMonthlySchedule() {
         return this.monthlySchedule;
@@ -36,10 +45,6 @@ public class SectionMonthlySchedule {
         this.monthlySchedule = monthlySchedule;
     }
 
-    //Many-To-One Part for SECTION Table
-    @ManyToOne(fetch = FetchType.LAZY)
-    private Section section;
-
     public Section getSection() {
         return this.section;
     }
@@ -47,11 +52,6 @@ public class SectionMonthlySchedule {
     public void setSection(Section section) {
         this.section = section;
     }
-
-    //One-To-Many Part for DUTY Table
-    @OneToMany(mappedBy = "sectionMonthlySchedule", orphanRemoval = true)
-    @JoinColumn(name = "sectionMonthlyScheduleId")
-    private Set<Duty> dutySet = new HashSet<Duty>();
 
     public Set<Duty> getDutySet() {
         return this.dutySet;
