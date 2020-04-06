@@ -6,13 +6,14 @@ import javax.persistence.*;
 @Table(name = "sectionInstrumentation")
 public class SectionInstrumentation {
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "sectionInstrumentationId")
     private Integer sectionInstrumentationId;
 
     @Column(name = "instrumentationId")
     private Integer instrumentationId;
 
-
+    //Getters and Setters
     public Integer getSectionInstrumentationId() {
         return this.sectionInstrumentationId;
     }

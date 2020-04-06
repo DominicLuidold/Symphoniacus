@@ -6,6 +6,7 @@ import javax.persistence.*;
 @Table(name = "seriesOfPerformances_musicalPiece")
 public class SeriesOfPerformancesMusicalPiece {
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "seriesOfPerformances_musicalPieceId")
     private Integer seriesOfPerformancesMusicalPieceId;
 
@@ -15,7 +16,19 @@ public class SeriesOfPerformancesMusicalPiece {
     @Column(name = "seriesOfPerformancesId")
     private Integer seriesOfPerformancesId;
 
+    ////Many-To-One Part for MUSICALPIECE Table
+    @ManyToOne(fetch = FetchType.LAZY)
+    private MusicalPiece musicalPiece;
 
+    public MusicalPiece getMusicalPiece() {
+        return this.musicalPiece;
+    }
+
+    public void setMusicalPiece(MusicalPiece musicalPiece) {
+        this.musicalPiece = musicalPiece;
+    }
+
+    //Getters and Setters
     public Integer getSeriesOfPerformancesMusicalPieceId() {
         return this.seriesOfPerformancesMusicalPieceId;
     }

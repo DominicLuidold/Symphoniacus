@@ -6,6 +6,7 @@ import javax.persistence.*;
 @Table(name = "positiveWish")
 public class PositiveWish {
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "positiveWishId")
     private Integer positiveWishId;
 
@@ -17,7 +18,6 @@ public class PositiveWish {
 
     @Column(name = "description")
     private String description;
-
 
     public Integer getPositiveWishId() {
         return this.positiveWishId;

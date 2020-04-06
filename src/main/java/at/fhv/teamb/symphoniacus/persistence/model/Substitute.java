@@ -6,6 +6,7 @@ import javax.persistence.*;
 @Table(name = "substitute")
 public class Substitute {
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "substituteId")
     private Integer substituteId;
 
@@ -26,7 +27,6 @@ public class Substitute {
 
     @Column(name = "phone")
     private String phone;
-
 
     public Integer getSubstituteId() {
         return this.substituteId;

@@ -6,6 +6,7 @@ import javax.persistence.*;
 @Table(name = "section_instrumentCategory")
 public class SectionInstrumentCategory {
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "section_instrumentCategoryId")
     private Integer sectionInstrumentCategoryId;
 
@@ -14,7 +15,6 @@ public class SectionInstrumentCategory {
 
     @Column(name = "sectionId")
     private Integer sectionId;
-
 
     public Integer getSectionInstrumentCategoryId() {
         return this.sectionInstrumentCategoryId;

@@ -1,14 +1,17 @@
 package at.fhv.teamb.symphoniacus.persistence.model;
 
-import at.fhv.teamb.symphoniacus.persistence.converters.BooleanConverter;
+import at.fhv.teamb.symphoniacus.persistence.converter.BooleanConverter;
 
 import javax.persistence.*;
 import java.time.LocalDate;
+import java.util.HashSet;
+import java.util.Set;
 
 @Entity
 @Table(name = "weeklySchedule")
 public class WeeklySchedule {
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "weeklyScheduleId")
     private Integer weeklyScheduleId;
 
@@ -31,7 +34,38 @@ public class WeeklySchedule {
     @Column(name = "monthlyScheduleId")
     private Integer monthlyScheduleId;
 
+    //Many-To-One Part for MONTHLYSCHEDULE Table
+    @ManyToOne(fetch = FetchType.LAZY)
+    private MonthlySchedule monthlySchedule;
 
+    public MonthlySchedule getMonthlySchedule() {
+        return this.monthlySchedule;
+    }
+
+    public void setMonthlySchedule(MonthlySchedule monthlySchedule) {
+        this.monthlySchedule = monthlySchedule;
+    }
+
+    //One-To-Many Part for DUTY Table
+    @OneToMany(mappedBy = "weeklySchedule", orphanRemoval = true)
+    @JoinColumn(name = "weeklyScheduleId")
+
+    private Set<Duty> dutySet = new HashSet<Duty>();
+
+    public Set<Duty> getDutySet() {
+        return this.dutySet;
+    }
+
+    public void setDutySet(Set<Duty> dutySet) {
+        this.dutySet = dutySet;
+    }
+
+    public void addDuty(Duty duty) {
+        this.dutySet.add(duty);
+        duty.setWeeklySchedule(this);
+    }
+
+    //Getters and Setters
     public Integer getWeeklyScheduleId() {
         return this.weeklyScheduleId;
     }

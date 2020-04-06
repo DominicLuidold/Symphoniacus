@@ -1,6 +1,6 @@
 package at.fhv.teamb.symphoniacus.persistence.model;
 
-import at.fhv.teamb.symphoniacus.persistence.converters.BooleanConverter;
+import at.fhv.teamb.symphoniacus.persistence.converter.BooleanConverter;
 
 import javax.persistence.*;
 
@@ -8,6 +8,7 @@ import javax.persistence.*;
 @Table(name = "dutyCategory")
 public class DutyCategory {
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "dutyCategoryId")
     private Integer dutyCategoryId;
 
@@ -20,7 +21,6 @@ public class DutyCategory {
 
     @Column(name = "points")
     private Integer points;
-
 
     public Integer getDutyCategoryId() {
         return this.dutyCategoryId;

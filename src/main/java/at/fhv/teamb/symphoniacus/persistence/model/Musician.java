@@ -6,6 +6,7 @@ import javax.persistence.*;
 @Table(name = "musician")
 public class Musician {
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "musicianId")
     private Integer musicianId;
 
@@ -14,7 +15,6 @@ public class Musician {
 
     @Column(name = "sectionId")
     private Integer sectionId;
-
 
     public Integer getMusicianId() {
         return this.musicianId;

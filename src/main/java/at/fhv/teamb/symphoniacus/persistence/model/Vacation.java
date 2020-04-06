@@ -1,6 +1,6 @@
 package at.fhv.teamb.symphoniacus.persistence.model;
 
-import at.fhv.teamb.symphoniacus.persistence.converters.BooleanConverter;
+import at.fhv.teamb.symphoniacus.persistence.converter.BooleanConverter;
 
 import javax.persistence.*;
 import java.time.LocalDate;
@@ -9,6 +9,7 @@ import java.time.LocalDate;
 @Table(name = "vacation")
 public class Vacation {
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "vacationId")
     private Integer vacationId;
 
@@ -24,7 +25,6 @@ public class Vacation {
     @Column(name = "isConfirmed")
     @Convert(converter = BooleanConverter.class)
     private Boolean isConfirmed;
-
 
     public Integer getVacationId() {
         return this.vacationId;

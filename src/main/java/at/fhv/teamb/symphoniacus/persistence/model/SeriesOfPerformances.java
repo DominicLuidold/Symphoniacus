@@ -1,6 +1,6 @@
 package at.fhv.teamb.symphoniacus.persistence.model;
 
-import at.fhv.teamb.symphoniacus.persistence.converters.BooleanConverter;
+import at.fhv.teamb.symphoniacus.persistence.converter.BooleanConverter;
 
 import javax.persistence.*;
 import java.time.LocalDate;
@@ -9,6 +9,7 @@ import java.time.LocalDate;
 @Table(name = "seriesOfPerformances")
 public class SeriesOfPerformances {
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "seriesOfPerformancesId")
     private Integer seriesOfPerformancesId;
 
@@ -27,7 +28,6 @@ public class SeriesOfPerformances {
 
     @Column(name = "instrumentationId")
     private Integer instrumentationId;
-
 
     public Integer getSeriesOfPerformancesId() {
         return this.seriesOfPerformancesId;
