@@ -8,6 +8,7 @@ import java.util.Set;
 @Table(name = "dutyPosition")
 public class DutyPosition {
     @Id
+    @GeneratedValue(strategy=GenerationType.IDENTITY)
     @Column(name = "dutyPositionId")
     private Integer dutyPositionId;
 
@@ -29,7 +30,7 @@ public class DutyPosition {
     private Duty duty;
 
     public Duty getDuty() {
-        return duty;
+        return this.duty;
     }
     public void setDuty(Duty duty) {
         this.duty = duty;
@@ -42,14 +43,14 @@ public class DutyPosition {
     private Set<DutyPositionMusician> dutyPositionMusicianSet = new HashSet<DutyPositionMusician>();
 
     public Set<DutyPositionMusician> getDutyPositionMusicianSet() {
-        return dutyPositionMusicianSet;
+        return this.dutyPositionMusicianSet;
     }
     public void setDutyPositionMusicianSet(Set<DutyPositionMusician> dutyPositionMusicianSet) {
         this.dutyPositionMusicianSet = dutyPositionMusicianSet;
     }
 
     public void addDutyPositionMusician(DutyPositionMusician dutyPositionMusician) {
-        dutyPositionMusicianSet.add(dutyPositionMusician);
+        this.dutyPositionMusicianSet.add(dutyPositionMusician);
         dutyPositionMusician.setDutyPosition(this);
     }
 

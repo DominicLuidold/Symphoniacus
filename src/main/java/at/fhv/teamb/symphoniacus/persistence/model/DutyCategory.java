@@ -8,6 +8,7 @@ import javax.persistence.*;
 @Table(name = "dutyCategory")
 public class DutyCategory {
     @Id
+    @GeneratedValue(strategy=GenerationType.IDENTITY)
     @Column(name = "dutyCategoryId")
     private Integer dutyCategoryId;
 

@@ -6,6 +6,7 @@ import javax.persistence.*;
 @Table(name = "seriesOfPerformances_musicalPiece")
 public class SeriesOfPerformancesMusicalPiece {
     @Id
+    @GeneratedValue(strategy=GenerationType.IDENTITY)
     @Column(name = "seriesOfPerformances_musicalPieceId")
     private Integer seriesOfPerformancesMusicalPieceId;
 
@@ -21,7 +22,7 @@ public class SeriesOfPerformancesMusicalPiece {
     private MusicalPiece musicalPiece;
 
     public MusicalPiece getMusicalPiece() {
-        return musicalPiece;
+        return this.musicalPiece;
     }
     public void setMusicalPiece(MusicalPiece musicalPiece) {
         this.musicalPiece = musicalPiece;

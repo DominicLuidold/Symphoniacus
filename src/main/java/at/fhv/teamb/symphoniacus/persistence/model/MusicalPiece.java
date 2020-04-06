@@ -7,6 +7,7 @@ import java.util.*;
 @Table(name = "musicalPiece")
 public class MusicalPiece {
     @Id
+    @GeneratedValue(strategy=GenerationType.IDENTITY)
     @Column(name = "musicalPieceId")
     private Integer musicalPieceId;
 
@@ -26,14 +27,14 @@ public class MusicalPiece {
     private Set<SeriesOfPerformancesMusicalPiece> seriesOfPerformancesMusicalPieceSet = new HashSet<SeriesOfPerformancesMusicalPiece>();
 
     public Set<SeriesOfPerformancesMusicalPiece> getSeriesOfPerformancesMusicalPiece() {
-        return seriesOfPerformancesMusicalPieceSet;
+        return this.seriesOfPerformancesMusicalPieceSet;
     }
     public void setSeriesOfPerformancesMusicalPieceSet(Set<SeriesOfPerformancesMusicalPiece> seriesOfPerformancesMusicalPieceSet) {
         this.seriesOfPerformancesMusicalPieceSet = seriesOfPerformancesMusicalPieceSet;
     }
 
     public void addSeriesOfPerformancesMusicalPiece(SeriesOfPerformancesMusicalPiece seriesOfPerformancesMusicalPiece) {
-        seriesOfPerformancesMusicalPieceSet.add(seriesOfPerformancesMusicalPiece);
+        this.seriesOfPerformancesMusicalPieceSet.add(seriesOfPerformancesMusicalPiece);
         seriesOfPerformancesMusicalPiece.setMusicalPiece(this);
     }
 

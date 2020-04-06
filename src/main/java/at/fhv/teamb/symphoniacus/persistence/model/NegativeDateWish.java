@@ -7,6 +7,7 @@ import java.time.LocalDate;
 @Table(name = "negativeDateWish")
 public class NegativeDateWish {
     @Id
+    @GeneratedValue(strategy=GenerationType.IDENTITY)
     @Column(name = "negativeDateId")
     private Integer negativeDateId;
 

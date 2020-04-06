@@ -11,6 +11,7 @@ import java.util.Set;
 @Table(name = "monthlySchedule")
 public class MonthlySchedule {
     @Id
+    @GeneratedValue(strategy=GenerationType.IDENTITY)
     @Column(name = "monthlyScheduleId")
     private Integer monthlyScheduleId;
 
@@ -40,14 +41,14 @@ public class MonthlySchedule {
     private Set<SectionMonthlySchedule> sectionMonthlyScheduleSet = new HashSet<SectionMonthlySchedule>();
 
     public Set<SectionMonthlySchedule> getSectionMonthlyScheduleSet() {
-        return sectionMonthlyScheduleSet;
+        return this.sectionMonthlyScheduleSet;
     }
     public void setSectionMonthlyScheduleSet(Set<SectionMonthlySchedule> sectionMonthlyScheduleSet) {
         this.sectionMonthlyScheduleSet = sectionMonthlyScheduleSet;
     }
 
     public void addSectionMonthlySchedule(SectionMonthlySchedule sectionMonthlySchedule) {
-        sectionMonthlyScheduleSet.add(sectionMonthlySchedule);
+        this.sectionMonthlyScheduleSet.add(sectionMonthlySchedule);
         sectionMonthlySchedule.setMonthlySchedule(this);
     }
 
@@ -58,14 +59,14 @@ public class MonthlySchedule {
 
     private Set<WeeklySchedule> weeklyScheduleSet = new HashSet<WeeklySchedule>();
     public Set<WeeklySchedule> getWeeklyScheduleSet() {
-        return weeklyScheduleSet;
+        return this.weeklyScheduleSet;
     }
     public void setWeeklyScheduleSet(Set<WeeklySchedule> weeklyScheduleSet) {
         this.weeklyScheduleSet = weeklyScheduleSet;
     }
 
     public void addWeeklySchedule(WeeklySchedule weeklySchedule) {
-        weeklyScheduleSet.add(weeklySchedule);
+        this.weeklyScheduleSet.add(weeklySchedule);
         weeklySchedule.setMonthlySchedule(this);
     }
 

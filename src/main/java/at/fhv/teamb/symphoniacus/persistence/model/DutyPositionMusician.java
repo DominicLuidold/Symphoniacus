@@ -7,6 +7,7 @@ import javax.persistence.*;
 @Table(name = "dutyPosition_musician")
 public class DutyPositionMusician {
     @Id
+    @GeneratedValue(strategy=GenerationType.IDENTITY)
     @Column(name = "dutyPosition_musician")
     private Integer dutyPositionMusician;
 
@@ -22,7 +23,7 @@ public class DutyPositionMusician {
     private DutyPosition dutyPosition;
 
     public DutyPosition getDutyPosition() {
-        return dutyPosition;
+        return this.dutyPosition;
     }
     public void setDutyPosition(DutyPosition dutyPosition) {
         this.dutyPosition = dutyPosition;

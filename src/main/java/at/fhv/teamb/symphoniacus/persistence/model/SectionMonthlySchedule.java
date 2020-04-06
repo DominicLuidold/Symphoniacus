@@ -10,6 +10,7 @@ import java.util.Set;
 @Table(name = "sectionMonthlySchedule")
 public class SectionMonthlySchedule {
     @Id
+    @GeneratedValue(strategy=GenerationType.IDENTITY)
     @Column(name = "sectionMonthlyScheduleId")
     private Integer sectionMonthlyScheduleId;
 
@@ -29,7 +30,7 @@ public class SectionMonthlySchedule {
     private MonthlySchedule monthlySchedule;
 
     public MonthlySchedule getMonthlySchedule() {
-        return monthlySchedule;
+        return this.monthlySchedule;
     }
     public void setMonthlySchedule(MonthlySchedule monthlySchedule) {
         this.monthlySchedule = monthlySchedule;
@@ -41,7 +42,7 @@ public class SectionMonthlySchedule {
     private Section section;
 
     public Section getSection() {
-        return section;
+        return this.section;
     }
     public void setSection(Section section) {
         this.section = section;
@@ -54,14 +55,14 @@ public class SectionMonthlySchedule {
 
     private Set<Duty> dutySet = new HashSet<Duty>();
     public Set<Duty> getDutySet() {
-        return dutySet;
+        return this.dutySet;
     }
     public void setDutySet(Set<Duty> dutySet) {
         this.dutySet = dutySet;
     }
 
     public void addDuty(Duty duty) {
-        dutySet.add(duty);
+        this.dutySet.add(duty);
         duty.setSectionMonthlySchedule(this);
     }
 

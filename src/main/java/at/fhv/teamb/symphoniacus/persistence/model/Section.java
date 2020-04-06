@@ -8,6 +8,7 @@ import java.util.Set;
 @Table(name = "section")
 public class Section {
     @Id
+    @GeneratedValue(strategy=GenerationType.IDENTITY)
     @Column(name = "sectionId")
     private Integer sectionId;
 
@@ -24,14 +25,14 @@ public class Section {
 
     private Set<SectionMonthlySchedule> sectionMonthlyScheduleSet = new HashSet<SectionMonthlySchedule>();
     public Set<SectionMonthlySchedule> getSectionMonthlyScheduleSet() {
-        return sectionMonthlyScheduleSet;
+        return this.sectionMonthlyScheduleSet;
     }
     public void setSectionMonthlyScheduleSet(Set<SectionMonthlySchedule> sectionMonthlyScheduleSet) {
         this.sectionMonthlyScheduleSet = sectionMonthlyScheduleSet;
     }
 
     public void addSectionMonthlySchedule(SectionMonthlySchedule sectionMonthlySchedule) {
-        sectionMonthlyScheduleSet.add(sectionMonthlySchedule);
+        this.sectionMonthlyScheduleSet.add(sectionMonthlySchedule);
         sectionMonthlySchedule.setSection(this);
     }
 

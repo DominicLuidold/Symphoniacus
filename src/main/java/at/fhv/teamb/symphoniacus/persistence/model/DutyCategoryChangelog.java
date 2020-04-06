@@ -7,6 +7,7 @@ import java.time.LocalDate;
 @Table(name = "dutyCategoryChangelog")
 public class DutyCategoryChangelog {
     @Id
+    @GeneratedValue(strategy=GenerationType.IDENTITY)
     @Column(name = "dutyCategoryChangelogId")
     private Integer dutyCategoryChangelogId;
 

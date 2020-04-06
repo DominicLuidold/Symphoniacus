@@ -5,7 +5,7 @@ import javax.persistence.*;
 @Entity
 @Table(name = "sectionInstrumentation")
 public class SectionInstrumentation {
-    @Id
+    @Id@GeneratedValue(strategy=GenerationType.IDENTITY)
     @Column(name = "sectionInstrumentationId")
     private Integer sectionInstrumentationId;
 
