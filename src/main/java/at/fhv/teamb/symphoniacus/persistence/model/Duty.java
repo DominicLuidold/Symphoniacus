@@ -91,7 +91,7 @@ public class Duty {
         return this.date;
     }
 
-    public void setDate(LocalDate) {
+    public void setDate(LocalDate date) {
         this.date = date;
     }
 
