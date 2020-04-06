@@ -19,12 +19,16 @@ public class Main extends Application {
     @Override
     public void start(Stage stage) {
         try {
-            ResourceBundle bundle = ResourceBundle.getBundle("bundles.language", new Locale("en", "US"));
-            Parent root = FXMLLoader.load(getClass().getResource("/view/basic_frame.fxml"), bundle);
+            Locale locale = new Locale("en", "UK");
+            Locale.setDefault(locale);
+            ResourceBundle bundle = ResourceBundle.getBundle("bundles.language", locale);
+            Parent root = FXMLLoader.load(getClass().getResource("/view/mainWindow.fxml"), bundle);
 
             Scene scene = new Scene(root);
             stage.setTitle("Symphoniacus");
             stage.setScene(scene);
+            stage.setMinHeight(768);
+            stage.setMinWidth(1366);
             stage.show();
         } catch (IOException e) {
             e.fillInStackTrace();

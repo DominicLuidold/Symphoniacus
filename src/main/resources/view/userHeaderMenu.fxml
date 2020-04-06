@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.TextFlow?>
+
+<AnchorPane xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml"
+            fx:controller="at.fhv.teamb.symphoniacus.presentation.UserController" prefHeight="34.0"
+            AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0"
+            AnchorPane.topAnchor="0.0">
+    <HBox prefHeight="34.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0"
+          AnchorPane.topAnchor="0.0">
+        <TextFlow fx:id="txtFlowSection" textAlignment="CENTER" HBox.hgrow="ALWAYS"/>
+        <TextFlow textAlignment="CENTER" HBox.hgrow="ALWAYS"/>
+        <MenuBar nodeOrientation="RIGHT_TO_LEFT" HBox.hgrow="ALWAYS">
+            <HBox.margin>
+                <Insets/>
+            </HBox.margin>
+            <Menu mnemonicParsing="false" text="%placeholder">
+                <graphic>
+                    <ImageView fitHeight="26.0" fitWidth="44.0" pickOnBounds="true" preserveRatio="true">
+                        <Image url="@../images/avatar_roster_responsible.png"/>
+                    </ImageView>
+                </graphic>
+                <MenuItem fx:id="user_logout" mnemonicParsing="false" onAction="#handleUserLogout"
+                          text="%menu.user.logout"/>
+            </Menu>
+        </MenuBar>
+    </HBox>
+</AnchorPane>
