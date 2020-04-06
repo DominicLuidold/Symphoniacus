@@ -37,7 +37,6 @@ public class MusicalPiece {
         seriesOfPerformancesMusicalPiece.setMusicalPiece(this);
     }
 
-    //Getters and Setters
     public Integer getMusicalPieceId() {
         return this.musicalPieceId;
     }
