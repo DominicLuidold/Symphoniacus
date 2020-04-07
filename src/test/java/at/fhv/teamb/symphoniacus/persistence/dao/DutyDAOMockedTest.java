@@ -17,7 +17,7 @@ import static org.mockito.Mockito.mock;
 
 
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
-public class DutyDAOMockedTests {
+public class DutyDAOMockedTest {
 
 	private DutyDAO _dao;
 	private EntityManager _entityManager;
@@ -40,8 +40,4 @@ public class DutyDAOMockedTests {
 		_dao = new DutyDAO();
 	}
 
-	@Test
-	public void testFindAllDuties() {
-		List<Duty> list = _dao.findAll();
-	}
 }

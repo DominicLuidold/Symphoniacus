@@ -6,18 +6,18 @@ import javax.persistence.Persistence;
 
 
 public abstract class BaseDAO<T> implements DAO<T> {
-    protected EntityManagerFactory _entityManagerFactory;
-    protected EntityManager _entityManager;
+    protected EntityManagerFactory entityManagerFactory;
+    protected EntityManager entityManager;
 
     public BaseDAO() {
-        _entityManagerFactory = Persistence.createEntityManagerFactory("mysqldb");
+        this.entityManagerFactory = Persistence.createEntityManagerFactory("mysqldb");
     }
 
     public void createEntityManager(){
-        _entityManager = _entityManagerFactory.createEntityManager();
+        this.entityManager = entityManagerFactory.createEntityManager();
     }
 
     public void tearDown() {
-        _entityManagerFactory.close();
+        this.entityManagerFactory.close();
     }
 }
