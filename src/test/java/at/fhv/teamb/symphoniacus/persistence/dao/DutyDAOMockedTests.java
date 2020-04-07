@@ -37,7 +37,7 @@ public class DutyDAOMockedTests {
 		Mockito.when(_entityManager.createQuery(Mockito.anyString(), Mockito.eq(Duty.class))).thenReturn(mockedQuery);
 		Mockito.when(mockedQuery.getResultList()).thenReturn(tempList);
 
-		_dao = new DutyDAO(entityManagerFactory);
+		_dao = new DutyDAO();
 	}
 
 	@Test

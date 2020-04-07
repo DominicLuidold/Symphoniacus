@@ -23,7 +23,7 @@ public class DutyDAOTests {
 	@BeforeAll
 	public void init() {
 		EntityManagerFactory fact = Persistence.createEntityManagerFactory("mysqldb");
-		_dao = new DutyDAO(fact);
+		_dao = new DutyDAO();
 	}
 
 	@Test
