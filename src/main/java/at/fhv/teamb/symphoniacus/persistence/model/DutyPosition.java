@@ -18,15 +18,15 @@ public class DutyPosition {
     @Column(name = "instrumentationPositionId")
     private Integer instrumentationPositionId;
 
-    @Column(name = "dutyId")
+    @Column(name = "dutyId", updatable = false, insertable = false)
     private Integer dutyId;
 
     @Column(name = "sectionId")
     private Integer sectionId;
 
-
     //Many-To-One Part for DUTY Table
     @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "dutyId")
     private Duty duty;
 
     public Duty getDuty() {
@@ -39,7 +39,6 @@ public class DutyPosition {
 
     //One-To-Many Part for DUTYPOSITION_MUSICIAN Table
     @OneToMany(mappedBy = "dutyPosition", orphanRemoval = true)
-    @JoinColumn(name = "dutyPositionId")
     private Set<DutyPositionMusician> dutyPositionMusicianSet = new HashSet<DutyPositionMusician>();
 
     public Set<DutyPositionMusician> getDutyPositionMusicianSet() {
@@ -55,7 +54,6 @@ public class DutyPosition {
         dutyPositionMusician.setDutyPosition(this);
     }
 
-    //Getters and Setters
     public Integer getDutyPositionId() {
         return this.dutyPositionId;
     }

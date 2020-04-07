@@ -3,6 +3,7 @@ trigger:
 - develop
 - feature/*
 - release/*
+- bugfix/*
 - hotfix/*
 
 pool:

@@ -13,13 +13,13 @@ public class Duty {
     @Column(name = "dutyId")
     private Integer dutyId;
 
-    @Column(name = "weeklyScheduleId")
+    @Column(name = "weeklyScheduleId", insertable = false, updatable = false)
     private Integer weeklyScheduleId;
 
     @Column(name = "dutyCategoryId")
     private Integer dutyCategoryId;
 
-    @Column(name = "sectionMonthlyScheduleId")
+    @Column(name = "sectionMonthlyScheduleId", insertable = false, updatable = false)
     private Integer sectionMonthlyScheduleId;
 
     @Column(name = "description")
@@ -39,8 +39,17 @@ public class Duty {
 
     //One-To-Many Part for DUTYPOSITION Table
     @OneToMany(mappedBy = "duty", orphanRemoval = true)
-    @JoinColumn(name = "dutyId")
     private Set<DutyPosition> dutyPositionSet = new HashSet<DutyPosition>();
+
+    //Many-To-One Part for WEEKLYSCHEDULE Table
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "weeklyScheduleId")
+    private WeeklySchedule weeklySchedule;
+
+    //Many-To-One Part for SECTIONMONTHLYSCHEDULE Table
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "sectionMonthlyScheduleId")
+    private SectionMonthlySchedule sectionMonthlySchedule;
 
     public Set<DutyPosition> getDutyPositionSet() {
         return this.dutyPositionSet;
@@ -55,10 +64,6 @@ public class Duty {
         dutyPosition.setDuty(this);
     }
 
-    //Many-To-One Part for WEEKLYSCHEDULE Table
-    @ManyToOne(fetch = FetchType.LAZY)
-    private WeeklySchedule weeklySchedule;
-
     public WeeklySchedule getWeeklySchedule() {
         return this.weeklySchedule;
     }
@@ -66,10 +71,6 @@ public class Duty {
     public void setWeeklySchedule(WeeklySchedule weeklySchedule) {
         this.weeklySchedule = weeklySchedule;
     }
-
-    //Many-To-One Part for SECTIONMONTHLYSCHEDULE Table
-    @ManyToOne(fetch = FetchType.LAZY)
-    private SectionMonthlySchedule sectionMonthlySchedule;
 
     public SectionMonthlySchedule getSectionMonthlySchedule() {
         return this.sectionMonthlySchedule;
@@ -79,7 +80,6 @@ public class Duty {
         this.sectionMonthlySchedule = sectionMonthlySchedule;
     }
 
-    //Getters and Setters
     public Integer getDutyId() {
         return this.dutyId;
     }

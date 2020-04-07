@@ -7,6 +7,7 @@ import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.TypedQuery;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
@@ -38,8 +39,8 @@ public class DutyDAO implements DAO<Duty> {
      * @return A List of all Duties that have the date between the given start and end dates
      * @author Valentin Goronjic
      */
-    public List<Duty> findAllInWeek(LocalDate start, LocalDate end) {
-        TypedQuery<Duty> query = _em.createQuery("SELECT d FROM Duty d WHERE d._date BETWEEN :start AND :end", Duty.class);
+    public List<Duty> findAllInRange(LocalDateTime start, LocalDateTime end) {
+        TypedQuery<Duty> query = _em.createQuery("SELECT d FROM Duty d WHERE d.start >= :start AND d.end <= :end", Duty.class);
         query.setMaxResults(300);
         query.setParameter("start", start);
         query.setParameter("end", end);
@@ -53,8 +54,8 @@ public class DutyDAO implements DAO<Duty> {
      * @return A List of all Duties that have the date between the given start date plus 6 days
      * @author Valentin Goronjic
      */
-    public List<Duty> findAllInWeek(LocalDate start) {
-        TypedQuery<Duty> query = _em.createQuery("SELECT d FROM Duty d WHERE d._date BETWEEN :start AND :end", Duty.class);
+    public List<Duty> findAllInWeek(LocalDateTime start) {
+        TypedQuery<Duty> query = _em.createQuery("SELECT d FROM Duty d WHERE d.start >= :start AND d.end <= :end", Duty.class);
         query.setMaxResults(300);
         query.setParameter("start", start);
         query.setParameter("end", start.plusDays(6));

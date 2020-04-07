@@ -16,7 +16,6 @@ public class Instrumentation {
     @Column(name = "musicalPieceId")
     private Integer musicalPieceId;
 
-
     public Integer getInstrumentationId() {
         return this.instrumentationId;
     }

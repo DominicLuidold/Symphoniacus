@@ -20,8 +20,6 @@ public class Section {
 
     //One-To-Many Part for SECTIONMONTHLYSCHEDULE Table
     @OneToMany(mappedBy = "section", orphanRemoval = true)
-    @JoinColumn(name = "sectionId")
-
     private Set<SectionMonthlySchedule> sectionMonthlyScheduleSet = new HashSet<SectionMonthlySchedule>();
 
     public Set<SectionMonthlySchedule> getSectionMonthlyScheduleSet() {
@@ -37,7 +35,6 @@ public class Section {
         sectionMonthlySchedule.setSection(this);
     }
 
-    //Getter and Setter
     public Integer getSectionId() {
         return this.sectionId;
     }

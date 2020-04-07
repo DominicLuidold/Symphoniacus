@@ -22,7 +22,6 @@ public class MusicalPiece {
 
     //One-To-Many Part for SERIESOFPERFORMANCESMUSICALPIECE Table
     @OneToMany(mappedBy = "musicalPiece", orphanRemoval = true)
-    @JoinColumn(name = "musicalPieceId")
     private Set<SeriesOfPerformancesMusicalPiece> seriesOfPerformancesMusicalPieceSet = new HashSet<SeriesOfPerformancesMusicalPiece>();
 
     public Set<SeriesOfPerformancesMusicalPiece> getSeriesOfPerformancesMusicalPiece() {
@@ -38,7 +37,6 @@ public class MusicalPiece {
         seriesOfPerformancesMusicalPiece.setMusicalPiece(this);
     }
 
-    //Getters and Setters
     public Integer getMusicalPieceId() {
         return this.musicalPieceId;
     }
