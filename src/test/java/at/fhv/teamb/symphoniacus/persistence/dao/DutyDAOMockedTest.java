@@ -2,8 +2,8 @@ package at.fhv.teamb.symphoniacus.persistence.dao;
 
 import at.fhv.teamb.symphoniacus.persistence.model.Duty;
 import org.junit.jupiter.api.BeforeAll;
-import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInstance;
+import org.mockito.Mock;
 import org.mockito.Mockito;
 
 import javax.persistence.EntityManager;
@@ -19,25 +19,24 @@ import static org.mockito.Mockito.mock;
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 public class DutyDAOMockedTest {
 
-	private DutyDAO _dao;
-	private EntityManager _entityManager;
+	private DutyDAO dao;
+	private EntityManager entityManager;
+	@Mock
+	private TypedQuery<Duty> mockedQuery;
 
 	@BeforeAll
 	public void init() {
-		_entityManager = mock(EntityManager.class);
+		this.entityManager = mock(EntityManager.class);
 		EntityManagerFactory entityManagerFactory = mock(EntityManagerFactory.class);
-		Mockito.when(entityManagerFactory.createEntityManager()).thenReturn(_entityManager);
-
-		TypedQuery<Duty> mockedQuery = Mockito.mock(TypedQuery.class);
+		Mockito.when(entityManagerFactory.createEntityManager()).thenReturn(this.entityManager);
 
 		List<Duty> tempList = new LinkedList<>();
 		tempList.add(new Duty());
 		tempList.add(new Duty());
 		// " select * from ... "
-		Mockito.when(_entityManager.createQuery(Mockito.anyString(), Mockito.eq(Duty.class))).thenReturn(mockedQuery);
-		Mockito.when(mockedQuery.getResultList()).thenReturn(tempList);
-
-		_dao = new DutyDAO();
+		Mockito.when(this.entityManager.createQuery(Mockito.anyString(), Mockito.eq(Duty.class))).thenReturn(this.mockedQuery);
+		Mockito.when(this.mockedQuery.getResultList()).thenReturn(tempList);
+		this.dao = new DutyDAO();
 	}
 
 }

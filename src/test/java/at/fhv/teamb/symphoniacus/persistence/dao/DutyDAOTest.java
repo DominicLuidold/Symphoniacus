@@ -13,17 +13,17 @@ import java.util.List;
 
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 public class DutyDAOTest {
-	private DutyDAO _dao;
+	private DutyDAO dao;
 
 	@BeforeAll
 	public void init() {
 		EntityManagerFactory fact = Persistence.createEntityManagerFactory("mysqldb");
-		_dao = new DutyDAO();
+		this.dao = new DutyDAO();
 	}
 
 	@Test
 	public void testFindAllDutiesForWeek() {
-		List<Duty> list = _dao.findAllInRange(LocalDateTime.of(2020, 3,30,0,0,0), LocalDateTime.of(2020,4,5,0,0,0));
+		List<Duty> list = this.dao.findAllInRange(LocalDateTime.of(2020, 3,30,0,0,0), LocalDateTime.of(2020,4,5,0,0,0));
 
 		Assertions.assertTrue(list != null);
 	}
