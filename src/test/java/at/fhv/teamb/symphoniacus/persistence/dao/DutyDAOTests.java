@@ -9,6 +9,7 @@ import org.junit.jupiter.api.TestInstance;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.Persistence;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 
 import static org.mockito.Mockito.mock;
@@ -32,7 +33,7 @@ public class DutyDAOTests {
 	}
 	@Test
 	public void testFindAllDutiesForWeek() {
-		List<Duty> list = _dao.findAllInWeek(LocalDate.of(2020, 03,30), LocalDate.of(2020,04,05));
+		List<Duty> list = _dao.findAllInRange(LocalDateTime.of(2020, 03,30,00,00,00), LocalDateTime.of(2020,04,05,00,00,00));
 
 		Assertions.assertTrue(list != null);
 	}

@@ -13,7 +13,6 @@ public class SectionInstrumentation {
     @Column(name = "instrumentationId")
     private Integer instrumentationId;
 
-    //Getters and Setters
     public Integer getSectionInstrumentationId() {
         return this.sectionInstrumentationId;
     }
