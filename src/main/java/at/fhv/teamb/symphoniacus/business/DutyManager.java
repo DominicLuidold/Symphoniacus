@@ -37,6 +37,4 @@ public class DutyManager {
         //Will always jump back to last monday
         return givenDate.with(DayOfWeek.MONDAY);
     }
-
-
 }
