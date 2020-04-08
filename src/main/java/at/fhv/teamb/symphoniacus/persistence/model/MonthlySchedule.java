@@ -1,9 +1,15 @@
 package at.fhv.teamb.symphoniacus.persistence.model;
 
-import javax.persistence.*;
 import java.time.LocalDate;
 import java.util.HashSet;
 import java.util.Set;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.OneToMany;
+import javax.persistence.Table;
 
 @Entity
 @Table(name = "monthlySchedule")
@@ -33,17 +39,18 @@ public class MonthlySchedule {
 
     //One-To-Many Part for SECTIONMONTHLYSCHEDULE Table
     @OneToMany(mappedBy = "monthlySchedule", orphanRemoval = true)
-    private Set<SectionMonthlySchedule> sectionMonthlyScheduleSet = new HashSet<SectionMonthlySchedule>();
+    private Set<SectionMonthlySchedule> sectionMonthlyScheduleSet = new HashSet<>();
 
     //One-To-Many Part for WEEKLYSCHEDULE Table
     @OneToMany(mappedBy = "monthlySchedule", orphanRemoval = true)
-    private Set<WeeklySchedule> weeklyScheduleSet = new HashSet<WeeklySchedule>();
+    private Set<WeeklySchedule> weeklyScheduleSet = new HashSet<>();
 
     public Set<SectionMonthlySchedule> getSectionMonthlyScheduleSet() {
         return this.sectionMonthlyScheduleSet;
     }
 
-    public void setSectionMonthlyScheduleSet(Set<SectionMonthlySchedule> sectionMonthlyScheduleSet) {
+    public void setSectionMonthlyScheduleSet(
+        Set<SectionMonthlySchedule> sectionMonthlyScheduleSet) {
         this.sectionMonthlyScheduleSet = sectionMonthlyScheduleSet;
     }
 

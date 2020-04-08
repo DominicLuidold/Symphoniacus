@@ -1,14 +1,14 @@
 package at.fhv.teamb.symphoniacus.persistence.dao;
 
-import at.fhv.teamb.symphoniacus.persistence.BaseDAO;
+import at.fhv.teamb.symphoniacus.persistence.BaseDao;
 import at.fhv.teamb.symphoniacus.persistence.model.Duty;
 import at.fhv.teamb.symphoniacus.persistence.model.Section;
-import javax.persistence.TypedQuery;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
+import javax.persistence.TypedQuery;
 
-public class DutyDAO extends BaseDAO<Duty> {
+public class DutyDao extends BaseDao<Duty> {
 
     @Override
     public Optional<Duty> find(Object key) {
@@ -24,7 +24,10 @@ public class DutyDAO extends BaseDAO<Duty> {
      */
     public List<Duty> findAllInWeek(LocalDateTime start) {
         createEntityManager();
-        TypedQuery<Duty> query = this.entityManager.createQuery("SELECT d FROM Duty d WHERE d.start >= :start AND d.end <= :end", Duty.class);
+        TypedQuery<Duty> query = this.entityManager.createQuery(
+            "SELECT d FROM Duty d WHERE d.start >= :start AND d.end <= :end",
+            Duty.class
+        );
         query.setMaxResults(300);
         query.setParameter("start", start);
         query.setParameter("end", start.plusDays(6));
@@ -39,7 +42,7 @@ public class DutyDAO extends BaseDAO<Duty> {
     }
 
     /**
-     * Returns all duties that are in the week of the given start and end date
+     * Returns all duties that are in the week of the given start and end date.
      *
      * @param start A LocalDate that represents the start of the week
      * @param end   A LocalDate that represents the end of the week
@@ -48,7 +51,10 @@ public class DutyDAO extends BaseDAO<Duty> {
      */
     public List<Duty> findAllInRange(LocalDateTime start, LocalDateTime end) {
         createEntityManager();
-        TypedQuery<Duty> query = this.entityManager.createQuery("SELECT d FROM Duty d WHERE d.start >= :start AND d.end <= :end", Duty.class);
+        TypedQuery<Duty> query = this.entityManager.createQuery(
+            "SELECT d FROM Duty d WHERE d.start >= :start AND d.end <= :end",
+            Duty.class
+        );
         query.setMaxResults(300);
         query.setParameter("start", start);
         query.setParameter("end", end);
