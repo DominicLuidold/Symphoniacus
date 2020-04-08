@@ -1,7 +1,5 @@
 package at.fhv.teamb.symphoniacus.persistence.model;
 
-import at.fhv.teamb.symphoniacus.persistence.converter.BooleanConverter;
-
 import javax.persistence.*;
 import java.time.LocalDate;
 import java.util.HashSet;
@@ -28,7 +26,6 @@ public class WeeklySchedule {
     private LocalDate publishDate;
 
     @Column(name = "confirmed")
-    @Convert(converter = BooleanConverter.class)
     private Boolean confirmed;
 
     @Column(name = "monthlyScheduleId", insertable = false, updatable = false)
