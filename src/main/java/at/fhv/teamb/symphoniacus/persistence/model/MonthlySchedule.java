@@ -1,7 +1,5 @@
 package at.fhv.teamb.symphoniacus.persistence.model;
 
-import at.fhv.teamb.symphoniacus.persistence.converter.BooleanConverter;
-
 import javax.persistence.*;
 import java.time.LocalDate;
 import java.util.HashSet;
@@ -28,7 +26,6 @@ public class MonthlySchedule {
     private LocalDate endDateClassification;
 
     @Column(name = "isPublished")
-    @Convert(converter = BooleanConverter.class)
     private Boolean isPublished;
 
     @Column(name = "endWish")

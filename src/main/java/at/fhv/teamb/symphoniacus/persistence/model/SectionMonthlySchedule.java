@@ -1,7 +1,5 @@
 package at.fhv.teamb.symphoniacus.persistence.model;
 
-import at.fhv.teamb.symphoniacus.persistence.converter.BooleanConverter;
-
 import javax.persistence.*;
 import java.util.HashSet;
 import java.util.Set;
@@ -18,7 +16,6 @@ public class SectionMonthlySchedule {
     private Integer monthlyScheduleId;
 
     @Column(name = "isPublished")
-    @Convert(converter = BooleanConverter.class)
     private Boolean isPublished;
 
     @Column(name = "sectionId", updatable = false, insertable = false)

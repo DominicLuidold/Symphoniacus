@@ -1,7 +1,5 @@
 package at.fhv.teamb.symphoniacus.persistence.model;
 
-import at.fhv.teamb.symphoniacus.persistence.converter.BooleanConverter;
-
 import javax.persistence.*;
 
 @Entity
@@ -16,7 +14,6 @@ public class DutyCategory {
     private String type;
 
     @Column(name = "isRehearsal")
-    @Convert(converter = BooleanConverter.class)
     private Boolean isRehearsal;
 
     @Column(name = "points")

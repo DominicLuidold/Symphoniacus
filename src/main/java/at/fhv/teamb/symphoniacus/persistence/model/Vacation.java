@@ -1,7 +1,5 @@
 package at.fhv.teamb.symphoniacus.persistence.model;
 
-import at.fhv.teamb.symphoniacus.persistence.converter.BooleanConverter;
-
 import javax.persistence.*;
 import java.time.LocalDate;
 
@@ -23,7 +21,6 @@ public class Vacation {
     private LocalDate endDate;
 
     @Column(name = "isConfirmed")
-    @Convert(converter = BooleanConverter.class)
     private Boolean isConfirmed;
 
     public Integer getVacationId() {

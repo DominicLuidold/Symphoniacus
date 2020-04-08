@@ -1,7 +1,5 @@
 package at.fhv.teamb.symphoniacus.persistence.model;
 
-import at.fhv.teamb.symphoniacus.persistence.converter.BooleanConverter;
-
 import javax.persistence.*;
 import java.time.LocalDate;
 
@@ -23,7 +21,6 @@ public class SeriesOfPerformances {
     private LocalDate endDate;
 
     @Column(name = "isTour")
-    @Convert(converter = BooleanConverter.class)
     private Boolean isTour;
 
     @Column(name = "instrumentationId")
