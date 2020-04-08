@@ -1,12 +1,13 @@
 package at.fhv.teamb.symphoniacus.persistence.converter;
 
-import javax.persistence.AttributeConverter;
-import javax.persistence.Converter;
 import java.sql.Time;
 import java.time.LocalTime;
+import javax.persistence.AttributeConverter;
+import javax.persistence.Converter;
 
 @Converter(autoApply = true)
-public class LocalTimeConverter implements AttributeConverter<LocalTime, Time>{
+public class LocalTimeConverter implements AttributeConverter<LocalTime, Time> {
+
     @Override
     public Time convertToDatabaseColumn(LocalTime attribute) {
         if (attribute != null) {

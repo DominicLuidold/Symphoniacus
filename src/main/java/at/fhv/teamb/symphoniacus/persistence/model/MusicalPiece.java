@@ -1,7 +1,14 @@
 package at.fhv.teamb.symphoniacus.persistence.model;
 
-import javax.persistence.*;
-import java.util.*;
+import java.util.HashSet;
+import java.util.Set;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.OneToMany;
+import javax.persistence.Table;
 
 @Entity
 @Table(name = "musicalPiece")
@@ -22,17 +29,20 @@ public class MusicalPiece {
 
     //One-To-Many Part for SERIESOFPERFORMANCESMUSICALPIECE Table
     @OneToMany(mappedBy = "musicalPiece", orphanRemoval = true)
-    private Set<SeriesOfPerformancesMusicalPiece> seriesOfPerformancesMusicalPieceSet = new HashSet<SeriesOfPerformancesMusicalPiece>();
+    private Set<SeriesOfPerformancesMusicalPiece> seriesOfPerformancesMusicalPieceSet =
+        new HashSet<>();
 
     public Set<SeriesOfPerformancesMusicalPiece> getSeriesOfPerformancesMusicalPiece() {
         return this.seriesOfPerformancesMusicalPieceSet;
     }
 
-    public void setSeriesOfPerformancesMusicalPieceSet(Set<SeriesOfPerformancesMusicalPiece> seriesOfPerformancesMusicalPieceSet) {
+    public void setSeriesOfPerformancesMusicalPieceSet(
+        Set<SeriesOfPerformancesMusicalPiece> seriesOfPerformancesMusicalPieceSet) {
         this.seriesOfPerformancesMusicalPieceSet = seriesOfPerformancesMusicalPieceSet;
     }
 
-    public void addSeriesOfPerformancesMusicalPiece(SeriesOfPerformancesMusicalPiece seriesOfPerformancesMusicalPiece) {
+    public void addSeriesOfPerformancesMusicalPiece(
+        SeriesOfPerformancesMusicalPiece seriesOfPerformancesMusicalPiece) {
         this.seriesOfPerformancesMusicalPieceSet.add(seriesOfPerformancesMusicalPiece);
         seriesOfPerformancesMusicalPiece.setMusicalPiece(this);
     }

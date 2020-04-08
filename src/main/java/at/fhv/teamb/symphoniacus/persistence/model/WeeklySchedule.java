@@ -1,9 +1,18 @@
 package at.fhv.teamb.symphoniacus.persistence.model;
 
-import javax.persistence.*;
 import java.time.LocalDate;
 import java.util.HashSet;
 import java.util.Set;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
+import javax.persistence.Table;
 
 @Entity
 @Table(name = "weeklySchedule")
@@ -38,7 +47,7 @@ public class WeeklySchedule {
 
     //One-To-Many Part for DUTY Table
     @OneToMany(mappedBy = "weeklySchedule", orphanRemoval = true)
-    private Set<Duty> dutySet = new HashSet<Duty>();
+    private Set<Duty> dutySet = new HashSet<>();
 
     public MonthlySchedule getMonthlySchedule() {
         return this.monthlySchedule;
@@ -60,7 +69,7 @@ public class WeeklySchedule {
         this.dutySet.add(duty);
         duty.setWeeklySchedule(this);
     }
-    
+
     public Integer getWeeklyScheduleId() {
         return this.weeklyScheduleId;
     }

@@ -1,9 +1,18 @@
 package at.fhv.teamb.symphoniacus.persistence.model;
 
-import javax.persistence.*;
 import java.time.LocalDateTime;
 import java.util.HashSet;
 import java.util.Set;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
+import javax.persistence.Table;
 
 @Entity
 @Table(name = "duty")
@@ -39,7 +48,7 @@ public class Duty {
 
     //One-To-Many Part for DUTYPOSITION Table
     @OneToMany(mappedBy = "duty", orphanRemoval = true)
-    private Set<DutyPosition> dutyPositionSet = new HashSet<DutyPosition>();
+    private Set<DutyPosition> dutyPositionSet = new HashSet<>();
 
     //Many-To-One Part for WEEKLYSCHEDULE Table
     @ManyToOne(fetch = FetchType.LAZY)
