@@ -5,6 +5,7 @@ import at.fhv.teamb.symphoniacus.persistence.model.Duty;
 import at.fhv.teamb.symphoniacus.persistence.model.Section;
 import javax.persistence.TypedQuery;
 import java.time.LocalDateTime;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Optional;
 
@@ -16,26 +17,20 @@ public class DutyDAO extends BaseDAO<Duty> {
     }
 
     /**
-     * Returns all duties that are in the week of the given start date (must be Monday).
-     *
-     * @param start A LocalDate of a Monday which serves as the start of the week
-     * @return A List of all Duties that have the date between the given start date plus 6 days
-     * @author Valentin Goronjic
+     * @see #findAllInRange(LocalDateTime, LocalDateTime) 
      */
     public List<Duty> findAllInWeek(LocalDateTime start) {
-        createEntityManager();
-        TypedQuery<Duty> query = this.entityManager.createQuery("SELECT d FROM Duty d WHERE d.start >= :start AND d.end <= :end", Duty.class);
-        query.setMaxResults(300);
-        query.setParameter("start", start);
-        query.setParameter("end", start.plusDays(6));
-        List<Duty> resultList = query.getResultList();
-        tearDown();
-        return resultList;
+        return findAllInRange(start, start.plusDays(6));
     }
 
-    //TODO - IMPLEMENT
-    public List<Duty> findAllInWeek(Section sectionOfUser, LocalDateTime monday) {
-        return null;
+    /**
+     * @see #findAllInRange(Section, LocalDateTime, LocalDateTime) 
+     * @param section
+     * @param start
+     * @return
+     */
+    public List<Duty> findAllInWeek(Section section, LocalDateTime start) {
+        return findAllInRange(section,start, start.plusDays(6));
     }
 
     /**
@@ -47,7 +42,7 @@ public class DutyDAO extends BaseDAO<Duty> {
      * @author Valentin Goronjic
      */
     public List<Duty> findAllInRange(LocalDateTime start, LocalDateTime end) {
-        createEntityManager();
+        this.createEntityManager();
         TypedQuery<Duty> query = this.entityManager.createQuery("SELECT d FROM Duty d WHERE d.start >= :start AND d.end <= :end", Duty.class);
         query.setMaxResults(300);
         query.setParameter("start", start);
@@ -57,9 +52,34 @@ public class DutyDAO extends BaseDAO<Duty> {
         return resultList;
     }
 
-    //TODO - IMPLEMENT
+    /**
+     * Returns all duties in a specific time range that have a sectionMonthlySchedule with this section's sectionId.
+     * @param section
+     * @param start
+     * @param end
+     * @return
+     */
     public List<Duty> findAllInRange(Section section, LocalDateTime start, LocalDateTime end) {
-        return null;
+        if (section == null || start == null || end == null) {
+            // TODO use a proper logger?
+            System.out.println("Cannot findAllInRange with null arguments");
+            return new LinkedList<>();
+        }
+        this.createEntityManager();
+        // TODO check if this is ok ?????
+        TypedQuery<Duty> query = this.entityManager.createQuery("SELECT d FROM Duty d " +
+                "INNER JOIN SectionMonthlySchedule sms ON d.sectionMonthlyScheduleId = sms.sectionMonthlyScheduleId " +
+                "INNER JOIN Section s ON sms.sectionId = s.sectionId " +
+                "WHERE d.start >= :start AND d.end <= :end " +
+                "AND s.sectionId = :sectionId", Duty.class);
+        query.setMaxResults(300);
+        query.setParameter("start", start);
+        query.setParameter("end", end);
+        query.setParameter("sectionId", section.getSectionId());
+
+        List<Duty> resultList = query.getResultList();
+        tearDown();
+        throw new UnsupportedOperationException();
     }
 
     @Override
