@@ -10,7 +10,7 @@ public class UserController {
     private TextFlow txtFlowSection;
 
     @FXML
-    private MenuItem user_logout;
+    private MenuItem userLogout;
 
     @FXML
     void handleUserLogout(ActionEvent event) {

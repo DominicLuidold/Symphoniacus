@@ -25,7 +25,7 @@
                         <Image url="@../images/avatar_roster_responsible.png"/>
                     </ImageView>
                 </graphic>
-                <MenuItem fx:id="user_logout" mnemonicParsing="false" onAction="#handleUserLogout"
+                <MenuItem fx:id="userLogout" mnemonicParsing="false" onAction="#handleUserLogout"
                           text="%menu.user.logout"/>
             </Menu>
         </MenuBar>
