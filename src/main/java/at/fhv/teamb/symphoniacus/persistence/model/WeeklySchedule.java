@@ -34,8 +34,8 @@ public class WeeklySchedule {
     @Column(name = "publishDate")
     private LocalDate publishDate;
 
-    @Column(name = "confirmed")
-    private Boolean confirmed;
+    @Column(name = "isConfirmed")
+    private Boolean isConfirmed;
 
     @Column(name = "monthlyScheduleId", insertable = false, updatable = false)
     private Integer monthlyScheduleId;
@@ -110,12 +110,12 @@ public class WeeklySchedule {
         this.publishDate = publishDate;
     }
 
-    public Boolean getConfirmed() {
-        return this.confirmed;
+    public Boolean getIsConfirmed() {
+        return this.isConfirmed;
     }
 
-    public void setConfirmed(Boolean confirmed) {
-        this.confirmed = confirmed;
+    public void setIsConfirmed(Boolean isConfirmed) {
+        this.isConfirmed = isConfirmed;
     }
 
     public Integer getMonthlyScheduleId() {
