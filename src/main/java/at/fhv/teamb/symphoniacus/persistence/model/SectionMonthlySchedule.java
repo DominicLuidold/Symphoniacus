@@ -24,6 +24,12 @@ public class SectionMonthlySchedule {
     @Column(name = "monthlyScheduleId", insertable = false, updatable = false)
     private Integer monthlyScheduleId;
 
+    @Column(name = "isReadyForDutyScheduler")
+    private Boolean isReadyForDutyScheduler;
+
+    @Column(name = "isReadyForOrganisationManager")
+    private Boolean isReadyForOrganisationManager;
+
     @Column(name = "isPublished")
     private Boolean isPublished;
 
@@ -87,6 +93,22 @@ public class SectionMonthlySchedule {
 
     public void setMonthlyScheduleId(Integer monthlyScheduleId) {
         this.monthlyScheduleId = monthlyScheduleId;
+    }
+
+    public Boolean getIsReadyForDutyScheduler() {
+        return this.isReadyForDutyScheduler;
+    }
+
+    public void setIsReadyForDutyScheduler(Boolean isReadyForDutyScheduler) {
+        this.isReadyForDutyScheduler = isReadyForDutyScheduler;
+    }
+
+    public Boolean getIsReadyForOrganisationManager() {
+        return this.isReadyForOrganisationManager;
+    }
+
+    public void setIsReadyForOrganisationManager(Boolean isReadyForOrganisationManager) {
+        this.isReadyForOrganisationManager = isReadyForOrganisationManager;
     }
 
     public Boolean getIsPublished() {
