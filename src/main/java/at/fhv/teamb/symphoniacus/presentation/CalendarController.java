@@ -30,6 +30,9 @@ public class CalendarController implements Initializable {
     @FXML
     private CalendarView calendarView;
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         // TODO - Wait for UserController and method that returns all accessible sections
