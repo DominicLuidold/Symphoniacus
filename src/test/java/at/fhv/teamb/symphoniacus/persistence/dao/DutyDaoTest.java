@@ -22,7 +22,7 @@ public class DutyDaoTest {
     }
 
     @Test
-    public void testFindAllDutiesForWeek() {
+    public void testFindAllDutiesForWeek_shouldReturnNotNull() {
         List<Duty> list = this.dao.findAllInRange(
             LocalDateTime.of(2020, 3, 30, 0, 0, 0),
             LocalDateTime.of(2020, 4, 5, 0, 0, 0));
@@ -31,14 +31,14 @@ public class DutyDaoTest {
     }
 
     @Test
-    public void findAllInRangeWithSection_shouldReturnMoreThanZero() {
+    public void findAllInRangeWithSection_shouldReturnNotNull() {
         Section s = new Section();
         s.setSectionId(1);
         List<Duty> list = this.dao.findAllInRangeWithSection(s,
             LocalDateTime.of(2020, 5, 1, 0, 0, 0),
             LocalDateTime.of(2020, 5, 1, 14, 0, 0),
             true, false, false);
-        LOG.debug("Result size? " + list);
+        LOG.debug("Result size? " + list.size());
         Assertions.assertTrue(list != null);
     }
 }
