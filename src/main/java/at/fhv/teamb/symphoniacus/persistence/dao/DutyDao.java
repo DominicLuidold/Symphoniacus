@@ -10,6 +10,7 @@ import javax.persistence.TypedQuery;
 
 /**
  * DAO for Duty class.
+ *
  * @author Valentin Goronjic
  */
 public class DutyDao extends BaseDao<Duty> {
@@ -66,7 +67,7 @@ public class DutyDao extends BaseDao<Duty> {
      * @param start   A LocalDateTime that represents the start
      * @return A List of the corresponding duties that were found
      * @see #findAllInRangeWithSection
-     *      (Section, LocalDateTime, LocalDateTime, boolean, boolean, boolean)
+     * (Section, LocalDateTime, LocalDateTime, boolean, boolean, boolean)
      */
     public List<Duty> findAllInRangeWithSection(
         Section section,
@@ -124,6 +125,7 @@ public class DutyDao extends BaseDao<Duty> {
 
     /**
      * Persists a new duty.
+     *
      * @param elem The duty to persist
      * @return The persisted duty filled with its Identifier
      */
@@ -151,6 +153,7 @@ public class DutyDao extends BaseDao<Duty> {
 
     /**
      * Removes a duty.
+     *
      * @param elem The duty to be removed.
      * @return True if the duty was removed
      */
