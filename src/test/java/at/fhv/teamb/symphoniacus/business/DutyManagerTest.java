@@ -30,7 +30,8 @@ class DutyManagerTest {
         this.section = Mockito.mock(Section.class);
         this.dutyManager.dutyDao = Mockito.mock(DutyDao.class);
         when(this.dutyManager.dutyDao
-            .findAllInRange(any(Section.class), any(LocalDateTime.class), any(LocalDateTime.class)))
+            .findAllInRangeWithSection(any(Section.class), any(LocalDateTime.class), any(LocalDateTime.class),
+                false, true, false))
             .thenReturn(new LinkedList<Duty>());
         when(this.section.getSectionId()).thenReturn(4711);
     }

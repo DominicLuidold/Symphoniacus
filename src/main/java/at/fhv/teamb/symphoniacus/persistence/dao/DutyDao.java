@@ -34,7 +34,7 @@ public class DutyDao extends BaseDao<Duty> {
      * @return A List of the corresponding duties that were found
      * @see #findAllInRange(LocalDateTime, LocalDateTime)
      */
-    public List<Duty> findAllInRange(LocalDateTime start) {
+    public List<Duty> findAllInWeek(LocalDateTime start) {
         return findAllInRange(start, start.plusDays(6));
     }
 
@@ -44,13 +44,13 @@ public class DutyDao extends BaseDao<Duty> {
      * @param section The section of the current user
      * @param start   A LocalDateTime that represents the start
      * @return A List of the corresponding duties that were found
-     * @see #findAllInRange(Section, LocalDateTime, LocalDateTime, boolean, boolean, boolean)
+     * @see #findAllInRangeWithSection(Section, LocalDateTime, LocalDateTime, boolean, boolean, boolean)
      */
-    public List<Duty> findAllInRange(Section section, LocalDateTime start,
-                                     boolean isReadyForDutyScheduler,
-                                     boolean isReadyForOrganisationManager,
-                                     boolean isPublished) {
-        return findAllInRange(section, start, start.plusDays(6),
+    public List<Duty> findAllInRangeWithSection(Section section, LocalDateTime start,
+                                                boolean isReadyForDutyScheduler,
+                                                boolean isReadyForOrganisationManager,
+                                                boolean isPublished) {
+        return findAllInRangeWithSection(section, start, start.plusDays(6),
             isReadyForDutyScheduler,
             isReadyForOrganisationManager,
             isPublished);
@@ -87,11 +87,11 @@ public class DutyDao extends BaseDao<Duty> {
      * @param end     A LocalDateTime that represents the end
      * @return A List of the corresponding duties that were found
      */
-    public List<Duty> findAllInRange(Section section, LocalDateTime start,
-                                     LocalDateTime end,
-                                     boolean isReadyForDutyScheduler,
-                                     boolean isReadyForOrganisationManager,
-                                     boolean isPublished) {
+    public List<Duty> findAllInRangeWithSection(Section section, LocalDateTime start,
+                                                LocalDateTime end,
+                                                boolean isReadyForDutyScheduler,
+                                                boolean isReadyForOrganisationManager,
+                                                boolean isPublished) {
         this.createEntityManager();
         TypedQuery<Duty> query = this.entityManager.createQuery("SELECT d FROM Duty d "
             + "INNER JOIN SectionMonthlySchedule sms "

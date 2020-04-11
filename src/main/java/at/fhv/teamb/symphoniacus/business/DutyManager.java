@@ -15,12 +15,11 @@ public class DutyManager {
     }
 
     public List<Duty> findAllInWeek(LocalDate start) {
-        return this.dutyDao.findAllInRange(start.atStartOfDay());
+        return this.dutyDao.findAllInWeek(start.atStartOfDay());
     }
 
     public List<Duty> findAllInWeek(Section sectionOfUser, LocalDate start) {
-        // TODO fix the booleans
-        return this.dutyDao.findAllInRange(sectionOfUser, start.atStartOfDay(),
+        return this.dutyDao.findAllInRangeWithSection(sectionOfUser, start.atStartOfDay(),
             false, false, false);
     }
 
@@ -29,8 +28,7 @@ public class DutyManager {
     }
 
     public List<Duty> findAllInRange(Section sectionOfUser, LocalDate start, LocalDate end) {
-        // TODO fix the booleans
-        return this.dutyDao.findAllInRange(sectionOfUser, start.atStartOfDay(), end.atStartOfDay(),
+        return this.dutyDao.findAllInRangeWithSection(sectionOfUser, start.atStartOfDay(), end.atStartOfDay(),
             false, false, false);
     }
 
