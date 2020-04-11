@@ -12,6 +12,7 @@ import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.Table;
+import javax.persistence.Transient;
 
 @Entity
 @Table(name = "musician")
@@ -65,11 +66,26 @@ public class Musician {
         this.sectionId = sectionId;
     }
 
-    private List<MusicianRole> getMusicianRoles() {
+    public List<MusicianRole> getMusicianRoles() {
         return this.musicianRoles;
     }
 
-    private void addMusicianRole(MusicianRole role) {
+    public void addMusicianRole(MusicianRole role) {
         this.musicianRoles.add(role);
+    }
+
+    public void addAllMusicianRoles(List<MusicianRole> roles) {
+        this.musicianRoles.addAll(roles);
+    }
+
+    @Transient
+    private List<Section> section;
+
+    public void setSection(List<Section> section) {
+        this.section = section;
+    }
+
+    public List<Section> getSection() {
+        return this.section;
     }
 }

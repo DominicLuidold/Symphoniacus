@@ -1,53 +1,54 @@
 package at.fhv.teamb.symphoniacus.application;
 
-import at.fhv.teamb.symphoniacus.domain.DomainMusician;
+import at.fhv.teamb.symphoniacus.persistence.model.Musician;
 import at.fhv.teamb.symphoniacus.persistence.model.MusicianRole;
 import at.fhv.teamb.symphoniacus.persistence.model.Section;
+import at.fhv.teamb.symphoniacus.persistence.model.User;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 
 import static org.junit.jupiter.api.Assertions.*;
 
 /**
+ * Tests for LoginManager.
+ *
  * @author : Danijel Antonijevic
  * @created : 10.04.20, Fr.
  **/
-public class UserManagerTest {
+public class LogInManagerTest {
 
-    private UserManager userManager = new UserManager();
+    private LogInManager logInManager = new LogInManager();
 
     @Test
-    public void login_shouldCreateDomainUser(){
-        assertNull(this.userManager.currentLoggedInUser);
-        userManager.login("TestUser","TestPassword");
-        userManager.currentLoggedInUser = Mockito.mock(DomainMusician.class);
-        assertNotNull(this.userManager.currentLoggedInUser);
-        assertEquals(this.userManager.currentLoggedInUser.getUserShortcut(),"TestUser");
+    public void login_shouldCreateDomainUser() {
+        assertNull(this.logInManager.currentLoggedInUser);
+        logInManager.login("TestUser", "TestPassword");
+        logInManager.currentLoggedInUser = Mockito.mock(User.class);
+        assertNotNull(this.logInManager.currentLoggedInUser);
+        assertEquals(this.logInManager.currentLoggedInUser.getShortcut(), "TestUser");
     }
 
-   /* getCurrentRole()
-    getSectionsAccessibleToUser()*/
 
-   @Test
-    public void getCurrentMusicianRole_shouldReturnCurrentMusicianRole(){
-       DomainMusician m = Mockito.mock(DomainMusician.class);
-       MusicianRole role = new MusicianRole();
-       role.setMusicianRoleId(2);
-       m.addMusicianRoles(role);
-       this.userManager.currentLoggedInUser = m;
-       assertNotNull(this.userManager.currentLoggedInUser);
-       assertTrue(this.userManager.currentLoggedInUser instanceof DomainMusician);
-       DomainMusician musician = (DomainMusician) this.userManager.currentLoggedInUser;
-       assertNotNull(musician.getMusicianRoles());
-       assertTrue(musician.isDutyScheduler());
+    @Test
+    public void getCurrentMusicianRole_shouldReturnCurrentMusicianRole() {
+        Musician m = Mockito.mock(Musician.class);
+        MusicianRole role = new MusicianRole();
+        role.setMusicianRoleId(2);
+        m.addMusicianRoles(role);
+        this.logInManager.currentLoggedInUser = m;
+        assertNotNull(this.logInManager.currentLoggedInUser);
+        assertTrue(this.logInManager.currentLoggedInUser instanceof DomainMusician);
+        DomainMusician musician = (DomainMusician) this.logInManager.currentLoggedInUser;
+        assertNotNull(musician.getMusicianRoles());
+        assertTrue(musician.isDutyScheduler());
     }
 
-    public void getSectionsAccessibleToUser(){
+    public void getSectionsAccessibleToUser() {
         DomainMusician m = Mockito.mock(DomainMusician.class);
         Section section = new Section();
         section.setSectionId(1);
         m.setSection(section);
-        assertNotNull(this.userManager.currentLoggedInUser);
+        assertNotNull(this.logInManager.currentLoggedInUser);
 
     }
 }

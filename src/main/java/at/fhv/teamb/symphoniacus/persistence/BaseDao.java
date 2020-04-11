@@ -1,5 +1,6 @@
 package at.fhv.teamb.symphoniacus.persistence;
 
+import at.fhv.teamb.symphoniacus.persistence.model.User;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.Persistence;
@@ -19,4 +20,5 @@ public abstract class BaseDao<T> implements Dao<T> {
     public void tearDown() {
         this.entityManagerFactory.close();
     }
+
 }

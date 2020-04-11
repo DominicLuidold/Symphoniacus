@@ -1,11 +1,8 @@
 package at.fhv.teamb.symphoniacus.persistence.model;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.Table;
+import at.fhv.teamb.symphoniacus.roleEnum.AdministrativeAssistantEnum;
+
+import javax.persistence.*;
 
 @Entity
 @Table(name = "administrativeAssistant")
@@ -15,8 +12,9 @@ public class AdministrativeAssistant {
     @Column(name = "userId")
     private Integer userId;
 
+    @Enumerated(EnumType.STRING)
     @Column(name = "description")
-    private String description;
+    private AdministrativeAssistantEnum description;
 
     public Integer getUserId() {
         return this.userId;
@@ -26,11 +24,11 @@ public class AdministrativeAssistant {
         this.userId = userId;
     }
 
-    public String getDescription() {
+    public AdministrativeAssistantEnum getDescription() {
         return this.description;
     }
 
-    public void setDescription(String description) {
+    public void setDescription(AdministrativeAssistantEnum description) {
         this.description = description;
     }
 }

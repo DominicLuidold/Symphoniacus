@@ -1,4 +1,4 @@
-package at.fhv.teamb.symphoniacus.business;
+package at.fhv.teamb.symphoniacus.application;
 
 import at.fhv.teamb.symphoniacus.persistence.dao.DutyDao;
 import at.fhv.teamb.symphoniacus.persistence.model.Duty;
@@ -34,4 +34,6 @@ public class DutyManager {
         // Will always jump back to last monday
         return givenDate.with(DayOfWeek.MONDAY);
     }
+
+
 }
