@@ -28,8 +28,9 @@ public class DutyManager {
     }
 
     public List<Duty> findAllInRange(Section sectionOfUser, LocalDate start, LocalDate end) {
-        return this.dutyDao.findAllInRangeWithSection(sectionOfUser, start.atStartOfDay(), end.atStartOfDay(),
-            false, false, false);
+        return this.dutyDao.findAllInRangeWithSection(sectionOfUser, start.atStartOfDay(),
+            end.atStartOfDay(),false, false,
+            false);
     }
 
     public static LocalDate getLastMondayDate(LocalDate givenDate) {

@@ -39,24 +39,6 @@ public class DutyDao extends BaseDao<Duty> {
     }
 
     /**
-     * Finds all duties in a week.
-     *
-     * @param section The section of the current user
-     * @param start   A LocalDateTime that represents the start
-     * @return A List of the corresponding duties that were found
-     * @see #findAllInRangeWithSection(Section, LocalDateTime, LocalDateTime, boolean, boolean, boolean)
-     */
-    public List<Duty> findAllInRangeWithSection(Section section, LocalDateTime start,
-                                                boolean isReadyForDutyScheduler,
-                                                boolean isReadyForOrganisationManager,
-                                                boolean isPublished) {
-        return findAllInRangeWithSection(section, start, start.plusDays(6),
-            isReadyForDutyScheduler,
-            isReadyForOrganisationManager,
-            isPublished);
-    }
-
-    /**
      * Returns all duties that are in the week of the given start and end date.
      *
      * @param start A LocalDateTime that represents the start
@@ -75,6 +57,25 @@ public class DutyDao extends BaseDao<Duty> {
         List<Duty> resultList = query.getResultList();
         this.tearDown();
         return resultList;
+    }
+
+    /**
+     * Finds all duties in a week.
+     *
+     * @param section The section of the current user
+     * @param start   A LocalDateTime that represents the start
+     * @return A List of the corresponding duties that were found
+     * @see #findAllInRangeWithSection
+     *      (Section, LocalDateTime, LocalDateTime, boolean, boolean, boolean)
+     */
+    public List<Duty> findAllInRangeWithSection(Section section, LocalDateTime start,
+                                                boolean isReadyForDutyScheduler,
+                                                boolean isReadyForOrganisationManager,
+                                                boolean isPublished) {
+        return findAllInRangeWithSection(section, start, start.plusDays(6),
+            isReadyForDutyScheduler,
+            isReadyForOrganisationManager,
+            isPublished);
     }
 
     /**
