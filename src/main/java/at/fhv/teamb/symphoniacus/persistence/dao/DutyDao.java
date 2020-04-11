@@ -68,10 +68,13 @@ public class DutyDao extends BaseDao<Duty> {
      * @see #findAllInRangeWithSection
      *      (Section, LocalDateTime, LocalDateTime, boolean, boolean, boolean)
      */
-    public List<Duty> findAllInRangeWithSection(Section section, LocalDateTime start,
-                                                boolean isReadyForDutyScheduler,
-                                                boolean isReadyForOrganisationManager,
-                                                boolean isPublished) {
+    public List<Duty> findAllInRangeWithSection(
+        Section section,
+        LocalDateTime start,
+        boolean isReadyForDutyScheduler,
+        boolean isReadyForOrganisationManager,
+        boolean isPublished
+    ) {
         return findAllInRangeWithSection(section, start, start.plusDays(6),
             isReadyForDutyScheduler,
             isReadyForOrganisationManager,
@@ -88,11 +91,14 @@ public class DutyDao extends BaseDao<Duty> {
      * @param end     A LocalDateTime that represents the end
      * @return A List of the corresponding duties that were found
      */
-    public List<Duty> findAllInRangeWithSection(Section section, LocalDateTime start,
-                                                LocalDateTime end,
-                                                boolean isReadyForDutyScheduler,
-                                                boolean isReadyForOrganisationManager,
-                                                boolean isPublished) {
+    public List<Duty> findAllInRangeWithSection(
+        Section section,
+        LocalDateTime start,
+        LocalDateTime end,
+        boolean isReadyForDutyScheduler,
+        boolean isReadyForOrganisationManager,
+        boolean isPublished
+    ) {
         this.createEntityManager();
         TypedQuery<Duty> query = this.entityManager.createQuery("SELECT d FROM Duty d "
             + "INNER JOIN SectionMonthlySchedule sms "
