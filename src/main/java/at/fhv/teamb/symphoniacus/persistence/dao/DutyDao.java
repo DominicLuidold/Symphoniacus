@@ -3,7 +3,9 @@ package at.fhv.teamb.symphoniacus.persistence.dao;
 import at.fhv.teamb.symphoniacus.persistence.BaseDao;
 import at.fhv.teamb.symphoniacus.persistence.model.Duty;
 import at.fhv.teamb.symphoniacus.persistence.model.Section;
+import at.fhv.teamb.symphoniacus.persistence.model.SectionMonthlySchedule;
 import java.time.LocalDateTime;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Optional;
 import javax.persistence.TypedQuery;
@@ -102,14 +104,14 @@ public class DutyDao extends BaseDao<Duty> {
     ) {
         this.createEntityManager();
         TypedQuery<Duty> query = this.entityManager.createQuery("SELECT d FROM Duty d "
-            + "INNER JOIN SectionMonthlySchedule sms "
-            + "ON d.sectionMonthlyScheduleId = sms.sectionMonthlyScheduleId "
-            + "INNER JOIN Section s ON sms.sectionId = s.sectionId "
-            + "WHERE d.start >= :start AND d.end <= :end "
+            + "INNER JOIN d.sectionMonthlySchedules sms "
+            + "INNER JOIN sms.section s "
+            + "WHERE d.start >= :start AND d.start <= :end "
             + "AND s.sectionId = :sectionId "
             + "AND sms.isReadyForDutyScheduler = :isReadyForDutyScheduler "
             + "AND sms.isReadyForOrganisationManager = :isReadyForOrganisationManager "
             + "AND sms.isPublished = :isPublished", Duty.class);
+
         query.setMaxResults(300);
         query.setParameter("start", start);
         query.setParameter("end", end);
@@ -118,9 +120,10 @@ public class DutyDao extends BaseDao<Duty> {
         query.setParameter("isReadyForOrganisationManager", isReadyForOrganisationManager);
         query.setParameter("isPublished", isPublished);
 
-        List<Duty> resultList = query.getResultList();
+        List<Duty> result = query.getResultList();
+
         this.tearDown();
-        return resultList;
+        return result;
     }
 
     /**
