@@ -18,19 +18,27 @@ public class DutyManager {
         return this.dutyDao.findAllInWeek(start.atStartOfDay());
     }
 
-    public List<Duty> findAllInWeek(Section sectionOfUser, LocalDate start) {
+    public List<Duty> findAllInRangeWithSection(Section sectionOfUser, LocalDate start) {
         return this.dutyDao.findAllInRangeWithSection(sectionOfUser, start.atStartOfDay(),
             false, false, false);
     }
 
-    public List<Duty> findAllInRange(LocalDate start, LocalDate end) {
-        return this.dutyDao.findAllInRange(start.atStartOfDay(), end.atStartOfDay());
-    }
-
-    public List<Duty> findAllInRange(Section sectionOfUser, LocalDate start, LocalDate end) {
+    /**
+     * Finds all duties in a range for a section.
+     * @param sectionOfUser The section of the current user
+     * @param start A LocalDateTime that represents the start
+     * @param end A LocalDateTime that represents the end
+     * @return A List of the matching duties
+     */
+    public List<Duty> findAllInRangeWithSection(Section sectionOfUser, LocalDate start,
+                                                LocalDate end) {
         return this.dutyDao.findAllInRangeWithSection(sectionOfUser, start.atStartOfDay(),
             end.atStartOfDay(),false, false,
             false);
+    }
+
+    public List<Duty> findAllInRange(LocalDate start, LocalDate end) {
+        return this.dutyDao.findAllInRange(start.atStartOfDay(), end.atStartOfDay());
     }
 
     public static LocalDate getLastMondayDate(LocalDate givenDate) {
