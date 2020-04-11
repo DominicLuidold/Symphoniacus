@@ -34,7 +34,7 @@ public class DutyDao extends BaseDao<Duty> {
      * @return A List of the corresponding duties that were found
      * @see #findAllInRange(LocalDateTime, LocalDateTime)
      */
-    public List<Duty> findAllInWeek(LocalDateTime start) {
+    public List<Duty> findAllInRange(LocalDateTime start) {
         return findAllInRange(start, start.plusDays(6));
     }
 
@@ -44,10 +44,16 @@ public class DutyDao extends BaseDao<Duty> {
      * @param section The section of the current user
      * @param start   A LocalDateTime that represents the start
      * @return A List of the corresponding duties that were found
-     * @see #findAllInRange(Section, LocalDateTime, LocalDateTime)
+     * @see #findAllInRange(Section, LocalDateTime, LocalDateTime, boolean, boolean, boolean)
      */
-    public List<Duty> findAllInWeek(Section section, LocalDateTime start) {
-        return findAllInRange(section, start, start.plusDays(6));
+    public List<Duty> findAllInRange(Section section, LocalDateTime start,
+                                     boolean isReadyForDutyScheduler,
+                                     boolean isReadyForOrganisationManager,
+                                     boolean isPublished) {
+        return findAllInRange(section, start, start.plusDays(6),
+            isReadyForDutyScheduler,
+            isReadyForOrganisationManager,
+            isPublished);
     }
 
     /**
@@ -81,7 +87,11 @@ public class DutyDao extends BaseDao<Duty> {
      * @param end     A LocalDateTime that represents the end
      * @return A List of the corresponding duties that were found
      */
-    public List<Duty> findAllInRange(Section section, LocalDateTime start, LocalDateTime end) {
+    public List<Duty> findAllInRange(Section section, LocalDateTime start,
+                                     LocalDateTime end,
+                                     boolean isReadyForDutyScheduler,
+                                     boolean isReadyForOrganisationManager,
+                                     boolean isPublished) {
         this.createEntityManager();
         TypedQuery<Duty> query = this.entityManager.createQuery("SELECT d FROM Duty d "
             + "INNER JOIN SectionMonthlySchedule sms "
@@ -89,11 +99,16 @@ public class DutyDao extends BaseDao<Duty> {
             + "INNER JOIN Section s ON sms.sectionId = s.sectionId "
             + "WHERE d.start >= :start AND d.end <= :end "
             + "AND s.sectionId = :sectionId "
-            + "AND sms.isReadyForDutyScheduler = true", Duty.class);
+            + "AND sms.isReadyForDutyScheduler = :isReadyForDutyScheduler "
+            + "AND sms.isReadyForOrganisationManager = :isReadyForOrganisationManager "
+            + "AND sms.isPublished = :isPublished", Duty.class);
         query.setMaxResults(300);
         query.setParameter("start", start);
         query.setParameter("end", end);
         query.setParameter("sectionId", section.getSectionId());
+        query.setParameter("isReadyForDutyScheduler", isReadyForDutyScheduler);
+        query.setParameter("isReadyForOrganisationManager", isReadyForOrganisationManager);
+        query.setParameter("isPublished", isPublished);
 
         List<Duty> resultList = query.getResultList();
         this.tearDown();

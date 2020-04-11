@@ -15,11 +15,13 @@ public class DutyManager {
     }
 
     public List<Duty> findAllInWeek(LocalDate start) {
-        return this.dutyDao.findAllInWeek(start.atStartOfDay());
+        return this.dutyDao.findAllInRange(start.atStartOfDay());
     }
 
     public List<Duty> findAllInWeek(Section sectionOfUser, LocalDate start) {
-        return this.dutyDao.findAllInWeek(sectionOfUser, start.atStartOfDay());
+        // TODO fix the booleans
+        return this.dutyDao.findAllInRange(sectionOfUser, start.atStartOfDay(),
+            false, false, false);
     }
 
     public List<Duty> findAllInRange(LocalDate start, LocalDate end) {
@@ -27,7 +29,9 @@ public class DutyManager {
     }
 
     public List<Duty> findAllInRange(Section sectionOfUser, LocalDate start, LocalDate end) {
-        return this.dutyDao.findAllInRange(sectionOfUser, start.atStartOfDay(), end.atStartOfDay());
+        // TODO fix the booleans
+        return this.dutyDao.findAllInRange(sectionOfUser, start.atStartOfDay(), end.atStartOfDay(),
+            false, false, false);
     }
 
     public static LocalDate getLastMondayDate(LocalDate givenDate) {
