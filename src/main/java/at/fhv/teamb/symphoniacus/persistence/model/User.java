@@ -50,6 +50,9 @@ public class User {
     @Column(name = "streetNumber")
     private String streetNumber;
 
+    @Column(name = "passwordSalt")
+    private String passwordSalt;
+
     public Integer getUserId() {
         return this.userId;
     }
@@ -147,7 +150,6 @@ public class User {
     }
 
     @Transient
-
     protected DomainUserType type;
 
     public DomainUserType getType() {
@@ -158,4 +160,11 @@ public class User {
         this.type = type;
     }
 
+    public String getPasswordSalt() {
+        return this.passwordSalt;
+    }
+
+    public void setPasswordSalt(String passwordSalt) {
+        this.passwordSalt = passwordSalt;
+    }
 }

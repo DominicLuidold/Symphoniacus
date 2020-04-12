@@ -15,6 +15,12 @@ public class SectionInstrumentation {
     @Column(name = "sectionInstrumentationId")
     private Integer sectionInstrumentationId;
 
+    // TODO - Missing:
+    //  - sectionId
+    //  - Constraint `fk_sectionInstrumentation_section`
+    //    - FOREIGN KEY (`sectionId`)
+    //    - REFERENCES `ni128610_1sql2`.`section` (`sectionId`)
+
     @Column(name = "instrumentationId")
     private Integer instrumentationId;
 

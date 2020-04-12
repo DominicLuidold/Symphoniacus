@@ -30,15 +30,18 @@ class DutyManagerTest {
         this.section = Mockito.mock(Section.class);
         this.dutyManager.dutyDao = Mockito.mock(DutyDao.class);
         when(this.dutyManager.dutyDao
-            .findAllInRange(any(Section.class), any(LocalDateTime.class), any(LocalDateTime.class)))
+            .findAllInRangeWithSection(any(Section.class), any(LocalDateTime.class),
+                any(LocalDateTime.class),any(Boolean.class),
+                any(Boolean.class), any(Boolean.class)))
             .thenReturn(new LinkedList<Duty>());
         when(this.section.getSectionId()).thenReturn(4711);
     }
 
     @Test
     void findAllWithSections_ShouldNotReturnNull() {
-        assertNotNull(this.dutyManager.findAllInRange(this.section, this.testDate, this.testDate));
-        assertNotNull(this.dutyManager.findAllInWeek(this.section, this.testDate));
+        assertNotNull(this.dutyManager.findAllInRangeWithSection(this.section,
+            this.testDate, this.testDate));
+        assertNotNull(this.dutyManager.findAllInRangeWithSection(this.section, this.testDate));
     }
 
     @Test
