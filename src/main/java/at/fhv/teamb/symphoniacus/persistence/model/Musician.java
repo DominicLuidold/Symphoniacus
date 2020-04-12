@@ -22,15 +22,17 @@ public class Musician {
     @Column(name = "musicianId")
     private Integer musicianId;
 
-    @ManyToMany(cascade = {
-        CascadeType.PERSIST,
-        CascadeType.MERGE
-    })
-    @JoinTable(name = "musicianRole",
-        joinColumns = @JoinColumn(name = "musicianRoleId"),
-        inverseJoinColumns = @JoinColumn(name = "musicianId"))
-    @Column(name = "musicianId")
-    private List<MusicianRole> musicianRoles;
+    @ManyToMany
+    @JoinTable(
+        name = "musicianRole_musician",
+        joinColumns = {
+            @JoinColumn(name = "musicianId")
+        },
+        inverseJoinColumns = {
+            @JoinColumn(name = "musicianRoleId")
+        }
+    )
+    private List<MusicianRole> musicianRoles = new LinkedList<>();
 
     @Column(name = "userId")
     private Integer userId;
@@ -38,9 +40,8 @@ public class Musician {
     @Column(name = "sectionId")
     private Integer sectionId;
 
-    public Musician() {
-        this.musicianRoles = new LinkedList<>();
-    }
+    @Transient
+    private List<Section> section;
 
     public Integer getMusicianId() {
         return this.musicianId;
@@ -72,14 +73,13 @@ public class Musician {
 
     public void addMusicianRole(MusicianRole role) {
         this.musicianRoles.add(role);
+        role.addMusician(this);
     }
 
-    public void addAllMusicianRoles(List<MusicianRole> roles) {
-        this.musicianRoles.addAll(roles);
+    public void removeMusicianRole(MusicianRole role) {
+        this.musicianRoles.remove(role);
+        role.removeMusician(this);
     }
-
-    @Transient
-    private List<Section> section;
 
     public void setSection(List<Section> section) {
         this.section = section;

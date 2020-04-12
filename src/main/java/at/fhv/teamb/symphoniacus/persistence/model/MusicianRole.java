@@ -1,10 +1,17 @@
 package at.fhv.teamb.symphoniacus.persistence.model;
 
 import at.fhv.teamb.symphoniacus.roleEnum.MusicianRoleEnum;
-
 import java.util.LinkedList;
 import java.util.List;
-import javax.persistence.*;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.ManyToMany;
+import javax.persistence.Table;
 
 @Entity
 @Table(name = "musicianRole")
@@ -18,22 +25,17 @@ public class MusicianRole {
     @Column(name = "description")
     private MusicianRoleEnum description;
 
-    @ManyToMany(cascade = {
-        CascadeType.PERSIST,
-        CascadeType.MERGE
-    })
-    @JoinTable(name = "musician",
-        joinColumns = @JoinColumn(name = "musicianId"),
-        inverseJoinColumns = @JoinColumn(name = "musicianRoleId"))
-    @Column(name = "musicianId")
-    private List<Musician> musicians;
+    @ManyToMany(mappedBy = "musicianRoles")
+    private List<Musician> musicians = new LinkedList<>();
 
-    @Column(name = "authorization")
-    private String authorization;
+    public void addMusician(Musician m) {
+        musicians.add(m);
+        m.addMusicianRole(this);
+    }
 
-
-    public MusicianRole() {
-        this.musicians = new LinkedList<>();
+    public void removeMusician(Musician m) {
+        musicians.remove(m);
+        m.removeMusicianRole(this);
     }
 
     public Integer getMusicianRoleId() {
@@ -50,13 +52,5 @@ public class MusicianRole {
 
     public void setDescription(MusicianRoleEnum description) {
         this.description = description;
-    }
-
-    public String getAuthorization() {
-        return this.authorization;
-    }
-
-    public void setAuthorization(String authorization) {
-        this.authorization = authorization;
     }
 }
