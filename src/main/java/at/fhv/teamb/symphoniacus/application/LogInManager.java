@@ -1,9 +1,8 @@
 package at.fhv.teamb.symphoniacus.application;
 
+import at.fhv.teamb.symphoniacus.application.roleenum.DomainUserType;
 import at.fhv.teamb.symphoniacus.persistence.dao.UserDao;
 import at.fhv.teamb.symphoniacus.persistence.model.User;
-import at.fhv.teamb.symphoniacus.roleEnum.DomainUserType;
-
 
 public class LogInManager {
 

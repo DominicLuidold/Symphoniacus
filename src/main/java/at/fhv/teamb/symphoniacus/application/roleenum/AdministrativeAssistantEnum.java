@@ -1,9 +1,5 @@
-package at.fhv.teamb.symphoniacus.roleEnum;
+package at.fhv.teamb.symphoniacus.application.roleenum;
 
-/**
- * @author : Danijel Antonijevic
- * @created : 10.04.20, Fr.
- **/
 public enum AdministrativeAssistantEnum {
     ORGANIZATIONAL_OFFICER,
     ORCHESTRA_LIBRARIAN,

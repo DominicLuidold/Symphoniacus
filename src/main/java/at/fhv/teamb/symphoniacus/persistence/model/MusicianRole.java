@@ -1,6 +1,6 @@
 package at.fhv.teamb.symphoniacus.persistence.model;
 
-import at.fhv.teamb.symphoniacus.roleEnum.MusicianRoleEnum;
+import at.fhv.teamb.symphoniacus.application.roleenum.MusicianRoleEnum;
 import java.util.LinkedList;
 import java.util.List;
 import javax.persistence.Column;
