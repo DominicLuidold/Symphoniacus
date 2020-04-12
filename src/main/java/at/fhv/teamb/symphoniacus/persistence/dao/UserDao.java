@@ -42,6 +42,8 @@ public class UserDao extends BaseDao<User> {
 
     /**
      * returns a user if the shortcut and password matches an entry in the database.
+     *
+     * @author : Danijel Antonijevic
      **/
     public User login(String userShortCut, String password) {
         createEntityManager();
@@ -55,7 +57,6 @@ public class UserDao extends BaseDao<User> {
         User result = query.getSingleResult();
         tearDown();
         return result;
-
     }
 
     /**
@@ -63,6 +64,7 @@ public class UserDao extends BaseDao<User> {
      * from the user table matches the userId from the musician table.
      *
      * @param currentUser A musician when currentUser is a Musician
+     * @created : 11.04.20, Sa.
      **/
     public Musician getUserIsMusician(User currentUser) {
         createEntityManager();
@@ -76,4 +78,5 @@ public class UserDao extends BaseDao<User> {
         tearDown();
         return result;
     }
+
 }
