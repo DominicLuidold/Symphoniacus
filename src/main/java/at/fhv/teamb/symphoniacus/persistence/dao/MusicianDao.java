@@ -12,12 +12,11 @@ import javax.persistence.TypedQuery;
 
 
 /**
- * DAO for Users.
+ * DAO for Musicians.
  *
- * @author : Danijel Antonijevic
  * @author : Valentin Goronjic
  */
-public class UserDao extends BaseDao<User> {
+public class MusicianDao extends BaseDao<User> {
     public AdministrativeAssistant getUserIsAdministrativeAssistant;
 
     @Override
@@ -40,40 +39,45 @@ public class UserDao extends BaseDao<User> {
         return null;
     }
 
+
     /**
-     * returns a user if the shortcut and password matches an entry in the database.
+     * returns all musicians rolls of the musician.
+     * from the user table matches the userId from the musician table.
+     *
+     * @param musician The musician for which the roles should be loaded
      **/
-    public User login(String userShortCut, String password) {
+    public List<MusicianRole> getAllMusicianRoles(Musician musician) {
         createEntityManager();
-        TypedQuery<User> query = this.entityManager.createQuery(
-            "SELECT u FROM User u WHERE u.shortcut = :shortc AND u.password = :pwd",
-            User.class
+        TypedQuery<MusicianRole> query = this.entityManager.createQuery(
+            "SELECT mr FROM Musician m "
+                + "INNER JOIN m.musicianRoles mr "
+                + "WHERE m.musicianId = :mId",
+            MusicianRole.class
         );
         query.setMaxResults(300);
-        query.setParameter("shortc", userShortCut);
-        query.setParameter("pwd", password);
-        User result = query.getSingleResult();
+        query.setParameter("mId", musician.getMusicianId());
+        List<MusicianRole> resultList = query.getResultList();
         tearDown();
-        return result;
-
+        return resultList;
     }
 
     /**
-     * returns the linked musician if the userid
+     * searches in the section table for the name
+     * of the musician and returns the corresponding section.
      * from the user table matches the userId from the musician table.
      *
-     * @param currentUser A musician when currentUser is a Musician
+     * @param musician The musician for which the sections should be loaded
      **/
-    public Musician getUserIsMusician(User currentUser) {
+    public List<Section> getSectionsAccessibleToUser(Musician musician) {
         createEntityManager();
-        TypedQuery<Musician> query = this.entityManager.createQuery(
-            "SELECT m FROM Musician m WHERE m.userId = :uId",
-            Musician.class
+        TypedQuery<Section> query = this.entityManager.createQuery(
+            "SELECT s FROM Section s WHERE s.sectionId = :secId",
+            Section.class
         );
         query.setMaxResults(300);
-        query.setParameter("uId", currentUser.getUserId());
-        Musician result = query.getSingleResult();
+        query.setParameter("secId", musician.getSectionId());
+        List<Section> resultList = query.getResultList();
         tearDown();
-        return result;
+        return resultList;
     }
 }
