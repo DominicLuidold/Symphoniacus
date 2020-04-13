@@ -18,9 +18,6 @@ public class MusicianRole {
     @Column(name = "description")
     private String description;
 
-    @Column(name = "authorization")
-    private String authorization;
-
     public Integer getMusicianRoleId() {
         return this.musicianRoleId;
     }
@@ -35,13 +32,5 @@ public class MusicianRole {
 
     public void setDescription(String description) {
         this.description = description;
-    }
-
-    public String getAuthorization() {
-        return this.authorization;
-    }
-
-    public void setAuthorization(String authorization) {
-        this.authorization = authorization;
     }
 }

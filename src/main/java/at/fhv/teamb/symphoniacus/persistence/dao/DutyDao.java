@@ -10,6 +10,7 @@ import javax.persistence.TypedQuery;
 
 /**
  * DAO for Duty class.
+ *
  * @author Valentin Goronjic
  */
 public class DutyDao extends BaseDao<Duty> {
@@ -29,25 +30,14 @@ public class DutyDao extends BaseDao<Duty> {
     }
 
     /**
-     * Finds all duties in a week.
+     * Finds all duties in a week. The start date must be a Monday.
      *
+     * @param start A monday that represents the start of the
      * @return A List of the corresponding duties that were found
      * @see #findAllInRange(LocalDateTime, LocalDateTime)
      */
     public List<Duty> findAllInWeek(LocalDateTime start) {
         return findAllInRange(start, start.plusDays(6));
-    }
-
-    /**
-     * Finds all duties in a week.
-     *
-     * @param section The section of the current user
-     * @param start   A LocalDateTime that represents the start
-     * @return A List of the corresponding duties that were found
-     * @see #findAllInRange(Section, LocalDateTime, LocalDateTime)
-     */
-    public List<Duty> findAllInWeek(Section section, LocalDateTime start) {
-        return findAllInRange(section, start, start.plusDays(6));
     }
 
     /**
@@ -68,7 +58,34 @@ public class DutyDao extends BaseDao<Duty> {
         query.setParameter("end", end);
         List<Duty> resultList = query.getResultList();
         this.tearDown();
+
         return resultList;
+    }
+
+    /**
+     * Finds all duties in a week.
+     *
+     * @param section The section of the current user
+     * @param start   A LocalDateTime that represents the start
+     * @return A List of the corresponding duties that were found
+     * @see #findAllInRangeWithSection
+     * (Section, LocalDateTime, LocalDateTime, boolean, boolean, boolean)
+     */
+    public List<Duty> findAllInWeekWithSection(
+        Section section,
+        LocalDateTime start,
+        boolean isReadyForDutyScheduler,
+        boolean isReadyForOrganisationManager,
+        boolean isPublished
+    ) {
+        return findAllInRangeWithSection(
+            section,
+            start,
+            start.plusDays(6),
+            isReadyForDutyScheduler,
+            isReadyForOrganisationManager,
+            isPublished
+        );
     }
 
     /**
@@ -81,27 +98,42 @@ public class DutyDao extends BaseDao<Duty> {
      * @param end     A LocalDateTime that represents the end
      * @return A List of the corresponding duties that were found
      */
-    public List<Duty> findAllInRange(Section section, LocalDateTime start, LocalDateTime end) {
+    public List<Duty> findAllInRangeWithSection(
+        Section section,
+        LocalDateTime start,
+        LocalDateTime end,
+        boolean isReadyForDutyScheduler,
+        boolean isReadyForOrganisationManager,
+        boolean isPublished
+    ) {
         this.createEntityManager();
         TypedQuery<Duty> query = this.entityManager.createQuery("SELECT d FROM Duty d "
-            + "INNER JOIN SectionMonthlySchedule sms "
-            + "ON d.sectionMonthlyScheduleId = sms.sectionMonthlyScheduleId "
-            + "INNER JOIN Section s ON sms.sectionId = s.sectionId "
-            + "WHERE d.start >= :start AND d.end <= :end "
+            + "INNER JOIN d.sectionMonthlySchedules sms "
+            + "INNER JOIN sms.section s "
+            + "WHERE d.start >= :start AND d.start <= :end "
             + "AND s.sectionId = :sectionId "
-            + "AND sms.isReadyForDutyScheduler = true", Duty.class);
+            + "AND sms.isReadyForDutyScheduler = :isReadyForDutyScheduler "
+            + "AND sms.isReadyForOrganisationManager = :isReadyForOrganisationManager "
+            + "AND sms.isPublished = :isPublished", Duty.class
+        );
+
         query.setMaxResults(300);
         query.setParameter("start", start);
         query.setParameter("end", end);
         query.setParameter("sectionId", section.getSectionId());
+        query.setParameter("isReadyForDutyScheduler", isReadyForDutyScheduler);
+        query.setParameter("isReadyForOrganisationManager", isReadyForOrganisationManager);
+        query.setParameter("isPublished", isPublished);
 
-        List<Duty> resultList = query.getResultList();
+        List<Duty> result = query.getResultList();
+
         this.tearDown();
-        return resultList;
+        return result;
     }
 
     /**
      * Persists a new duty.
+     *
      * @param elem The duty to persist
      * @return The persisted duty filled with its Identifier
      */
@@ -129,6 +161,7 @@ public class DutyDao extends BaseDao<Duty> {
 
     /**
      * Removes a duty.
+     *
      * @param elem The duty to be removed.
      * @return True if the duty was removed
      */
