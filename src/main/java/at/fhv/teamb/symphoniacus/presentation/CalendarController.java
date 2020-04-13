@@ -113,7 +113,7 @@ public class CalendarController implements Initializable {
      */
     public void fillCalendar(Calendar calendar, Section section) {
         fillCalendar(calendar, createDutyCalendarEntries(
-            new DutyManager().findAllInRange(
+            new DutyManager().findAllInRangeWithSection(
                 section,
                 DEFAULT_INTERVAL_START,
                 DEFAULT_INTERVAL_END
@@ -137,7 +137,7 @@ public class CalendarController implements Initializable {
         LocalDate endDate
     ) {
         fillCalendar(calendar, createDutyCalendarEntries(
-            new DutyManager().findAllInRange(
+            new DutyManager().findAllInRangeWithSection(
                 section,
                 startDate,
                 endDate
