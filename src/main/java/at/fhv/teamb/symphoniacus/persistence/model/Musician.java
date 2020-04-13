@@ -19,6 +19,14 @@ import javax.persistence.Table;
 
 @Entity
 @Table(name = "musician")
+@NamedEntityGraph(
+    name="musician-with-collections",
+    attributeNodes = {
+        @NamedAttributeNode("userId"),
+        @NamedAttributeNode("section"),
+        @NamedAttributeNode("musicianRoles")
+    }
+)
 public class Musician {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
