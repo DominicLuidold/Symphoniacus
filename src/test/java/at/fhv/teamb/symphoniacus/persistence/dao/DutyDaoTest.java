@@ -25,7 +25,8 @@ public class DutyDaoTest {
     public void testFindAllDutiesForWeek_shouldReturnNotNull() {
         List<Duty> list = this.dao.findAllInRange(
             LocalDateTime.of(2020, 3, 30, 0, 0, 0),
-            LocalDateTime.of(2020, 4, 5, 0, 0, 0));
+            LocalDateTime.of(2020, 4, 5, 0, 0, 0)
+        );
 
         Assertions.assertTrue(list != null);
     }

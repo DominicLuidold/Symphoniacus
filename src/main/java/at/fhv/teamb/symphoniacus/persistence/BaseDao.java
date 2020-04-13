@@ -9,9 +9,6 @@ public abstract class BaseDao<T> implements Dao<T> {
     protected EntityManagerFactory entityManagerFactory;
     protected EntityManager entityManager;
 
-    public BaseDao() {
-    }
-
     public void createEntityManager() {
         this.entityManagerFactory = Persistence.createEntityManagerFactory("mysqldb");
         this.entityManager = entityManagerFactory.createEntityManager();

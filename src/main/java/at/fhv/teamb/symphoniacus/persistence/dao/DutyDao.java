@@ -3,9 +3,7 @@ package at.fhv.teamb.symphoniacus.persistence.dao;
 import at.fhv.teamb.symphoniacus.persistence.BaseDao;
 import at.fhv.teamb.symphoniacus.persistence.model.Duty;
 import at.fhv.teamb.symphoniacus.persistence.model.Section;
-import at.fhv.teamb.symphoniacus.persistence.model.SectionMonthlySchedule;
 import java.time.LocalDateTime;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Optional;
 import javax.persistence.TypedQuery;
@@ -32,8 +30,9 @@ public class DutyDao extends BaseDao<Duty> {
     }
 
     /**
-     * Finds all duties in a week.
+     * Finds all duties in a week. The start date must be a Monday.
      *
+     * @param start A monday that represents the start of the
      * @return A List of the corresponding duties that were found
      * @see #findAllInRange(LocalDateTime, LocalDateTime)
      */
@@ -59,6 +58,7 @@ public class DutyDao extends BaseDao<Duty> {
         query.setParameter("end", end);
         List<Duty> resultList = query.getResultList();
         this.tearDown();
+
         return resultList;
     }
 
@@ -71,17 +71,21 @@ public class DutyDao extends BaseDao<Duty> {
      * @see #findAllInRangeWithSection
      * (Section, LocalDateTime, LocalDateTime, boolean, boolean, boolean)
      */
-    public List<Duty> findAllInRangeWithSection(
+    public List<Duty> findAllInWeekWithSection(
         Section section,
         LocalDateTime start,
         boolean isReadyForDutyScheduler,
         boolean isReadyForOrganisationManager,
         boolean isPublished
     ) {
-        return findAllInRangeWithSection(section, start, start.plusDays(6),
+        return findAllInRangeWithSection(
+            section,
+            start,
+            start.plusDays(6),
             isReadyForDutyScheduler,
             isReadyForOrganisationManager,
-            isPublished);
+            isPublished
+        );
     }
 
     /**
@@ -110,7 +114,8 @@ public class DutyDao extends BaseDao<Duty> {
             + "AND s.sectionId = :sectionId "
             + "AND sms.isReadyForDutyScheduler = :isReadyForDutyScheduler "
             + "AND sms.isReadyForOrganisationManager = :isReadyForOrganisationManager "
-            + "AND sms.isPublished = :isPublished", Duty.class);
+            + "AND sms.isPublished = :isPublished", Duty.class
+        );
 
         query.setMaxResults(300);
         query.setParameter("start", start);

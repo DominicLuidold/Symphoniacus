@@ -162,7 +162,7 @@ public class Duty {
     }
 
     public Set<SectionMonthlySchedule> getSectionMonthlySchedules() {
-        return sectionMonthlySchedules;
+        return this.sectionMonthlySchedules;
     }
 
     public void setSectionMonthlySchedules(
