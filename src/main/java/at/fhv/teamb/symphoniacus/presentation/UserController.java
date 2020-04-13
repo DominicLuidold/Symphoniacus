@@ -9,8 +9,6 @@ import org.apache.logging.log4j.Logger;
 
 public class UserController {
 
-    private static final Logger LOG = LogManager.getLogger(UserController.class);
-
     @FXML
     private TextFlow txtFlowSection;
 
@@ -19,6 +17,5 @@ public class UserController {
 
     @FXML
     void handleUserLogout(ActionEvent event) {
-        LOG.info("Test");
     }
 }

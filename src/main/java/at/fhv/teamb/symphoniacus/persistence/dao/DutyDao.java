@@ -3,9 +3,7 @@ package at.fhv.teamb.symphoniacus.persistence.dao;
 import at.fhv.teamb.symphoniacus.persistence.BaseDao;
 import at.fhv.teamb.symphoniacus.persistence.model.Duty;
 import at.fhv.teamb.symphoniacus.persistence.model.Section;
-import at.fhv.teamb.symphoniacus.persistence.model.SectionMonthlySchedule;
 import java.time.LocalDateTime;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Optional;
 import javax.persistence.TypedQuery;
@@ -110,7 +108,8 @@ public class DutyDao extends BaseDao<Duty> {
             + "AND s.sectionId = :sectionId "
             + "AND sms.isReadyForDutyScheduler = :isReadyForDutyScheduler "
             + "AND sms.isReadyForOrganisationManager = :isReadyForOrganisationManager "
-            + "AND sms.isPublished = :isPublished", Duty.class);
+            + "AND sms.isPublished = :isPublished", Duty.class
+        );
 
         query.setMaxResults(300);
         query.setParameter("start", start);
