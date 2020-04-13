@@ -5,14 +5,17 @@ import java.util.List;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
+import javax.persistence.ManyToOne;
+import javax.persistence.NamedAttributeNode;
+import javax.persistence.NamedEntityGraph;
 import javax.persistence.Table;
-import javax.persistence.Transient;
 
 @Entity
 @Table(name = "musician")
@@ -37,11 +40,9 @@ public class Musician {
     @Column(name = "userId")
     private Integer userId;
 
-    @Column(name = "sectionId")
-    private Integer sectionId;
-
-    @Transient
-    private List<Section> section;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "sectionId")
+    private Section section;
 
     public Integer getMusicianId() {
         return this.musicianId;
@@ -59,14 +60,6 @@ public class Musician {
         this.userId = userId;
     }
 
-    public Integer getSectionId() {
-        return this.sectionId;
-    }
-
-    public void setSectionId(Integer sectionId) {
-        this.sectionId = sectionId;
-    }
-
     public List<MusicianRole> getMusicianRoles() {
         return this.musicianRoles;
     }
@@ -81,11 +74,22 @@ public class Musician {
         role.removeMusician(this);
     }
 
-    public void setSection(List<Section> section) {
+    public Section getSection() {
+        return section;
+    }
+
+    public void setSection(Section section) {
         this.section = section;
     }
 
-    public List<Section> getSection() {
-        return this.section;
+    @Override
+    public String toString() {
+        return "Musician{" +
+            "musicianId=" + musicianId +
+            ", musicianRoles=" + musicianRoles +
+            ", userId=" + userId +
+            ", section=" + section +
+            '}';
     }
+
 }

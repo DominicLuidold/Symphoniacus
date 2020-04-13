@@ -38,6 +38,9 @@ public class Section {
     @OneToMany(mappedBy = "section", orphanRemoval = true)
     private Set<SectionMonthlySchedule> sectionMonthlyScheduleSet = new HashSet<>();
 
+    @OneToMany(mappedBy = "section", orphanRemoval = true)
+    private Set<Musician> musicians = new HashSet<>();
+
     public Set<SectionMonthlySchedule> getSectionMonthlyScheduleSet() {
         return this.sectionMonthlyScheduleSet;
     }
@@ -74,5 +77,13 @@ public class Section {
 
     public void setDescription(String description) {
         this.description = description;
+    }
+
+    public Set<Musician> getMusicians() {
+        return musicians;
+    }
+
+    public void setMusicians(Set<Musician> musicians) {
+        this.musicians = musicians;
     }
 }
