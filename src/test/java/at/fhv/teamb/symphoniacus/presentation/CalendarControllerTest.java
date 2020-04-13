@@ -2,6 +2,7 @@ package at.fhv.teamb.symphoniacus.presentation;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.doAnswer;
@@ -26,8 +27,10 @@ class CalendarControllerTest {
     @Test
     void prepareCalendarSource_ShouldPrepareCalendarSource() {
         // Given
+        Section section = new Section();
+        section.setDescription("Test Section 1");
+        section.setSectionShortcut("TS1");
         String name = "Test Source";
-        List<Section> sections = prepareTestSections();
 
         CalendarController controller = spy(CalendarController.class);
         doAnswer((Answer<Void>) invocation -> {
@@ -39,44 +42,36 @@ class CalendarControllerTest {
         }).when(controller).fillCalendar(any(Calendar.class), any(Section.class));
 
         // When
-        CalendarSource source = controller.prepareCalendarSource(name, sections);
+        CalendarSource source = controller.prepareCalendarSource(name, section);
 
         // Then
         assertEquals(name, source.getName(), "Given name and CalendarSource name should be equal");
-        assertEquals(
-            sections.size(),
-            source.getCalendars().size(),
-            "Amount of Sections and Calendars should be equal"
-        );
+        assertEquals(1, source.getCalendars().size(), "CalendarSource should have one calendar");
     }
 
     @Test
-    void createCalendars_ShouldCreateCalendars() {
+    void createCalendar_ShouldCreateCalendar() {
         // Given
-        List<Section> sections = prepareTestSections();
+        Section section = new Section();
+        section.setDescription("Test Section 1");
+        section.setSectionShortcut("TS1");
 
         // When
-        List<Calendar> calendars = new CalendarController().createCalendars(sections);
+        Calendar calendar = new CalendarController().createCalendar(section);
 
         // Then
         assertEquals(
-            sections.size(),
-            calendars.size(),
-            "Amount of Sections and Entries should be equal"
+            section.getDescription(),
+            calendar.getName(),
+            "Section and Calendar should have same name"
         );
-        for (int i = 0; i < calendars.size(); i++) {
-            assertEquals(
-                sections.get(i).getDescription(),
-                calendars.get(i).getName(),
-                "Section and Calendar should have same name"
-            );
-            assertEquals(
-                sections.get(i).getSectionShortcut(),
-                calendars.get(i).getShortName(),
-                "Section and Calendar should have same short name"
-            );
-            assertTrue(calendars.get(i).isReadOnly(), "Calendar should be marked as read only");
-        }
+        assertEquals(
+            section.getSectionShortcut(),
+            calendar.getShortName(),
+            "Section and Calendar should have same short name"
+        );
+        assertTrue(calendar.isReadOnly(), "Calendar should be marked as read only");
+        assertNotNull(calendar.getStyle(), "Calendar should have a style");
     }
 
     @Test
@@ -130,24 +125,6 @@ class CalendarControllerTest {
                 "Duty and Entry should have same end time/day"
             );
         }
-    }
-
-    /**
-     * Prepares a List of {@link Section}s with test data.
-     *
-     * @return A list of Sections
-     */
-    private List<Section> prepareTestSections() {
-        // Given
-        Section testSection1 = new Section();
-        testSection1.setDescription("Test Section 1");
-        testSection1.setSectionShortcut("TS1");
-
-        Section testSection2 = new Section();
-        testSection2.setDescription("Test Section 2");
-        testSection2.setSectionShortcut("TS2");
-
-        return new LinkedList<>(Arrays.asList(testSection1, testSection2));
     }
 
     /**

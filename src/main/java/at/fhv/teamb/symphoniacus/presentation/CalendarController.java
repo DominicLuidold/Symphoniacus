@@ -10,13 +10,19 @@ import com.calendarfx.model.Interval;
 import com.calendarfx.view.CalendarView;
 import java.net.URL;
 import java.time.LocalDate;
-import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.ResourceBundle;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 
+/**
+ * This controller is responsible for handling all CalendarFX related actions such as
+ * creating Calendar {@link Entry} objects, filling a {@link Calendar} and preparing it
+ * for display.
+ *
+ * @author Dominic Luidold
+ */
 public class CalendarController implements Initializable {
     /**
      * Default interval start date represents {@link LocalDate#now()}.
@@ -35,70 +41,51 @@ public class CalendarController implements Initializable {
      */
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-        // TODO - Wait for UserController and method that returns all accessible sections
-        Section test = new Section();
-        test.setDescription("Test Test");
-        test.setSectionId(1);
-        test.setSectionShortcut("T");
+        // TODO - Wait for UserController and method that returns user-specific section
+        Section section = new Section();
+        section.setDescription("Test Test");
+        section.setSectionId(1);
+        section.setSectionShortcut("T");
 
-        Section test2 = new Section();
-        test2.setDescription("Another Test");
-        test2.setSectionId(2);
-        test2.setSectionShortcut("B");
-
-        List<Section> sections = new LinkedList<>(Arrays.asList(test, test2));
-        calendarView.getCalendarSources().setAll(
+        this.calendarView.getCalendarSources().setAll(
             prepareCalendarSource(
                 resources.getString("sections"),
-                sections // TODO
+                section // TODO
             )
         );
     }
 
     /**
-     * Prepares a {@link CalendarSource} by creating {@link Calendar}s and subsequently filling
-     * them with {@link Entry} objects.
+     * Prepares a {@link CalendarSource} by creating a {@link Calendar} and subsequently filling
+     * it with {@link Entry} objects.
      *
-     * @param name     Name of the CalendarSource
-     * @param sections List of sections
-     * @return A CalendarSource containing Calendars and Entries
+     * @param name    Name of the CalendarSource
+     * @param section The section to use
+     * @return A CalendarSource containing a Calendar and Entries
      */
-    public CalendarSource prepareCalendarSource(String name, List<Section> sections) {
+    public CalendarSource prepareCalendarSource(String name, Section section) {
         CalendarSource calendarSource = new CalendarSource(name);
-        List<Calendar> calendars = createCalendars(sections);
-        for (Calendar calendar : calendars) {
-            for (Section section : sections) {
-                if (calendar.getName().equals(section.getDescription())
-                    && calendar.getShortName().equals(section.getSectionShortcut())
-                ) {
-                    fillCalendar(calendar, section);
-                    calendarSource.getCalendars().add(calendar);
-                }
-            }
-        }
+        Calendar calendar = createCalendar(section);
+        fillCalendar(calendar, section);
+        calendarSource.getCalendars().add(calendar);
         return calendarSource;
     }
 
     /**
-     * Creates {@link Calendar}s based on specified {@link Section}s.
+     * Creates a {@link Calendar} based on specified {@link Section}.
      *
-     * <p>Each calendar will have a {@link Calendar.Style} assigned and will be marked as
+     * <p>The calendar will have a {@link Calendar.Style} assigned and will be marked as
      * {@code readOnly}.
      *
-     * @param sections A List of sections
-     * @return A List of Calendars
+     * @param section The section to use
+     * @return A Calendar
      */
-    public List<Calendar> createCalendars(List<Section> sections) {
-        List<Calendar> calendars = new LinkedList<>();
-        int i = 0;
-        for (Section section : sections) {
-            Calendar calendar = new Calendar(section.getDescription());
-            calendar.setShortName(section.getSectionShortcut());
-            calendar.setReadOnly(true);
-            calendar.setStyle(Calendar.Style.getStyle(i++));
-            calendars.add(calendar);
-        }
-        return calendars;
+    public Calendar createCalendar(Section section) {
+        Calendar calendar = new Calendar(section.getDescription());
+        calendar.setShortName(section.getSectionShortcut());
+        calendar.setReadOnly(true);
+        calendar.setStyle(Calendar.Style.STYLE1);
+        return calendar;
     }
 
     /**
