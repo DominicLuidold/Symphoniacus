@@ -37,11 +37,11 @@ public class DutyManager {
      * @param start         A LocalDate that represents the start
      * @return A List of the matching duties
      */
-    public List<Duty> findAllInRangeWithSection(
+    public List<Duty> findAllInWeekWithSection(
         Section sectionOfUser,
         LocalDate start
     ) {
-        return this.dutyDao.findAllInRangeWithSection(
+        return this.dutyDao.findAllInWeekWithSection(
             sectionOfUser,
             getLastMondayDate(start).atStartOfDay(),
             false,

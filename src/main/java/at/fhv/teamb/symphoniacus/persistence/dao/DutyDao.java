@@ -71,7 +71,7 @@ public class DutyDao extends BaseDao<Duty> {
      * @see #findAllInRangeWithSection
      * (Section, LocalDateTime, LocalDateTime, boolean, boolean, boolean)
      */
-    public List<Duty> findAllInRangeWithSection(
+    public List<Duty> findAllInWeekWithSection(
         Section section,
         LocalDateTime start,
         boolean isReadyForDutyScheduler,

@@ -49,7 +49,7 @@ class DutyManagerTest {
     void findAllWithSections_ShouldNotReturnNull() {
         assertNotNull(this.dutyManager.findAllInRangeWithSection(this.section,
             this.testDate, this.testDate));
-        assertNotNull(this.dutyManager.findAllInRangeWithSection(this.section, this.testDate));
+        assertNotNull(this.dutyManager.findAllInWeekWithSection(this.section, this.testDate));
     }
 
     @Test
