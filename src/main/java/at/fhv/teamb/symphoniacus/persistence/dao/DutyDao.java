@@ -30,8 +30,9 @@ public class DutyDao extends BaseDao<Duty> {
     }
 
     /**
-     * Finds all duties in a week.
+     * Finds all duties in a week. The start date must be a Monday.
      *
+     * @param start A monday that represents the start of the
      * @return A List of the corresponding duties that were found
      * @see #findAllInRange(LocalDateTime, LocalDateTime)
      */
@@ -57,6 +58,7 @@ public class DutyDao extends BaseDao<Duty> {
         query.setParameter("end", end);
         List<Duty> resultList = query.getResultList();
         this.tearDown();
+
         return resultList;
     }
 
