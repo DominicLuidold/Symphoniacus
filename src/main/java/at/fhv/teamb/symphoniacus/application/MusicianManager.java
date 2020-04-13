@@ -3,11 +3,8 @@ package at.fhv.teamb.symphoniacus.application;
 
 import at.fhv.teamb.symphoniacus.persistence.dao.MusicianDao;
 import at.fhv.teamb.symphoniacus.persistence.model.Musician;
-import at.fhv.teamb.symphoniacus.persistence.model.MusicianRole;
 import at.fhv.teamb.symphoniacus.persistence.model.Section;
 import at.fhv.teamb.symphoniacus.persistence.model.User;
-import java.util.LinkedList;
-import java.util.List;
 import java.util.Optional;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -42,43 +39,16 @@ public class MusicianManager extends LogInManager {
         return m;
     }
 
-    /**
-     * Is responsible for retrieving all roles of the musicians
-     * from the database .
-     **/
-    public List<MusicianRole> getCurrentRole(User user) {
-        // TODO this implementation is broken.
-        // It will re-add the roles every time the GUI calls this
+    public Section getSectionsAccessibleToUser(User user) {
         if (user != null) {
-            this.currentMusician = userDao.getUserIsMusician(user);
-            if (this.currentMusician != null) {
-                List<MusicianRole> roles = musicianDao.getAllMusicianRoles(currentMusician);
-                for (MusicianRole mr : roles) {
-                    this.currentMusician.addMusicianRole(mr);
-                }
-                return this.currentMusician.getMusicianRoles();
+            if (this.userDao.isUserMusician(user) == true) {
+                this.currentMusician = musicianDao.find(user.getUserId()).get();
             }
+        } else {
+            LOG.error("Cannot load section for null user");
         }
-        return new LinkedList<>();
-    }
 
-    /**
-     * Is responsible for retrieving corresponding sections of the musician
-     * from the database .
-     **/
-    public List<Section> getSectionsAccessibleToUser(User user) {
-        // TODO this implementation is broken.
-        // It will re-set the sections every time the GUI calls this
-        if (user != null) {
-            if (this.userDao.getUserIsMusician(user) != null) {
-                this.currentMusician = userDao.getUserIsMusician(user);
-                if (this.currentMusician != null) {
-                    this.currentMusician = musicianDao.find(user.getUserId()).get();
-                }
-            }
-
-        }
-        return new LinkedList<>();
+        return this.currentMusician.getSection();
     }
 
 }

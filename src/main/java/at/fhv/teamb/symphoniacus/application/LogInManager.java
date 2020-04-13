@@ -3,9 +3,13 @@ package at.fhv.teamb.symphoniacus.application;
 import at.fhv.teamb.symphoniacus.application.roleenum.DomainUserType;
 import at.fhv.teamb.symphoniacus.persistence.dao.UserDao;
 import at.fhv.teamb.symphoniacus.persistence.model.User;
+import java.util.Optional;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 public class LogInManager {
 
+    private static final Logger LOG = LogManager.getLogger(LogInManager.class);
     protected UserDao userDao;
     protected User currentLoggedInUser;
 
@@ -13,26 +17,25 @@ public class LogInManager {
         this.userDao = new UserDao();
     }
 
-    /**
-     * Checks the input data of the user who wants to log on, if successful then a user is returned.
-     *
-     * @author : Danijel Antonijevic
-     * @created : 10.04.20, Fr.
-     **/
-    public User login(String userShortCut, String userPassword) {
+    public Optional<User> login(String userShortCut, String userPassword) {
 
         if (userShortCut != null && userPassword != null) {
-            this.currentLoggedInUser = this.userDao.login(userShortCut, userPassword);
-
-            if (this.currentLoggedInUser != null) {
-                if (this.userDao.getUserIsMusician(this.currentLoggedInUser) != null) {
-                    this.currentLoggedInUser.setType(DomainUserType.DOMAIN_MUSICIAN);
-                } else if (this.userDao.getUserIsAdministrativeAssistant != null) {
-                    //TODO
-                }
+            Optional<User> user = this.userDao.login(userShortCut, userPassword);
+            if (user.isEmpty()) {
+                LOG.error("Login not possible");
+                return user;
             }
+
+            if (this.userDao.isUserMusician(this.currentLoggedInUser) == true) {
+                user.get().setType(DomainUserType.DOMAIN_MUSICIAN);
+            } else if (this.userDao.getUserIsAdministrativeAssistant != null) {
+                //TODO
+            }
+            this.currentLoggedInUser = user.get();
+            return user;
         }
-        return this.currentLoggedInUser;
+        LOG.error("Login not possible, either userShortCut or userPassword is null");
+        return Optional.empty();
     }
 }
 

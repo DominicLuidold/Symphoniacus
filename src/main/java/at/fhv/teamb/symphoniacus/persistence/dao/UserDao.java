@@ -57,22 +57,20 @@ public class UserDao extends BaseDao<User> {
         return Optional.of(result);
     }
 
-    /**
-     * Returns a {@link Musician} object if the provided {@link User} is a musician.
-     *
-     * @param currentUser The user representing a potential musician
-     * @return A Musician object representing the user
-     */
-    public Optional<Musician> getUserIsMusician(User currentUser) {
+    public boolean isUserMusician(User currentUser) {
         this.createEntityManager();
-        TypedQuery<Musician> query = this.entityManager.createQuery(
-            "SELECT m FROM Musician m WHERE m.userId = :uId",
-            Musician.class
+        TypedQuery<Long> query = this.entityManager.createQuery(
+            "SELECT COUNT(m) FROM Musician m WHERE m.userId = :uId",
+            Long.class
         );
         query.setParameter("uId", currentUser.getUserId());
-        Musician result = query.getSingleResult();
+        Long result = query.getSingleResult();
         this.tearDown();
 
-        return Optional.of(result);
+        if (result == 1) {
+            return true;
+        } else {
+            return false;
+        }
     }
 }
