@@ -79,7 +79,8 @@ public class DutyDao extends BaseDao<Duty> {
         boolean isPublished
     ) {
         return findAllInRangeWithSection(
-            section, start,
+            section,
+            start,
             start.plusDays(6),
             isReadyForDutyScheduler,
             isReadyForOrganisationManager,
