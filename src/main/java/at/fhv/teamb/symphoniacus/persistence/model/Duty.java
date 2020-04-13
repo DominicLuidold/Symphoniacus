@@ -10,6 +10,8 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
+import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
@@ -27,9 +29,6 @@ public class Duty {
 
     @Column(name = "dutyCategoryId")
     private Integer dutyCategoryId;
-
-    @Column(name = "sectionMonthlyScheduleId", insertable = false, updatable = false)
-    private Integer sectionMonthlyScheduleId;
 
     @Column(name = "description")
     private String description;
@@ -55,10 +54,17 @@ public class Duty {
     @JoinColumn(name = "weeklyScheduleId")
     private WeeklySchedule weeklySchedule;
 
-    //Many-To-One Part for SECTIONMONTHLYSCHEDULE Table
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "sectionMonthlyScheduleId")
-    private SectionMonthlySchedule sectionMonthlySchedule;
+    @ManyToMany
+    @JoinTable(
+        name = "duty_sectionMonthlySchedule",
+        joinColumns = {
+            @JoinColumn(name = "dutyId")
+        },
+        inverseJoinColumns = {
+            @JoinColumn(name = "sectionMonthlyScheduleId")
+        }
+    )
+    private Set<SectionMonthlySchedule> sectionMonthlySchedules = new HashSet<>();
 
     public Set<DutyPosition> getDutyPositionSet() {
         return this.dutyPositionSet;
@@ -79,14 +85,6 @@ public class Duty {
 
     public void setWeeklySchedule(WeeklySchedule weeklySchedule) {
         this.weeklySchedule = weeklySchedule;
-    }
-
-    public SectionMonthlySchedule getSectionMonthlySchedule() {
-        return this.sectionMonthlySchedule;
-    }
-
-    public void setSectionMonthlySchedule(SectionMonthlySchedule sectionMonthlySchedule) {
-        this.sectionMonthlySchedule = sectionMonthlySchedule;
     }
 
     public Integer getDutyId() {
@@ -111,14 +109,6 @@ public class Duty {
 
     public void setDutyCategoryId(Integer dutyCategoryId) {
         this.dutyCategoryId = dutyCategoryId;
-    }
-
-    public Integer getSectionMonthlyScheduleId() {
-        return this.sectionMonthlyScheduleId;
-    }
-
-    public void setSectionMonthlyScheduleId(Integer sectionMonthlyScheduleId) {
-        this.sectionMonthlyScheduleId = sectionMonthlyScheduleId;
     }
 
     public String getDescription() {
@@ -159,5 +149,24 @@ public class Duty {
 
     public void setSeriesOfPerformancesId(Integer seriesOfPerformancesId) {
         this.seriesOfPerformancesId = seriesOfPerformancesId;
+    }
+
+    public void addSectionMonthlySchedule(SectionMonthlySchedule sms) {
+        this.sectionMonthlySchedules.add(sms);
+        sms.getDuties().add(this);
+    }
+
+    public void removeSectionMonthlySchedule(SectionMonthlySchedule sms) {
+        this.sectionMonthlySchedules.remove(sms);
+        sms.getDuties().remove(this);
+    }
+
+    public Set<SectionMonthlySchedule> getSectionMonthlySchedules() {
+        return this.sectionMonthlySchedules;
+    }
+
+    public void setSectionMonthlySchedules(
+        Set<SectionMonthlySchedule> sectionMonthlySchedules) {
+        this.sectionMonthlySchedules = sectionMonthlySchedules;
     }
 }

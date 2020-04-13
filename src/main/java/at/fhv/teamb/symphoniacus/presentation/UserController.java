@@ -6,6 +6,7 @@ import javafx.scene.control.MenuItem;
 import javafx.scene.text.TextFlow;
 
 public class UserController {
+
     @FXML
     private TextFlow txtFlowSection;
 
@@ -14,6 +15,5 @@ public class UserController {
 
     @FXML
     void handleUserLogout(ActionEvent event) {
-        System.out.println("test");
     }
 }

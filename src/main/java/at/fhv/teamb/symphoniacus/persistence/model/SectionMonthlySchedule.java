@@ -9,8 +9,8 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
+import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
-import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
 @Entity
@@ -46,9 +46,8 @@ public class SectionMonthlySchedule {
     @JoinColumn(name = "sectionId")
     private Section section;
 
-    //One-To-Many Part for DUTY Table
-    @OneToMany(mappedBy = "sectionMonthlySchedule", orphanRemoval = true)
-    private Set<Duty> dutySet = new HashSet<>();
+    @ManyToMany(mappedBy = "sectionMonthlySchedules")
+    private Set<Duty> duties = new HashSet<>();
 
     public MonthlySchedule getMonthlySchedule() {
         return this.monthlySchedule;
@@ -66,17 +65,22 @@ public class SectionMonthlySchedule {
         this.section = section;
     }
 
-    public Set<Duty> getDutySet() {
-        return this.dutySet;
+    public Set<Duty> getDuties() {
+        return this.duties;
     }
 
-    public void setDutySet(Set<Duty> dutySet) {
-        this.dutySet = dutySet;
+    public void setDuties(Set<Duty> dutySet) {
+        this.duties = dutySet;
     }
 
     public void addDuty(Duty duty) {
-        this.dutySet.add(duty);
-        duty.setSectionMonthlySchedule(this);
+        this.duties.add(duty);
+        duty.getSectionMonthlySchedules().add(this);
+    }
+
+    public void removeDuty(Duty duty) {
+        this.duties.remove(duty);
+        duty.getSectionMonthlySchedules().remove(this);
     }
 
     public Integer getSectionMonthlyScheduleId() {

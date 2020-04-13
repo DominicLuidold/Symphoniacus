@@ -8,49 +8,47 @@ import java.util.List;
 import java.util.Optional;
 import javax.persistence.TypedQuery;
 
+/**
+ * DAO for Duty class.
+ *
+ * @author Valentin Goronjic
+ */
 public class DutyDao extends BaseDao<Duty> {
 
+    /**
+     * Finds a duty by its key.
+     *
+     * @param key The key of the duty
+     * @return The duty that is looked for
+     */
     @Override
     public Optional<Duty> find(Object key) {
-        return Optional.empty();
+        this.createEntityManager();
+        Duty d = this.entityManager.find(Duty.class, key);
+        this.tearDown();
+        return Optional.of(d);
     }
 
     /**
-     * Returns all duties that are in the week of the given start date (must be Monday).
+     * Finds all duties in a week. The start date must be a Monday.
      *
-     * @param start A LocalDate of a Monday which serves as the start of the week
-     * @return A List of all Duties that have the date between the given start date plus 6 days
-     * @author Valentin Goronjic
+     * @param start A monday that represents the start of the
+     * @return A List of the corresponding duties that were found
+     * @see #findAllInRange(LocalDateTime, LocalDateTime)
      */
     public List<Duty> findAllInWeek(LocalDateTime start) {
-        createEntityManager();
-        TypedQuery<Duty> query = this.entityManager.createQuery(
-            "SELECT d FROM Duty d WHERE d.start >= :start AND d.end <= :end",
-            Duty.class
-        );
-        query.setMaxResults(300);
-        query.setParameter("start", start);
-        query.setParameter("end", start.plusDays(6));
-        List<Duty> resultList = query.getResultList();
-        tearDown();
-        return resultList;
-    }
-
-    //TODO - IMPLEMENT
-    public List<Duty> findAllInWeek(Section sectionOfUser, LocalDateTime monday) {
-        return null;
+        return findAllInRange(start, start.plusDays(6));
     }
 
     /**
      * Returns all duties that are in the week of the given start and end date.
      *
-     * @param start A LocalDate that represents the start of the week
-     * @param end   A LocalDate that represents the end of the week
+     * @param start A LocalDateTime that represents the start
+     * @param end   A LocalDateTime that represents the end
      * @return A List of all Duties that have the date between the given start and end dates
-     * @author Valentin Goronjic
      */
     public List<Duty> findAllInRange(LocalDateTime start, LocalDateTime end) {
-        createEntityManager();
+        this.createEntityManager();
         TypedQuery<Duty> query = this.entityManager.createQuery(
             "SELECT d FROM Duty d WHERE d.start >= :start AND d.end <= :end",
             Duty.class
@@ -59,27 +57,119 @@ public class DutyDao extends BaseDao<Duty> {
         query.setParameter("start", start);
         query.setParameter("end", end);
         List<Duty> resultList = query.getResultList();
-        tearDown();
+        this.tearDown();
+
         return resultList;
     }
 
-    //TODO - IMPLEMENT
-    public List<Duty> findAllInRange(Section section, LocalDateTime start, LocalDateTime end) {
-        return null;
+    /**
+     * Finds all duties in a week.
+     *
+     * @param section The section of the current user
+     * @param start   A LocalDateTime that represents the start
+     * @return A List of the corresponding duties that were found
+     * @see #findAllInRangeWithSection
+     * (Section, LocalDateTime, LocalDateTime, boolean, boolean, boolean)
+     */
+    public List<Duty> findAllInWeekWithSection(
+        Section section,
+        LocalDateTime start,
+        boolean isReadyForDutyScheduler,
+        boolean isReadyForOrganisationManager,
+        boolean isPublished
+    ) {
+        return findAllInRangeWithSection(
+            section,
+            start,
+            start.plusDays(6),
+            isReadyForDutyScheduler,
+            isReadyForOrganisationManager,
+            isPublished
+        );
     }
 
+    /**
+     * Returns all duties in a specific time range that have a sectionMonthlySchedule
+     * with this section's sectionId where the flag isReadyForDutyScheduler
+     * is true.
+     *
+     * @param section The section of the current user
+     * @param start   A LocalDateTime that represents the start
+     * @param end     A LocalDateTime that represents the end
+     * @return A List of the corresponding duties that were found
+     */
+    public List<Duty> findAllInRangeWithSection(
+        Section section,
+        LocalDateTime start,
+        LocalDateTime end,
+        boolean isReadyForDutyScheduler,
+        boolean isReadyForOrganisationManager,
+        boolean isPublished
+    ) {
+        this.createEntityManager();
+        TypedQuery<Duty> query = this.entityManager.createQuery("SELECT d FROM Duty d "
+            + "INNER JOIN d.sectionMonthlySchedules sms "
+            + "INNER JOIN sms.section s "
+            + "WHERE d.start >= :start AND d.start <= :end "
+            + "AND s.sectionId = :sectionId "
+            + "AND sms.isReadyForDutyScheduler = :isReadyForDutyScheduler "
+            + "AND sms.isReadyForOrganisationManager = :isReadyForOrganisationManager "
+            + "AND sms.isPublished = :isPublished", Duty.class
+        );
+
+        query.setMaxResults(300);
+        query.setParameter("start", start);
+        query.setParameter("end", end);
+        query.setParameter("sectionId", section.getSectionId());
+        query.setParameter("isReadyForDutyScheduler", isReadyForDutyScheduler);
+        query.setParameter("isReadyForOrganisationManager", isReadyForOrganisationManager);
+        query.setParameter("isPublished", isPublished);
+
+        List<Duty> result = query.getResultList();
+
+        this.tearDown();
+        return result;
+    }
+
+    /**
+     * Persists a new duty.
+     *
+     * @param elem The duty to persist
+     * @return The persisted duty filled with its Identifier
+     */
     @Override
     public Optional<Duty> persist(Duty elem) {
-        return Optional.empty();
+        this.createEntityManager();
+        this.entityManager.persist(elem);
+        this.tearDown();
+        return Optional.of(elem);
     }
 
+    /**
+     * Updates an existing duty.
+     *
+     * @param elem The duty to be updated
+     * @return The updated duty
+     */
     @Override
     public Optional<Duty> update(Duty elem) {
-        return Optional.empty();
+        this.createEntityManager();
+        this.entityManager.merge(elem);
+        this.tearDown();
+        return Optional.of(elem);
     }
 
+    /**
+     * Removes a duty.
+     *
+     * @param elem The duty to be removed.
+     * @return True if the duty was removed
+     */
     @Override
     public Boolean remove(Duty elem) {
-        return null;
+        this.createEntityManager();
+        this.entityManager.remove(elem);
+        this.tearDown();
+        return true;
     }
 }
