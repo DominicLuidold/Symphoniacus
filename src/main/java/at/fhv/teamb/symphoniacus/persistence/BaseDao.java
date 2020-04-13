@@ -18,7 +18,9 @@ public abstract class BaseDao<T> implements Dao<T> {
      * Creates a new {@link EntityManager} that can be used to create new connections.
      */
     public void createEntityManager() {
-        this.entityManagerFactory = Persistence.createEntityManagerFactory("mysqldb");
+        this.entityManagerFactory = Persistence.createEntityManagerFactory(
+            "mysqldb"
+        );
         this.entityManager = entityManagerFactory.createEntityManager();
     }
 
