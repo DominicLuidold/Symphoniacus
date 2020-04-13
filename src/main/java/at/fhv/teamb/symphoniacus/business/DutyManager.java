@@ -20,11 +20,11 @@ public class DutyManager {
     }
 
     /**
-     * Finds all duties within a full week (any Date can be given)
-     *
+     * Finds all duties within a full week (any Date can be given).
      * converts the given Date the last Monday
-     * @param start     is any given Date
-     * @return          a List of all matching duties
+     *
+     * @param start is any given Date
+     * @return a List of all matching duties
      */
     public List<Duty> findAllInWeek(LocalDate start) {
         return this.dutyDao.findAllInWeek(getLastMondayDate(start).atStartOfDay());
@@ -35,7 +35,7 @@ public class DutyManager {
      *
      * @param sectionOfUser The section of the current user
      * @param start         A LocalDate that represents the start
-     * @return              A List of the matching duties
+     * @return A List of the matching duties
      */
     public List<Duty> findAllInRangeWithSection(
         Section sectionOfUser,
@@ -56,7 +56,7 @@ public class DutyManager {
      * @param sectionOfUser The section of the current user
      * @param start         A LocalDate that represents the start
      * @param end           A LocalDate that represents the end
-     * @return              A List of the matching duties
+     * @return A List of the matching duties
      */
     public List<Duty> findAllInRangeWithSection(
         Section sectionOfUser,
@@ -75,9 +75,10 @@ public class DutyManager {
 
     /**
      * Finds all duties in a specific range of time.
-     * @param start     A LocalDate that represents the start
-     * @param end       A LocalDate that represents the end
-     * @return          A List of the matching duties
+     *
+     * @param start A LocalDate that represents the start
+     * @param end   A LocalDate that represents the end
+     * @return A List of the matching duties
      */
     public List<Duty> findAllInRange(LocalDate start, LocalDate end) {
         return this.dutyDao.findAllInRange(start.atStartOfDay(), end.atStartOfDay());
