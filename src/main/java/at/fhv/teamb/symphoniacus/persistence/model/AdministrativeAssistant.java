@@ -1,6 +1,6 @@
 package at.fhv.teamb.symphoniacus.persistence.model;
 
-import at.fhv.teamb.symphoniacus.application.roleenum.AdministrativeAssistantEnum;
+import at.fhv.teamb.symphoniacus.application.type.AdministrativeAssistantType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
@@ -20,7 +20,7 @@ public class AdministrativeAssistant {
 
     @Enumerated(EnumType.STRING)
     @Column(name = "description")
-    private AdministrativeAssistantEnum description;
+    private AdministrativeAssistantType description;
 
     public Integer getUserId() {
         return this.userId;
@@ -30,11 +30,11 @@ public class AdministrativeAssistant {
         this.userId = userId;
     }
 
-    public AdministrativeAssistantEnum getDescription() {
+    public AdministrativeAssistantType getDescription() {
         return this.description;
     }
 
-    public void setDescription(AdministrativeAssistantEnum description) {
+    public void setDescription(AdministrativeAssistantType description) {
         this.description = description;
     }
 }

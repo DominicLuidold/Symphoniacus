@@ -1,6 +1,6 @@
 package at.fhv.teamb.symphoniacus.application;
 
-import at.fhv.teamb.symphoniacus.application.role.DomainUserType;
+import at.fhv.teamb.symphoniacus.application.type.DomainUserType;
 import at.fhv.teamb.symphoniacus.persistence.dao.UserDao;
 import at.fhv.teamb.symphoniacus.persistence.model.User;
 import java.util.Optional;

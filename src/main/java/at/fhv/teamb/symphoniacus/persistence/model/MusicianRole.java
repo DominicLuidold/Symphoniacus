@@ -1,6 +1,6 @@
 package at.fhv.teamb.symphoniacus.persistence.model;
 
-import at.fhv.teamb.symphoniacus.application.roleenum.MusicianRoleEnum;
+import at.fhv.teamb.symphoniacus.application.type.MusicianRoleType;
 import java.util.LinkedList;
 import java.util.List;
 import javax.persistence.Column;
@@ -23,7 +23,7 @@ public class MusicianRole {
 
     @Enumerated(EnumType.STRING)
     @Column(name = "description")
-    private MusicianRoleEnum description;
+    private MusicianRoleType description;
 
     @ManyToMany(mappedBy = "musicianRoles")
     private List<Musician> musicians = new LinkedList<>();
@@ -46,11 +46,11 @@ public class MusicianRole {
         this.musicianRoleId = musicianRoleId;
     }
 
-    public MusicianRoleEnum getDescription() {
+    public MusicianRoleType getDescription() {
         return this.description;
     }
 
-    public void setDescription(MusicianRoleEnum description) {
+    public void setDescription(MusicianRoleType description) {
         this.description = description;
     }
 }
