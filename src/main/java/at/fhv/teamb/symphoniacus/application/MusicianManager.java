@@ -1,9 +1,7 @@
 package at.fhv.teamb.symphoniacus.application;
 
-
 import at.fhv.teamb.symphoniacus.persistence.dao.MusicianDao;
 import at.fhv.teamb.symphoniacus.persistence.model.Musician;
-import at.fhv.teamb.symphoniacus.persistence.model.Section;
 import at.fhv.teamb.symphoniacus.persistence.model.User;
 import java.util.Optional;
 import org.apache.logging.log4j.LogManager;
@@ -12,43 +10,39 @@ import org.apache.logging.log4j.Logger;
 /**
  * Manager for Musicians.
  *
- * @author Danijel Antonijevic
  * @author Valentin Goronjic
+ * @author Dominic Luidold
  */
-public class MusicianManager extends LogInManager {
-
+public class MusicianManager extends LoginManager {
     private static final Logger LOG = LogManager.getLogger(MusicianManager.class);
-    private Musician currentMusician;
-    private MusicianDao musicianDao;
+    private final MusicianDao musicianDao;
 
     public MusicianManager() {
-        musicianDao = new MusicianDao();
+        this.musicianDao = new MusicianDao();
     }
 
-    public Optional<Musician> loadMusician(User u) {
-        if (u == null) {
+    /**
+     * Returns a {@link Musician} based on provided {@link User}.
+     *
+     * <p>In case of the user not being a musician, an empty {@link Optional} will be returned.
+     *
+     * @param user The user to use
+     * @return A Musician object representing the provided User
+     */
+    public Optional<Musician> loadMusician(User user) {
+        if (user == null) {
             LOG.error("Cannot load musician with null user.");
             return Optional.empty();
         }
-        Optional<Musician> m = this.musicianDao.find(u.getUserId());
-        if (m.isEmpty()) {
-            LOG.error("Could not load musician with id {}", u.getUserId());
+        Optional<Musician> musician = this.musicianDao.find(user.getUserId());
+
+        // Load attempt failed
+        if (musician.isEmpty()) {
+            LOG.error("Could not load musician with userId {}", user.getUserId());
             return Optional.empty();
         }
-        this.currentMusician = m.get();
-        return m;
+
+        // Load attempt succeeded
+        return musician;
     }
-
-    public Section getSectionsAccessibleToUser(User user) {
-        if (user != null) {
-            if (this.userDao.isUserMusician(user) == true) {
-                this.currentMusician = musicianDao.find(user.getUserId()).get();
-            }
-        } else {
-            LOG.error("Cannot load section for null user");
-        }
-
-        return this.currentMusician.getSection();
-    }
-
 }
