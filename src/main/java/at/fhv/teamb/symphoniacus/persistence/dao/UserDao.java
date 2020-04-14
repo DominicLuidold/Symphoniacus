@@ -1,7 +1,6 @@
 package at.fhv.teamb.symphoniacus.persistence.dao;
 
 import at.fhv.teamb.symphoniacus.persistence.BaseDao;
-import at.fhv.teamb.symphoniacus.persistence.model.AdministrativeAssistant;
 import at.fhv.teamb.symphoniacus.persistence.model.Musician;
 import at.fhv.teamb.symphoniacus.persistence.model.User;
 import java.util.Optional;
@@ -14,7 +13,6 @@ import javax.persistence.TypedQuery;
  * @author Valentin Goronjic
  */
 public class UserDao extends BaseDao<User> {
-    public AdministrativeAssistant getUserIsAdministrativeAssistant;
 
     @Override
     public Optional<User> find(Object key) {
@@ -41,7 +39,7 @@ public class UserDao extends BaseDao<User> {
      *
      * @param userShortCut The shortcut to identify the user
      * @param password     The password to authenticate the user
-     * @return A User matching provided credentials
+     * @return A user matching provided credentials
      */
     public Optional<User> login(String userShortCut, String password) {
         this.createEntityManager();
@@ -57,6 +55,12 @@ public class UserDao extends BaseDao<User> {
         return Optional.of(result);
     }
 
+    /**
+     * Checks whether the provided {@link User} is a {@link Musician}.
+     *
+     * @param currentUser The user to check
+     * @return True if user is a musician, false otherwise
+     */
     public boolean isUserMusician(User currentUser) {
         this.createEntityManager();
         TypedQuery<Long> query = this.entityManager.createQuery(
@@ -67,10 +71,6 @@ public class UserDao extends BaseDao<User> {
         Long result = query.getSingleResult();
         this.tearDown();
 
-        if (result == 1) {
-            return true;
-        } else {
-            return false;
-        }
+        return result == 1;
     }
 }
