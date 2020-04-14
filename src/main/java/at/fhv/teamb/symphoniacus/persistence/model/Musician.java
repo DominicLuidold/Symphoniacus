@@ -2,7 +2,6 @@ package at.fhv.teamb.symphoniacus.persistence.model;
 
 import java.util.LinkedList;
 import java.util.List;
-import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -20,7 +19,7 @@ import javax.persistence.Table;
 @Entity
 @Table(name = "musician")
 @NamedEntityGraph(
-    name="musician-with-collections",
+    name = "musician-with-collections",
     attributeNodes = {
         @NamedAttributeNode("userId"),
         @NamedAttributeNode("section"),
@@ -92,12 +91,11 @@ public class Musician {
 
     @Override
     public String toString() {
-        return "Musician{" +
-            "musicianId=" + musicianId +
-            ", musicianRoles=" + musicianRoles +
-            ", userId=" + userId +
-            ", section=" + section +
-            '}';
+        return "Musician{"
+            + "musicianId=" + musicianId
+            + ", musicianRoles=" + musicianRoles
+            + ", userId=" + userId
+            + ", section=" + section
+            + '}';
     }
-
 }
