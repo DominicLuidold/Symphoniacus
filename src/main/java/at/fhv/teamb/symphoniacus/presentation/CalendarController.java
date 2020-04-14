@@ -34,10 +34,12 @@ public class CalendarController implements Initializable {
      * Default interval start date represents {@link LocalDate#now()}.
      */
     private static final LocalDate DEFAULT_INTERVAL_START = LocalDate.now();
+
     /**
      * Default interval end date represents {@link #DEFAULT_INTERVAL_START} plus 13 days.
      */
     private static final LocalDate DEFAULT_INTERVAL_END = DEFAULT_INTERVAL_START.plusDays(13);
+
     /**
      * Extended interval end date represents {@link #DEFAULT_INTERVAL_START} plus one month.
      */
