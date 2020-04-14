@@ -7,9 +7,9 @@ plugins {
 
     /* Project specific plugins */
     id 'checkstyle'
-    id 'pmd'
     id 'jacoco'
     id 'org.openjfx.javafxplugin' version '0.0.8'
+    id 'pmd'
 }
 
 repositories {
@@ -28,11 +28,11 @@ dependencies {
 
     /* Project specific dependencies */
     compile 'com.jfoenix:jfoenix:9.0.8'
-    compile 'mysql:mysql-connector-java:5.1.13'
-    compile 'org.hibernate:hibernate-core:5.4.13.Final'
     compile 'javax.persistence:javax.persistence-api:2.2'
+    compile 'mysql:mysql-connector-java:5.1.13'
     compile 'org.apache.logging.log4j:log4j-api:2.13.1'
     compile 'org.apache.logging.log4j:log4j-core:2.13.1'
+    compile 'org.hibernate:hibernate-core:5.4.13.Final'
 
     implementation 'com.calendarfx:view:11.8.3'
 
@@ -71,12 +71,13 @@ jacocoTestReport {
     }
 }
 
+/* PMD configuration */
 pmd {
+    toolVersion = '6.21.0'
     consoleOutput = true
     ignoreFailures = true
-    toolVersion = "6.21.0"
     rulePriority = 5
-    ruleSets = ["category/java/errorprone.xml", "category/java/bestpractices.xml"]
+    ruleSets = ['category/java/errorprone.xml', 'category/java/bestpractices.xml']
 }
 
 build.dependsOn jacocoTestReport
