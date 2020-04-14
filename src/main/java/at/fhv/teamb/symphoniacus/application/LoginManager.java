@@ -14,7 +14,7 @@ import org.apache.logging.log4j.Logger;
  */
 public class LoginManager {
     private static final Logger LOG = LogManager.getLogger(LoginManager.class);
-    protected final UserDao userDao;
+    protected UserDao userDao;
     protected User currentLoggedInUser;
 
     public LoginManager() {

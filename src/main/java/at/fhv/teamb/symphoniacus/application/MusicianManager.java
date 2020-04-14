@@ -15,7 +15,7 @@ import org.apache.logging.log4j.Logger;
  */
 public class MusicianManager extends LoginManager {
     private static final Logger LOG = LogManager.getLogger(MusicianManager.class);
-    private final MusicianDao musicianDao;
+    private MusicianDao musicianDao;
 
     public MusicianManager() {
         this.musicianDao = new MusicianDao();

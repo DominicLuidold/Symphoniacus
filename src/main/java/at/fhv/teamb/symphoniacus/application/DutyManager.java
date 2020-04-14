@@ -14,7 +14,7 @@ import java.util.List;
  * @author Nino Heinzle
  */
 public class DutyManager {
-    protected final DutyDao dutyDao;
+    protected DutyDao dutyDao;
 
     public DutyManager() {
         this.dutyDao = new DutyDao();
