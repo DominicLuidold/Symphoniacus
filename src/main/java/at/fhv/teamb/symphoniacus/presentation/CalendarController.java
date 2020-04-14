@@ -1,8 +1,12 @@
 package at.fhv.teamb.symphoniacus.presentation;
 
-import at.fhv.teamb.symphoniacus.business.DutyManager;
+import at.fhv.teamb.symphoniacus.application.DutyManager;
+import at.fhv.teamb.symphoniacus.application.LoginManager;
+import at.fhv.teamb.symphoniacus.application.MusicianManager;
 import at.fhv.teamb.symphoniacus.persistence.model.Duty;
+import at.fhv.teamb.symphoniacus.persistence.model.Musician;
 import at.fhv.teamb.symphoniacus.persistence.model.Section;
+import at.fhv.teamb.symphoniacus.persistence.model.User;
 import com.calendarfx.model.Calendar;
 import com.calendarfx.model.CalendarSource;
 import com.calendarfx.model.Entry;
@@ -10,8 +14,10 @@ import com.calendarfx.model.Interval;
 import com.calendarfx.view.CalendarView;
 import java.net.URL;
 import java.time.LocalDate;
+import java.time.LocalTime;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Optional;
 import java.util.ResourceBundle;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -32,6 +38,10 @@ public class CalendarController implements Initializable {
      * Default interval end date represents {@link #DEFAULT_INTERVAL_START} plus 13 days.
      */
     private static final LocalDate DEFAULT_INTERVAL_END = DEFAULT_INTERVAL_START.plusDays(13);
+    /**
+     * Extended interval end date represents {@link #DEFAULT_INTERVAL_START} plus one month.
+     */
+    private static final LocalDate EXTENDED_INTERVAL_END = DEFAULT_INTERVAL_START.plusMonths(1);
 
     @FXML
     private CalendarView calendarView;
@@ -41,16 +51,15 @@ public class CalendarController implements Initializable {
      */
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-        // TODO - Wait for UserController and method that returns user-specific section
-        Section section = new Section();
-        section.setDescription("Test Test");
-        section.setSectionId(1);
-        section.setSectionShortcut("T");
+        // TODO - Temporarily used until proper login is introduced
+        Optional<User> user = new LoginManager().login("vaubou", "eItFAJSb");
+        Optional<Musician> musician = new MusicianManager().loadMusician(user.get());
+        Section section = musician.get().getSection();
 
         this.calendarView.getCalendarSources().setAll(
             prepareCalendarSource(
                 resources.getString("sections"),
-                section // TODO
+                section
             )
         );
     }
@@ -116,7 +125,7 @@ public class CalendarController implements Initializable {
             new DutyManager().findAllInRangeWithSection(
                 section,
                 DEFAULT_INTERVAL_START,
-                DEFAULT_INTERVAL_END
+                EXTENDED_INTERVAL_END // TODO - Temporarily used until lazy loading is introduced
             )
         ));
     }
@@ -157,8 +166,9 @@ public class CalendarController implements Initializable {
             Interval interval = new Interval(
                 duty.getStart().toLocalDate(),
                 duty.getStart().toLocalTime(),
-                duty.getEnd().toLocalDate(),
-                duty.getEnd().toLocalTime()
+                (duty.getEnd() == null // TODO - Adjust database to make duties always have an end
+                    ? duty.getStart().toLocalDate() : duty.getEnd().toLocalDate()),
+                (duty.getEnd() == null ? LocalTime.MAX : duty.getEnd().toLocalTime())
             );
             Entry<Duty> entry = new Entry<>(duty.getDescription(), interval);
             calendarEntries.add(entry);

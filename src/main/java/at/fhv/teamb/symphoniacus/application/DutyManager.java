@@ -68,7 +68,7 @@ public class DutyManager {
             sectionOfUser,
             start.atStartOfDay(),
             end.atStartOfDay(),
-            false,
+            true, // TODO - Add logic to determine which parameters are true
             false,
             false
         );
