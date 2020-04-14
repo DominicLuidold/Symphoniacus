@@ -7,16 +7,17 @@ import java.time.DayOfWeek;
 import java.time.LocalDate;
 import java.util.List;
 
+/**
+ * This class is responsible for finding {@link Duty} objects based on a range of time and
+ * {@link Section}.
+ *
+ * @author Nino Heinzle
+ */
 public class DutyManager {
-    protected DutyDao dutyDao;
+    protected final DutyDao dutyDao;
 
     public DutyManager() {
         this.dutyDao = new DutyDao();
-    }
-
-    public static LocalDate getLastMondayDate(LocalDate givenDate) {
-        // Will always jump back to last monday
-        return givenDate.with(DayOfWeek.MONDAY);
     }
 
     /**
@@ -82,5 +83,16 @@ public class DutyManager {
      */
     public List<Duty> findAllInRange(LocalDate start, LocalDate end) {
         return this.dutyDao.findAllInRange(start.atStartOfDay(), end.atStartOfDay());
+    }
+
+    /**
+     * Returns the Monday of the week based on the {@link LocalDate}.
+     *
+     * @param givenDate The date to determine the monday of the week
+     * @return A LocalDate representing the monday of the week
+     */
+    public static LocalDate getLastMondayDate(LocalDate givenDate) {
+        // Will always jump back to last monday
+        return givenDate.with(DayOfWeek.MONDAY);
     }
 }
