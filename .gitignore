@@ -24,3 +24,5 @@ build
 .classpath
 .settings/
 bin
+
+.vscode/

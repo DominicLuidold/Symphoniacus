@@ -1,11 +1,13 @@
 package at.fhv.teamb.symphoniacus.persistence.model;
 
+import at.fhv.teamb.symphoniacus.application.type.DomainUserType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
+import javax.persistence.Transient;
 
 @Entity
 @Table(name = "user")
@@ -50,6 +52,9 @@ public class User {
 
     @Column(name = "passwordSalt")
     private String passwordSalt;
+
+    @Transient
+    protected DomainUserType type;
 
     public Integer getUserId() {
         return this.userId;
@@ -153,5 +158,13 @@ public class User {
 
     public void setPasswordSalt(String passwordSalt) {
         this.passwordSalt = passwordSalt;
+    }
+
+    public DomainUserType getType() {
+        return this.type;
+    }
+
+    public void setType(DomainUserType type) {
+        this.type = type;
     }
 }

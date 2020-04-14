@@ -13,6 +13,16 @@ import javax.persistence.Table;
 @Entity
 @Table(name = "section")
 public class Section {
+    /*
+       ID1 --> 'Vl1', 'Erste Violinen');
+       ID2 -->'Vl2', 'Zweite Violinen');
+       ID3 -->'Vla', 'Viola oder Bratschen');
+       ID4 -->'Vc', 'Violoncelli');
+       ID5 -->'Kb', 'Kontrabässe');
+       ID6 -->'Fl/Ob/Kl/Fg', 'Holzbläser');
+       ID7 -->'Hr/Trp/Pos/Tb', 'Blechbläser');
+       ID8 -->'Pk/Schlw/Hf', 'Schlagwerk');
+   */
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "sectionId")
@@ -27,6 +37,9 @@ public class Section {
     //One-To-Many Part for SECTIONMONTHLYSCHEDULE Table
     @OneToMany(mappedBy = "section", orphanRemoval = true)
     private Set<SectionMonthlySchedule> sectionMonthlyScheduleSet = new HashSet<>();
+
+    @OneToMany(mappedBy = "section", orphanRemoval = true)
+    private Set<Musician> musicians = new HashSet<>();
 
     public Set<SectionMonthlySchedule> getSectionMonthlyScheduleSet() {
         return this.sectionMonthlyScheduleSet;
@@ -64,5 +77,13 @@ public class Section {
 
     public void setDescription(String description) {
         this.description = description;
+    }
+
+    public Set<Musician> getMusicians() {
+        return musicians;
+    }
+
+    public void setMusicians(Set<Musician> musicians) {
+        this.musicians = musicians;
     }
 }
