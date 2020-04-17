@@ -27,13 +27,13 @@ public class DutyPositionMusician {
     //Many-To-One Part for DUTYPosition Table
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "dutyPositionId")
-    private DutyPosition dutyPosition;
+    private DutyPositionEntity dutyPosition;
 
-    public DutyPosition getDutyPosition() {
+    public DutyPositionEntity getDutyPosition() {
         return this.dutyPosition;
     }
 
-    public void setDutyPosition(DutyPosition dutyPosition) {
+    public void setDutyPosition(DutyPositionEntity dutyPosition) {
         this.dutyPosition = dutyPosition;
     }
 

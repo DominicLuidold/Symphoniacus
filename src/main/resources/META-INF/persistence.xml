@@ -6,26 +6,26 @@
         <!-- Entity classes -->
         <class>at.fhv.teamb.symphoniacus.persistence.model.AdministrativeAssistant</class>
         <class>at.fhv.teamb.symphoniacus.persistence.model.ContractualObligation</class>
-        <class>at.fhv.teamb.symphoniacus.persistence.model.Duty</class>
+        <class>at.fhv.teamb.symphoniacus.persistence.model.DutyEntity</class>
         <class>at.fhv.teamb.symphoniacus.persistence.model.DutyCategory</class>
         <class>at.fhv.teamb.symphoniacus.persistence.model.DutyCategoryChangelog</class>
-        <class>at.fhv.teamb.symphoniacus.persistence.model.DutyPosition</class>
+        <class>at.fhv.teamb.symphoniacus.persistence.model.DutyPositionEntity</class>
         <class>at.fhv.teamb.symphoniacus.persistence.model.DutyPositionMusician</class>
-        <class>at.fhv.teamb.symphoniacus.persistence.model.Instrumentation</class>
-        <class>at.fhv.teamb.symphoniacus.persistence.model.InstrumentationPosition</class>
+        <class>at.fhv.teamb.symphoniacus.persistence.model.InstrumentationEntity</class>
+        <class>at.fhv.teamb.symphoniacus.persistence.model.InstrumentationPositionEntity</class>
         <class>at.fhv.teamb.symphoniacus.persistence.model.InstrumentCategory</class>
         <class>at.fhv.teamb.symphoniacus.persistence.model.InstrumentCategoryMusician</class>
         <class>at.fhv.teamb.symphoniacus.persistence.model.MonthlySchedule</class>
         <class>at.fhv.teamb.symphoniacus.persistence.model.MusicalPiece</class>
-        <class>at.fhv.teamb.symphoniacus.persistence.model.Musician</class>
+        <class>at.fhv.teamb.symphoniacus.persistence.model.MusicianEntity</class>
         <class>at.fhv.teamb.symphoniacus.persistence.model.MusicianRole</class>
         <class>at.fhv.teamb.symphoniacus.persistence.model.MusicianRoleMusician</class>
         <class>at.fhv.teamb.symphoniacus.persistence.model.NegativeDateMonthlySchedule</class>
         <class>at.fhv.teamb.symphoniacus.persistence.model.NegativeDateWish</class>
         <class>at.fhv.teamb.symphoniacus.persistence.model.NegativeDutyWish</class>
         <class>at.fhv.teamb.symphoniacus.persistence.model.PositiveWish</class>
-        <class>at.fhv.teamb.symphoniacus.persistence.model.Section</class>
-        <class>at.fhv.teamb.symphoniacus.persistence.model.SectionInstrumentation</class>
+        <class>at.fhv.teamb.symphoniacus.persistence.model.SectionEntity</class>
+        <class>at.fhv.teamb.symphoniacus.persistence.model.SectionInstrumentationEntity</class>
         <class>at.fhv.teamb.symphoniacus.persistence.model.SectionInstrumentCategory</class>
         <class>at.fhv.teamb.symphoniacus.persistence.model.SectionMonthlySchedule</class>
         <class>at.fhv.teamb.symphoniacus.persistence.model.SeriesOfPerformances</class>

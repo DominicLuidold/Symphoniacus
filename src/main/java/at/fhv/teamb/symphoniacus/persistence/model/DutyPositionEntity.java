@@ -15,7 +15,7 @@ import javax.persistence.Table;
 
 @Entity
 @Table(name = "dutyPosition")
-public class DutyPosition {
+public class DutyPositionEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "dutyPositionId")
@@ -36,13 +36,13 @@ public class DutyPosition {
     //Many-To-One Part for DUTY Table
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "dutyId")
-    private Duty duty;
+    private DutyEntity duty;
 
-    public Duty getDuty() {
+    public DutyEntity getDuty() {
         return this.duty;
     }
 
-    public void setDuty(Duty duty) {
+    public void setDuty(DutyEntity duty) {
         this.duty = duty;
     }
 

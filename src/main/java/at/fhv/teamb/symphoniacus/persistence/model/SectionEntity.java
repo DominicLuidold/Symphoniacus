@@ -12,7 +12,7 @@ import javax.persistence.Table;
 
 @Entity
 @Table(name = "section")
-public class Section {
+public class SectionEntity {
     /*
        ID1 --> 'Vl1', 'Erste Violinen');
        ID2 -->'Vl2', 'Zweite Violinen');
@@ -39,7 +39,7 @@ public class Section {
     private Set<SectionMonthlySchedule> sectionMonthlyScheduleSet = new HashSet<>();
 
     @OneToMany(mappedBy = "section", orphanRemoval = true)
-    private Set<Musician> musicians = new HashSet<>();
+    private Set<MusicianEntity> musicians = new HashSet<>();
 
     public Set<SectionMonthlySchedule> getSectionMonthlyScheduleSet() {
         return this.sectionMonthlyScheduleSet;
@@ -79,11 +79,11 @@ public class Section {
         this.description = description;
     }
 
-    public Set<Musician> getMusicians() {
+    public Set<MusicianEntity> getMusicians() {
         return musicians;
     }
 
-    public void setMusicians(Set<Musician> musicians) {
+    public void setMusicians(Set<MusicianEntity> musicians) {
         this.musicians = musicians;
     }
 }

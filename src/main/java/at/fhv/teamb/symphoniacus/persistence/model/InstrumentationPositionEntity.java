@@ -9,7 +9,7 @@ import javax.persistence.Table;
 
 @Entity
 @Table(name = "instrumentationPosition")
-public class InstrumentationPosition {
+public class InstrumentationPositionEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "instrumentationPositionId")

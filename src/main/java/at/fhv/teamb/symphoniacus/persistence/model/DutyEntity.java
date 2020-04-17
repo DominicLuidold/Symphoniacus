@@ -18,7 +18,7 @@ import javax.persistence.Table;
 
 @Entity
 @Table(name = "duty")
-public class Duty {
+public class DutyEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "dutyId")
@@ -47,7 +47,7 @@ public class Duty {
 
     //One-To-Many Part for DUTYPOSITION Table
     @OneToMany(mappedBy = "duty", orphanRemoval = true)
-    private Set<DutyPosition> dutyPositionSet = new HashSet<>();
+    private Set<DutyPositionEntity> dutyPositionSet = new HashSet<>();
 
     //Many-To-One Part for WEEKLYSCHEDULE Table
     @ManyToOne(fetch = FetchType.LAZY)
@@ -66,15 +66,15 @@ public class Duty {
     )
     private Set<SectionMonthlySchedule> sectionMonthlySchedules = new HashSet<>();
 
-    public Set<DutyPosition> getDutyPositionSet() {
+    public Set<DutyPositionEntity> getDutyPositionSet() {
         return this.dutyPositionSet;
     }
 
-    public void setDutyPositionSet(Set<DutyPosition> dutyPositionSet) {
+    public void setDutyPositionSet(Set<DutyPositionEntity> dutyPositionSet) {
         this.dutyPositionSet = dutyPositionSet;
     }
 
-    public void addDutyPosition(DutyPosition dutyPosition) {
+    public void addDutyPosition(DutyPositionEntity dutyPosition) {
         this.dutyPositionSet.add(dutyPosition);
         dutyPosition.setDuty(this);
     }

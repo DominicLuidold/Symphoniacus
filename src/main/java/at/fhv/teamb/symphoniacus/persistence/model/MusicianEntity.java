@@ -26,7 +26,7 @@ import javax.persistence.Table;
         @NamedAttributeNode("musicianRoles")
     }
 )
-public class Musician {
+public class MusicianEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "musicianId")
@@ -49,7 +49,7 @@ public class Musician {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "sectionId")
-    private Section section;
+    private SectionEntity section;
 
     public Integer getMusicianId() {
         return this.musicianId;
@@ -81,11 +81,11 @@ public class Musician {
         role.removeMusician(this);
     }
 
-    public Section getSection() {
+    public SectionEntity getSection() {
         return section;
     }
 
-    public void setSection(Section section) {
+    public void setSection(SectionEntity section) {
         this.section = section;
     }
 

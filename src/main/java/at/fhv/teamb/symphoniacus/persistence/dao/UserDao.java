@@ -1,7 +1,7 @@
 package at.fhv.teamb.symphoniacus.persistence.dao;
 
 import at.fhv.teamb.symphoniacus.persistence.BaseDao;
-import at.fhv.teamb.symphoniacus.persistence.model.Musician;
+import at.fhv.teamb.symphoniacus.persistence.model.MusicianEntity;
 import at.fhv.teamb.symphoniacus.persistence.model.User;
 import java.util.Optional;
 import javax.persistence.TypedQuery;
@@ -56,7 +56,7 @@ public class UserDao extends BaseDao<User> {
     }
 
     /**
-     * Checks whether the provided {@link User} is a {@link Musician}.
+     * Checks whether the provided {@link User} is a {@link MusicianEntity}.
      *
      * @param currentUser The user to check
      * @return True if user is a musician, false otherwise
@@ -64,7 +64,7 @@ public class UserDao extends BaseDao<User> {
     public boolean isUserMusician(User currentUser) {
         this.createEntityManager();
         TypedQuery<Long> query = this.entityManager.createQuery(
-            "SELECT COUNT(m) FROM Musician m WHERE m.userId = :uId",
+            "SELECT COUNT(m) FROM MusicianEntity m WHERE m.userId = :uId",
             Long.class
         );
         query.setParameter("uId", currentUser.getUserId());

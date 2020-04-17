@@ -1,8 +1,8 @@
 package at.fhv.teamb.symphoniacus.persistence.dao;
 
 import at.fhv.teamb.symphoniacus.persistence.BaseDao;
-import at.fhv.teamb.symphoniacus.persistence.model.Duty;
-import at.fhv.teamb.symphoniacus.persistence.model.Section;
+import at.fhv.teamb.symphoniacus.persistence.model.DutyEntity;
+import at.fhv.teamb.symphoniacus.persistence.model.SectionEntity;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
@@ -13,7 +13,7 @@ import javax.persistence.TypedQuery;
  *
  * @author Valentin Goronjic
  */
-public class DutyDao extends BaseDao<Duty> {
+public class DutyDao extends BaseDao<DutyEntity> {
 
     /**
      * Finds a duty by its key.
@@ -22,9 +22,9 @@ public class DutyDao extends BaseDao<Duty> {
      * @return The duty that is looked for
      */
     @Override
-    public Optional<Duty> find(Object key) {
+    public Optional<DutyEntity> find(Object key) {
         this.createEntityManager();
-        Duty d = this.entityManager.find(Duty.class, key);
+        DutyEntity d = this.entityManager.find(DutyEntity.class, key);
         this.tearDown();
         return Optional.of(d);
     }
@@ -36,7 +36,7 @@ public class DutyDao extends BaseDao<Duty> {
      * @return A List of the corresponding duties that were found
      * @see #findAllInRange(LocalDateTime, LocalDateTime)
      */
-    public List<Duty> findAllInWeek(LocalDateTime start) {
+    public List<DutyEntity> findAllInWeek(LocalDateTime start) {
         return findAllInRange(start, start.plusDays(6));
     }
 
@@ -47,16 +47,16 @@ public class DutyDao extends BaseDao<Duty> {
      * @param end   A LocalDateTime that represents the end
      * @return A List of all Duties that have the date between the given start and end dates
      */
-    public List<Duty> findAllInRange(LocalDateTime start, LocalDateTime end) {
+    public List<DutyEntity> findAllInRange(LocalDateTime start, LocalDateTime end) {
         this.createEntityManager();
-        TypedQuery<Duty> query = this.entityManager.createQuery(
-            "SELECT d FROM Duty d WHERE d.start >= :start AND d.end <= :end",
-            Duty.class
+        TypedQuery<DutyEntity> query = this.entityManager.createQuery(
+            "SELECT d FROM DutyEntity d WHERE d.start >= :start AND d.end <= :end",
+            DutyEntity.class
         );
         query.setMaxResults(300);
         query.setParameter("start", start);
         query.setParameter("end", end);
-        List<Duty> resultList = query.getResultList();
+        List<DutyEntity> resultList = query.getResultList();
         this.tearDown();
 
         return resultList;
@@ -71,8 +71,8 @@ public class DutyDao extends BaseDao<Duty> {
      * @see #findAllInRangeWithSection
      * (Section, LocalDateTime, LocalDateTime, boolean, boolean, boolean)
      */
-    public List<Duty> findAllInWeekWithSection(
-        Section section,
+    public List<DutyEntity> findAllInWeekWithSection(
+        SectionEntity section,
         LocalDateTime start,
         boolean isReadyForDutyScheduler,
         boolean isReadyForOrganisationManager,
@@ -98,8 +98,8 @@ public class DutyDao extends BaseDao<Duty> {
      * @param end     A LocalDateTime that represents the end
      * @return A List of the corresponding duties that were found
      */
-    public List<Duty> findAllInRangeWithSection(
-        Section section,
+    public List<DutyEntity> findAllInRangeWithSection(
+        SectionEntity section,
         LocalDateTime start,
         LocalDateTime end,
         boolean isReadyForDutyScheduler,
@@ -107,14 +107,14 @@ public class DutyDao extends BaseDao<Duty> {
         boolean isPublished
     ) {
         this.createEntityManager();
-        TypedQuery<Duty> query = this.entityManager.createQuery("SELECT d FROM Duty d "
+        TypedQuery<DutyEntity> query = this.entityManager.createQuery("SELECT d FROM DutyEntity d "
             + "INNER JOIN d.sectionMonthlySchedules sms "
             + "INNER JOIN sms.section s "
             + "WHERE d.start >= :start AND d.start <= :end "
             + "AND s.sectionId = :sectionId "
             + "AND sms.isReadyForDutyScheduler = :isReadyForDutyScheduler "
             + "AND sms.isReadyForOrganisationManager = :isReadyForOrganisationManager "
-            + "AND sms.isPublished = :isPublished", Duty.class
+            + "AND sms.isPublished = :isPublished", DutyEntity.class
         );
 
         query.setMaxResults(300);
@@ -125,7 +125,7 @@ public class DutyDao extends BaseDao<Duty> {
         query.setParameter("isReadyForOrganisationManager", isReadyForOrganisationManager);
         query.setParameter("isPublished", isPublished);
 
-        List<Duty> result = query.getResultList();
+        List<DutyEntity> result = query.getResultList();
 
         this.tearDown();
         return result;
@@ -138,7 +138,7 @@ public class DutyDao extends BaseDao<Duty> {
      * @return The persisted duty filled with its Identifier
      */
     @Override
-    public Optional<Duty> persist(Duty elem) {
+    public Optional<DutyEntity> persist(DutyEntity elem) {
         this.createEntityManager();
         this.entityManager.persist(elem);
         this.tearDown();
@@ -152,7 +152,7 @@ public class DutyDao extends BaseDao<Duty> {
      * @return The updated duty
      */
     @Override
-    public Optional<Duty> update(Duty elem) {
+    public Optional<DutyEntity> update(DutyEntity elem) {
         this.createEntityManager();
         this.entityManager.merge(elem);
         this.tearDown();
@@ -166,7 +166,7 @@ public class DutyDao extends BaseDao<Duty> {
      * @return True if the duty was removed
      */
     @Override
-    public Boolean remove(Duty elem) {
+    public Boolean remove(DutyEntity elem) {
         this.createEntityManager();
         this.entityManager.remove(elem);
         this.tearDown();

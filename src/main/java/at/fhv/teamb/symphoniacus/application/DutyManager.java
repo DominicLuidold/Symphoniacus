@@ -1,15 +1,15 @@
 package at.fhv.teamb.symphoniacus.application;
 
 import at.fhv.teamb.symphoniacus.persistence.dao.DutyDao;
-import at.fhv.teamb.symphoniacus.persistence.model.Duty;
-import at.fhv.teamb.symphoniacus.persistence.model.Section;
+import at.fhv.teamb.symphoniacus.persistence.model.DutyEntity;
+import at.fhv.teamb.symphoniacus.persistence.model.SectionEntity;
 import java.time.DayOfWeek;
 import java.time.LocalDate;
 import java.util.List;
 
 /**
- * This class is responsible for finding {@link Duty} objects based on a range of time and
- * {@link Section}.
+ * This class is responsible for finding {@link DutyEntity} objects based on a range of time and
+ * {@link SectionEntity}.
  *
  * @author Nino Heinzle
  */
@@ -27,7 +27,7 @@ public class DutyManager {
      * @param start is any given Date
      * @return a List of all matching duties
      */
-    public List<Duty> findAllInWeek(LocalDate start) {
+    public List<DutyEntity> findAllInWeek(LocalDate start) {
         return this.dutyDao.findAllInWeek(getLastMondayDate(start).atStartOfDay());
     }
 
@@ -38,8 +38,8 @@ public class DutyManager {
      * @param start         A LocalDate that represents the start
      * @return A List of the matching duties
      */
-    public List<Duty> findAllInWeekWithSection(
-        Section sectionOfUser,
+    public List<DutyEntity> findAllInWeekWithSection(
+        SectionEntity sectionOfUser,
         LocalDate start
     ) {
         return this.dutyDao.findAllInWeekWithSection(
@@ -59,8 +59,8 @@ public class DutyManager {
      * @param end           A LocalDate that represents the end
      * @return A List of the matching duties
      */
-    public List<Duty> findAllInRangeWithSection(
-        Section sectionOfUser,
+    public List<DutyEntity> findAllInRangeWithSection(
+        SectionEntity sectionOfUser,
         LocalDate start,
         LocalDate end
     ) {
@@ -81,7 +81,7 @@ public class DutyManager {
      * @param end   A LocalDate that represents the end
      * @return A List of the matching duties
      */
-    public List<Duty> findAllInRange(LocalDate start, LocalDate end) {
+    public List<DutyEntity> findAllInRange(LocalDate start, LocalDate end) {
         return this.dutyDao.findAllInRange(start.atStartOfDay(), end.atStartOfDay());
     }
 
