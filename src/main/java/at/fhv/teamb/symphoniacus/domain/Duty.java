@@ -17,8 +17,7 @@ public class Duty {
     public void setEntity(DutyEntity entity) {
         this.entity = entity;
     }
-
-
+    
     public String getTitle() {
         throw new UnsupportedOperationException("Not yet implemented");
     }
