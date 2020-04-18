@@ -7,12 +7,18 @@
 <?import javafx.scene.control.ToolBar?>
 <?import javafx.scene.layout.AnchorPane?>
 
+<?import javafx.scene.control.Separator?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.Pane?>
 <AnchorPane fx:id="dutySchedule" prefHeight="226.0" prefWidth="364.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="at.fhv.teamb.symphoniacus.presentation.DutyScheduleController">
    <AnchorPane maxHeight="45.0" minHeight="45.0" prefHeight="45.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
       <children>
          <ToolBar prefHeight="45.0" prefWidth="200.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
            <items>
-             <Button fx:id="scheduleBackBtn" mnemonicParsing="false" text="%global.button.back" />
+               <Button fx:id="scheduleBackBtn" mnemonicParsing="false" text="%global.button.back" />
+               <Pane HBox.hgrow="ALWAYS" />
+               <Button fx:id="scheduleSaveBtn" mnemonicParsing="false" text="%global.button.save" />
+               <Button fx:id="schedulePublishBtn" mnemonicParsing="false" text="%tab.duty.schedule.btn.publish" />
            </items>
          </ToolBar>
       </children>
