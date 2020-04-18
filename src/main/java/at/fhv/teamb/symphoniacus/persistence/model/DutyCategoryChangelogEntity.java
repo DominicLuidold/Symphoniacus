@@ -10,7 +10,7 @@ import javax.persistence.Table;
 
 @Entity
 @Table(name = "dutyCategoryChangelog")
-public class DutyCategoryChangelog {
+public class DutyCategoryChangelogEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "dutyCategoryChangelogId")

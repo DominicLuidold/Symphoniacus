@@ -2,6 +2,8 @@ package at.fhv.teamb.symphoniacus.persistence.model;
 
 import java.time.LocalDateTime;
 import java.util.HashSet;
+import java.util.LinkedList;
+import java.util.List;
 import java.util.Set;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -47,7 +49,7 @@ public class DutyEntity {
 
     //One-To-Many Part for DUTYPOSITION Table
     @OneToMany(mappedBy = "duty", orphanRemoval = true)
-    private Set<DutyPositionEntity> dutyPositionSet = new HashSet<>();
+    private List<DutyPositionEntity> dutyPositions = new LinkedList<>();
 
     //Many-To-One Part for WEEKLYSCHEDULE Table
     @ManyToOne(fetch = FetchType.LAZY)
@@ -66,17 +68,22 @@ public class DutyEntity {
     )
     private Set<SectionMonthlySchedule> sectionMonthlySchedules = new HashSet<>();
 
-    public Set<DutyPositionEntity> getDutyPositionSet() {
-        return this.dutyPositionSet;
+
+    public List<DutyPositionEntity> getDutyPositions() {
+        return this.dutyPositions;
     }
 
-    public void setDutyPositionSet(Set<DutyPositionEntity> dutyPositionSet) {
-        this.dutyPositionSet = dutyPositionSet;
+    public void setDutyPositions(List<DutyPositionEntity> dutyPositions) {
+        this.dutyPositions = dutyPositions;
     }
 
     public void addDutyPosition(DutyPositionEntity dutyPosition) {
-        this.dutyPositionSet.add(dutyPosition);
+        this.dutyPositions.add(dutyPosition);
         dutyPosition.setDuty(this);
+    }
+
+    public void addAllDutyPositions(List<DutyPositionEntity> dutyPositions) {
+        this.dutyPositions.addAll(dutyPositions);
     }
 
     public WeeklySchedule getWeeklySchedule() {

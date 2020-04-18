@@ -51,6 +51,14 @@ public class MusicianEntity {
     @JoinColumn(name = "sectionId")
     private SectionEntity section;
 
+
+    @JoinTable(name = "dutyPosition_musician",
+        joinColumns = @JoinColumn(name = "musicianId"),
+        inverseJoinColumns = @JoinColumn(name = "dutyPositionId")
+    )
+    @ManyToMany
+    private List<DutyPositionEntity> dutyPositions = new LinkedList<>();
+
     public Integer getMusicianId() {
         return this.musicianId;
     }
@@ -87,6 +95,18 @@ public class MusicianEntity {
 
     public void setSection(SectionEntity section) {
         this.section = section;
+    }
+
+    public List<DutyPositionEntity> getDutyPositions() {
+        return this.dutyPositions;
+    }
+
+    public void addDutyPosition(DutyPositionEntity position) {
+        this.dutyPositions.add(position);
+    }
+
+    public void addAllDutyPositions(List<DutyPositionEntity> positions) {
+        this.dutyPositions.addAll(positions);
     }
 
     @Override
