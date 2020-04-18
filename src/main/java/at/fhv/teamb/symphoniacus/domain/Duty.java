@@ -18,4 +18,8 @@ public class Duty {
         this.entity = entity;
     }
 
+
+    public String getTitle() {
+        throw new UnsupportedOperationException("Not yet implemented");
+    }
 }
