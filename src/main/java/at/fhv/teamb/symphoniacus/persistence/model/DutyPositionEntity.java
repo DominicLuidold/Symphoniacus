@@ -1,6 +1,8 @@
 package at.fhv.teamb.symphoniacus.persistence.model;
 
 import java.util.HashSet;
+import java.util.LinkedList;
+import java.util.List;
 import java.util.Set;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -9,13 +11,14 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
+import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
 @Entity
 @Table(name = "dutyPosition")
-public class DutyPosition {
+public class DutyPositionEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "dutyPositionId")
@@ -36,31 +39,17 @@ public class DutyPosition {
     //Many-To-One Part for DUTY Table
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "dutyId")
-    private Duty duty;
+    private DutyEntity duty;
 
-    public Duty getDuty() {
+    @ManyToMany(mappedBy = "dutyPositions")
+    private List<MusicianEntity> musicians = new LinkedList<>();
+
+    public DutyEntity getDuty() {
         return this.duty;
     }
 
-    public void setDuty(Duty duty) {
+    public void setDuty(DutyEntity duty) {
         this.duty = duty;
-    }
-
-    //One-To-Many Part for DUTYPOSITION_MUSICIAN Table
-    @OneToMany(mappedBy = "dutyPosition", orphanRemoval = true)
-    private Set<DutyPositionMusician> dutyPositionMusicianSet = new HashSet<>();
-
-    public Set<DutyPositionMusician> getDutyPositionMusicianSet() {
-        return this.dutyPositionMusicianSet;
-    }
-
-    public void setDutyPositionMusicianSet(Set<DutyPositionMusician> dutyPositionMusicianSet) {
-        this.dutyPositionMusicianSet = dutyPositionMusicianSet;
-    }
-
-    public void addDutyPositionMusician(DutyPositionMusician dutyPositionMusician) {
-        this.dutyPositionMusicianSet.add(dutyPositionMusician);
-        dutyPositionMusician.setDutyPosition(this);
     }
 
     public Integer getDutyPositionId() {
@@ -102,4 +91,5 @@ public class DutyPosition {
     public void setSectionId(Integer sectionId) {
         this.sectionId = sectionId;
     }
+
 }

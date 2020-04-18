@@ -5,21 +5,19 @@
     <persistence-unit name="mysqldb">
         <!-- Entity classes -->
         <class>at.fhv.teamb.symphoniacus.persistence.model.AdministrativeAssistant</class>
-        <class>at.fhv.teamb.symphoniacus.persistence.model.ContractualObligation</class>
-        <class>at.fhv.teamb.symphoniacus.persistence.model.Duty</class>
-        <class>at.fhv.teamb.symphoniacus.persistence.model.DutyCategory</class>
-        <class>at.fhv.teamb.symphoniacus.persistence.model.DutyCategoryChangelog</class>
-        <class>at.fhv.teamb.symphoniacus.persistence.model.DutyPosition</class>
-        <class>at.fhv.teamb.symphoniacus.persistence.model.DutyPositionMusician</class>
+        <class>at.fhv.teamb.symphoniacus.persistence.model.ContractualObligationEntity</class>
+        <class>at.fhv.teamb.symphoniacus.persistence.model.DutyEntity</class>
+        <class>at.fhv.teamb.symphoniacus.persistence.model.DutyCategoryEntity</class>
+        <class>at.fhv.teamb.symphoniacus.persistence.model.DutyCategoryChangelogEntity</class>
+        <class>at.fhv.teamb.symphoniacus.persistence.model.DutyPositionEntity</class>
         <class>at.fhv.teamb.symphoniacus.persistence.model.Instrumentation</class>
         <class>at.fhv.teamb.symphoniacus.persistence.model.InstrumentationPosition</class>
         <class>at.fhv.teamb.symphoniacus.persistence.model.InstrumentCategory</class>
         <class>at.fhv.teamb.symphoniacus.persistence.model.InstrumentCategoryMusician</class>
         <class>at.fhv.teamb.symphoniacus.persistence.model.MonthlySchedule</class>
         <class>at.fhv.teamb.symphoniacus.persistence.model.MusicalPiece</class>
-        <class>at.fhv.teamb.symphoniacus.persistence.model.Musician</class>
+        <class>at.fhv.teamb.symphoniacus.persistence.model.MusicianEntity</class>
         <class>at.fhv.teamb.symphoniacus.persistence.model.MusicianRole</class>
-        <class>at.fhv.teamb.symphoniacus.persistence.model.MusicianRoleMusician</class>
         <class>at.fhv.teamb.symphoniacus.persistence.model.NegativeDateMonthlySchedule</class>
         <class>at.fhv.teamb.symphoniacus.persistence.model.NegativeDateWish</class>
         <class>at.fhv.teamb.symphoniacus.persistence.model.NegativeDutyWish</class>
