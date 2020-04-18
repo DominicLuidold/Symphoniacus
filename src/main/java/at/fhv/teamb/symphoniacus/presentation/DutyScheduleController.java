@@ -3,10 +3,14 @@ package at.fhv.teamb.symphoniacus.presentation;
 import at.fhv.teamb.symphoniacus.persistence.model.Duty;
 import java.net.URL;
 import java.util.ResourceBundle;
+import javafx.beans.property.SimpleStringProperty;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
+import javafx.scene.control.Label;
 import javafx.scene.layout.AnchorPane;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 public class DutyScheduleController implements Initializable, Controllable {
 
@@ -17,6 +21,11 @@ public class DutyScheduleController implements Initializable, Controllable {
 
     @FXML
     private Button scheduleBackBtn;
+
+    @FXML
+    private Label dutyTitle;
+
+    private static final Logger LOG = LogManager.getLogger(DutyScheduleController.class);
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
@@ -49,5 +58,10 @@ public class DutyScheduleController implements Initializable, Controllable {
 
     public void setDuty(Duty duty) {
         this.duty = duty;
+
+        LOG.debug("Binding duty title to: " + duty.getDescription());
+        this.dutyTitle.textProperty().bind(new SimpleStringProperty(
+           "Current Duty: " + duty.getDescription() // TODO change to domain duty title
+        ));
     }
 }

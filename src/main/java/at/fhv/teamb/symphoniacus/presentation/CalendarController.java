@@ -24,6 +24,8 @@ import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.layout.AnchorPane;
 import javafx.util.Callback;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 /**
  * This controller is responsible for handling all CalendarFX related actions such as
@@ -47,6 +49,8 @@ public class CalendarController implements Initializable, Controllable {
      * Extended interval end date represents {@link #DEFAULT_INTERVAL_START} plus one month.
      */
     private static final LocalDate EXTENDED_INTERVAL_END = DEFAULT_INTERVAL_START.plusMonths(1);
+
+    private static final Logger LOG = LogManager.getLogger(CalendarController.class);
 
     @FXML
     private CalendarView calendarView;
@@ -77,19 +81,23 @@ public class CalendarController implements Initializable, Controllable {
             new Callback<DateControl.EntryDetailsParameter, Boolean>() {
                 @Override
                 public Boolean call(DateControl.EntryDetailsParameter param) {
-                    Entry<Duty> entry = (Entry<Duty>) param.getEntry();
-                    MasterController mc = MasterController.getInstance();
-                    if (mc.get("CalendarController") instanceof CalendarController) {
-                        CalendarController cc = (CalendarController) mc.get("CalendarController");
-                        cc.hide();
+                    if (param.getEntry() instanceof Entry) {
+                        Entry<Duty> entry = (Entry<Duty>) param.getEntry();
+                        MasterController mc = MasterController.getInstance();
+                        if (mc.get("CalendarController") instanceof CalendarController) {
+                            CalendarController cc = (CalendarController) mc.get("CalendarController");
+                            cc.hide();
+                        }
+                        if (mc.get("DutyScheduleController") instanceof DutyScheduleController) {
+                            DutyScheduleController dsc =
+                                (DutyScheduleController) mc.get("DutyScheduleController");
+                            dsc.setDuty(entry.getUserObject());
+                            dsc.show();
+                        }
+                        return true;
                     }
-                    if (mc.get("DutyScheduleController") instanceof DutyScheduleController) {
-                        DutyScheduleController dsc =
-                            (DutyScheduleController) mc.get("DutyScheduleController");
-                        dsc.setDuty(entry.getUserObject());
-                        dsc.show();
-                    }
-                    return true;
+                    LOG.error("Unrecognized Calendar Entry: No Duty found");
+                    return false;
                 }
             }
         );
