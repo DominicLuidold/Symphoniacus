@@ -110,7 +110,7 @@ public class DutyDao extends BaseDao<Duty> {
         TypedQuery<Duty> query = this.entityManager.createQuery("SELECT d FROM Duty d "
             + "INNER JOIN d.sectionMonthlySchedules sms "
             + "INNER JOIN sms.section s "
-            + "WHERE d.start >= :start AND d.start <= :end "
+            + "WHERE d.start >= :start AND d.end <= :end "
             + "AND s.sectionId = :sectionId "
             + "AND sms.isReadyForDutyScheduler = :isReadyForDutyScheduler "
             + "AND sms.isReadyForOrganisationManager = :isReadyForOrganisationManager "
