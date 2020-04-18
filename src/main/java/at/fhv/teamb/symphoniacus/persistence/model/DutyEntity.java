@@ -18,7 +18,7 @@ import javax.persistence.Table;
 
 @Entity
 @Table(name = "duty")
-public class Duty {
+public class DutyEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "dutyId")
@@ -76,7 +76,7 @@ public class Duty {
 
     public void addDutyPosition(DutyPosition dutyPosition) {
         this.dutyPositionSet.add(dutyPosition);
-        dutyPosition.setDuty(this);
+        dutyPosition.setDutyEntity(this);
     }
 
     public WeeklySchedule getWeeklySchedule() {

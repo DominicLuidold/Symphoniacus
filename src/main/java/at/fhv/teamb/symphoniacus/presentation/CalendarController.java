@@ -3,7 +3,7 @@ package at.fhv.teamb.symphoniacus.presentation;
 import at.fhv.teamb.symphoniacus.application.DutyManager;
 import at.fhv.teamb.symphoniacus.application.LoginManager;
 import at.fhv.teamb.symphoniacus.application.MusicianManager;
-import at.fhv.teamb.symphoniacus.persistence.model.Duty;
+import at.fhv.teamb.symphoniacus.domain.Duty;
 import at.fhv.teamb.symphoniacus.persistence.model.Musician;
 import at.fhv.teamb.symphoniacus.persistence.model.Section;
 import at.fhv.teamb.symphoniacus.persistence.model.User;
@@ -203,13 +203,13 @@ public class CalendarController implements Initializable, Controllable {
         List<Entry<Duty>> calendarEntries = new LinkedList<>();
         for (Duty duty : duties) {
             Interval interval = new Interval(
-                duty.getStart().toLocalDate(),
-                duty.getStart().toLocalTime(),
-                (duty.getEnd() == null // TODO - Adjust database to make duties always have an end
-                    ? duty.getStart().toLocalDate() : duty.getEnd().toLocalDate()),
-                (duty.getEnd() == null ? LocalTime.MAX : duty.getEnd().toLocalTime())
+                duty.getEntity().getStart().toLocalDate(),
+                duty.getEntity().getStart().toLocalTime(),
+                (duty.getEntity().getEnd() == null // TODO - Adjust database to make duties always have an end
+                    ? duty.getEntity().getStart().toLocalDate() : duty.getEntity().getEnd().toLocalDate()),
+                (duty.getEntity().getEnd() == null ? LocalTime.MAX : duty.getEntity().getEnd().toLocalTime())
             );
-            Entry<Duty> entry = new Entry<>(duty.getDescription(), interval);
+            Entry<Duty> entry = new Entry<>(duty.getEntity().getDescription(), interval);
             entry.setUserObject(duty);
             calendarEntries.add(entry);
         }

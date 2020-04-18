@@ -47,7 +47,7 @@ public class SectionMonthlySchedule {
     private Section section;
 
     @ManyToMany(mappedBy = "sectionMonthlySchedules")
-    private Set<Duty> duties = new HashSet<>();
+    private Set<DutyEntity> duties = new HashSet<>();
 
     public MonthlySchedule getMonthlySchedule() {
         return this.monthlySchedule;
@@ -65,22 +65,22 @@ public class SectionMonthlySchedule {
         this.section = section;
     }
 
-    public Set<Duty> getDuties() {
+    public Set<DutyEntity> getDuties() {
         return this.duties;
     }
 
-    public void setDuties(Set<Duty> dutySet) {
-        this.duties = dutySet;
+    public void setDuties(Set<DutyEntity> dutyEntitySet) {
+        this.duties = dutyEntitySet;
     }
 
-    public void addDuty(Duty duty) {
-        this.duties.add(duty);
-        duty.getSectionMonthlySchedules().add(this);
+    public void addDuty(DutyEntity dutyEntity) {
+        this.duties.add(dutyEntity);
+        dutyEntity.getSectionMonthlySchedules().add(this);
     }
 
-    public void removeDuty(Duty duty) {
-        this.duties.remove(duty);
-        duty.getSectionMonthlySchedules().remove(this);
+    public void removeDuty(DutyEntity dutyEntity) {
+        this.duties.remove(dutyEntity);
+        dutyEntity.getSectionMonthlySchedules().remove(this);
     }
 
     public Integer getSectionMonthlyScheduleId() {

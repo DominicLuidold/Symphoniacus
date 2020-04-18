@@ -2,7 +2,8 @@ package at.fhv.teamb.symphoniacus.persistence.dao;
 
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
-import at.fhv.teamb.symphoniacus.persistence.model.Duty;
+import at.fhv.teamb.symphoniacus.domain.Duty;
+import at.fhv.teamb.symphoniacus.persistence.model.DutyEntity;
 import at.fhv.teamb.symphoniacus.persistence.model.Section;
 import java.time.LocalDateTime;
 import java.util.List;
@@ -25,7 +26,7 @@ class DutyDaoTest {
     @Test
     void testFindAllDutiesForWeek_ShouldReturnNotNull() {
         // When
-        List<Duty> list = this.dao.findAllInRange(
+        List<DutyEntity> list = this.dao.findAllInRange(
             LocalDateTime.of(2020, 3, 30, 0, 0, 0),
             LocalDateTime.of(2020, 4, 5, 0, 0, 0)
         );
@@ -41,7 +42,7 @@ class DutyDaoTest {
         s.setSectionId(1);
 
         // When
-        List<Duty> list = this.dao.findAllInRangeWithSection(s,
+        List<DutyEntity> list = this.dao.findAllInRangeWithSection(s,
             LocalDateTime.of(2020, 5, 1, 0, 0, 0),
             LocalDateTime.of(2020, 5, 1, 14, 0, 0),
             true, false, false);

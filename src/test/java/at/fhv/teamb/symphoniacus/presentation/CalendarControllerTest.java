@@ -8,7 +8,8 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.doAnswer;
 import static org.mockito.Mockito.spy;
 
-import at.fhv.teamb.symphoniacus.persistence.model.Duty;
+import at.fhv.teamb.symphoniacus.domain.Duty;
+import at.fhv.teamb.symphoniacus.persistence.model.DutyEntity;
 import at.fhv.teamb.symphoniacus.persistence.model.Section;
 import com.calendarfx.model.Calendar;
 import com.calendarfx.model.CalendarSource;
@@ -110,17 +111,17 @@ class CalendarControllerTest {
         assertEquals(duties.size(), entries.size(), "Amount of Duties and Entries should be equal");
         for (int i = 0; i < duties.size(); i++) {
             assertEquals(
-                duties.get(i).getDescription(),
+                duties.get(i).getEntity().getDescription(),
                 entries.get(i).getTitle(),
                 "Duty and Entry should have same description"
             );
             assertEquals(
-                duties.get(i).getStart(),
+                duties.get(i).getEntity().getStart(),
                 entries.get(i).getStartAsLocalDateTime(),
                 "Duty and Entry should have same start time/day"
             );
             assertEquals(
-                duties.get(i).getEnd(),
+                duties.get(i).getEntity().getEnd(),
                 entries.get(i).getEndAsLocalDateTime(),
                 "Duty and Entry should have same end time/day"
             );
@@ -133,15 +134,20 @@ class CalendarControllerTest {
      * @return A List of Duties
      */
     private List<Duty> prepareTestDuties() {
-        Duty testDuty1 = new Duty();
-        testDuty1.setDescription("A very descriptive title");
-        testDuty1.setStart(LocalDateTime.of(LocalDate.now(), LocalTime.MIDNIGHT));
-        testDuty1.setEnd(LocalDateTime.of(LocalDate.now(), LocalTime.NOON));
+        Duty testDuty1 = new Duty(new DutyEntity());
+        testDuty1.getEntity().setDescription("A very descriptive title");
+        testDuty1.getEntity().setStart(LocalDateTime.of(LocalDate.now(), LocalTime.MIDNIGHT));
+        testDuty1.getEntity().setEnd(LocalDateTime.of(LocalDate.now(), LocalTime.NOON));
 
-        Duty testDuty2 = new Duty();
-        testDuty2.setDescription("Completely random something");
-        testDuty2.setStart(LocalDateTime.of(LocalDate.now().plusDays(1), LocalTime.NOON));
-        testDuty2.setEnd(LocalDateTime.of(LocalDate.now().plusDays(1), LocalTime.MAX));
+        Duty testDuty2 = new Duty(new DutyEntity());
+        testDuty2.getEntity().setDescription("Completely random something");
+        testDuty2.getEntity().setStart(
+            LocalDateTime.of(
+                LocalDate.now().plusDays(1),
+                LocalTime.NOON
+            )
+        );
+        testDuty2.getEntity().setEnd(LocalDateTime.of(LocalDate.now().plusDays(1), LocalTime.MAX));
 
         return new LinkedList<>(Arrays.asList(testDuty1, testDuty2));
     }
