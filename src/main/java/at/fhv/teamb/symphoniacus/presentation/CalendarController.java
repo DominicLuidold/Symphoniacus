@@ -32,7 +32,7 @@ import javafx.util.Callback;
  *
  * @author Dominic Luidold
  */
-public class CalendarController implements Initializable {
+public class CalendarController implements Initializable, Controllable {
     /**
      * Default interval start date represents {@link LocalDate#now()}.
      */
@@ -59,6 +59,8 @@ public class CalendarController implements Initializable {
      */
     @Override
     public void initialize(URL location, ResourceBundle resources) {
+        this.registerController();
+
         // TODO - Temporarily used until proper login is introduced
         Optional<User> user = new LoginManager().login("vaubou", "eItFAJSb");
         Optional<Musician> musician = new MusicianManager().loadMusician(user.get());
@@ -70,21 +72,27 @@ public class CalendarController implements Initializable {
             )
         );
 
-
-        /**
-         * Hide {@link calendarView} by clicking on Duty and load new Window for DutyScheduleView.
-         */
-        calendarView.setEntryDetailsCallback(new Callback<DateControl.EntryDetailsParameter, Boolean>() {
-            @Override
-            public Boolean call(DateControl.EntryDetailsParameter param) {
-                Entry<Duty> entry = (Entry<Duty>) param.getEntry();
-                dutySchedule.setVisible(true);
-                Duty duty = entry.getUserObject();
-
-                System.out.println(duty.getDescription());
-                return null;
+        // Hide calendarView by clicking on Duty and load new Window for DutyScheduleView.
+        calendarView.setEntryDetailsCallback(
+            new Callback<DateControl.EntryDetailsParameter, Boolean>() {
+                @Override
+                public Boolean call(DateControl.EntryDetailsParameter param) {
+                    Entry<Duty> entry = (Entry<Duty>) param.getEntry();
+                    MasterController mc = MasterController.getInstance();
+                    if (mc.get("CalendarController") instanceof CalendarController) {
+                        CalendarController cc = (CalendarController) mc.get("CalendarController");
+                        cc.hide();
+                    }
+                    if (mc.get("DutyScheduleController") instanceof DutyScheduleController) {
+                        DutyScheduleController dsc =
+                            (DutyScheduleController) mc.get("DutyScheduleController");
+                        dsc.setDuty(entry.getUserObject());
+                        dsc.show();
+                    }
+                    return true;
+                }
             }
-        });
+        );
     }
 
     /**
@@ -198,5 +206,21 @@ public class CalendarController implements Initializable {
             calendarEntries.add(entry);
         }
         return calendarEntries;
+    }
+
+    @Override
+    public void registerController() {
+        MasterController mc = MasterController.getInstance();
+        mc.put("CalendarController", this);
+    }
+
+    @Override
+    public void show() {
+        this.calendarView.setVisible(true);
+    }
+
+    @Override
+    public void hide() {
+        this.calendarView.setVisible(false);
     }
 }
