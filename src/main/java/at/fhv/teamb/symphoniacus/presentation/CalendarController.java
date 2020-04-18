@@ -12,6 +12,7 @@ import com.calendarfx.model.CalendarSource;
 import com.calendarfx.model.Entry;
 import com.calendarfx.model.Interval;
 import com.calendarfx.view.CalendarView;
+import com.calendarfx.view.DateControl;
 import java.net.URL;
 import java.time.LocalDate;
 import java.time.LocalTime;
@@ -21,6 +22,8 @@ import java.util.Optional;
 import java.util.ResourceBundle;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.scene.layout.AnchorPane;
+import javafx.util.Callback;
 
 /**
  * This controller is responsible for handling all CalendarFX related actions such as
@@ -48,6 +51,9 @@ public class CalendarController implements Initializable {
     @FXML
     private CalendarView calendarView;
 
+    @FXML
+    private AnchorPane dutySchedule;
+
     /**
      * {@inheritDoc}
      */
@@ -57,13 +63,28 @@ public class CalendarController implements Initializable {
         Optional<User> user = new LoginManager().login("vaubou", "eItFAJSb");
         Optional<Musician> musician = new MusicianManager().loadMusician(user.get());
         Section section = musician.get().getSection();
-
         this.calendarView.getCalendarSources().setAll(
             prepareCalendarSource(
                 resources.getString("sections"),
                 section
             )
         );
+
+
+        /**
+         * Hide {@link calendarView} by clicking on Duty and load new Window for DutyScheduleView.
+         */
+        calendarView.setEntryDetailsCallback(new Callback<DateControl.EntryDetailsParameter, Boolean>() {
+            @Override
+            public Boolean call(DateControl.EntryDetailsParameter param) {
+                Entry<Duty> entry = (Entry<Duty>) param.getEntry();
+                dutySchedule.setVisible(true);
+                Duty duty = entry.getUserObject();
+
+                System.out.println(duty.getDescription());
+                return null;
+            }
+        });
     }
 
     /**
@@ -173,6 +194,7 @@ public class CalendarController implements Initializable {
                 (duty.getEnd() == null ? LocalTime.MAX : duty.getEnd().toLocalTime())
             );
             Entry<Duty> entry = new Entry<>(duty.getDescription(), interval);
+            entry.setUserObject(duty);
             calendarEntries.add(entry);
         }
         return calendarEntries;
