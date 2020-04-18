@@ -1,10 +1,13 @@
 package at.fhv.teamb.symphoniacus.persistence.model;
 
+import java.util.Set;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
 @Entity
@@ -23,6 +26,9 @@ public class DutyCategory {
 
     @Column(name = "points")
     private Integer points;
+
+    @OneToMany(mappedBy = "dutyCategory", orphanRemoval = false, fetch = FetchType.LAZY)
+    private Set<DutyEntity> duties;
 
     public Integer getDutyCategoryId() {
         return this.dutyCategoryId;
@@ -54,5 +60,15 @@ public class DutyCategory {
 
     public void setPoints(Integer points) {
         this.points = points;
+    }
+
+    public void addDuty(DutyEntity entity) {
+        this.duties.add(entity);
+        entity.setDutyCategory(this);
+    }
+
+    public void removeEntity(DutyEntity entity) {
+        this.duties.remove(entity);
+        entity.setDutyCategory(null);
     }
 }
