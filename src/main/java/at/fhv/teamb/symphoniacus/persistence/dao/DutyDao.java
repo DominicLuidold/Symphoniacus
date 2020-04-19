@@ -50,7 +50,11 @@ public class DutyDao extends BaseDao<DutyEntity> {
     public List<DutyEntity> findAllInRange(LocalDateTime start, LocalDateTime end) {
         this.createEntityManager();
         TypedQuery<DutyEntity> query = this.entityManager.createQuery(
-            "SELECT d FROM DutyEntity d WHERE d.start >= :start AND d.end <= :end",
+            "SELECT d FROM DutyEntity d "
+                + "JOIN FETCH d.dutyCategory dc "
+                + "JOIN FETCH d.seriesOfPerformances sop "
+                + "WHERE d.start >= :start "
+                + "AND d.end <= :end",
             DutyEntity.class
         );
         query.setMaxResults(300);
@@ -110,6 +114,8 @@ public class DutyDao extends BaseDao<DutyEntity> {
         TypedQuery<DutyEntity> query = this.entityManager.createQuery("SELECT d FROM DutyEntity d "
             + "INNER JOIN d.sectionMonthlySchedules sms "
             + "INNER JOIN sms.section s "
+            + "JOIN FETCH d.dutyCategory dc "
+            + "JOIN FETCH d.seriesOfPerformances sop "
             + "WHERE d.start >= :start AND d.end <= :end "
             + "AND s.sectionId = :sectionId "
             + "AND sms.isReadyForDutyScheduler = :isReadyForDutyScheduler "
