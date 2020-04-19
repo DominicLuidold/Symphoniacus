@@ -65,7 +65,7 @@ public class DutyScheduleController implements Initializable, Controllable {
 
         LOG.debug("Binding duty title to: " + duty.getTitle());
         this.dutyTitle.textProperty().bind(new SimpleStringProperty(
-           "Current Duty: " + duty.getTitle()
+            "Current Duty: " + duty.getTitle()
         ));
     }
 }
