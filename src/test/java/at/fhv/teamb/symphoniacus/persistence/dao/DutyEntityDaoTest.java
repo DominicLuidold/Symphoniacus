@@ -2,7 +2,6 @@ package at.fhv.teamb.symphoniacus.persistence.dao;
 
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
-import at.fhv.teamb.symphoniacus.domain.Duty;
 import at.fhv.teamb.symphoniacus.persistence.model.DutyEntity;
 import at.fhv.teamb.symphoniacus.persistence.model.Section;
 import java.time.LocalDateTime;
