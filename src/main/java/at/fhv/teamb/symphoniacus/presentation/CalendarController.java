@@ -207,7 +207,7 @@ public class CalendarController implements Initializable, Controllable {
                 duty.getEntity().getEnd().toLocalDate(),
                 duty.getEntity().getEnd().toLocalTime()
             );
-            Entry<Duty> entry = new Entry<>(duty.getEntity().getDescription(), interval);
+            Entry<Duty> entry = new Entry<>(duty.getTitle(), interval);
             entry.setUserObject(duty);
             calendarEntries.add(entry);
         }
