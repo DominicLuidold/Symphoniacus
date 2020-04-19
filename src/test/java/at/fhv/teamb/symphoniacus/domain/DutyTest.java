@@ -28,6 +28,7 @@ public class DutyTest {
                 )
             );
 
+        Mockito.when(de.getDescription()).thenReturn("TV");
         DutyCategory dc = new DutyCategory();
         dc.setIsRehearsal(true);
         dc.setType("Konzert-Probe");
@@ -38,7 +39,7 @@ public class DutyTest {
         Mockito.when(de.getSeriesOfPerformances()).thenReturn(sp);
 
         Duty duty = new Duty(de);
-        Assertions.assertEquals("Konzert-Probe for Aida at 17.05.2020", duty.getTitle());
+        Assertions.assertEquals("Konzert-Probe for Aida (TV)", duty.getTitle());
     }
 
     @Test
@@ -53,7 +54,7 @@ public class DutyTest {
                 LocalDateTime.of(
                     2020,
                     05,
-                    05,
+                    17,
                     15,
                     00,
                     00
@@ -67,7 +68,7 @@ public class DutyTest {
 
         Duty duty = new Duty(de);
         Assertions.assertEquals(
-            "Nicht-musikalischer Dienst at 17.05.2020",
+            "Nicht-musikalischer Dienst",
             duty.getTitle()
         );
     }
