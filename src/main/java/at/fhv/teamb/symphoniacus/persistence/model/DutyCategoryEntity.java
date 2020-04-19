@@ -15,7 +15,7 @@ import javax.persistence.Table;
 @Entity
 @Table(name = "dutyCategory")
 @NamedEntityGraph(
-    name = "dutyCategory-with-points",
+    name = "dutyCategoryId-with-points",
     attributeNodes = {
         @NamedAttributeNode("dutyCategoryId"),
         @NamedAttributeNode("points"),

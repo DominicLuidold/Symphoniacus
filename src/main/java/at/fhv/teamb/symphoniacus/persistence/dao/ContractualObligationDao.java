@@ -6,9 +6,12 @@ import at.fhv.teamb.symphoniacus.persistence.model.MusicianEntity;
 import java.util.Optional;
 import javax.persistence.TypedQuery;
 
-//TODO - implement euqals method
+/**
+ * DAO for ContractualObligation.
+ *
+ * @author Nino Heinzle
+ */
 public class ContractualObligationDao extends BaseDao<ContractualObligationEntity> {
-
 
     @Override
     public Optional<ContractualObligationEntity> find(Object key) {
@@ -41,7 +44,7 @@ public class ContractualObligationDao extends BaseDao<ContractualObligationEntit
         TypedQuery<ContractualObligationEntity> query = this.entityManager.createQuery(
             "SELECT co FROM ContractualObligationEntity co WHERE co.musicianId = :musicianId",
             ContractualObligationEntity.class);
-        query.setParameter("musicianId",musician.getMusicianId());
+        query.setParameter("musicianId", musician.getMusicianId());
         ContractualObligationEntity co = query.getSingleResult();
         this.tearDown();
 

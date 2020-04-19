@@ -1,6 +1,5 @@
 package at.fhv.teamb.symphoniacus.persistence.dao;
 
-
 import at.fhv.teamb.symphoniacus.persistence.model.ContractualObligationEntity;
 import at.fhv.teamb.symphoniacus.persistence.model.MusicianEntity;
 import java.util.Optional;
@@ -11,6 +10,11 @@ import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInstance;
 
+/**
+ * Tests for ContractualObligation.
+ *
+ * @author Nino Heinzle
+ */
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 class ContractualObligationDaoTest {
     private static final Logger LOG = LogManager.getLogger(ContractualObligationDaoTest.class);
@@ -46,5 +50,4 @@ class ContractualObligationDaoTest {
             .assertEquals(contractualObligationEntity.getMusicianId(),
                 musicianEntity.getMusicianId()));
     }
-
 }
