@@ -14,18 +14,14 @@ import org.apache.logging.log4j.Logger;
 
 public class DutyScheduleController implements Initializable, Controllable {
 
+    private static final Logger LOG = LogManager.getLogger(DutyScheduleController.class);
     private Duty duty;
-
     @FXML
     private AnchorPane dutySchedule;
-
     @FXML
     private Button scheduleBackBtn;
-
     @FXML
     private Label dutyTitle;
-
-    private static final Logger LOG = LogManager.getLogger(DutyScheduleController.class);
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
@@ -58,6 +54,7 @@ public class DutyScheduleController implements Initializable, Controllable {
 
     /**
      * Set the actual Duty for Controller.
+     *
      * @param duty actual Duty.
      */
     public void setDuty(Duty duty) {
@@ -65,7 +62,7 @@ public class DutyScheduleController implements Initializable, Controllable {
 
         LOG.debug("Binding duty title to: " + duty.getTitle());
         this.dutyTitle.textProperty().bind(new SimpleStringProperty(
-           "Current Duty: " + duty.getTitle()
+            "Current Duty: " + duty.getTitle()
         ));
     }
 }

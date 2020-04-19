@@ -11,6 +11,7 @@ import com.calendarfx.model.Calendar;
 import com.calendarfx.model.CalendarSource;
 import com.calendarfx.model.Entry;
 import com.calendarfx.model.Interval;
+import com.calendarfx.model.LoadEvent;
 import com.calendarfx.view.CalendarView;
 import com.calendarfx.view.DateControl;
 import java.net.URL;
@@ -68,6 +69,7 @@ public class CalendarController implements Initializable, Controllable {
         Optional<User> user = new LoginManager().login("vaubou", "eItFAJSb");
         Optional<Musician> musician = new MusicianManager().loadMusician(user.get());
         Section section = musician.get().getSection();
+
         this.calendarView.getCalendarSources().setAll(
             prepareCalendarSource(
                 resources.getString("sections"),
@@ -75,8 +77,13 @@ public class CalendarController implements Initializable, Controllable {
             )
         );
 
+        this.calendarView.addEventHandler(LoadEvent.LOAD, event -> {
+            LOG.debug("Calendar Load Event, loading");
+            LOG.debug("TODO: Would add lazy loading strategy here");
+        });
+
         // Hide calendarView by clicking on Duty and load new Window for DutyScheduleView.
-        calendarView.setEntryDetailsCallback(
+        this.calendarView.setEntryDetailsCallback(
             new Callback<DateControl.EntryDetailsParameter, Boolean>() {
                 @Override
                 public Boolean call(DateControl.EntryDetailsParameter param) {
