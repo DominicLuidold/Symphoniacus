@@ -84,7 +84,8 @@ public class CalendarController implements Initializable, Controllable {
                         Entry<Duty> entry = (Entry<Duty>) param.getEntry();
                         MasterController mc = MasterController.getInstance();
                         if (mc.get("CalendarController") instanceof CalendarController) {
-                            CalendarController cc = (CalendarController) mc.get("CalendarController");
+                            CalendarController cc =
+                                (CalendarController) mc.get("CalendarController");
                             cc.hide();
                         }
                         if (mc.get("DutyScheduleController") instanceof DutyScheduleController) {

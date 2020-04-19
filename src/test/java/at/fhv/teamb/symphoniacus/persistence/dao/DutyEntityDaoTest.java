@@ -14,8 +14,8 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInstance;
 
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
-class DutyDaoTest {
-    private static final Logger LOG = LogManager.getLogger(DutyDaoTest.class);
+class DutyEntityDaoTest {
+    private static final Logger LOG = LogManager.getLogger(DutyEntityDaoTest.class);
     private DutyDao dao;
 
     @BeforeAll

@@ -56,13 +56,16 @@ public class DutyScheduleController implements Initializable, Controllable {
         this.dutySchedule.setVisible(false);
     }
 
+    /**
+     * Set the actual Duty for Controller.
+     * @param duty actual Duty.
+     */
     public void setDuty(Duty duty) {
         this.duty = duty;
-
         LOG.debug("Binding duty title to: " + duty.getEntity().getDescription());
         this.dutyTitle.textProperty().bind(new SimpleStringProperty(
-           "Current Duty: " + duty.getEntity().getDescription()
-            // TODO change to domain duty title
+            "Current Duty: " + duty.getEntity().getDescription()
+        // TODO change to domain duty title
         ));
     }
 }
