@@ -13,7 +13,7 @@ public class DutyTest {
     @Test
     void getTitle_shouldReturnACompositeTitleForSeries() {
         // Konzert-Probe for Aida at 17.05.2020
-        // <CATEGORY> for <SERIES> at <DATE>
+        // <CATEGORY> for <SERIES> (<DESCRIPTION>)
         DutyEntity de = Mockito.mock(DutyEntity.class);
         Mockito
             .when(de.getStart())
@@ -45,7 +45,7 @@ public class DutyTest {
     @Test
     void getTitle_shouldReturnACompositeTitleWithoutSeries() {
         // Juryservice at 17.05.2020
-        // <CATEGORY> at <DATE>
+        // <CATEGORY> (<DESCRIPTION>)
 
         DutyEntity de = Mockito.mock(DutyEntity.class);
         Mockito
