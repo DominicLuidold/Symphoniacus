@@ -2,6 +2,8 @@ package at.fhv.teamb.symphoniacus.presentation;
 
 import at.fhv.teamb.symphoniacus.domain.Duty;
 import java.net.URL;
+import java.time.format.DateTimeFormatter;
+import java.time.format.FormatStyle;
 import java.util.ResourceBundle;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.fxml.FXML;
@@ -65,7 +67,9 @@ public class DutyScheduleController implements Initializable, Controllable {
 
         LOG.debug("Binding duty title to: " + duty.getTitle());
         this.dutyTitle.textProperty().bind(new SimpleStringProperty(
-            "Current Duty: " + duty.getTitle()
+            duty.getEntity().getStart().format(DateTimeFormatter.ofPattern("dd.MM.yyyy, HH:mm")) + " - " + duty.getTitle()
         ));
     }
+
+
 }
