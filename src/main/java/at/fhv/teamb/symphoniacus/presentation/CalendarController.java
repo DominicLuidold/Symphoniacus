@@ -15,7 +15,6 @@ import com.calendarfx.view.CalendarView;
 import com.calendarfx.view.DateControl;
 import java.net.URL;
 import java.time.LocalDate;
-import java.time.LocalTime;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Optional;
@@ -205,9 +204,8 @@ public class CalendarController implements Initializable, Controllable {
             Interval interval = new Interval(
                 duty.getEntity().getStart().toLocalDate(),
                 duty.getEntity().getStart().toLocalTime(),
-                (duty.getEntity().getEnd() == null // TODO - Adjust database to make duties always have an end
-                    ? duty.getEntity().getStart().toLocalDate() : duty.getEntity().getEnd().toLocalDate()),
-                (duty.getEntity().getEnd() == null ? LocalTime.MAX : duty.getEntity().getEnd().toLocalTime())
+                duty.getEntity().getEnd().toLocalDate(),
+                duty.getEntity().getEnd().toLocalTime()
             );
             Entry<Duty> entry = new Entry<>(duty.getEntity().getDescription(), interval);
             entry.setUserObject(duty);
