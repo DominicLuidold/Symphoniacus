@@ -43,8 +43,10 @@ public class Duty {
             ResourceBundle bundle = ResourceBundle.getBundle("bundles.language", locale);
 
             StringBuilder sb = new StringBuilder();
-            // <CATEGORY>
-            sb.append(this.entity.getDutyCategory().getType());
+            if (this.entity.getDutyCategory() != null) {
+                // <CATEGORY>
+                sb.append(this.entity.getDutyCategory().getType());
+            }
 
             // for <SOP>
             if (this.entity.getSeriesOfPerformances() != null) {

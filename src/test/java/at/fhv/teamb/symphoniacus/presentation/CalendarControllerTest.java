@@ -111,7 +111,7 @@ class CalendarControllerTest {
         assertEquals(duties.size(), entries.size(), "Amount of Duties and Entries should be equal");
         for (int i = 0; i < duties.size(); i++) {
             assertEquals(
-                duties.get(i).getEntity().getDescription(),
+                duties.get(i).getTitle(),
                 entries.get(i).getTitle(),
                 "Duty and Entry should have same description"
             );
