@@ -67,9 +67,13 @@ public class DutyScheduleController implements Initializable, Controllable {
 
         LOG.debug("Binding duty title to: " + duty.getTitle());
         this.dutyTitle.textProperty().bind(new SimpleStringProperty(
-            duty.getEntity().getStart().format(DateTimeFormatter.ofPattern("dd.MM.yyyy, HH:mm")) + " - " + duty.getTitle()
-        ));
+            duty
+                .getEntity()
+                .getStart()
+                .format(
+                    DateTimeFormatter.ofPattern("dd.MM.yyyy, HH:mm")
+                ) + " - " + duty.getTitle()
+            )
+        );
     }
-
-
 }
