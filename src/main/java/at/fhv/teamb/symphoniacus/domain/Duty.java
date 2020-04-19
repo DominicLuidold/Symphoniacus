@@ -6,6 +6,11 @@ import java.util.ResourceBundle;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+/**
+ * Domain object for Duty.
+ *
+ * @author Valentin Goronjio
+ */
 public class Duty {
 
     private static final Logger LOG = LogManager.getLogger(Duty.class);
@@ -23,7 +28,13 @@ public class Duty {
     public void setEntity(DutyEntity entity) {
         this.entity = entity;
     }
-    
+
+    /**
+     * Generates a calendar-friendly title for Duty.
+     * @return String that looks like this: CATEGORY for SERIES (DESCRIPTION),
+     *     where the "for SERIES" "(DESCRIPTION)" parts are optional
+     * @see DutyTest
+     * */
     public String getTitle() {
         if (this.title == null) {
             LOG.debug("No title generated yet - generating");
