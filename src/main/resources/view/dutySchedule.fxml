@@ -11,6 +11,9 @@
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.Pane?>
 <?import javafx.scene.control.Label?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
+<?import javafx.geometry.Insets?>
 <AnchorPane fx:id="dutySchedule" prefHeight="226.0" prefWidth="364.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="at.fhv.teamb.symphoniacus.presentation.DutyScheduleController">
    <AnchorPane maxHeight="45.0" minHeight="45.0" prefHeight="45.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
       <children>
@@ -26,20 +29,56 @@
          </ToolBar>
       </children>
    </AnchorPane>
-   <SplitPane dividerPositions="0.29797979797979796" prefHeight="160.0" prefWidth="200.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="45.0">
-     <items>
+   <SplitPane dividerPositions="0.3" orientation="HORIZONTAL" prefHeight="160.0" prefWidth="200.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="45.0">
+       <padding>
+           <Insets top="5" right="5" bottom="5" left="5" />
+       </padding>
+       <items>
             <TableView prefHeight="360.0" prefWidth="241.0">
                 <columns>
                     <TableColumn maxWidth="1.7976931348623157E308" minWidth="-1.0" prefWidth="120.0" text="Rolle" />
                     <TableColumn maxWidth="1.7976931348623157E308" minWidth="-1.0" prefWidth="120.0" text="Musiker" />
                 </columns>
             </TableView>
-            <TableView prefHeight="191.0" prefWidth="523.0">
-                <columns>
-                    <TableColumn prefWidth="75.0" text="C1" />
-                    <TableColumn prefWidth="75.0" text="C2" />
-                </columns>
-            </TableView>
+            <SplitPane prefHeight="191.0" prefWidth="523.0" dividerPositions="0.5" orientation="VERTICAL">
+                <padding>
+                    <Insets top="5" right="5" bottom="5" left="5" />
+                </padding>
+                <VBox>
+                    <Label text="%tab.duty.schedule.table.musicians.with.request">
+                        <font>
+                            <Font size="18" />
+                        </font>
+                    </Label>
+                    <TableView>
+                        <columns>
+                            <TableColumn prefWidth="150" text="%tab.duty.schedule.table.musicians.name" />
+                            <TableColumn prefWidth="75.0" text="%tab.duty.schedule.table.musicians.points" />
+                            <TableColumn prefWidth="100.0" text="%tab.duty.schedule.table.musicians.request.type" />
+                            <TableColumn prefWidth="100.0" text="%tab.duty.schedule.table.musicians.details" />
+                            <TableColumn prefWidth="75.0" text="%tab.duty.schedule.table.musicians.date" />
+                            <TableColumn prefWidth="75.0" text="%tab.duty.schedule.table.musicians.schedule" />
+                        </columns>
+                    </TableView>
+                </VBox>
+                <VBox>
+                    <Label text="%tab.duty.schedule.table.musicians.without.request">
+                        <font>
+                            <Font size="18" />
+                        </font>
+                    </Label>
+                    <TableView>
+                        <columns>
+                            <TableColumn prefWidth="150" text="%tab.duty.schedule.table.musicians.name" />
+                            <TableColumn prefWidth="75.0" text="%tab.duty.schedule.table.musicians.points" />
+                            <TableColumn prefWidth="100.0" text="%tab.duty.schedule.table.musicians.request.type" />
+                            <TableColumn prefWidth="100.0" text="%tab.duty.schedule.table.musicians.details" />
+                            <TableColumn prefWidth="75.0" text="%tab.duty.schedule.table.musicians.date" />
+                            <TableColumn prefWidth="75.0" text="%tab.duty.schedule.table.musicians.schedule" />
+                        </columns>
+                    </TableView>
+                </VBox>
+            </SplitPane>
      </items>
    </SplitPane>
 </AnchorPane>
