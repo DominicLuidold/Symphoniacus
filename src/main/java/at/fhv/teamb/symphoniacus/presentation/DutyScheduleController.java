@@ -18,7 +18,6 @@ import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
-import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.layout.AnchorPane;
 import org.apache.logging.log4j.LogManager;
@@ -52,10 +51,7 @@ public class DutyScheduleController implements Initializable, Controllable {
     private TableView<MusicianTableModel> musicianTableWithRequests;
 
     @FXML
-    private TableColumn<MusicianTableModel, String> columnName;
-
-    @FXML
-    private TableView<Musician> musicianTableWithoutRequests;
+    private TableView<MusicianTableModel> musicianTableWithoutRequests;
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
@@ -77,6 +73,24 @@ public class DutyScheduleController implements Initializable, Controllable {
         this.musicianTableWithRequests.setItems(demoList);
 
         showDutyPositionsWithMusicians();
+        this.musicianTableWithRequests.getSelectionModel().selectedItemProperty()
+            .addListener(
+                (observable, oldValue, newValue) -> addMusicianToPosition(
+                    newValue.getMusician(),
+                    null)
+            );
+
+        this.musicianTableWithoutRequests.getSelectionModel().selectedItemProperty()
+            .addListener(
+                (observable, oldValue, newValue) -> addMusicianToPosition(
+                    newValue.getMusician(),
+                    null)
+            );
+    }
+
+    protected void addMusicianToPosition(Musician musician, DutyPosition dutyPosition) {
+        LOG.debug("Selected musician changed");
+        LOG.error("TODO: add musician to position here");
     }
 
     @Override
