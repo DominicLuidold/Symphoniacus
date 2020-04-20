@@ -48,8 +48,8 @@ public class DutyPositionEntity {
         return this.duty;
     }
 
-    public void setDuty(DutyEntity duty) {
-        this.duty = duty;
+    public void setDuty(DutyEntity dutyEntity) {
+        this.duty = dutyEntity;
     }
 
     public Integer getDutyPositionId() {

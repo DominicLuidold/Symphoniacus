@@ -47,7 +47,7 @@ public class WeeklySchedule {
 
     //One-To-Many Part for DUTY Table
     @OneToMany(mappedBy = "weeklySchedule", orphanRemoval = true)
-    private Set<DutyEntity> dutySet = new HashSet<>();
+    private Set<DutyEntity> dutyEntitySet = new HashSet<>();
 
     public MonthlySchedule getMonthlySchedule() {
         return this.monthlySchedule;
@@ -57,17 +57,17 @@ public class WeeklySchedule {
         this.monthlySchedule = monthlySchedule;
     }
 
-    public Set<DutyEntity> getDutySet() {
-        return this.dutySet;
+    public Set<DutyEntity> getDutyEntitySet() {
+        return this.dutyEntitySet;
     }
 
-    public void setDutySet(Set<DutyEntity> dutySet) {
-        this.dutySet = dutySet;
+    public void setDutyEntitySet(Set<DutyEntity> dutyEntitySet) {
+        this.dutyEntitySet = dutyEntitySet;
     }
 
-    public void addDuty(DutyEntity duty) {
-        this.dutySet.add(duty);
-        duty.setWeeklySchedule(this);
+    public void addDuty(DutyEntity dutyEntity) {
+        this.dutyEntitySet.add(dutyEntity);
+        dutyEntity.setWeeklySchedule(this);
     }
 
     public Integer getWeeklyScheduleId() {

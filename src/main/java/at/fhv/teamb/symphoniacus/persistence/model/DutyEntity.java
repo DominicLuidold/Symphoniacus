@@ -26,11 +26,9 @@ public class DutyEntity {
     @Column(name = "dutyId")
     private Integer dutyId;
 
-    @Column(name = "weeklyScheduleId", insertable = false, updatable = false)
-    private Integer weeklyScheduleId;
-
-    @Column(name = "dutyCategoryId")
-    private Integer dutyCategoryId;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "dutyCategoryId")
+    private DutyCategory dutyCategory;
 
     @Column(name = "description")
     private String description;
@@ -44,8 +42,10 @@ public class DutyEntity {
     @Column(name = "start")
     private LocalDateTime start;
 
-    @Column(name = "seriesOfPerformancesId")
-    private Integer seriesOfPerformancesId;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "seriesOfPerformancesId")
+    private SeriesOfPerformances seriesOfPerformances;
+
 
     //One-To-Many Part for DUTYPOSITION Table
     @OneToMany(mappedBy = "duty", orphanRemoval = true)
@@ -102,22 +102,6 @@ public class DutyEntity {
         this.dutyId = dutyId;
     }
 
-    public Integer getWeeklyScheduleId() {
-        return this.weeklyScheduleId;
-    }
-
-    public void setWeeklyScheduleId(Integer weeklyScheduleId) {
-        this.weeklyScheduleId = weeklyScheduleId;
-    }
-
-    public Integer getDutyCategoryId() {
-        return this.dutyCategoryId;
-    }
-
-    public void setDutyCategoryId(Integer dutyCategoryId) {
-        this.dutyCategoryId = dutyCategoryId;
-    }
-
     public String getDescription() {
         return this.description;
     }
@@ -150,14 +134,6 @@ public class DutyEntity {
         this.start = start;
     }
 
-    public Integer getSeriesOfPerformancesId() {
-        return this.seriesOfPerformancesId;
-    }
-
-    public void setSeriesOfPerformancesId(Integer seriesOfPerformancesId) {
-        this.seriesOfPerformancesId = seriesOfPerformancesId;
-    }
-
     public void addSectionMonthlySchedule(SectionMonthlySchedule sms) {
         this.sectionMonthlySchedules.add(sms);
         sms.getDuties().add(this);
@@ -175,5 +151,22 @@ public class DutyEntity {
     public void setSectionMonthlySchedules(
         Set<SectionMonthlySchedule> sectionMonthlySchedules) {
         this.sectionMonthlySchedules = sectionMonthlySchedules;
+    }
+
+    public DutyCategory getDutyCategory() {
+        return dutyCategory;
+    }
+
+    public void setDutyCategory(DutyCategory dutyCategory) {
+        this.dutyCategory = dutyCategory;
+    }
+
+    public SeriesOfPerformances getSeriesOfPerformances() {
+        return seriesOfPerformances;
+    }
+
+    public void setSeriesOfPerformances(
+        SeriesOfPerformances seriesOfPerformances) {
+        this.seriesOfPerformances = seriesOfPerformances;
     }
 }

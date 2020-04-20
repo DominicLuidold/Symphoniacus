@@ -11,7 +11,9 @@ import com.calendarfx.model.Calendar;
 import com.calendarfx.model.CalendarSource;
 import com.calendarfx.model.Entry;
 import com.calendarfx.model.Interval;
+import com.calendarfx.model.LoadEvent;
 import com.calendarfx.view.CalendarView;
+import com.calendarfx.view.DateControl;
 import java.net.URL;
 import java.time.LocalDate;
 import java.util.LinkedList;
@@ -20,6 +22,10 @@ import java.util.Optional;
 import java.util.ResourceBundle;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.scene.layout.AnchorPane;
+import javafx.util.Callback;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 /**
  * This controller is responsible for handling all CalendarFX related actions such as
@@ -28,7 +34,7 @@ import javafx.fxml.Initializable;
  *
  * @author Dominic Luidold
  */
-public class CalendarController implements Initializable {
+public class CalendarController implements Initializable, Controllable {
     /**
      * Default interval start date represents {@link LocalDate#now()}.
      */
@@ -44,14 +50,21 @@ public class CalendarController implements Initializable {
      */
     private static final LocalDate EXTENDED_INTERVAL_END = DEFAULT_INTERVAL_START.plusMonths(1);
 
+    private static final Logger LOG = LogManager.getLogger(CalendarController.class);
+
     @FXML
     private CalendarView calendarView;
+
+    @FXML
+    private AnchorPane dutySchedule;
 
     /**
      * {@inheritDoc}
      */
     @Override
     public void initialize(URL location, ResourceBundle resources) {
+        this.registerController();
+
         // TODO - Temporarily used until proper login is introduced
         Optional<User> user = new LoginManager().login("vaubou", "eItFAJSb");
         Optional<MusicianEntity> musician = new MusicianManager().loadMusician(user.get());
@@ -62,6 +75,38 @@ public class CalendarController implements Initializable {
                 resources.getString("sections"),
                 section
             )
+        );
+
+        this.calendarView.addEventHandler(LoadEvent.LOAD, event -> {
+            LOG.debug("Calendar Load Event, loading");
+            LOG.debug("TODO: Would add lazy loading strategy here");
+        });
+
+        // Hide calendarView by clicking on Duty and load new Window for DutyScheduleView.
+        this.calendarView.setEntryDetailsCallback(
+            new Callback<DateControl.EntryDetailsParameter, Boolean>() {
+                @Override
+                public Boolean call(DateControl.EntryDetailsParameter param) {
+                    if (param.getEntry() instanceof Entry) {
+                        Entry<Duty> entry = (Entry<Duty>) param.getEntry();
+                        MasterController mc = MasterController.getInstance();
+                        if (mc.get("CalendarController") instanceof CalendarController) {
+                            CalendarController cc =
+                                (CalendarController) mc.get("CalendarController");
+                            cc.hide();
+                        }
+                        if (mc.get("DutyScheduleController") instanceof DutyScheduleController) {
+                            DutyScheduleController dsc =
+                                (DutyScheduleController) mc.get("DutyScheduleController");
+                            dsc.setDuty(entry.getUserObject());
+                            dsc.show();
+                        }
+                        return true;
+                    }
+                    LOG.error("Unrecognized Calendar Entry: No Duty found");
+                    return false;
+                }
+            }
         );
     }
 
@@ -165,14 +210,31 @@ public class CalendarController implements Initializable {
         List<Entry<DutyEntity>> calendarEntries = new LinkedList<>();
         for (DutyEntity duty : duties) {
             Interval interval = new Interval(
-                duty.getStart().toLocalDate(),
-                duty.getStart().toLocalTime(),
-                duty.getEnd().toLocalDate(),
-                duty.getEnd().toLocalTime()
+                duty.getEntity().getStart().toLocalDate(),
+                duty.getEntity().getStart().toLocalTime(),
+                duty.getEntity().getEnd().toLocalDate(),
+                duty.getEntity().getEnd().toLocalTime()
             );
-            Entry<DutyEntity> entry = new Entry<>(duty.getDescription(), interval);
+            Entry<Duty> entry = new Entry<>(duty.getTitle(), interval);
+            entry.setUserObject(duty);
             calendarEntries.add(entry);
         }
         return calendarEntries;
+    }
+
+    @Override
+    public void registerController() {
+        MasterController mc = MasterController.getInstance();
+        mc.put("CalendarController", this);
+    }
+
+    @Override
+    public void show() {
+        this.calendarView.setVisible(true);
+    }
+
+    @Override
+    public void hide() {
+        this.calendarView.setVisible(false);
     }
 }
