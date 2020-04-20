@@ -35,15 +35,6 @@ public class Main extends Application {
             stage.setMinHeight(768);
             stage.setMinWidth(1366);
             stage.show();
-
-            DutyEntity entity = new DutyEntity();
-            entity.setDutyId(4);
-            MusicianEntity musicianEntity = new MusicianEntity();
-            musicianEntity.setMusicianId(9);
-            DutyDao dao = new DutyDao();
-            List<DutyEntity> result =
-                dao.getAllDutiesInRangeFromMusician(musicianEntity, LocalDate.of(2020, 5, 3));
-            System.out.println();
         } catch (IOException e) {
             e.fillInStackTrace();
         }

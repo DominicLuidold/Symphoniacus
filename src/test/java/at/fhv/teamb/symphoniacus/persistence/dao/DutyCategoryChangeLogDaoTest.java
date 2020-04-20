@@ -19,7 +19,7 @@ import org.junit.jupiter.api.TestInstance;
  */
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 class DutyCategoryChangeLogDaoTest {
-    private static final Logger LOG = LogManager.getLogger(ContractualObligationDaoTest.class);
+    private static final Logger LOG = LogManager.getLogger(DutyCategoryChangeLogDaoTest.class);
     private DutyCategoryChangeLogDao dao;
 
     @BeforeAll
