@@ -122,7 +122,7 @@ public class Points {
     }
 
     private static boolean isGivenMonthCurrentMonth(LocalDateTime month) {
-        return (month.getYear() == LocalDate.now().getYear() &&
-            (month.getMonthValue() == LocalDate.now().getMonthValue()));
+        return (month.getYear() == LocalDate.now().getYear()
+            && (month.getMonthValue() == LocalDate.now().getMonthValue()));
     }
 }
