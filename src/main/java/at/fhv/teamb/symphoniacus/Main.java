@@ -9,7 +9,7 @@ import java.util.List;
 import java.util.Locale;
 import java.util.ResourceBundle;
 import javafx.application.Application;
-import javafx.fxml.FXMLLoader;git
+import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
@@ -41,7 +41,8 @@ public class Main extends Application {
             MusicianEntity musicianEntity = new MusicianEntity();
             musicianEntity.setMusicianId(9);
             DutyDao dao = new DutyDao();
-            List<DutyEntity> result = dao.getAllDutiesInRangeFromMusician(musicianEntity, LocalDate.of(2020,5,3));
+            List<DutyEntity> result =
+                dao.getAllDutiesInRangeFromMusician(musicianEntity, LocalDate.of(2020, 5, 3));
             System.out.println();
         } catch (IOException e) {
             e.fillInStackTrace();
