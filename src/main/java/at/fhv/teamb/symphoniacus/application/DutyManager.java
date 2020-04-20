@@ -60,7 +60,7 @@ public class DutyManager {
      * @param start         A LocalDate that represents the start
      * @return A List of the matching duties
      */
-    public List<DutyEntity> findAllInWeekWithSection(
+    public List<Duty> findAllInWeekWithSection(
         SectionEntity sectionOfUser,
         LocalDate start
     ) {
@@ -83,7 +83,7 @@ public class DutyManager {
      * @param end           A LocalDate that represents the end
      * @return A List of the matching duties
      */
-    public List<DutyEntity> findAllInRangeWithSection(
+    public List<Duty> findAllInRangeWithSection(
         SectionEntity sectionOfUser,
         LocalDate start,
         LocalDate end

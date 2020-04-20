@@ -8,6 +8,7 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.doAnswer;
 import static org.mockito.Mockito.spy;
 
+import at.fhv.teamb.symphoniacus.domain.Duty;
 import at.fhv.teamb.symphoniacus.persistence.model.DutyEntity;
 import at.fhv.teamb.symphoniacus.persistence.model.SectionEntity;
 import com.calendarfx.model.Calendar;
@@ -79,13 +80,13 @@ class CalendarControllerTest {
         // Given
         CalendarController controller = new CalendarController();
         Calendar calendar = new Calendar();
-        List<Entry<DutyEntity>> entries = controller.createDutyCalendarEntries(prepareTestDuties());
+        List<Entry<Duty>> entries = controller.createDutyCalendarEntries(prepareTestDuties());
 
         // When
         controller.fillCalendar(calendar, entries);
 
         // Then
-        for (Entry<DutyEntity> entry : entries) {
+        for (Entry<Duty> entry : entries) {
             assertFalse(
                 calendar.findEntries(entry.getTitle()).isEmpty(),
                 "Calendar should contain Entry"
@@ -101,10 +102,10 @@ class CalendarControllerTest {
     @Test
     void createDutyCalendarEntries_ShouldCreateEntries() {
         // Given
-        List<DutyEntity> duties = prepareTestDuties();
+        List<Duty> duties = prepareTestDuties();
 
         // When
-        List<Entry<DutyEntity>> entries =
+        List<Entry<Duty>> entries =
             new CalendarController().createDutyCalendarEntries(duties);
 
         // Then
@@ -129,7 +130,7 @@ class CalendarControllerTest {
     }
 
     /**
-     * Prepares a List of {@link DutyEntity} objects with test data.
+     * Prepares a List of {@link Duty} objects with test data.
      *
      * @return A List of Duties
      */

@@ -3,6 +3,7 @@ package at.fhv.teamb.symphoniacus.presentation;
 import at.fhv.teamb.symphoniacus.application.DutyManager;
 import at.fhv.teamb.symphoniacus.application.LoginManager;
 import at.fhv.teamb.symphoniacus.application.MusicianManager;
+import at.fhv.teamb.symphoniacus.domain.Duty;
 import at.fhv.teamb.symphoniacus.persistence.model.DutyEntity;
 import at.fhv.teamb.symphoniacus.persistence.model.MusicianEntity;
 import at.fhv.teamb.symphoniacus.persistence.model.SectionEntity;
@@ -149,8 +150,8 @@ public class CalendarController implements Initializable, Controllable {
      * @param calendar The calendar to fill
      * @param entries  A List of Entries
      */
-    public void fillCalendar(Calendar calendar, List<Entry<DutyEntity>> entries) {
-        for (Entry<DutyEntity> entry : entries) {
+    public void fillCalendar(Calendar calendar, List<Entry<Duty>> entries) {
+        for (Entry<Duty> entry : entries) {
             entry.setCalendar(calendar);
         }
     }
@@ -206,9 +207,9 @@ public class CalendarController implements Initializable, Controllable {
      * @param duties A List of Duties
      * @return A list of Entries
      */
-    public List<Entry<DutyEntity>> createDutyCalendarEntries(List<DutyEntity> duties) {
-        List<Entry<DutyEntity>> calendarEntries = new LinkedList<>();
-        for (DutyEntity duty : duties) {
+    public List<Entry<Duty>> createDutyCalendarEntries(List<Duty> duties) {
+        List<Entry<Duty>> calendarEntries = new LinkedList<>();
+        for (Duty duty : duties) {
             Interval interval = new Interval(
                 duty.getEntity().getStart().toLocalDate(),
                 duty.getEntity().getStart().toLocalTime(),
