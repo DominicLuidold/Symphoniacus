@@ -1,5 +1,8 @@
 package at.fhv.teamb.symphoniacus.presentation;
 
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyBoolean;
+
 import at.fhv.teamb.symphoniacus.application.DutyScheduleManager;
 import at.fhv.teamb.symphoniacus.domain.ActualSectionInstrumentation;
 import at.fhv.teamb.symphoniacus.domain.Duty;
@@ -10,6 +13,8 @@ import at.fhv.teamb.symphoniacus.presentation.internal.DutyPositionMusicianTable
 import at.fhv.teamb.symphoniacus.presentation.internal.MusicianTableModel;
 import java.net.URL;
 import java.time.format.DateTimeFormatter;
+import java.util.LinkedList;
+import java.util.List;
 import java.util.ResourceBundle;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
@@ -22,6 +27,7 @@ import javafx.scene.control.TableView;
 import javafx.scene.layout.AnchorPane;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.mockito.Mockito;
 
 public class DutyScheduleController implements Initializable, Controllable {
 
@@ -62,18 +68,46 @@ public class DutyScheduleController implements Initializable, Controllable {
             cc.show();
         });
 
-        this.positionsTable
-            .getSelectionModel()
-            .selectedItemProperty()
-            .addListener(
-                (observable, oldValue, newValue) -> setActualPosition(
-                    newValue.getDutyPosition()
-                )
-            );
 
-        this.showDutyPositionsWithMusicians();
+        // TODO remove mocking when finished
+        this.dutyScheduleManager = Mockito.mock(DutyScheduleManager.class);
+        try {
+            Mockito
+                .when(
+                    this.dutyScheduleManager.getMusiciansAvailableForPosition(
+                        any(DutyPosition.class),
+                        anyBoolean()
+                    )
+                )
+                .thenReturn(
+                    getMockedMusicians()
+                );
+        } catch (Exception e) {
+            LOG.error(e);
+        }
+
+        this.initDutyPositionsTableWithMusicians();
         this.initMusicianTableWithRequests();
         this.initMusicianTableWithoutRequests();
+
+    }
+
+    private List<Musician> getMockedMusicians() {
+        LOG.debug("returning mocked musicians");
+        List<Musician> demoMusicianList = new LinkedList<>();
+        Musician m = new Musician();
+        m.setUserId(1);
+        m.setSection(new Section());
+
+        Musician m2 = new Musician();
+        m2.setUserId(2);
+        m2.setSection(new Section());
+        demoMusicianList.add(m);
+        demoMusicianList.add(m2);
+
+        System.out.println(demoMusicianList);
+
+        return demoMusicianList;
     }
 
     private void initMusicianTableWithoutRequests() {
@@ -84,22 +118,23 @@ public class DutyScheduleController implements Initializable, Controllable {
             .addListener(
                 (observable, oldValue, newValue) -> addMusicianToPosition(
                     newValue.getMusician(),
-                    selectedDutyPosition
+                    this.selectedDutyPosition
                 )
-            );        
+            );
 
-        ObservableList<MusicianTableModel> demoList = FXCollections.observableArrayList();
+        List<Musician> list = this.dutyScheduleManager.getMusiciansAvailableForPosition(
+            this.selectedDutyPosition,
+            Boolean.FALSE
+        );
 
-        Musician m = new Musician();
-        m.setUserId(1);
-        m.setSection(new Section());
-        demoList.add(new MusicianTableModel(m));
-
-        Musician m2 = new Musician();
-        m2.setUserId(2);
-        m2.setSection(new Section());
-        demoList.add(new MusicianTableModel(m2));
-        this.musicianTableWithoutRequests.setItems(demoList);
+        List<MusicianTableModel> guiList = new LinkedList<>();
+        for (Musician domainMusician : list) {
+            guiList.add(new MusicianTableModel(domainMusician));
+        }
+        ObservableList<MusicianTableModel> observableList =
+            FXCollections.observableArrayList();
+        observableList.addAll(guiList);
+        this.musicianTableWithoutRequests.setItems(observableList);
     }
 
     private void initMusicianTableWithRequests() {
@@ -110,16 +145,23 @@ public class DutyScheduleController implements Initializable, Controllable {
             .addListener(
                 (observable, oldValue, newValue) -> addMusicianToPosition(
                     newValue.getMusician(),
-                    selectedDutyPosition
+                    this.selectedDutyPosition
                 )
             );
 
-        ObservableList<MusicianTableModel> demoList = FXCollections.observableArrayList();
-        Musician m = new Musician();
-        m.setUserId(1);
-        m.setSection(new Section());
-        demoList.add(new MusicianTableModel(m));
-        this.musicianTableWithRequests.setItems(demoList);
+        List<Musician> list = this.dutyScheduleManager.getMusiciansAvailableForPosition(
+            this.selectedDutyPosition,
+            Boolean.TRUE
+        );
+
+        List<MusicianTableModel> guiList = new LinkedList<>();
+        for (Musician domainMusician : list) {
+            guiList.add(new MusicianTableModel(domainMusician));
+        }
+        ObservableList<MusicianTableModel> observableList =
+            FXCollections.observableArrayList();
+        observableList.addAll(guiList);
+        this.musicianTableWithoutRequests.setItems(observableList);
     }
 
     protected void addMusicianToPosition(Musician musician, DutyPosition dutyPosition) {
@@ -148,7 +190,16 @@ public class DutyScheduleController implements Initializable, Controllable {
         this.dutySchedule.setVisible(false);
     }
 
-    private void showDutyPositionsWithMusicians() {
+    private void initDutyPositionsTableWithMusicians() {
+        this.positionsTable
+            .getSelectionModel()
+            .selectedItemProperty()
+            .addListener(
+                (observable, oldValue, newValue) -> setActualPosition(
+                    newValue.getDutyPosition()
+                )
+            );
+
         ObservableList<DutyPositionMusicianTableModel> poslist =
             FXCollections.observableArrayList();
 
