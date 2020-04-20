@@ -9,6 +9,9 @@ import at.fhv.teamb.symphoniacus.persistence.dao.DutyPositionDao;
 import at.fhv.teamb.symphoniacus.persistence.model.DutyPositionEntity;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Optional;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 /**
  * This class is responsible for obtaining and handling all instances of actual instrumentations
@@ -17,6 +20,7 @@ import java.util.List;
  * @author Dominic Luidold
  */
 public class DutyScheduleManager {
+    private static final Logger LOG = LogManager.getLogger(DutyScheduleManager.class);
     private DutyPositionDao dutyPositionDao;
 
     public DutyScheduleManager() {
@@ -32,7 +36,17 @@ public class DutyScheduleManager {
      * @param section The section to use
      * @return A domain object containing all instrumentation information
      */
-    public ActualSectionInstrumentation getInstrumentationDetails(Duty duty, Section section) {
+    public Optional<ActualSectionInstrumentation> getInstrumentationDetails(
+        Duty duty,
+        Section section
+    ) {
+        if (duty == null || section == null) {
+            LOG.error(
+                "Fetching instrumentation details not possible - either duty or section is null"
+            );
+            return Optional.empty();
+        }
+
         // Get all DutyPosition entities from database
         List<DutyPositionEntity> dutyPositionEntities =
             this.dutyPositionDao.findCorrespondingPositions(duty.getEntity(), section.getEntity());
@@ -46,7 +60,7 @@ public class DutyScheduleManager {
         // Fill Duty with available information
         Duty dutyWithInformation = new Duty(duty.getEntity(), dutyPositions);
 
-        return new ActualSectionInstrumentation(dutyWithInformation);
+        return Optional.of(new ActualSectionInstrumentation(dutyWithInformation));
     }
 
     public List<Musician> getMusiciansAvailableForPosition(DutyPosition position) {
