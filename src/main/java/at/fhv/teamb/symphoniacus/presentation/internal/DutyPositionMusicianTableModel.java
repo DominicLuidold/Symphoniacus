@@ -46,4 +46,20 @@ public class DutyPositionMusicianTableModel {
     public void setMusicanShortcut(String musicanShortcut) {
         this.musicanShortcut.set(musicanShortcut);
     }
+
+    public DutyPosition getDutyPosition() {
+        return dutyPosition;
+    }
+
+    public void setDutyPosition(DutyPosition dutyPosition) {
+        this.dutyPosition = dutyPosition;
+    }
+
+    public Musician getMusician() {
+        return musician;
+    }
+
+    public void setMusician(Musician musician) {
+        this.musician = musician;
+    }
 }

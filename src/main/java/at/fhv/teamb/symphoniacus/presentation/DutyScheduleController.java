@@ -1,6 +1,7 @@
 package at.fhv.teamb.symphoniacus.presentation;
 
 import at.fhv.teamb.symphoniacus.application.DutyScheduleManager;
+import at.fhv.teamb.symphoniacus.domain.ActualSectionInstrumentation;
 import at.fhv.teamb.symphoniacus.domain.Duty;
 import at.fhv.teamb.symphoniacus.persistence.model.DutyPosition;
 import at.fhv.teamb.symphoniacus.persistence.model.Musician;
@@ -27,6 +28,8 @@ public class DutyScheduleController implements Initializable, Controllable {
     private static final Logger LOG = LogManager.getLogger(DutyScheduleController.class);
     private Duty duty;
     private DutyScheduleManager dutyScheduleManager;
+    private ActualSectionInstrumentation actualSectionInstrumentation;
+    private DutyPosition selectedDutyPosition;
 
     @FXML
     private AnchorPane dutySchedule;
@@ -50,6 +53,7 @@ public class DutyScheduleController implements Initializable, Controllable {
         this.registerController();
         this.dutyScheduleManager = new DutyScheduleManager();
 
+
         this.dutySchedule.setVisible(false);
         this.scheduleBackBtn.setOnAction(e -> {
             this.hide();
@@ -57,6 +61,7 @@ public class DutyScheduleController implements Initializable, Controllable {
             CalendarController cc = (CalendarController) mc.get("CalendarController");
             cc.show();
         });
+
         ObservableList<MusicianTableModel> demoList = FXCollections.observableArrayList();
         Musician m = new Musician();
         m.setUserId(1);
@@ -64,14 +69,25 @@ public class DutyScheduleController implements Initializable, Controllable {
         demoList.add(new MusicianTableModel(m));
         this.musicianTableWithRequests.setItems(demoList);
 
-        showDutyPositionsWithMusicians();
+        this.showDutyPositionsWithMusicians();
+
+        this.positionsTable
+            .getSelectionModel()
+            .selectedItemProperty()
+            .addListener(
+                (observable, oldValue, newValue) -> setActualPosition(
+                    newValue.getDutyPosition()
+                )
+            );
+
+
         this.musicianTableWithRequests
             .getSelectionModel()
             .selectedItemProperty()
             .addListener(
                 (observable, oldValue, newValue) -> addMusicianToPosition(
                     newValue.getMusician(),
-                    null
+                    selectedDutyPosition
                 )
             );
 
@@ -81,7 +97,7 @@ public class DutyScheduleController implements Initializable, Controllable {
             .addListener(
                 (observable, oldValue, newValue) -> addMusicianToPosition(
                     newValue.getMusician(),
-                    null
+                    selectedDutyPosition
                 )
             );
     }
@@ -89,6 +105,11 @@ public class DutyScheduleController implements Initializable, Controllable {
     protected void addMusicianToPosition(Musician musician, DutyPosition dutyPosition) {
         LOG.debug("Selected musician changed");
         LOG.error("TODO: add musician to position here");
+    }
+
+    private void setActualPosition(DutyPosition dutyPosition) {
+        LOG.debug(dutyPosition.getDescription());
+        this.selectedDutyPosition = dutyPosition;
     }
 
     @Override
@@ -113,8 +134,14 @@ public class DutyScheduleController implements Initializable, Controllable {
 
         Musician m = new Musician();
         DutyPosition dp = new DutyPosition();
+        dp.setDescription("DutyDescription1");
+
+        Musician m2 = new Musician();
+        DutyPosition dp2 = new DutyPosition();
+        dp.setDescription("DutyDescription2");
 
         poslist.add(new DutyPositionMusicianTableModel(dp, m));
+        poslist.add(new DutyPositionMusicianTableModel(dp2, m2));
         this.positionsTable.setItems(poslist);
     }
 
