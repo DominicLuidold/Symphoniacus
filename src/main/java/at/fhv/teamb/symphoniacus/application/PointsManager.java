@@ -20,6 +20,12 @@ import javassist.NotFoundException;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+/**
+ * UseCase Controller responsible for delivering all requested Points of a musician w/ timespan.
+ *
+ * @author Danijel Antonijevic
+ * @author Nino Heinzle
+ */
 public class PointsManager {
     private static final Logger LOG = LogManager.getLogger(PointsManager.class);
 
