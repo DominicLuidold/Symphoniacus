@@ -1,4 +1,4 @@
-package at.fhv.teamb.symphoniacus.domain; Mockito.mock(DutyEntity.class);
+package at.fhv.teamb.symphoniacus.domain;
 
 import at.fhv.teamb.symphoniacus.persistence.model.DutyCategory;
 import at.fhv.teamb.symphoniacus.persistence.model.DutyEntity;

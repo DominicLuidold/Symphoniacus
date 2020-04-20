@@ -1,7 +1,7 @@
 package at.fhv.teamb.symphoniacus.presentation.internal;
 
-import at.fhv.teamb.symphoniacus.persistence.model.DutyPosition;
-import at.fhv.teamb.symphoniacus.persistence.model.Musician;
+import at.fhv.teamb.symphoniacus.domain.DutyPosition;
+import at.fhv.teamb.symphoniacus.domain.Musician;
 import javafx.beans.property.SimpleStringProperty;
 
 public class DutyPositionMusicianTableModel {

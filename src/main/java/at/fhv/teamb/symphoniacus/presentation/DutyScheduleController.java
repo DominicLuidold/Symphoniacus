@@ -6,9 +6,12 @@ import static org.mockito.ArgumentMatchers.anyBoolean;
 import at.fhv.teamb.symphoniacus.application.DutyScheduleManager;
 import at.fhv.teamb.symphoniacus.domain.ActualSectionInstrumentation;
 import at.fhv.teamb.symphoniacus.domain.Duty;
-import at.fhv.teamb.symphoniacus.persistence.model.DutyPosition;
-import at.fhv.teamb.symphoniacus.persistence.model.Musician;
-import at.fhv.teamb.symphoniacus.persistence.model.Section;
+import at.fhv.teamb.symphoniacus.domain.DutyPosition;
+import at.fhv.teamb.symphoniacus.domain.Musician;
+import at.fhv.teamb.symphoniacus.persistence.model.DutyPositionEntity;
+import at.fhv.teamb.symphoniacus.persistence.model.MusicianEntity;
+import at.fhv.teamb.symphoniacus.persistence.model.SectionEntity;
+import at.fhv.teamb.symphoniacus.persistence.model.UserEntity;
 import at.fhv.teamb.symphoniacus.presentation.internal.DutyPositionMusicianTableModel;
 import at.fhv.teamb.symphoniacus.presentation.internal.MusicianTableModel;
 import java.net.URL;
@@ -45,6 +48,7 @@ public class DutyScheduleController implements Initializable, Controllable {
 
     @FXML
     private Label dutyTitle;
+
     @FXML
     private TableView<DutyPositionMusicianTableModel> positionsTable;
 
@@ -59,7 +63,6 @@ public class DutyScheduleController implements Initializable, Controllable {
         this.registerController();
         this.dutyScheduleManager = new DutyScheduleManager();
 
-
         this.dutySchedule.setVisible(false);
         this.scheduleBackBtn.setOnAction(e -> {
             this.hide();
@@ -67,7 +70,6 @@ public class DutyScheduleController implements Initializable, Controllable {
             CalendarController cc = (CalendarController) mc.get("CalendarController");
             cc.show();
         });
-
 
         // TODO remove mocking when finished
         this.dutyScheduleManager = Mockito.mock(DutyScheduleManager.class);
@@ -89,19 +91,19 @@ public class DutyScheduleController implements Initializable, Controllable {
         this.initDutyPositionsTableWithMusicians();
         this.initMusicianTableWithRequests();
         this.initMusicianTableWithoutRequests();
-
     }
 
     private List<Musician> getMockedMusicians() {
         LOG.debug("returning mocked musicians");
-        List<Musician> demoMusicianList = new LinkedList<>();
-        Musician m = new Musician();
-        m.setUserId(1);
-        m.setSection(new Section());
+        Musician m = new Musician(new MusicianEntity());
+        m.getEntity().setUser(new UserEntity());
+        m.getEntity().setSection(new SectionEntity());
 
-        Musician m2 = new Musician();
-        m2.setUserId(2);
-        m2.setSection(new Section());
+        Musician m2 = new Musician(new MusicianEntity());
+        m2.getEntity().setUser(new UserEntity());
+        m2.getEntity().setSection(new SectionEntity());
+
+        List<Musician> demoMusicianList = new LinkedList<>();
         demoMusicianList.add(m);
         demoMusicianList.add(m2);
 
@@ -170,7 +172,7 @@ public class DutyScheduleController implements Initializable, Controllable {
     }
 
     private void setActualPosition(DutyPosition dutyPosition) {
-        LOG.debug(dutyPosition.getDescription());
+        LOG.debug(dutyPosition.getEntity().getDescription());
         this.selectedDutyPosition = dutyPosition;
     }
 
@@ -203,13 +205,13 @@ public class DutyScheduleController implements Initializable, Controllable {
         ObservableList<DutyPositionMusicianTableModel> poslist =
             FXCollections.observableArrayList();
 
-        Musician m = new Musician();
-        DutyPosition dp = new DutyPosition();
-        dp.setDescription("DutyDescription1");
+        Musician m = new Musician(new MusicianEntity());
+        DutyPosition dp = new DutyPosition(new DutyPositionEntity());
+        dp.getEntity().setDescription("DutyDescription1");
 
-        Musician m2 = new Musician();
-        DutyPosition dp2 = new DutyPosition();
-        dp.setDescription("DutyDescription2");
+        Musician m2 = new Musician(new MusicianEntity());
+        DutyPosition dp2 = new DutyPosition(new DutyPositionEntity());
+        dp2.getEntity().setDescription("DutyDescription2");
 
         poslist.add(new DutyPositionMusicianTableModel(dp, m));
         poslist.add(new DutyPositionMusicianTableModel(dp2, m2));

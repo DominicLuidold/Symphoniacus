@@ -1,10 +1,10 @@
 package at.fhv.teamb.symphoniacus.domain;
 
 import at.fhv.teamb.symphoniacus.persistence.model.DutyEntity;
-import java.util.Locale;
 import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Locale;
 import java.util.Objects;
 import java.util.ResourceBundle;
 import org.apache.logging.log4j.LogManager;

@@ -1,6 +1,6 @@
 package at.fhv.teamb.symphoniacus.presentation.internal;
 
-import at.fhv.teamb.symphoniacus.persistence.model.Musician;
+import at.fhv.teamb.symphoniacus.domain.Musician;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.property.SimpleStringProperty;

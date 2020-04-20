@@ -49,7 +49,10 @@ public class DutyScheduleManager {
         return new ActualSectionInstrumentation(dutyWithInformation);
     }
 
-    public List<Musician> getMusiciansAvailableForPosition(DutyPosition position) {
+    public List<Musician> getMusiciansAvailableForPosition(
+        DutyPosition position,
+        boolean withRequests
+    ) {
         throw new UnsupportedOperationException("Not yet implemented");
     }
 
