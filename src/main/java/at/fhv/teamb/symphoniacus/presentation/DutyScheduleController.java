@@ -8,6 +8,8 @@ import at.fhv.teamb.symphoniacus.persistence.model.Musician;
 import at.fhv.teamb.symphoniacus.persistence.model.Section;
 import at.fhv.teamb.symphoniacus.presentation.internal.DutyPositionMusicianTableModel;
 import at.fhv.teamb.symphoniacus.presentation.internal.MusicianTableModel;
+import at.fhv.teamb.symphoniacus.persistence.model.DutyPositionMusician;
+import at.fhv.teamb.symphoniacus.persistence.model.DutyEntity;
 import java.net.URL;
 import java.time.format.DateTimeFormatter;
 import java.util.ResourceBundle;
@@ -23,6 +25,7 @@ import javafx.scene.control.TableView;
 import javafx.scene.layout.AnchorPane;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.mockito.Mockito;
 
 public class DutyScheduleController implements Initializable, Controllable {
 
@@ -38,13 +41,10 @@ public class DutyScheduleController implements Initializable, Controllable {
 
     @FXML
     private Label dutyTitle;
-
     @FXML
     private TableView<DutyPositionMusicianTableModel> positionsTable;
-
     @FXML
     private TableColumn<DutyPositionMusicianTableModel, String> role;
-
     @FXML
     private TableColumn<DutyPositionMusicianTableModel, String> musicianShortcut;
 
@@ -145,4 +145,34 @@ public class DutyScheduleController implements Initializable, Controllable {
             )
         );
     }
+
+    /**
+     * {@link DutyPositionMusicianTableModel} Class only to fill in Data into the Table.
+     */
+    private class DutyPositionMusicianTableModel {
+        private String role;
+        private String musicanShortcut;
+
+        public DutyPositionMusicianTableModel(String role, String musicanShortcut) {
+            this.role = role;
+            this.musicanShortcut = musicanShortcut;
+        }
+
+        public String getRole() {
+            return role;
+        }
+
+        public void setRole(String role) {
+            this.role = role;
+        }
+
+        public String getMusicanShortcut() {
+            return musicanShortcut;
+        }
+
+        public void setMusicanShortcut(String musicanShortcut) {
+            this.musicanShortcut = musicanShortcut;
+        }
+    }
+
 }
