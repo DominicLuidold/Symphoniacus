@@ -62,15 +62,6 @@ public class DutyScheduleController implements Initializable, Controllable {
             cc.show();
         });
 
-        ObservableList<MusicianTableModel> demoList = FXCollections.observableArrayList();
-        Musician m = new Musician();
-        m.setUserId(1);
-        m.setSection(new Section());
-        demoList.add(new MusicianTableModel(m));
-        this.musicianTableWithRequests.setItems(demoList);
-
-        this.showDutyPositionsWithMusicians();
-
         this.positionsTable
             .getSelectionModel()
             .selectedItemProperty()
@@ -80,7 +71,39 @@ public class DutyScheduleController implements Initializable, Controllable {
                 )
             );
 
+        this.showDutyPositionsWithMusicians();
+        this.initMusicianTableWithRequests();
+        this.initMusicianTableWithoutRequests();
+    }
 
+    private void initMusicianTableWithoutRequests() {
+        // add selected item click listener
+        this.musicianTableWithoutRequests
+            .getSelectionModel()
+            .selectedItemProperty()
+            .addListener(
+                (observable, oldValue, newValue) -> addMusicianToPosition(
+                    newValue.getMusician(),
+                    selectedDutyPosition
+                )
+            );        
+
+        ObservableList<MusicianTableModel> demoList = FXCollections.observableArrayList();
+
+        Musician m = new Musician();
+        m.setUserId(1);
+        m.setSection(new Section());
+        demoList.add(new MusicianTableModel(m));
+
+        Musician m2 = new Musician();
+        m2.setUserId(2);
+        m2.setSection(new Section());
+        demoList.add(new MusicianTableModel(m2));
+        this.musicianTableWithoutRequests.setItems(demoList);
+    }
+
+    private void initMusicianTableWithRequests() {
+        // add selected item click listener
         this.musicianTableWithRequests
             .getSelectionModel()
             .selectedItemProperty()
@@ -91,15 +114,12 @@ public class DutyScheduleController implements Initializable, Controllable {
                 )
             );
 
-        this.musicianTableWithoutRequests
-            .getSelectionModel()
-            .selectedItemProperty()
-            .addListener(
-                (observable, oldValue, newValue) -> addMusicianToPosition(
-                    newValue.getMusician(),
-                    selectedDutyPosition
-                )
-            );
+        ObservableList<MusicianTableModel> demoList = FXCollections.observableArrayList();
+        Musician m = new Musician();
+        m.setUserId(1);
+        m.setSection(new Section());
+        demoList.add(new MusicianTableModel(m));
+        this.musicianTableWithRequests.setItems(demoList);
     }
 
     protected void addMusicianToPosition(Musician musician, DutyPosition dutyPosition) {
