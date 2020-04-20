@@ -14,6 +14,7 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 <?import javafx.geometry.Insets?>
+<?import javafx.scene.control.cell.PropertyValueFactory?>
 <AnchorPane fx:id="dutySchedule" prefHeight="226.0" prefWidth="364.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="at.fhv.teamb.symphoniacus.presentation.DutyScheduleController">
    <AnchorPane maxHeight="45.0" minHeight="45.0" prefHeight="45.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
       <children>
@@ -50,14 +51,38 @@
                             <Font size="18" />
                         </font>
                     </Label>
-                    <TableView>
+                    <TableView fx:id="musicianTableWithRequests">
                         <columns>
-                            <TableColumn prefWidth="150" text="%tab.duty.schedule.table.musicians.name" />
-                            <TableColumn prefWidth="75.0" text="%tab.duty.schedule.table.musicians.points" />
-                            <TableColumn prefWidth="100.0" text="%tab.duty.schedule.table.musicians.request.type" />
-                            <TableColumn prefWidth="100.0" text="%tab.duty.schedule.table.musicians.details" />
-                            <TableColumn prefWidth="75.0" text="%tab.duty.schedule.table.musicians.date" />
-                            <TableColumn prefWidth="75.0" text="%tab.duty.schedule.table.musicians.schedule" />
+                            <TableColumn id="columnName" prefWidth="150" text="%tab.duty.schedule.table.musicians.name">
+                                <cellValueFactory>
+                                    <PropertyValueFactory property="name" />
+                                </cellValueFactory>
+                            </TableColumn>
+                            <TableColumn id="columnPoints" prefWidth="75.0" text="%tab.duty.schedule.table.musicians.points">
+                                <cellValueFactory>
+                                    <PropertyValueFactory property="points" />
+                                </cellValueFactory>
+                            </TableColumn>
+                            <TableColumn id="columnType" prefWidth="100.0" text="%tab.duty.schedule.table.musicians.request.type">
+                                <cellValueFactory>
+                                    <PropertyValueFactory property="wishType" />
+                                </cellValueFactory>
+                            </TableColumn>
+                            <TableColumn id="columnDetails" prefWidth="100.0" text="%tab.duty.schedule.table.musicians.details">
+                                <cellValueFactory>
+                                    <PropertyValueFactory property="details" />
+                                </cellValueFactory>
+                            </TableColumn>
+                            <TableColumn id="columnDate" prefWidth="75.0" text="%tab.duty.schedule.table.musicians.date">
+                                <cellValueFactory>
+                                    <PropertyValueFactory property="date" />
+                                </cellValueFactory>
+                            </TableColumn>
+                            <TableColumn id="columnSchedule" prefWidth="75.0" text="%tab.duty.schedule.table.musicians.schedule">
+                                <cellValueFactory>
+                                    <PropertyValueFactory property="schedule" />
+                                </cellValueFactory>
+                            </TableColumn>
                         </columns>
                     </TableView>
                 </VBox>
@@ -67,7 +92,7 @@
                             <Font size="18" />
                         </font>
                     </Label>
-                    <TableView>
+                    <TableView fx:id="musicianTableWithoutRequests">
                         <columns>
                             <TableColumn prefWidth="150" text="%tab.duty.schedule.table.musicians.name" />
                             <TableColumn prefWidth="75.0" text="%tab.duty.schedule.table.musicians.points" />
