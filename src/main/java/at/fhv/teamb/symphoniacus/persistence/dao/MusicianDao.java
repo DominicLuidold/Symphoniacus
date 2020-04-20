@@ -20,10 +20,10 @@ public class MusicianDao extends BaseDao<MusicianEntity> {
         );
 
         MusicianEntity m = entityManager.createQuery(
-            "select m from MusicianEntity m where m.userId = :id",
+            "select m from MusicianEntity m where m.user = :user",
             MusicianEntity.class
         )
-            .setParameter("id", key)
+            .setParameter("user", key)
             .setHint("javax.persistence.fetchgraph", graph)
             .getSingleResult();
         m.getMusicianRoles();

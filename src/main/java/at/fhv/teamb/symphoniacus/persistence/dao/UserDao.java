@@ -64,10 +64,10 @@ public class UserDao extends BaseDao<UserEntity> {
     public boolean isUserMusician(UserEntity currentUser) {
         this.createEntityManager();
         TypedQuery<Long> query = this.entityManager.createQuery(
-            "SELECT COUNT(m) FROM MusicianEntity m WHERE m.userId = :uId",
+            "SELECT COUNT(m) FROM MusicianEntity m WHERE m.user = :user",
             Long.class
         );
-        query.setParameter("uId", currentUser.getUserId());
+        query.setParameter("user", currentUser);
         Long result = query.getSingleResult();
         this.tearDown();
 

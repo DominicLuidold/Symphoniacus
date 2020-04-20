@@ -34,7 +34,7 @@ public class MusicianManager extends LoginManager {
             LOG.error("Cannot load musician with null user.");
             return Optional.empty();
         }
-        Optional<MusicianEntity> musician = this.musicianDao.find(user.getUserId());
+        Optional<MusicianEntity> musician = this.musicianDao.find(user);
 
         // Load attempt failed
         if (musician.isEmpty()) {
