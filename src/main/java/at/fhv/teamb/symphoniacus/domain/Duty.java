@@ -9,7 +9,7 @@ import org.apache.logging.log4j.Logger;
 /**
  * Domain object for Duty.
  *
- * @author Valentin Goronjio
+ * @author Valentin Goronjic
  */
 public class Duty {
 
@@ -22,7 +22,7 @@ public class Duty {
     }
 
     public DutyEntity getEntity() {
-        return entity;
+        return this.entity;
     }
 
     public void setEntity(DutyEntity entity) {
