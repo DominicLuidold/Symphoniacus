@@ -8,6 +8,7 @@ import at.fhv.teamb.symphoniacus.domain.ActualSectionInstrumentation;
 import at.fhv.teamb.symphoniacus.domain.Duty;
 import at.fhv.teamb.symphoniacus.domain.DutyPosition;
 import at.fhv.teamb.symphoniacus.domain.Musician;
+import at.fhv.teamb.symphoniacus.domain.Section;
 import at.fhv.teamb.symphoniacus.persistence.model.DutyPositionEntity;
 import at.fhv.teamb.symphoniacus.persistence.model.MusicianEntity;
 import at.fhv.teamb.symphoniacus.persistence.model.SectionEntity;
@@ -18,6 +19,7 @@ import java.net.URL;
 import java.time.format.DateTimeFormatter;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Optional;
 import java.util.ResourceBundle;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
@@ -70,27 +72,6 @@ public class DutyScheduleController implements Initializable, Controllable {
             CalendarController cc = (CalendarController) mc.get("CalendarController");
             cc.show();
         });
-
-        // TODO remove mocking when finished
-        this.dutyScheduleManager = Mockito.mock(DutyScheduleManager.class);
-        try {
-            Mockito
-                .when(
-                    this.dutyScheduleManager.getMusiciansAvailableForPosition(
-                        any(DutyPosition.class),
-                        anyBoolean()
-                    )
-                )
-                .thenReturn(
-                    getMockedMusicians()
-                );
-        } catch (Exception e) {
-            LOG.error(e);
-        }
-
-        this.initDutyPositionsTableWithMusicians();
-        this.initMusicianTableWithRequests();
-        this.initMusicianTableWithoutRequests();
     }
 
     private List<Musician> getMockedMusicians() {
@@ -113,6 +94,23 @@ public class DutyScheduleController implements Initializable, Controllable {
     }
 
     private void initMusicianTableWithoutRequests() {
+        // TODO remove mocking when finished
+        this.dutyScheduleManager = Mockito.mock(DutyScheduleManager.class);
+        try {
+            Mockito
+                .when(
+                    this.dutyScheduleManager.getMusiciansAvailableForPosition(
+                        any(DutyPosition.class),
+                        anyBoolean()
+                    )
+                )
+                .thenReturn(
+                    getMockedMusicians()
+                );
+        } catch (Exception e) {
+            LOG.error(e);
+        }
+
         // add selected item click listener
         this.musicianTableWithoutRequests
             .getSelectionModel()
@@ -140,6 +138,23 @@ public class DutyScheduleController implements Initializable, Controllable {
     }
 
     private void initMusicianTableWithRequests() {
+        // TODO remove mocking when finished
+        this.dutyScheduleManager = Mockito.mock(DutyScheduleManager.class);
+        try {
+            Mockito
+                .when(
+                    this.dutyScheduleManager.getMusiciansAvailableForPosition(
+                        any(DutyPosition.class),
+                        anyBoolean()
+                    )
+                )
+                .thenReturn(
+                    getMockedMusicians()
+                );
+        } catch (Exception e) {
+            LOG.error(e);
+        }
+
         // add selected item click listener
         this.musicianTableWithRequests
             .getSelectionModel()
@@ -184,6 +199,10 @@ public class DutyScheduleController implements Initializable, Controllable {
 
     @Override
     public void show() {
+        this.initDutyPositionsTableWithMusicians();
+        this.initMusicianTableWithRequests();
+        this.initMusicianTableWithoutRequests();
+
         this.dutySchedule.setVisible(true);
     }
 
@@ -202,19 +221,26 @@ public class DutyScheduleController implements Initializable, Controllable {
                 )
             );
 
+        // TODO fix this
+        Section s = new Section(new SectionEntity());
+        s.getEntity().setSectionId(1);
+        Optional<ActualSectionInstrumentation> asi = this.dutyScheduleManager.getInstrumentationDetails(
+            this.duty,
+            s
+        );
+
+        if (!asi.isPresent()) {
+            LOG.error("Found no asi for duty");
+            return;
+        }
         ObservableList<DutyPositionMusicianTableModel> poslist =
             FXCollections.observableArrayList();
+        List<DutyPosition> posList = asi.get().getDuty().getDutyPositions();
+        for (DutyPosition dp : posList) {
+            // TODO
+            poslist.add(new DutyPositionMusicianTableModel(dp, dp.getMusician()));
+        }
 
-        Musician m = new Musician(new MusicianEntity());
-        DutyPosition dp = new DutyPosition(new DutyPositionEntity());
-        dp.getEntity().setDescription("DutyDescription1");
-
-        Musician m2 = new Musician(new MusicianEntity());
-        DutyPosition dp2 = new DutyPosition(new DutyPositionEntity());
-        dp2.getEntity().setDescription("DutyDescription2");
-
-        poslist.add(new DutyPositionMusicianTableModel(dp, m));
-        poslist.add(new DutyPositionMusicianTableModel(dp2, m2));
         this.positionsTable.setItems(poslist);
     }
 
