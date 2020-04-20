@@ -14,6 +14,7 @@ import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.NamedAttributeNode;
 import javax.persistence.NamedEntityGraph;
+import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
 @Entity
@@ -21,12 +22,12 @@ import javax.persistence.Table;
 @NamedEntityGraph(
     name = "musician-with-collections",
     attributeNodes = {
-        @NamedAttributeNode("userId"),
+        @NamedAttributeNode("user"),
         @NamedAttributeNode("section"),
         @NamedAttributeNode("musicianRoles")
     }
 )
-public class Musician {
+public class MusicianEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "musicianId")
@@ -44,12 +45,25 @@ public class Musician {
     )
     private List<MusicianRole> musicianRoles = new LinkedList<>();
 
-    @Column(name = "userId")
-    private Integer userId;
+    @OneToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "userId")
+    private UserEntity user;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "sectionId")
-    private Section section;
+    private SectionEntity section;
+
+    @ManyToMany
+    @JoinTable(
+        name = "dutyPosition_musician",
+        joinColumns = {
+            @JoinColumn(name = "musicianId")
+        },
+        inverseJoinColumns = {
+            @JoinColumn(name = "dutyPositionId")
+        }
+    )
+    private List<DutyPositionEntity> dutyPositions = new LinkedList<>();
 
     public Integer getMusicianId() {
         return this.musicianId;
@@ -59,12 +73,12 @@ public class Musician {
         this.musicianId = musicianId;
     }
 
-    public Integer getUserId() {
-        return this.userId;
+    public UserEntity getUser() {
+        return this.user;
     }
 
-    public void setUserId(Integer userId) {
-        this.userId = userId;
+    public void setUser(UserEntity user) {
+        this.user = user;
     }
 
     public List<MusicianRole> getMusicianRoles() {
@@ -81,12 +95,26 @@ public class Musician {
         role.removeMusician(this);
     }
 
-    public Section getSection() {
+    public SectionEntity getSection() {
         return section;
     }
 
-    public void setSection(Section section) {
+    public void setSection(SectionEntity section) {
         this.section = section;
+    }
+
+    public List<DutyPositionEntity> getDutyPositions() {
+        return this.dutyPositions;
+    }
+
+    public void addDutyPosition(DutyPositionEntity position) {
+        this.dutyPositions.add(position);
+        position.addMusician(this);
+    }
+
+    public void removeDutyPosition(DutyPositionEntity position) {
+        this.dutyPositions.remove(position);
+        position.removeMusician(this);
     }
 
     @Override
@@ -94,7 +122,7 @@ public class Musician {
         return "Musician{"
             + "musicianId=" + musicianId
             + ", musicianRoles=" + musicianRoles
-            + ", userId=" + userId
+            + ", user=" + user
             + ", section=" + section
             + '}';
     }

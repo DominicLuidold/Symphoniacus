@@ -10,7 +10,7 @@ import static org.mockito.Mockito.spy;
 
 import at.fhv.teamb.symphoniacus.domain.Duty;
 import at.fhv.teamb.symphoniacus.persistence.model.DutyEntity;
-import at.fhv.teamb.symphoniacus.persistence.model.Section;
+import at.fhv.teamb.symphoniacus.persistence.model.SectionEntity;
 import com.calendarfx.model.Calendar;
 import com.calendarfx.model.CalendarSource;
 import com.calendarfx.model.Entry;
@@ -28,7 +28,7 @@ class CalendarControllerTest {
     @Test
     void prepareCalendarSource_ShouldPrepareCalendarSource() {
         // Given
-        Section section = new Section();
+        SectionEntity section = new SectionEntity();
         section.setDescription("Test Section 1");
         section.setSectionShortcut("TS1");
         String name = "Test Source";
@@ -40,7 +40,7 @@ class CalendarControllerTest {
                 controller.createDutyCalendarEntries(prepareTestDuties())
             );
             return null;
-        }).when(controller).fillCalendar(any(Calendar.class), any(Section.class));
+        }).when(controller).fillCalendar(any(Calendar.class), any(SectionEntity.class));
 
         // When
         CalendarSource source = controller.prepareCalendarSource(name, section);
@@ -53,7 +53,7 @@ class CalendarControllerTest {
     @Test
     void createCalendar_ShouldCreateCalendar() {
         // Given
-        Section section = new Section();
+        SectionEntity section = new SectionEntity();
         section.setDescription("Test Section 1");
         section.setSectionShortcut("TS1");
 
@@ -105,7 +105,8 @@ class CalendarControllerTest {
         List<Duty> duties = prepareTestDuties();
 
         // When
-        List<Entry<Duty>> entries = new CalendarController().createDutyCalendarEntries(duties);
+        List<Entry<Duty>> entries =
+            new CalendarController().createDutyCalendarEntries(duties);
 
         // Then
         assertEquals(duties.size(), entries.size(), "Amount of Duties and Entries should be equal");

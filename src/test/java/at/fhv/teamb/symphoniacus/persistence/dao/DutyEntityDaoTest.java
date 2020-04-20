@@ -3,7 +3,7 @@ package at.fhv.teamb.symphoniacus.persistence.dao;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 import at.fhv.teamb.symphoniacus.persistence.model.DutyEntity;
-import at.fhv.teamb.symphoniacus.persistence.model.Section;
+import at.fhv.teamb.symphoniacus.persistence.model.SectionEntity;
 import java.time.LocalDateTime;
 import java.util.List;
 import org.apache.logging.log4j.LogManager;
@@ -37,7 +37,7 @@ class DutyEntityDaoTest {
     @Test
     void findAllInRangeWithSection_ShouldReturnNotNull() {
         // Given
-        Section s = new Section();
+        SectionEntity s = new SectionEntity();
         s.setSectionId(1);
 
         // When

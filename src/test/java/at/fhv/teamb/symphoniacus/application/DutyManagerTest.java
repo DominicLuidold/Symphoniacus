@@ -8,7 +8,7 @@ import static org.mockito.Mockito.when;
 import at.fhv.teamb.symphoniacus.domain.Duty;
 import at.fhv.teamb.symphoniacus.persistence.dao.DutyDao;
 import at.fhv.teamb.symphoniacus.persistence.model.DutyEntity;
-import at.fhv.teamb.symphoniacus.persistence.model.Section;
+import at.fhv.teamb.symphoniacus.persistence.model.SectionEntity;
 import java.time.DayOfWeek;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -23,17 +23,17 @@ import org.mockito.Mockito;
 class DutyManagerTest {
     private LocalDate testDate;
     private DutyManager dutyManager;
-    private Section section;
+    private SectionEntity section;
 
     @BeforeAll
     void initialize() {
         this.testDate = LocalDate.now();
         this.dutyManager = new DutyManager();
-        this.section = Mockito.mock(Section.class);
+        this.section = Mockito.mock(SectionEntity.class);
         this.dutyManager.dutyDao = Mockito.mock(DutyDao.class);
 
         when(this.dutyManager.dutyDao.findAllInRangeWithSection(
-            any(Section.class),
+            any(SectionEntity.class),
             any(LocalDateTime.class),
             any(LocalDateTime.class),
             any(Boolean.class),

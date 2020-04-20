@@ -6,12 +6,13 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import javax.persistence.Transient;
 
 @Entity
 @Table(name = "user")
-public class User {
+public class UserEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "userId")
@@ -53,8 +54,11 @@ public class User {
     @Column(name = "passwordSalt")
     private String passwordSalt;
 
+    @OneToOne(mappedBy = "user")
+    private MusicianEntity musician;
+
     @Transient
-    protected DomainUserType type;
+    protected DomainUserType type; // TODO
 
     public Integer getUserId() {
         return this.userId;
@@ -160,11 +164,20 @@ public class User {
         this.passwordSalt = passwordSalt;
     }
 
-    public DomainUserType getType() {
+    public MusicianEntity getMusician() {
+        return this.musician;
+    }
+
+    public void setMusician(MusicianEntity musician) {
+        this.musician = musician;
+        musician.setUser(this);
+    }
+
+    public DomainUserType getType() { // TODO
         return this.type;
     }
 
-    public void setType(DomainUserType type) {
+    public void setType(DomainUserType type) { // TODO
         this.type = type;
     }
 }

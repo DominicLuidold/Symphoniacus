@@ -2,7 +2,7 @@ package at.fhv.teamb.symphoniacus.persistence.dao;
 
 import at.fhv.teamb.symphoniacus.persistence.BaseDao;
 import at.fhv.teamb.symphoniacus.persistence.model.DutyEntity;
-import at.fhv.teamb.symphoniacus.persistence.model.Section;
+import at.fhv.teamb.symphoniacus.persistence.model.SectionEntity;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
@@ -76,7 +76,7 @@ public class DutyDao extends BaseDao<DutyEntity> {
      * (Section, LocalDateTime, LocalDateTime, boolean, boolean, boolean)
      */
     public List<DutyEntity> findAllInWeekWithSection(
-        Section section,
+        SectionEntity section,
         LocalDateTime start,
         boolean isReadyForDutyScheduler,
         boolean isReadyForOrganisationManager,
@@ -103,7 +103,7 @@ public class DutyDao extends BaseDao<DutyEntity> {
      * @return A List of the corresponding duties that were found
      */
     public List<DutyEntity> findAllInRangeWithSection(
-        Section section,
+        SectionEntity section,
         LocalDateTime start,
         LocalDateTime end,
         boolean isReadyForDutyScheduler,

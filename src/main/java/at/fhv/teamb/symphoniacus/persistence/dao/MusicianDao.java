@@ -1,7 +1,7 @@
 package at.fhv.teamb.symphoniacus.persistence.dao;
 
 import at.fhv.teamb.symphoniacus.persistence.BaseDao;
-import at.fhv.teamb.symphoniacus.persistence.model.Musician;
+import at.fhv.teamb.symphoniacus.persistence.model.MusicianEntity;
 import java.util.Optional;
 import javax.persistence.EntityGraph;
 
@@ -10,20 +10,20 @@ import javax.persistence.EntityGraph;
  *
  * @author Valentin Goronjic
  */
-public class MusicianDao extends BaseDao<Musician> {
+public class MusicianDao extends BaseDao<MusicianEntity> {
 
     @Override
-    public Optional<Musician> find(Object key) {
+    public Optional<MusicianEntity> find(Object key) {
         this.createEntityManager();
         EntityGraph graph = this.entityManager.getEntityGraph(
             "musician-with-collections"
         );
 
-        Musician m = entityManager.createQuery(
-            "select m from Musician m where m.userId = :id",
-            Musician.class
+        MusicianEntity m = entityManager.createQuery(
+            "select m from MusicianEntity m where m.user = :user",
+            MusicianEntity.class
         )
-            .setParameter("id", key)
+            .setParameter("user", key)
             .setHint("javax.persistence.fetchgraph", graph)
             .getSingleResult();
         m.getMusicianRoles();
@@ -33,17 +33,17 @@ public class MusicianDao extends BaseDao<Musician> {
     }
 
     @Override
-    public Optional<Musician> persist(Musician elem) {
+    public Optional<MusicianEntity> persist(MusicianEntity elem) {
         return Optional.empty();
     }
 
     @Override
-    public Optional<Musician> update(Musician elem) {
+    public Optional<MusicianEntity> update(MusicianEntity elem) {
         return Optional.empty();
     }
 
     @Override
-    public Boolean remove(Musician elem) {
+    public Boolean remove(MusicianEntity elem) {
         return null;
     }
 }

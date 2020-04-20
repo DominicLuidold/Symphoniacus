@@ -1,10 +1,11 @@
 package at.fhv.teamb.symphoniacus.domain;
 
 import at.fhv.teamb.symphoniacus.persistence.model.DutyEntity;
-import at.fhv.teamb.symphoniacus.persistence.model.DutyPosition;
-import at.fhv.teamb.symphoniacus.persistence.model.Musician;
 import java.util.Locale;
-import java.util.Map;
+import java.util.Collections;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Objects;
 import java.util.ResourceBundle;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -15,29 +16,37 @@ import org.apache.logging.log4j.Logger;
  * @author Valentin Goronjic
  */
 public class Duty {
-
     private static final Logger LOG = LogManager.getLogger(Duty.class);
     private DutyEntity entity;
+    private List<DutyPosition> dutyPositions;
     private String title;
 
     public Duty(DutyEntity entity) {
-        this.entity = entity;
+        this(entity, null);
     }
 
-    public DutyEntity getEntity() {
-        return this.entity;
-    }
-
-    public void setEntity(DutyEntity entity) {
+    /**
+     * Initializes the Duty object based on provided {@link DutyEntity} and List of
+     * {@link DutyPosition}s.
+     *
+     * @param entity        The entity to use
+     * @param dutyPositions The List of DutyPositions to use
+     */
+    public Duty(DutyEntity entity, List<DutyPosition> dutyPositions) {
         this.entity = entity;
+        if (dutyPositions == null) {
+            this.dutyPositions = null;
+        } else {
+            this.dutyPositions = Collections.unmodifiableList(dutyPositions);
+        }
     }
 
     /**
      * Generates a calendar-friendly title for Duty.
-     * @return String that looks like this: CATEGORY for SERIES (DESCRIPTION),
-     *     where the "for SERIES" "(DESCRIPTION)" parts are optional
-     * @see DutyTest
-     * */
+     *
+     * @return String that looks like this: CATEGORY for SERIES (DESCRIPTION), where the
+     *     "for SERIES", "(DESCRIPTION)" parts are optional.
+     */
     public String getTitle() {
         if (this.title == null) {
             LOG.debug("No title generated yet - generating");
@@ -75,5 +84,18 @@ public class Duty {
             this.title = sb.toString();
         }
         return this.title;
+    }
+
+    /**
+     * Returns a List of all {@link DutyPosition}s related to this duty.
+     *
+     * @return A List of DutyPositions
+     */
+    public List<DutyPosition> getDutyPositions() {
+        return Objects.requireNonNullElseGet(this.dutyPositions, LinkedList::new);
+    }
+
+    public DutyEntity getEntity() {
+        return this.entity;
     }
 }

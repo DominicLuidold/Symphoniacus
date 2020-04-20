@@ -1,6 +1,7 @@
 package at.fhv.teamb.symphoniacus.persistence.model;
 
 import java.time.LocalDate;
+//
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -10,7 +11,7 @@ import javax.persistence.Table;
 
 @Entity
 @Table(name = "contractualObligation")
-public class ContractualObligation {
+public class ContractualObligationEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "contractNr")
@@ -33,6 +34,7 @@ public class ContractualObligation {
 
     @Column(name = "instrumentCategoryId")
     private Integer instrumentCategoryId;
+
 
     public Integer getContractNr() {
         return this.contractNr;

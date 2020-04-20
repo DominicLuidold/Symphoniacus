@@ -3,15 +3,15 @@ package at.fhv.teamb.symphoniacus.application;
 import at.fhv.teamb.symphoniacus.domain.Duty;
 import at.fhv.teamb.symphoniacus.persistence.dao.DutyDao;
 import at.fhv.teamb.symphoniacus.persistence.model.DutyEntity;
-import at.fhv.teamb.symphoniacus.persistence.model.Section;
+import at.fhv.teamb.symphoniacus.persistence.model.SectionEntity;
 import java.time.DayOfWeek;
 import java.time.LocalDate;
 import java.util.LinkedList;
 import java.util.List;
 
 /**
- * This class is responsible for finding {@link Duty} objects based on a range of time and
- * {@link Section}.
+ * This class is responsible for finding {@link DutyEntity} objects based on a range of time and
+ * {@link SectionEntity}.
  *
  * @author Nino Heinzle
  */
@@ -61,7 +61,7 @@ public class DutyManager {
      * @return A List of the matching duties
      */
     public List<Duty> findAllInWeekWithSection(
-        Section sectionOfUser,
+        SectionEntity sectionOfUser,
         LocalDate start
     ) {
         return convertToDuties(
@@ -84,7 +84,7 @@ public class DutyManager {
      * @return A List of the matching duties
      */
     public List<Duty> findAllInRangeWithSection(
-        Section sectionOfUser,
+        SectionEntity sectionOfUser,
         LocalDate start,
         LocalDate end
     ) {

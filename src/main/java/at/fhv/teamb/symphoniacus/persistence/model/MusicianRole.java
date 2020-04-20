@@ -26,14 +26,14 @@ public class MusicianRole {
     private MusicianRoleType description;
 
     @ManyToMany(mappedBy = "musicianRoles")
-    private List<Musician> musicians = new LinkedList<>();
+    private List<MusicianEntity> musicians = new LinkedList<>();
 
-    public void addMusician(Musician m) {
+    public void addMusician(MusicianEntity m) {
         musicians.add(m);
         m.addMusicianRole(this);
     }
 
-    public void removeMusician(Musician m) {
+    public void removeMusician(MusicianEntity m) {
         musicians.remove(m);
         m.removeMusicianRole(this);
     }

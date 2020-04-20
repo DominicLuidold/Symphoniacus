@@ -1,24 +1,26 @@
 package at.fhv.teamb.symphoniacus.domain;
 
-import at.fhv.teamb.symphoniacus.persistence.model.Section;
-
+/**
+ * Domain object responsible for handling the instrumentation for a {@link Duty}.
+ *
+ * @author Dominic Luidold
+ */
 public class ActualSectionInstrumentation {
-    private Section section;
     private Duty duty;
 
-    public Section getSection() {
-        return section;
+    public ActualSectionInstrumentation(Duty duty) {
+        this.duty = duty;
     }
 
-    public void setSection(Section section) {
-        this.section = section;
+    public void setMusicianForPosition(Musician musician, DutyPosition dutyPosition) {
+        throw new UnsupportedOperationException("Not yet implemented");
+    }
+
+    public void unsetMusicianForPosition(Musician musician, DutyPosition dutyPosition) {
+        throw new UnsupportedOperationException("Not yet implemented");
     }
 
     public Duty getDuty() {
-        return duty;
-    }
-
-    public void setDuty(Duty duty) {
-        this.duty = duty;
+        return this.duty;
     }
 }

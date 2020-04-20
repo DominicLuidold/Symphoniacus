@@ -4,9 +4,10 @@ import at.fhv.teamb.symphoniacus.application.DutyManager;
 import at.fhv.teamb.symphoniacus.application.LoginManager;
 import at.fhv.teamb.symphoniacus.application.MusicianManager;
 import at.fhv.teamb.symphoniacus.domain.Duty;
-import at.fhv.teamb.symphoniacus.persistence.model.Musician;
-import at.fhv.teamb.symphoniacus.persistence.model.Section;
-import at.fhv.teamb.symphoniacus.persistence.model.User;
+import at.fhv.teamb.symphoniacus.persistence.model.DutyEntity;
+import at.fhv.teamb.symphoniacus.persistence.model.MusicianEntity;
+import at.fhv.teamb.symphoniacus.persistence.model.SectionEntity;
+import at.fhv.teamb.symphoniacus.persistence.model.UserEntity;
 import com.calendarfx.model.Calendar;
 import com.calendarfx.model.CalendarSource;
 import com.calendarfx.model.Entry;
@@ -66,9 +67,9 @@ public class CalendarController implements Initializable, Controllable {
         this.registerController();
 
         // TODO - Temporarily used until proper login is introduced
-        Optional<User> user = new LoginManager().login("vaubou", "eItFAJSb");
-        Optional<Musician> musician = new MusicianManager().loadMusician(user.get());
-        Section section = musician.get().getSection();
+        Optional<UserEntity> user = new LoginManager().login("vaubou", "eItFAJSb");
+        Optional<MusicianEntity> musician = new MusicianManager().loadMusician(user.get());
+        SectionEntity section = musician.get().getSection();
 
         this.calendarView.getCalendarSources().setAll(
             prepareCalendarSource(
@@ -118,7 +119,7 @@ public class CalendarController implements Initializable, Controllable {
      * @param section The section to use
      * @return A CalendarSource containing a Calendar and Entries
      */
-    public CalendarSource prepareCalendarSource(String name, Section section) {
+    public CalendarSource prepareCalendarSource(String name, SectionEntity section) {
         CalendarSource calendarSource = new CalendarSource(name);
         Calendar calendar = createCalendar(section);
         fillCalendar(calendar, section);
@@ -127,7 +128,7 @@ public class CalendarController implements Initializable, Controllable {
     }
 
     /**
-     * Creates a {@link Calendar} based on specified {@link Section}.
+     * Creates a {@link Calendar} based on specified {@link SectionEntity}.
      *
      * <p>The calendar will have a {@link Calendar.Style} assigned and will be marked as
      * {@code readOnly}.
@@ -135,7 +136,7 @@ public class CalendarController implements Initializable, Controllable {
      * @param section The section to use
      * @return A Calendar
      */
-    public Calendar createCalendar(Section section) {
+    public Calendar createCalendar(SectionEntity section) {
         Calendar calendar = new Calendar(section.getDescription());
         calendar.setShortName(section.getSectionShortcut());
         calendar.setReadOnly(true);
@@ -156,17 +157,17 @@ public class CalendarController implements Initializable, Controllable {
     }
 
     /**
-     * Fills a {@link Calendar} with {@link Entry} objects based on specified {@link Section}.
+     * Fills a {@link Calendar} with {@link Entry} objects based on specified {@link SectionEntity}.
      *
      * <p>Having no interval defined, the default interval start and end date (13 days from
      * {@link LocalDate#now()} are getting used.
      *
      * @param calendar The calendar to fill
-     * @param section  The section used to determine required {@link Duty} objects
+     * @param section  The section used to determine required {@link DutyEntity} objects
      * @see #DEFAULT_INTERVAL_START
      * @see #DEFAULT_INTERVAL_END
      */
-    public void fillCalendar(Calendar calendar, Section section) {
+    public void fillCalendar(Calendar calendar, SectionEntity section) {
         fillCalendar(calendar, createDutyCalendarEntries(
             new DutyManager().findAllInRangeWithSection(
                 section,
@@ -177,17 +178,17 @@ public class CalendarController implements Initializable, Controllable {
     }
 
     /**
-     * Fills a {@link Calendar} with {@link Entry} objects based on supplied {@link Section} and
-     * dates.
+     * Fills a {@link Calendar} with {@link Entry} objects based on supplied {@link SectionEntity}
+     * and dates.
      *
      * @param calendar  The calendar to fill
-     * @param section   The section used to determine which {@link Duty} objects
+     * @param section   The section used to determine which {@link DutyEntity} objects
      * @param startDate Start date of the desired interval
      * @param endDate   End date of the desired interval
      */
     public void fillCalendar(
         Calendar calendar,
-        Section section,
+        SectionEntity section,
         LocalDate startDate,
         LocalDate endDate
     ) {
@@ -201,7 +202,7 @@ public class CalendarController implements Initializable, Controllable {
     }
 
     /**
-     * Returns a list of CalendarFX {@link Entry} objects based on {@link Duty} objects.
+     * Returns a list of CalendarFX {@link Entry} objects based on {@link DutyEntity} objects.
      *
      * @param duties A List of Duties
      * @return A list of Entries
