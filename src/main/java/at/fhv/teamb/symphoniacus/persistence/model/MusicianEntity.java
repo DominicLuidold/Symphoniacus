@@ -51,12 +51,16 @@ public class MusicianEntity {
     @JoinColumn(name = "sectionId")
     private SectionEntity section;
 
-
-    @JoinTable(name = "dutyPosition_musician",
-        joinColumns = @JoinColumn(name = "musicianId"),
-        inverseJoinColumns = @JoinColumn(name = "dutyPositionId")
-    )
     @ManyToMany
+    @JoinTable(
+        name = "dutyPosition_musician",
+        joinColumns = {
+            @JoinColumn(name = "musicianId")
+        },
+        inverseJoinColumns = {
+            @JoinColumn(name = "dutyPositionId")
+        }
+    )
     private List<DutyPositionEntity> dutyPositions = new LinkedList<>();
 
     public Integer getMusicianId() {
@@ -103,10 +107,12 @@ public class MusicianEntity {
 
     public void addDutyPosition(DutyPositionEntity position) {
         this.dutyPositions.add(position);
+        position.addMusician(this);
     }
 
-    public void addAllDutyPositions(List<DutyPositionEntity> positions) {
-        this.dutyPositions.addAll(positions);
+    public void removeDutyPosition(DutyPositionEntity position) {
+        this.dutyPositions.remove(position);
+        position.removeMusician(this);
     }
 
     @Override

@@ -1,7 +1,7 @@
 package at.fhv.teamb.symphoniacus.persistence.model;
 
-import java.util.HashSet;
-import java.util.Set;
+import java.util.LinkedList;
+import java.util.List;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -13,16 +13,6 @@ import javax.persistence.Table;
 @Entity
 @Table(name = "section")
 public class SectionEntity {
-    /*
-       ID1 --> 'Vl1', 'Erste Violinen');
-       ID2 -->'Vl2', 'Zweite Violinen');
-       ID3 -->'Vla', 'Viola oder Bratschen');
-       ID4 -->'Vc', 'Violoncelli');
-       ID5 -->'Kb', 'Kontrabässe');
-       ID6 -->'Fl/Ob/Kl/Fg', 'Holzbläser');
-       ID7 -->'Hr/Trp/Pos/Tb', 'Blechbläser');
-       ID8 -->'Pk/Schlw/Hf', 'Schlagwerk');
-   */
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "sectionId")
@@ -34,26 +24,17 @@ public class SectionEntity {
     @Column(name = "description")
     private String description;
 
-    //One-To-Many Part for SECTIONMONTHLYSCHEDULE Table
     @OneToMany(mappedBy = "section", orphanRemoval = true)
-    private Set<SectionMonthlySchedule> sectionMonthlyScheduleSet = new HashSet<>();
+    private List<SectionMonthlySchedule> sectionMonthlySchedules = new LinkedList<>();
 
     @OneToMany(mappedBy = "section", orphanRemoval = true)
-    private Set<MusicianEntity> musicians = new HashSet<>();
+    private List<MusicianEntity> musicians = new LinkedList<>();
 
-    public Set<SectionMonthlySchedule> getSectionMonthlyScheduleSet() {
-        return this.sectionMonthlyScheduleSet;
-    }
+    @OneToMany(mappedBy = "section", orphanRemoval = true)
+    private List<DutyPositionEntity> dutyPositions = new LinkedList<>();
 
-    public void setSectionMonthlyScheduleSet(
-        Set<SectionMonthlySchedule> sectionMonthlyScheduleSet) {
-        this.sectionMonthlyScheduleSet = sectionMonthlyScheduleSet;
-    }
-
-    public void addSectionMonthlySchedule(SectionMonthlySchedule sectionMonthlySchedule) {
-        this.sectionMonthlyScheduleSet.add(sectionMonthlySchedule);
-        sectionMonthlySchedule.setSection(this);
-    }
+    @OneToMany(mappedBy = "section", orphanRemoval = true)
+    private List<SectionInstrumentationEntity> sectionInstrumentations = new LinkedList<>();
 
     public Integer getSectionId() {
         return this.sectionId;
@@ -79,11 +60,59 @@ public class SectionEntity {
         this.description = description;
     }
 
-    public Set<MusicianEntity> getMusicians() {
-        return musicians;
+    public List<SectionMonthlySchedule> getSectionMonthlySchedules() {
+        return this.sectionMonthlySchedules;
     }
 
-    public void setMusicians(Set<MusicianEntity> musicians) {
-        this.musicians = musicians;
+    public void addSectionMonthlySchedule(SectionMonthlySchedule sectionMonthlySchedule) {
+        this.sectionMonthlySchedules.add(sectionMonthlySchedule);
+        sectionMonthlySchedule.setSection(this);
+    }
+
+    public void removeSectionMonthlySchedule(SectionMonthlySchedule sectionMonthlySchedule) {
+        this.sectionMonthlySchedules.remove(sectionMonthlySchedule);
+        sectionMonthlySchedule.setMonthlySchedule(null);
+    }
+
+    public List<MusicianEntity> getMusicians() {
+        return this.musicians;
+    }
+
+    public void addMusician(MusicianEntity musician) {
+        this.musicians.add(musician);
+        musician.setSection(this);
+    }
+
+    public void removeMusician(MusicianEntity musician) {
+        this.musicians.remove(musician);
+        musician.setSection(null);
+    }
+
+    public List<DutyPositionEntity> getDutyPositions() {
+        return this.dutyPositions;
+    }
+
+    public void addDutyPosition(DutyPositionEntity dutyPosition) {
+        this.dutyPositions.add(dutyPosition);
+        dutyPosition.setSection(this);
+    }
+
+    public void removeDutyPosition(DutyPositionEntity dutyPosition) {
+        this.dutyPositions.remove(dutyPosition);
+        dutyPosition.setSection(null);
+    }
+
+    public List<SectionInstrumentationEntity> getSectionInstrumentations() {
+        return this.sectionInstrumentations;
+    }
+
+    public void addSectionInstrumentation(SectionInstrumentationEntity sectionInstrumentation) {
+        this.sectionInstrumentations.add(sectionInstrumentation);
+        sectionInstrumentation.setSection(this);
+    }
+
+    public void removeSectionInstrumentation(SectionInstrumentationEntity sectionInstrumentation) {
+        this.sectionInstrumentations.remove(sectionInstrumentation);
+        sectionInstrumentation.setSection(null);
     }
 }

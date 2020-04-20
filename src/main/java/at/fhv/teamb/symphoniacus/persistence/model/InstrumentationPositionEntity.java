@@ -1,10 +1,16 @@
 package at.fhv.teamb.symphoniacus.persistence.model;
 
+import java.util.LinkedList;
+import java.util.List;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
 @Entity
@@ -15,14 +21,19 @@ public class InstrumentationPositionEntity {
     @Column(name = "instrumentationPositionId")
     private Integer instrumentationPositionId;
 
-    @Column(name = "sectionInstrumentationId")
-    private Integer sectionInstrumentationId;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "sectionInstrumentationId")
+    private SectionInstrumentationEntity sectionInstrumentation;
 
-    @Column(name = "instrumentationId")
-    private Integer instrumentationId;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "instrumentationId")
+    private InstrumentationEntity instrumentation;
 
-    @Column(name = "position")
-    private String position;
+    @Column(name = "positionDescription")
+    private String positionDescription;
+
+    @OneToMany(mappedBy = "instrumentationPosition", orphanRemoval = true)
+    private List<DutyPositionEntity> dutyPositions = new LinkedList<>();
 
     public Integer getInstrumentationPositionId() {
         return this.instrumentationPositionId;
@@ -32,27 +43,44 @@ public class InstrumentationPositionEntity {
         this.instrumentationPositionId = instrumentationPositionId;
     }
 
-    public Integer getSectionInstrumentationId() {
-        return this.sectionInstrumentationId;
+    public SectionInstrumentationEntity getSectionInstrumentation() {
+        return this.sectionInstrumentation;
     }
 
-    public void setSectionInstrumentationId(Integer sectionInstrumentationId) {
-        this.sectionInstrumentationId = sectionInstrumentationId;
+    public void setSectionInstrumentation(
+        SectionInstrumentationEntity sectionInstrumentation) {
+        this.sectionInstrumentation = sectionInstrumentation;
     }
 
-    public Integer getInstrumentationId() {
-        return this.instrumentationId;
+    public InstrumentationEntity getInstrumentation() {
+        return this.instrumentation;
     }
 
-    public void setInstrumentationId(Integer instrumentationId) {
-        this.instrumentationId = instrumentationId;
+    public void setInstrumentation(
+        InstrumentationEntity instrumentation
+    ) {
+        this.instrumentation = instrumentation;
     }
 
-    public String getPosition() {
-        return this.position;
+    public String getPositionDescription() {
+        return this.positionDescription;
     }
 
-    public void setPosition(String position) {
-        this.position = position;
+    public void setPositionDescription(String positionDescription) {
+        this.positionDescription = positionDescription;
+    }
+
+    public List<DutyPositionEntity> getDutyPositions() {
+        return this.dutyPositions;
+    }
+
+    public void addDutyPosition(DutyPositionEntity dutyPosition) {
+        this.dutyPositions.add(dutyPosition);
+        dutyPosition.setInstrumentationPosition(this);
+    }
+
+    public void removeDutyPosition(DutyPositionEntity dutyPosition) {
+        this.dutyPositions.remove(dutyPosition);
+        dutyPosition.setInstrumentationPosition(null);
     }
 }

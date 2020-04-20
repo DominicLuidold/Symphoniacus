@@ -1,9 +1,7 @@
 package at.fhv.teamb.symphoniacus.persistence.model;
 
-import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Set;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -13,7 +11,6 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
-import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
 @Entity
@@ -27,30 +24,20 @@ public class DutyPositionEntity {
     @Column(name = "description")
     private String description;
 
-    @Column(name = "instrumentationPositionId")
-    private Integer instrumentationPositionId;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "instrumentationPositionId")
+    private InstrumentationPositionEntity instrumentationPosition;
 
-    @Column(name = "dutyId", updatable = false, insertable = false)
-    private Integer dutyId;
-
-    @Column(name = "sectionId")
-    private Integer sectionId;
-
-    //Many-To-One Part for DUTY Table
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "dutyId")
     private DutyEntity duty;
 
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "sectionId")
+    private SectionEntity section;
+
     @ManyToMany(mappedBy = "dutyPositions")
     private List<MusicianEntity> musicians = new LinkedList<>();
-
-    public DutyEntity getDuty() {
-        return this.duty;
-    }
-
-    public void setDuty(DutyEntity dutyEntity) {
-        this.duty = dutyEntity;
-    }
 
     public Integer getDutyPositionId() {
         return this.dutyPositionId;
@@ -68,28 +55,39 @@ public class DutyPositionEntity {
         this.description = description;
     }
 
-    public Integer getInstrumentationPositionId() {
-        return this.instrumentationPositionId;
+    public InstrumentationPositionEntity getInstrumentationPosition() {
+        return this.instrumentationPosition;
     }
 
-    public void setInstrumentationPositionId(Integer instrumentationPositionId) {
-        this.instrumentationPositionId = instrumentationPositionId;
+    public void setInstrumentationPosition(InstrumentationPositionEntity instrumentationPosition) {
+        this.instrumentationPosition = instrumentationPosition;
     }
 
-    public Integer getDutyId() {
-        return this.dutyId;
+    public DutyEntity getDuty() {
+        return this.duty;
     }
 
-    public void setDutyId(Integer dutyId) {
-        this.dutyId = dutyId;
+    public void setDuty(DutyEntity duty) {
+        this.duty = duty;
     }
 
-    public Integer getSectionId() {
-        return this.sectionId;
+    public SectionEntity getSection() {
+        return this.section;
     }
 
-    public void setSectionId(Integer sectionId) {
-        this.sectionId = sectionId;
+    public void setSection(SectionEntity section) {
+        this.section = section;
     }
 
+    public List<MusicianEntity> getMusicians() {
+        return this.musicians;
+    }
+
+    public void addMusician(MusicianEntity musician) {
+        this.musicians.add(musician);
+    }
+
+    public void removeMusician(MusicianEntity musician) {
+        this.musicians.remove(musician);
+    }
 }
