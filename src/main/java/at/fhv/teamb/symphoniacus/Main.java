@@ -1,25 +1,19 @@
 package at.fhv.teamb.symphoniacus;
 
-import at.fhv.teamb.symphoniacus.persistence.dao.DutyCategoryDao;
 import at.fhv.teamb.symphoniacus.persistence.dao.DutyDao;
-import at.fhv.teamb.symphoniacus.persistence.model.DutyCategoryEntity;
 import at.fhv.teamb.symphoniacus.persistence.model.DutyEntity;
 import at.fhv.teamb.symphoniacus.persistence.model.MusicianEntity;
-import at.fhv.teamb.symphoniacus.persistence.model.Section;
 import java.io.IOException;
 import java.time.LocalDate;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Locale;
-import java.util.Optional;
 import java.util.ResourceBundle;
-import java.util.Set;
 import javafx.application.Application;
-import javafx.fxml.FXMLLoader;
+import javafx.fxml.FXMLLoader;git
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
-import net.bytebuddy.asm.Advice;
+
 
 public class Main extends Application {
 
