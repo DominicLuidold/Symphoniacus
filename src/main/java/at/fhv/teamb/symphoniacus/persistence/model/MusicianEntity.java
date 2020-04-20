@@ -14,6 +14,7 @@ import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.NamedAttributeNode;
 import javax.persistence.NamedEntityGraph;
+import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
 @Entity
@@ -21,7 +22,7 @@ import javax.persistence.Table;
 @NamedEntityGraph(
     name = "musician-with-collections",
     attributeNodes = {
-        @NamedAttributeNode("userId"),
+        @NamedAttributeNode("user"),
         @NamedAttributeNode("section"),
         @NamedAttributeNode("musicianRoles")
     }
@@ -44,8 +45,9 @@ public class MusicianEntity {
     )
     private List<MusicianRole> musicianRoles = new LinkedList<>();
 
-    @Column(name = "userId")
-    private Integer userId;
+    @OneToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "userId")
+    private UserEntity user;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "sectionId")
@@ -71,12 +73,12 @@ public class MusicianEntity {
         this.musicianId = musicianId;
     }
 
-    public Integer getUserId() {
-        return this.userId;
+    public UserEntity getUser() {
+        return this.user;
     }
 
-    public void setUserId(Integer userId) {
-        this.userId = userId;
+    public void setUser(UserEntity user) {
+        this.user = user;
     }
 
     public List<MusicianRole> getMusicianRoles() {
@@ -120,7 +122,7 @@ public class MusicianEntity {
         return "Musician{"
             + "musicianId=" + musicianId
             + ", musicianRoles=" + musicianRoles
-            + ", userId=" + userId
+            + ", user=" + user
             + ", section=" + section
             + '}';
     }

@@ -4,9 +4,12 @@ import java.util.LinkedList;
 import java.util.List;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
@@ -21,8 +24,9 @@ public class InstrumentationEntity {
     @Column(name = "name")
     private String name;
 
-    @Column(name = "musicalPieceId")
-    private Integer musicalPieceId;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "musicalPieceId")
+    private MusicalPieceEntity musicalPiece;
 
     @OneToMany(mappedBy = "instrumentation", orphanRemoval = true)
     private List<SectionInstrumentationEntity> sectionInstrumentations = new LinkedList<>();
@@ -46,12 +50,12 @@ public class InstrumentationEntity {
         this.name = name;
     }
 
-    public Integer getMusicalPieceId() {
-        return this.musicalPieceId;
+    public MusicalPieceEntity getMusicalPiece() {
+        return this.musicalPiece;
     }
 
-    public void setMusicalPieceId(Integer musicalPieceId) {
-        this.musicalPieceId = musicalPieceId;
+    public void setMusicalPiece(MusicalPieceEntity musicalPiece) {
+        this.musicalPiece = musicalPiece;
     }
 
     public List<SectionInstrumentationEntity> getSectionInstrumentations() {

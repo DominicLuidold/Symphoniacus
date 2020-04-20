@@ -7,7 +7,7 @@ import at.fhv.teamb.symphoniacus.domain.Duty;
 import at.fhv.teamb.symphoniacus.persistence.model.DutyEntity;
 import at.fhv.teamb.symphoniacus.persistence.model.MusicianEntity;
 import at.fhv.teamb.symphoniacus.persistence.model.SectionEntity;
-import at.fhv.teamb.symphoniacus.persistence.model.User;
+import at.fhv.teamb.symphoniacus.persistence.model.UserEntity;
 import com.calendarfx.model.Calendar;
 import com.calendarfx.model.CalendarSource;
 import com.calendarfx.model.Entry;
@@ -67,7 +67,7 @@ public class CalendarController implements Initializable, Controllable {
         this.registerController();
 
         // TODO - Temporarily used until proper login is introduced
-        Optional<User> user = new LoginManager().login("vaubou", "eItFAJSb");
+        Optional<UserEntity> user = new LoginManager().login("vaubou", "eItFAJSb");
         Optional<MusicianEntity> musician = new MusicianManager().loadMusician(user.get());
         SectionEntity section = musician.get().getSection();
 

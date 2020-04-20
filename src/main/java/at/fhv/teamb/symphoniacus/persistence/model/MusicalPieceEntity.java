@@ -1,7 +1,7 @@
 package at.fhv.teamb.symphoniacus.persistence.model;
 
-import java.util.HashSet;
-import java.util.Set;
+import java.util.LinkedList;
+import java.util.List;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -12,7 +12,7 @@ import javax.persistence.Table;
 
 @Entity
 @Table(name = "musicalPiece")
-public class MusicalPiece {
+public class MusicalPieceEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "musicalPieceId")
@@ -27,25 +27,10 @@ public class MusicalPiece {
     @Column(name = "category")
     private String category;
 
-    //One-To-Many Part for SERIESOFPERFORMANCESMUSICALPIECE Table
     @OneToMany(mappedBy = "musicalPiece", orphanRemoval = true)
-    private Set<SeriesOfPerformancesMusicalPiece> seriesOfPerformancesMusicalPieceSet =
-        new HashSet<>();
+    private List<InstrumentationEntity> instrumentations = new LinkedList<>();
 
-    public Set<SeriesOfPerformancesMusicalPiece> getSeriesOfPerformancesMusicalPiece() {
-        return this.seriesOfPerformancesMusicalPieceSet;
-    }
-
-    public void setSeriesOfPerformancesMusicalPieceSet(
-        Set<SeriesOfPerformancesMusicalPiece> seriesOfPerformancesMusicalPieceSet) {
-        this.seriesOfPerformancesMusicalPieceSet = seriesOfPerformancesMusicalPieceSet;
-    }
-
-    public void addSeriesOfPerformancesMusicalPiece(
-        SeriesOfPerformancesMusicalPiece seriesOfPerformancesMusicalPiece) {
-        this.seriesOfPerformancesMusicalPieceSet.add(seriesOfPerformancesMusicalPiece);
-        seriesOfPerformancesMusicalPiece.setMusicalPiece(this);
-    }
+    // TODO - @ManyToMany zw. MusicalPiece & SeriesOfPerformances fehlt
 
     public Integer getMusicalPieceId() {
         return this.musicalPieceId;
@@ -77,5 +62,19 @@ public class MusicalPiece {
 
     public void setCategory(String category) {
         this.category = category;
+    }
+
+    public List<InstrumentationEntity> getInstrumentations() {
+        return this.instrumentations;
+    }
+
+    public void addInstrumentation(InstrumentationEntity instrumentation) {
+        this.instrumentations.add(instrumentation);
+        instrumentation.setMusicalPiece(this);
+    }
+
+    public void removeInstrumentation(InstrumentationEntity instrumentation) {
+        this.instrumentations.remove(instrumentation);
+        instrumentation.setMusicalPiece(null);
     }
 }

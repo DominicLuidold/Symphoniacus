@@ -5,12 +5,11 @@
     <persistence-unit name="mysqldb">
         <!-- Entity classes -->
         <class>at.fhv.teamb.symphoniacus.persistence.model.AdministrativeAssistant</class>
-        <class>at.fhv.teamb.symphoniacus.persistence.model.ContractualObligation</class>
+        <class>at.fhv.teamb.symphoniacus.persistence.model.ContractualObligationEntity</class>
         <class>at.fhv.teamb.symphoniacus.persistence.model.DutyEntity</class>
         <class>at.fhv.teamb.symphoniacus.persistence.model.DutyCategory</class>
-        <class>at.fhv.teamb.symphoniacus.persistence.model.DutyCategoryChangelog</class>
+        <class>at.fhv.teamb.symphoniacus.persistence.model.DutyCategoryChangelogEntity</class>
         <class>at.fhv.teamb.symphoniacus.persistence.model.DutyPositionEntity</class>
-        <class>at.fhv.teamb.symphoniacus.persistence.model.DutyPositionMusician</class>
         <class>at.fhv.teamb.symphoniacus.persistence.model.InstrumentationEntity</class>
         <class>at.fhv.teamb.symphoniacus.persistence.model.InstrumentationPositionEntity</class>
         <class>at.fhv.teamb.symphoniacus.persistence.model.ContractualObligationEntity</class>
@@ -18,12 +17,12 @@
         <class>at.fhv.teamb.symphoniacus.persistence.model.DutyCategoryEntity</class>
         <class>at.fhv.teamb.symphoniacus.persistence.model.DutyCategoryChangelogEntity</class>
         <class>at.fhv.teamb.symphoniacus.persistence.model.DutyPositionEntity</class>
-        <class>at.fhv.teamb.symphoniacus.persistence.model.Instrumentation</class>
-        <class>at.fhv.teamb.symphoniacus.persistence.model.InstrumentationPosition</class>
+        <class>at.fhv.teamb.symphoniacus.persistence.model.InstrumentationEntity</class>
+        <class>at.fhv.teamb.symphoniacus.persistence.model.InstrumentationPositionEntity</class>
         <class>at.fhv.teamb.symphoniacus.persistence.model.InstrumentCategory</class>
         <class>at.fhv.teamb.symphoniacus.persistence.model.InstrumentCategoryMusician</class>
         <class>at.fhv.teamb.symphoniacus.persistence.model.MonthlySchedule</class>
-        <class>at.fhv.teamb.symphoniacus.persistence.model.MusicalPiece</class>
+        <class>at.fhv.teamb.symphoniacus.persistence.model.MusicalPieceEntity</class>
         <class>at.fhv.teamb.symphoniacus.persistence.model.MusicianEntity</class>
         <class>at.fhv.teamb.symphoniacus.persistence.model.MusicianRole</class>
         <class>at.fhv.teamb.symphoniacus.persistence.model.NegativeDateMonthlySchedule</class>
@@ -37,7 +36,7 @@
         <class>at.fhv.teamb.symphoniacus.persistence.model.SeriesOfPerformances</class>
         <class>at.fhv.teamb.symphoniacus.persistence.model.SeriesOfPerformancesMusicalPiece</class>
         <class>at.fhv.teamb.symphoniacus.persistence.model.Substitute</class>
-        <class>at.fhv.teamb.symphoniacus.persistence.model.User</class>
+        <class>at.fhv.teamb.symphoniacus.persistence.model.UserEntity</class>
         <class>at.fhv.teamb.symphoniacus.persistence.model.Vacation</class>
         <class>at.fhv.teamb.symphoniacus.persistence.model.WeeklySchedule</class>
         <!-- Properties -->

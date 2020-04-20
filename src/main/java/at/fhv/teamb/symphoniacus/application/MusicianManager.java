@@ -2,7 +2,7 @@ package at.fhv.teamb.symphoniacus.application;
 
 import at.fhv.teamb.symphoniacus.persistence.dao.MusicianDao;
 import at.fhv.teamb.symphoniacus.persistence.model.MusicianEntity;
-import at.fhv.teamb.symphoniacus.persistence.model.User;
+import at.fhv.teamb.symphoniacus.persistence.model.UserEntity;
 import java.util.Optional;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -22,14 +22,14 @@ public class MusicianManager extends LoginManager {
     }
 
     /**
-     * Returns a {@link MusicianEntity} based on provided {@link User}.
+     * Returns a {@link MusicianEntity} based on provided {@link UserEntity}.
      *
      * <p>In case of the user not being a musician, an empty {@link Optional} will be returned.
      *
      * @param user The user to use
      * @return A Musician object representing the provided User
      */
-    public Optional<MusicianEntity> loadMusician(User user) {
+    public Optional<MusicianEntity> loadMusician(UserEntity user) {
         if (user == null) {
             LOG.error("Cannot load musician with null user.");
             return Optional.empty();
