@@ -1,6 +1,7 @@
 package at.fhv.teamb.symphoniacus.persistence.model;
 
 import java.time.LocalDateTime;
+import java.time.Month;
 import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
@@ -175,5 +176,9 @@ public class DutyEntity {
     public void setSectionMonthlySchedules(
         Set<SectionMonthlySchedule> sectionMonthlySchedules) {
         this.sectionMonthlySchedules = sectionMonthlySchedules;
+    }
+
+    public Month getMonth() {
+        return this.start.getMonth();
     }
 }

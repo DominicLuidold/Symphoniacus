@@ -2,8 +2,9 @@ package at.fhv.teamb.symphoniacus.persistence.dao;
 
 import at.fhv.teamb.symphoniacus.persistence.BaseDao;
 import at.fhv.teamb.symphoniacus.persistence.model.DutyCategoryEntity;
+import at.fhv.teamb.symphoniacus.persistence.model.DutyEntity;
 import java.util.Optional;
-import javax.persistence.EntityGraph;
+import javax.persistence.TypedQuery;
 
 /**
  * DAO for DutyCategories.
@@ -11,24 +12,10 @@ import javax.persistence.EntityGraph;
  * @author : Danijel Antonijevic
  **/
 public class DutyCategoryDao extends BaseDao<DutyCategoryEntity> {
-    //TODO - von Nino: hier ist man doch nur an einem DutyCategoryEntity interessiert,
-    // ob man dannach nur die id und punkte braucht kann man an dieser Stelle nicht wissen
-    // -> graph hier falsch
+
     @Override
     public Optional<DutyCategoryEntity> find(Object key) {
-        this.createEntityManager();
-        EntityGraph graph = this.entityManager.getEntityGraph(
-            "dutyCategoryId-with-points"
-        );
-
-        DutyCategoryEntity d = entityManager.createQuery("SELECT d from DutyCategoryEntity d "
-                + "WHERE d.dutyCategoryId = :id",
-            DutyCategoryEntity.class)
-            .setParameter("id", key)
-            .setHint("javax.persistence.fetchgraph", graph)
-            .getSingleResult();
-        this.tearDown();
-        return Optional.of(d);
+        return Optional.empty();
     }
 
     @Override
@@ -44,5 +31,23 @@ public class DutyCategoryDao extends BaseDao<DutyCategoryEntity> {
     @Override
     public Boolean remove(DutyCategoryEntity elem) {
         return null;
+    }
+
+    /**
+     * returns the corresponding dutyCategory to the corresponding duty.
+     *
+     * @param duty The dutyCategory of the current duty
+     * @return A Optional of the corresponding dutyCategories that were found
+     */
+    public Optional<DutyCategoryEntity> getCategoryFromDuty(DutyEntity duty) {
+        this.createEntityManager();
+        TypedQuery<DutyCategoryEntity> query = this.entityManager.createQuery(
+            "SELECT dc FROM DutyCategoryEntity dc WHERE dc.dutyCategoryId = :categoryId",
+            DutyCategoryEntity.class);
+        query.setParameter("categoryId", duty.getDutyCategoryId());
+        DutyCategoryEntity dutyCategory = query.getSingleResult();
+        this.tearDown();
+
+        return Optional.of(dutyCategory);
     }
 }

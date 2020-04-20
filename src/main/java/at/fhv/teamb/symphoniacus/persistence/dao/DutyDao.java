@@ -2,8 +2,11 @@ package at.fhv.teamb.symphoniacus.persistence.dao;
 
 import at.fhv.teamb.symphoniacus.persistence.BaseDao;
 import at.fhv.teamb.symphoniacus.persistence.model.DutyEntity;
+import at.fhv.teamb.symphoniacus.persistence.model.MusicianEntity;
 import at.fhv.teamb.symphoniacus.persistence.model.Section;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.YearMonth;
 import java.util.List;
 import java.util.Optional;
 import javax.persistence.TypedQuery;
@@ -129,6 +132,37 @@ public class DutyDao extends BaseDao<DutyEntity> {
 
         this.tearDown();
         return result;
+    }
+
+    /**
+     * returns all duties of a musician in the period of the entered month.
+     *
+     * @param musician The requested Musician
+     * @param month    A LocalDateTime that represents the month
+     * @return A List of the corresponding duties that were found
+     */
+    public List<DutyEntity> getAllDutiesInRangeFromMusician(MusicianEntity musician,
+                                                            LocalDate month) {
+
+        this.createEntityManager();
+        YearMonth yearMonth = YearMonth.from(month);
+        LocalDate start = yearMonth.atDay(1); // Find first day of month
+        LocalDate end = yearMonth.atEndOfMonth(); // Find last day of month
+        LocalDateTime startWithTime = start.atStartOfDay();
+        LocalDateTime endWithTime = end.atStartOfDay();
+        TypedQuery<DutyEntity> query = this.entityManager.createQuery("SELECT d FROM DutyEntity d "
+                + "INNER JOIN d.dutyPositions dp "
+                + "INNER JOIN dp.musicians m "
+                + "WHERE d.end <= :end AND d.start >= :start AND m.musicianId = :mid",
+            DutyEntity.class
+        );
+        query.setParameter("mid", musician.getMusicianId());
+        query.setParameter("start", startWithTime);
+        query.setParameter("end", endWithTime);
+        List<DutyEntity> dutyCategories = query.getResultList();
+        this.tearDown();
+
+        return dutyCategories;
     }
 
     /**
