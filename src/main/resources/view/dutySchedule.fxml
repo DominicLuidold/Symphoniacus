@@ -35,10 +35,18 @@
            <Insets top="5" right="5" bottom="5" left="5" />
        </padding>
        <items>
-            <TableView prefHeight="360.0" prefWidth="241.0">
+            <TableView fx:id="positionsTable" prefHeight="360.0" prefWidth="241.0">
                 <columns>
-                    <TableColumn maxWidth="1.7976931348623157E308" minWidth="-1.0" prefWidth="120.0" text="Rolle" />
-                    <TableColumn maxWidth="1.7976931348623157E308" minWidth="-1.0" prefWidth="120.0" text="Musiker" />
+                    <TableColumn fx:id="role"  prefWidth="120.0" text="%tab.duty.schedule.table.dutyrole.role" >
+                        <cellValueFactory>
+                            <PropertyValueFactory property="role" />
+                        </cellValueFactory>
+                    </TableColumn>
+                    <TableColumn fx:id="musicianShortcut" prefWidth="120.0" text="%tab.duty.schedule.table.dutyposition.musican" >
+                        <cellValueFactory>
+                            <PropertyValueFactory property="musicanShortcut" />
+                        </cellValueFactory>
+                </TableColumn>
                 </columns>
             </TableView>
             <SplitPane prefHeight="191.0" prefWidth="523.0" dividerPositions="0.5" orientation="VERTICAL">

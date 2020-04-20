@@ -1,8 +1,12 @@
 package at.fhv.teamb.symphoniacus.presentation;
 
+import at.fhv.teamb.symphoniacus.application.DutyScheduleManager;
+import at.fhv.teamb.symphoniacus.domain.ActualSectionInstrumentation;
 import at.fhv.teamb.symphoniacus.domain.Duty;
+import at.fhv.teamb.symphoniacus.persistence.model.DutyPosition;
 import at.fhv.teamb.symphoniacus.persistence.model.Musician;
 import at.fhv.teamb.symphoniacus.persistence.model.Section;
+import at.fhv.teamb.symphoniacus.presentation.internal.DutyPositionMusicianTableModel;
 import at.fhv.teamb.symphoniacus.presentation.internal.MusicianTableModel;
 import java.net.URL;
 import java.time.format.DateTimeFormatter;
@@ -24,6 +28,8 @@ public class DutyScheduleController implements Initializable, Controllable {
 
     private static final Logger LOG = LogManager.getLogger(DutyScheduleController.class);
     private Duty duty;
+    private DutyScheduleManager dutyScheduleManager;
+
     @FXML
     private AnchorPane dutySchedule;
 
@@ -32,6 +38,15 @@ public class DutyScheduleController implements Initializable, Controllable {
 
     @FXML
     private Label dutyTitle;
+
+    @FXML
+    private TableView<DutyPositionMusicianTableModel> positionsTable;
+
+    @FXML
+    private TableColumn<DutyPositionMusicianTableModel, String> role;
+
+    @FXML
+    private TableColumn<DutyPositionMusicianTableModel, String> musicianShortcut;
 
     @FXML
     private TableView<MusicianTableModel> musicianTableWithRequests;
@@ -45,6 +60,7 @@ public class DutyScheduleController implements Initializable, Controllable {
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         this.registerController();
+        this.dutyScheduleManager = new DutyScheduleManager();
 
         this.dutySchedule.setVisible(false);
         this.scheduleBackBtn.setOnAction(e -> {
@@ -59,6 +75,8 @@ public class DutyScheduleController implements Initializable, Controllable {
         m.setSection(new Section());
         demoList.add(new MusicianTableModel(m));
         this.musicianTableWithRequests.setItems(demoList);
+
+        showDutyPositionsWithMusicians();
     }
 
     @Override
@@ -75,6 +93,19 @@ public class DutyScheduleController implements Initializable, Controllable {
     @Override
     public void hide() {
         this.dutySchedule.setVisible(false);
+    }
+
+    private void showDutyPositionsWithMusicians() {
+        ObservableList<DutyPositionMusicianTableModel> poslist =
+            FXCollections.observableArrayList();
+
+        ActualSectionInstrumentation actualSectionInstrumentation;
+
+        Musician m = new Musician();
+        DutyPosition dp = new DutyPosition();
+
+        poslist.add(new DutyPositionMusicianTableModel(dp, m));
+        this.positionsTable.setItems(poslist);
     }
 
     /**
