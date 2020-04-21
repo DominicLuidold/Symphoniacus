@@ -71,7 +71,7 @@ class DutyManagerTest {
         List<DutyEntity> el = new LinkedList<>();
         el.add(new DutyEntity());
         el.add(new DutyEntity());
-        List<Duty> duties = this.dutyManager.convertToDuties(el);
+        List<Duty> duties = DutyManager.convertEntitiesToDomainObjects(el);
         assertEquals(el.size(), duties.size());
     }
 }

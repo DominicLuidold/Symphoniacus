@@ -1,8 +1,11 @@
 package at.fhv.teamb.symphoniacus.application;
 
+import at.fhv.teamb.symphoniacus.domain.Musician;
 import at.fhv.teamb.symphoniacus.persistence.dao.MusicianDao;
 import at.fhv.teamb.symphoniacus.persistence.model.MusicianEntity;
 import at.fhv.teamb.symphoniacus.persistence.model.UserEntity;
+import java.util.LinkedList;
+import java.util.List;
 import java.util.Optional;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -44,5 +47,19 @@ public class MusicianManager extends LoginManager {
 
         // Load attempt succeeded
         return musician;
+    }
+
+    /**
+     * Converts {@link MusicianEntity} objects to {@link Musician} objects.
+     *
+     * @param entities The entities to convert
+     * @return A List of Musician objects
+     */
+    public static List<Musician> convertEntitiesToDomainObjects(List<MusicianEntity> entities) {
+        List<Musician> musicians = new LinkedList<>();
+        for (MusicianEntity entity : entities) {
+            musicians.add(new Musician(entity));
+        }
+        return musicians;
     }
 }
