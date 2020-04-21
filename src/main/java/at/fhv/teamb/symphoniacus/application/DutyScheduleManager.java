@@ -5,8 +5,12 @@ import at.fhv.teamb.symphoniacus.domain.Duty;
 import at.fhv.teamb.symphoniacus.domain.DutyPosition;
 import at.fhv.teamb.symphoniacus.domain.Musician;
 import at.fhv.teamb.symphoniacus.domain.Section;
+import at.fhv.teamb.symphoniacus.persistence.dao.DutyDao;
 import at.fhv.teamb.symphoniacus.persistence.dao.DutyPositionDao;
+import at.fhv.teamb.symphoniacus.persistence.dao.MusicianDao;
 import at.fhv.teamb.symphoniacus.persistence.model.DutyPositionEntity;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Optional;
@@ -21,10 +25,21 @@ import org.apache.logging.log4j.Logger;
  */
 public class DutyScheduleManager {
     private static final Logger LOG = LogManager.getLogger(DutyScheduleManager.class);
-    private DutyPositionDao dutyPositionDao;
+    private final DutyDao dutyDao;
+    private final DutyPositionDao dutyPositionDao;
+    private final MusicianDao musicianDao;
+    private List<Musician> setMusicians;
+    private List<Musician> unsetMusicians;
 
+    /**
+     * Initialize the DutyScheduleManager.
+     */
     public DutyScheduleManager() {
+        this.dutyDao = new DutyDao();
         this.dutyPositionDao = new DutyPositionDao();
+        this.musicianDao = new MusicianDao();
+        this.setMusicians = new LinkedList<>();
+        this.unsetMusicians = new LinkedList<>();
     }
 
     /**
@@ -63,8 +78,48 @@ public class DutyScheduleManager {
         return Optional.of(new ActualSectionInstrumentation(dutyWithInformation));
     }
 
-    public List<Musician> getMusiciansAvailableForPosition(DutyPosition position) {
-        throw new UnsupportedOperationException("Not yet implemented");
+    /**
+     * Returns a List of {@link Musician}s that are available for a given {@link DutyPosition}.
+     *
+     * @param duty The currently edited duty
+     * @param position The position to determine musicians for
+     * @param withRequests Indicator whether musicians with duty requests should be part of the list
+     * @return A List of available musicians for the given duty position
+     */
+    public List<Musician> getMusiciansAvailableForPosition(
+        Duty duty,
+        DutyPosition position,
+        boolean withRequests
+    ) {
+        if (position == null) {
+            LOG.error("Fetching available musicians not possible - duty position is null");
+            return new LinkedList<>();
+        }
+        if (withRequests) {
+            throw new UnsupportedOperationException("Not yet implemented");
+        }
+
+        // Get all Musician entities from database and convert them
+        List<Musician> sectionMusicians = MusicianManager.convertEntitiesToDomainObjects(
+            this.musicianDao.findAllWithSection(
+                position.getEntity().getSection()
+            )
+        );
+
+        // Get all duties that occur at the same day
+        List<Duty> dutiesOfThisDay = DutyManager.convertEntitiesToDomainObjects(
+            this.dutyDao.findAllInRange(
+                LocalDateTime.of(duty.getEntity().getStart().toLocalDate(), LocalTime.MIN),
+                LocalDateTime.of(duty.getEntity().getStart().toLocalDate(), LocalTime.MAX)
+            )
+        );
+
+        return duty.determineAvailableMusicians(
+            sectionMusicians,
+            dutiesOfThisDay,
+            setMusicians,
+            unsetMusicians
+        );
     }
 
     public void setMusicianForPosition(Musician musician, DutyPosition position) {
