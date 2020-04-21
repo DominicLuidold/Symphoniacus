@@ -54,6 +54,32 @@
                     <Insets top="5" right="5" bottom="5" left="5" />
                 </padding>
                 <VBox>
+                    <Label text="%tab.duty.schedule.table.musicians.without.request">
+                        <font>
+                            <Font size="18" />
+                        </font>
+                    </Label>
+                    <TableView fx:id="musicianTableWithoutRequests">
+                        <columns>
+                            <TableColumn id="columnName" prefWidth="150" text="%tab.duty.schedule.table.musicians.name">
+                                <cellValueFactory>
+                                    <PropertyValueFactory property="name" />
+                                </cellValueFactory>
+                            </TableColumn>
+                            <TableColumn id="columnPoints" prefWidth="75.0" text="%tab.duty.schedule.table.musicians.points">
+                                <cellValueFactory>
+                                    <PropertyValueFactory property="points" />
+                                </cellValueFactory>
+                            </TableColumn>
+                            <TableColumn id="columnSchedule" prefWidth="75.0" text="%tab.duty.schedule.table.musicians.schedule">
+                                <cellValueFactory>
+                                    <PropertyValueFactory property="schedule" />
+                                </cellValueFactory>
+                            </TableColumn>
+                        </columns>
+                    </TableView>
+                </VBox>
+                <VBox>
                     <Label text="%tab.duty.schedule.table.musicians.with.request">
                         <font>
                             <Font size="18" />
@@ -84,32 +110,6 @@
                             <TableColumn id="columnDate" prefWidth="75.0" text="%tab.duty.schedule.table.musicians.date">
                                 <cellValueFactory>
                                     <PropertyValueFactory property="date" />
-                                </cellValueFactory>
-                            </TableColumn>
-                            <TableColumn id="columnSchedule" prefWidth="75.0" text="%tab.duty.schedule.table.musicians.schedule">
-                                <cellValueFactory>
-                                    <PropertyValueFactory property="schedule" />
-                                </cellValueFactory>
-                            </TableColumn>
-                        </columns>
-                    </TableView>
-                </VBox>
-                <VBox>
-                    <Label text="%tab.duty.schedule.table.musicians.without.request">
-                        <font>
-                            <Font size="18" />
-                        </font>
-                    </Label>
-                    <TableView fx:id="musicianTableWithoutRequests">
-                        <columns>
-                            <TableColumn id="columnName" prefWidth="150" text="%tab.duty.schedule.table.musicians.name">
-                                <cellValueFactory>
-                                    <PropertyValueFactory property="name" />
-                                </cellValueFactory>
-                            </TableColumn>
-                            <TableColumn id="columnPoints" prefWidth="75.0" text="%tab.duty.schedule.table.musicians.points">
-                                <cellValueFactory>
-                                    <PropertyValueFactory property="points" />
                                 </cellValueFactory>
                             </TableColumn>
                             <TableColumn id="columnSchedule" prefWidth="75.0" text="%tab.duty.schedule.table.musicians.schedule">
