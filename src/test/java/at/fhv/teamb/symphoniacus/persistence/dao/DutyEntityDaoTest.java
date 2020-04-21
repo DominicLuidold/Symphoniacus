@@ -3,7 +3,9 @@ package at.fhv.teamb.symphoniacus.persistence.dao;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 import at.fhv.teamb.symphoniacus.persistence.model.DutyEntity;
+import at.fhv.teamb.symphoniacus.persistence.model.MusicianEntity;
 import at.fhv.teamb.symphoniacus.persistence.model.SectionEntity;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 import org.apache.logging.log4j.LogManager;
@@ -47,6 +49,21 @@ class DutyEntityDaoTest {
             true, false, false);
 
         // Then
+        LOG.debug("Result size? " + list.size());
+        assertNotNull(list);
+    }
+
+    @Test
+    void getAllDutiesInRangeFromMusician_ShouldReturnNotNull() {
+        //Given
+        MusicianEntity musician = new MusicianEntity();
+        musician.setMusicianId(1);
+        LocalDate month = LocalDate.of(2020,5,1);
+
+        //When
+        List<DutyEntity> list = this.dao.getAllDutiesInRangeFromMusician(musician, month);
+
+        //Then
         LOG.debug("Result size? " + list.size());
         assertNotNull(list);
     }

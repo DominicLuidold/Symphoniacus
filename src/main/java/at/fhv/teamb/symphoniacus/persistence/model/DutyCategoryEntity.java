@@ -7,20 +7,11 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.NamedAttributeNode;
-import javax.persistence.NamedEntityGraph;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
 @Entity
 @Table(name = "dutyCategory")
-@NamedEntityGraph(
-    name = "dutyCategory-with-points",
-    attributeNodes = {
-        @NamedAttributeNode("dutyCategoryId"),
-        @NamedAttributeNode("points"),
-    }
-)
 public class DutyCategoryEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

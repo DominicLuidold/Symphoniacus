@@ -19,6 +19,11 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInstance;
 import org.mockito.Mockito;
 
+/**
+ * Tests for ContractualObligation.
+ *
+ * @author Nino Heinzle
+ */
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 class DutyManagerTest {
     private LocalDate testDate;
