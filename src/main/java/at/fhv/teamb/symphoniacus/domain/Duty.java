@@ -42,10 +42,61 @@ public class Duty {
     }
 
     /**
+     * Determines which {@link Musician}s are available for a given {@link DutyPosition} that
+     * belongs to this {@link Duty}.
+     *
+     * @param allSectionMusicians   A List of all {@link Section} musicians
+     * @param dutiesOfThisDay       A list of duties
+     * @param locallySetMusicians   A List of musicians locally assigned to a duty position
+     * @param locallyUnsetMusicians A list of musicians locally removed from a duty position
+     * @return A List of musicians that are available for a given position
+     */
+    public List<Musician> determineAvailableMusicians(
+        List<Musician> allSectionMusicians,
+        List<Duty> dutiesOfThisDay,
+        List<Musician> locallySetMusicians,
+        List<Musician> locallyUnsetMusicians
+    ) {
+        List<Musician> availableMusicians = new LinkedList<>();
+
+        // Remove the current duty from the list of possible conflicts
+        dutiesOfThisDay.remove(this);
+
+        // Mark all musicians as available if they're not already assigned to a duty position of
+        // this duty
+        for (DutyPosition possibleConflict : this.getDutyPositions()) {
+            if (possibleConflict.getAssignedMusician().isPresent()) {
+                allSectionMusicians.remove(possibleConflict.getAssignedMusician().get());
+            }
+        }
+
+        // Remove all musicians that are assigned to other duties which happen at the same time
+        for (Duty duty : dutiesOfThisDay) {
+            if (this.entity.getStart().isBefore(duty.getEntity().getEnd())
+                && this.entity.getEnd().isAfter(duty.getEntity().getStart())
+            ) {
+                for (DutyPosition possibleConflict : duty.getDutyPositions()) {
+                    if (possibleConflict.getAssignedMusician().isPresent()) {
+                        availableMusicians.remove(possibleConflict.getAssignedMusician().get());
+                    }
+                }
+            }
+        }
+
+        // Mark all musicians as unavailable that are locally already assigned to a duty position
+        availableMusicians.removeAll(locallySetMusicians);
+
+        // Mark all musicians as available that are locally not assigned to a duty position anymore
+        availableMusicians.addAll(locallyUnsetMusicians);
+
+        return availableMusicians;
+    }
+
+    /**
      * Generates a calendar-friendly title for Duty.
      *
      * @return String that looks like this: CATEGORY for SERIES (DESCRIPTION), where the
-     *     "for SERIES", "(DESCRIPTION)" parts are optional.
+     * "for SERIES", "(DESCRIPTION)" parts are optional.
      */
     public String getTitle() {
         if (this.title == null) {
