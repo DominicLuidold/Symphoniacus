@@ -14,6 +14,7 @@ import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.NamedAttributeNode;
 import javax.persistence.NamedEntityGraph;
+import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
@@ -53,16 +54,7 @@ public class MusicianEntity {
     @JoinColumn(name = "sectionId")
     private SectionEntity section;
 
-    @ManyToMany
-    @JoinTable(
-        name = "dutyPosition_musician",
-        joinColumns = {
-            @JoinColumn(name = "musicianId")
-        },
-        inverseJoinColumns = {
-            @JoinColumn(name = "dutyPositionId")
-        }
-    )
+    @OneToMany(mappedBy = "musician")
     private List<DutyPositionEntity> dutyPositions = new LinkedList<>();
 
     public Integer getMusicianId() {
@@ -109,12 +101,12 @@ public class MusicianEntity {
 
     public void addDutyPosition(DutyPositionEntity position) {
         this.dutyPositions.add(position);
-        position.addMusician(this);
+        position.setMusician(this);
     }
 
     public void removeDutyPosition(DutyPositionEntity position) {
         this.dutyPositions.remove(position);
-        position.removeMusician(this);
+        position.setMusician(null);
     }
 
     @Override

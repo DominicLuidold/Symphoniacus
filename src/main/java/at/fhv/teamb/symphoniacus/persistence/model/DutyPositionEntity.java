@@ -1,7 +1,5 @@
 package at.fhv.teamb.symphoniacus.persistence.model;
 
-import java.util.LinkedList;
-import java.util.List;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -9,7 +7,6 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
-import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
@@ -36,8 +33,9 @@ public class DutyPositionEntity {
     @JoinColumn(name = "sectionId")
     private SectionEntity section;
 
-    @ManyToMany(mappedBy = "dutyPositions")
-    private List<MusicianEntity> musicians = new LinkedList<>();
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "musicianId")
+    private MusicianEntity musician;
 
     public Integer getDutyPositionId() {
         return this.dutyPositionId;
@@ -79,15 +77,11 @@ public class DutyPositionEntity {
         this.section = section;
     }
 
-    public List<MusicianEntity> getMusicians() {
-        return this.musicians;
+    public MusicianEntity getMusician() {
+        return this.musician;
     }
 
-    public void addMusician(MusicianEntity musician) {
-        this.musicians.add(musician);
-    }
-
-    public void removeMusician(MusicianEntity musician) {
-        this.musicians.remove(musician);
+    public void setMusician(MusicianEntity musician) {
+        this.musician = musician;
     }
 }

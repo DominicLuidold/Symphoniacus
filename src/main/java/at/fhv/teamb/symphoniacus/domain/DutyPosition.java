@@ -1,10 +1,6 @@
 package at.fhv.teamb.symphoniacus.domain;
 
 import at.fhv.teamb.symphoniacus.persistence.model.DutyPositionEntity;
-import at.fhv.teamb.symphoniacus.persistence.model.MusicianEntity;
-import java.util.Collections;
-import java.util.LinkedList;
-import java.util.List;
 import java.util.Optional;
 
 /**
@@ -15,7 +11,7 @@ import java.util.Optional;
 public class DutyPosition {
     private final InstrumentationPosition instrumentationPosition;
     private DutyPositionEntity entity;
-    private List<Musician> musicians;
+    private Musician musician;
 
     /**
      * Initializes the DutyPosition object based on provided {@link DutyPositionEntity}.
@@ -26,13 +22,7 @@ public class DutyPosition {
         this.entity = entity;
         this.instrumentationPosition =
             new InstrumentationPosition(entity.getInstrumentationPosition());
-
-        // Create unmodifiable list containing Musicians
-        List<Musician> tempMusicians = new LinkedList<>();
-        for (MusicianEntity musicianEntity : entity.getMusicians()) {
-            tempMusicians.add(new Musician(musicianEntity));
-        }
-        this.musicians = Collections.unmodifiableList(tempMusicians);
+        this.musician = new Musician(entity.getMusician());
     }
 
     /**
@@ -40,11 +30,11 @@ public class DutyPosition {
      *
      * @return Optional containing the musician, if any is assigned
      */
-    public Optional<Musician> getMusician() {
-        if (this.musicians.isEmpty() || this.musicians.get(0) == null) {
+    public Optional<Musician> getAssignedMusician() {
+        if (this.musician == null) {
             return Optional.empty();
         } else {
-            return Optional.of(this.musicians.get(0));
+            return Optional.of(this.musician);
         }
     }
 
