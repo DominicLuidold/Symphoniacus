@@ -81,8 +81,8 @@ public class DutyScheduleManager {
     /**
      * Returns a List of {@link Musician}s that are available for a given {@link DutyPosition}.
      *
-     * @param duty The currently edited duty
-     * @param position The position to determine musicians for
+     * @param duty         The currently edited duty
+     * @param position     The position to determine musicians for
      * @param withRequests Indicator whether musicians with duty requests should be part of the list
      * @return A List of available musicians for the given duty position
      */
@@ -122,11 +122,43 @@ public class DutyScheduleManager {
         );
     }
 
-    public void setMusicianForPosition(Musician musician, DutyPosition position) {
-        throw new UnsupportedOperationException("Not yet implemented");
+    /**
+     * Assigns a {@link Musician} to a {@link DutyPosition}.
+     *
+     * @param actualSectionInstrumentation The actual section instrumentation to use
+     * @param musician                     The musician to assign
+     * @param position                     The duty position to use
+     */
+    public void assignMusicianToPosition(
+        ActualSectionInstrumentation actualSectionInstrumentation,
+        Musician musician,
+        DutyPosition position
+    ) {
+        // Update local musician lists
+        this.setMusicians.add(musician);
+        this.unsetMusicians.remove(musician);
+
+        // Delegate to domain object
+        actualSectionInstrumentation.assignMusicianToPosition(musician, position);
     }
 
-    public void unsetMusicianForPosition(Musician musician, DutyPosition position) {
-        throw new UnsupportedOperationException("Not yet implemented");
+    /**
+     * Removes a {@link Musician} from a {@link DutyPosition}.
+     *
+     * @param actualSectionInstrumentation The actual section instrumentation to use
+     * @param musician                     The musician to remove
+     * @param position                     The duty position to use
+     */
+    public void removeMusicianFromPosition(
+        ActualSectionInstrumentation actualSectionInstrumentation,
+        Musician musician,
+        DutyPosition position
+    ) {
+        // Update local musician lists
+        this.setMusicians.remove(musician);
+        this.unsetMusicians.add(musician);
+
+        // Delegate to domain object
+        actualSectionInstrumentation.removeMusicianFromPosition(musician, position);
     }
 }

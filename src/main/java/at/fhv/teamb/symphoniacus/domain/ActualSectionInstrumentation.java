@@ -12,12 +12,24 @@ public class ActualSectionInstrumentation {
         this.duty = duty;
     }
 
-    public void setMusicianForPosition(Musician musician, DutyPosition dutyPosition) {
-        throw new UnsupportedOperationException("Not yet implemented");
+    /**
+     * Assigns a {@link Musician} to a {@link DutyPosition}.
+     *
+     * @param musician     The musician to assign
+     * @param dutyPosition The duty position to use
+     */
+    public void assignMusicianToPosition(Musician musician, DutyPosition dutyPosition) {
+        musician.getEntity().addDutyPosition(dutyPosition.getEntity());
     }
 
-    public void unsetMusicianForPosition(Musician musician, DutyPosition dutyPosition) {
-        throw new UnsupportedOperationException("Not yet implemented");
+    /**
+     * Removes a {@link Musician} from a {@link DutyPosition}.
+     *
+     * @param musician     The musician to remove
+     * @param dutyPosition The position to use
+     */
+    public void removeMusicianFromPosition(Musician musician, DutyPosition dutyPosition) {
+        musician.getEntity().removeDutyPosition(dutyPosition.getEntity());
     }
 
     public Duty getDuty() {
