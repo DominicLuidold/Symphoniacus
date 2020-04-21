@@ -21,6 +21,8 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Optional;
 import java.util.ResourceBundle;
+import javafx.beans.InvalidationListener;
+import javafx.beans.Observable;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -94,7 +96,7 @@ public class DutyScheduleController implements Initializable, Controllable {
     public void hide() {
         this.dutySchedule.setVisible(false);
         //TODO remove listener positionTable
-        //this.positionsTable.getSelectionModel()
+        //positionsTable.getSelectionModel().clearSelection();
     }
 
     private List<Musician> getMockedMusicians() {
@@ -207,6 +209,28 @@ public class DutyScheduleController implements Initializable, Controllable {
     }
 
     private void initDutyPositionsTableWithMusicians() {
+        Optional<ActualSectionInstrumentation> asi = this
+            .dutyScheduleManager
+            .getInstrumentationDetails(
+                this.duty,
+                section
+            );
+
+        if (!asi.isPresent()) {
+            LOG.error("Found no asi for duty");
+            return;
+        }
+
+        ObservableList<DutyPositionMusicianTableModel> observablePositionList =
+            FXCollections.observableArrayList();
+        List<DutyPosition> positionList = asi.get().getDuty().getDutyPositions();
+
+        for (DutyPosition dp : positionList) {
+            // TODO
+            observablePositionList.add(new DutyPositionMusicianTableModel(dp, dp.getMusician()));
+        }
+        this.positionsTable.setItems(observablePositionList);
+
         this.positionsTable
             .getSelectionModel()
             .selectedItemProperty()
@@ -215,27 +239,6 @@ public class DutyScheduleController implements Initializable, Controllable {
                     newValue.getDutyPosition()
                 )
             );
-
-        Optional<ActualSectionInstrumentation> asi = this
-            .dutyScheduleManager
-            .getInstrumentationDetails(
-            this.duty,
-            section
-        );
-
-        if (!asi.isPresent()) {
-            LOG.error("Found no asi for duty");
-            return;
-        }
-        ObservableList<DutyPositionMusicianTableModel> poslist =
-            FXCollections.observableArrayList();
-        List<DutyPosition> posList = asi.get().getDuty().getDutyPositions();
-        for (DutyPosition dp : posList) {
-            // TODO
-            poslist.add(new DutyPositionMusicianTableModel(dp, dp.getMusician()));
-        }
-
-        this.positionsTable.setItems(poslist);
     }
 
     protected void addMusicianToPosition(Musician musician, DutyPosition dutyPosition) {
@@ -244,15 +247,11 @@ public class DutyScheduleController implements Initializable, Controllable {
     }
 
     private void setActualPosition(DutyPosition dutyPosition) {
-        /*
-        LOG.debug(dutyPosition
+        LOG.debug("Current DutyPosition: " + dutyPosition
             .getEntity()
             .getInstrumentationPosition()
-            .getPositionDescription()
+            .getPositionDescription() + "  Current Object: " + this
         );
-        LOG.debug("Current Object" + this);
-         */
-        System.out.println(this);
         this.selectedDutyPosition = dutyPosition;
     }
 
