@@ -86,9 +86,6 @@ public class DutyScheduleController implements Initializable, Controllable {
     @Override
     public void show() {
         this.initDutyPositionsTableWithMusicians();
-        this.initMusicianTableWithRequests();
-        this.initMusicianTableWithoutRequests();
-
         this.dutySchedule.setVisible(true);
     }
 
@@ -209,21 +206,22 @@ public class DutyScheduleController implements Initializable, Controllable {
     }
 
     private void initDutyPositionsTableWithMusicians() {
-        Optional<ActualSectionInstrumentation> asi = this
+        Optional<ActualSectionInstrumentation> actualSectionInstrumentation = this
             .dutyScheduleManager
             .getInstrumentationDetails(
                 this.duty,
                 section
             );
 
-        if (!asi.isPresent()) {
+        if (!actualSectionInstrumentation.isPresent()) {
             LOG.error("Found no asi for duty");
             return;
         }
 
         ObservableList<DutyPositionMusicianTableModel> observablePositionList =
             FXCollections.observableArrayList();
-        List<DutyPosition> positionList = asi.get().getDuty().getDutyPositions();
+        List<DutyPosition> positionList =
+            actualSectionInstrumentation.get().getDuty().getDutyPositions();
 
         for (DutyPosition dp : positionList) {
             // TODO
@@ -253,6 +251,8 @@ public class DutyScheduleController implements Initializable, Controllable {
             .getPositionDescription() + "  Current Object: " + this
         );
         this.selectedDutyPosition = dutyPosition;
+        this.initMusicianTableWithRequests();
+        this.initMusicianTableWithoutRequests();
     }
 
     /**
