@@ -35,6 +35,7 @@ dependencies {
     compile 'org.hibernate:hibernate-core:5.4.13.Final'
 
     implementation 'com.calendarfx:view:11.8.3'
+    implementation 'org.controlsfx:controlsfx:11.0.1'
 
     compile 'org.mockito:mockito-core:3.3.3'
     testCompile 'org.testfx:testfx-core:4.0.16-alpha'
