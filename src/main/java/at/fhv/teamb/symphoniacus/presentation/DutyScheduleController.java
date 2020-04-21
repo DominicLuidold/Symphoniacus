@@ -21,8 +21,6 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Optional;
 import java.util.ResourceBundle;
-import javafx.beans.InvalidationListener;
-import javafx.beans.Observable;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -30,6 +28,7 @@ import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import javafx.scene.control.SplitPane;
 import javafx.scene.control.TableView;
 import javafx.scene.layout.AnchorPane;
 import org.apache.logging.log4j.LogManager;
@@ -63,6 +62,12 @@ public class DutyScheduleController implements Initializable, Controllable {
     @FXML
     private TableView<MusicianTableModel> musicianTableWithoutRequests;
 
+    @FXML
+    private SplitPane rightSplitPane;
+
+    @FXML
+    private SplitPane leftSplitPane;
+
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         this.registerController();
@@ -75,6 +80,8 @@ public class DutyScheduleController implements Initializable, Controllable {
             CalendarController cc = (CalendarController) mc.get("CalendarController");
             cc.show();
         });
+
+        this.disableDetailView();
     }
 
     @Override
@@ -87,6 +94,7 @@ public class DutyScheduleController implements Initializable, Controllable {
     public void show() {
         this.initDutyPositionsTableWithMusicians();
         this.dutySchedule.setVisible(true);
+        this.disableDetailView();
     }
 
     @Override
@@ -242,9 +250,12 @@ public class DutyScheduleController implements Initializable, Controllable {
     protected void addMusicianToPosition(Musician musician, DutyPosition dutyPosition) {
         LOG.debug("Selected musician changed");
         LOG.error("TODO: add musician to position here");
+        this.disableDetailView();
     }
 
     private void setActualPosition(DutyPosition dutyPosition) {
+        this.enableDetailView();
+
         LOG.debug("Current DutyPosition: " + dutyPosition
             .getEntity()
             .getInstrumentationPosition()
@@ -253,6 +264,14 @@ public class DutyScheduleController implements Initializable, Controllable {
         this.selectedDutyPosition = dutyPosition;
         this.initMusicianTableWithRequests();
         this.initMusicianTableWithoutRequests();
+    }
+
+    private void enableDetailView() {
+        this.leftSplitPane.setDividerPosition(0,0.3);
+    }
+
+    private void disableDetailView() {
+        this.leftSplitPane.setDividerPosition(0,0.7);
     }
 
     /**

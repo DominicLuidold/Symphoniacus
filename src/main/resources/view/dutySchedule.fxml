@@ -30,7 +30,7 @@
          </ToolBar>
       </children>
    </AnchorPane>
-   <SplitPane dividerPositions="0.3" orientation="HORIZONTAL" prefHeight="160.0" prefWidth="200.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="45.0">
+   <SplitPane fx:id="leftSplitPane" dividerPositions="0.3" orientation="HORIZONTAL" prefHeight="160.0" prefWidth="200.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="45.0">
        <padding>
            <Insets top="5" right="5" bottom="5" left="5" />
        </padding>
@@ -49,7 +49,7 @@
                 </TableColumn>
                 </columns>
             </TableView>
-            <SplitPane prefHeight="191.0" prefWidth="523.0" dividerPositions="0.5" orientation="VERTICAL">
+            <SplitPane fx:id="rightSplitPane" prefHeight="191.0" prefWidth="523.0" dividerPositions="0.5" orientation="VERTICAL">
                 <padding>
                     <Insets top="5" right="5" bottom="5" left="5" />
                 </padding>
