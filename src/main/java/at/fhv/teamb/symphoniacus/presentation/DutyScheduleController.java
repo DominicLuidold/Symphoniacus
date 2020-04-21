@@ -38,6 +38,7 @@ public class DutyScheduleController implements Initializable, Controllable {
 
     private static final Logger LOG = LogManager.getLogger(DutyScheduleController.class);
     private Duty duty;
+    private Section section;
     private DutyScheduleManager dutyScheduleManager;
     private ActualSectionInstrumentation actualSectionInstrumentation;
     private DutyPosition selectedDutyPosition;
@@ -72,6 +73,28 @@ public class DutyScheduleController implements Initializable, Controllable {
             CalendarController cc = (CalendarController) mc.get("CalendarController");
             cc.show();
         });
+    }
+
+    @Override
+    public void registerController() {
+        MasterController mc = MasterController.getInstance();
+        mc.put("DutyScheduleController", this);
+    }
+
+    @Override
+    public void show() {
+        this.initDutyPositionsTableWithMusicians();
+        this.initMusicianTableWithRequests();
+        this.initMusicianTableWithoutRequests();
+
+        this.dutySchedule.setVisible(true);
+    }
+
+    @Override
+    public void hide() {
+        this.dutySchedule.setVisible(false);
+        //TODO remove listener positionTable
+        //this.positionsTable.getSelectionModel()
     }
 
     private List<Musician> getMockedMusicians() {
@@ -171,6 +194,8 @@ public class DutyScheduleController implements Initializable, Controllable {
             Boolean.TRUE
         );
 
+        System.out.println("musician available: " + list.size());
+
         List<MusicianTableModel> guiList = new LinkedList<>();
         for (Musician domainMusician : list) {
             guiList.add(new MusicianTableModel(domainMusician));
@@ -179,36 +204,6 @@ public class DutyScheduleController implements Initializable, Controllable {
             FXCollections.observableArrayList();
         observableList.addAll(guiList);
         this.musicianTableWithoutRequests.setItems(observableList);
-    }
-
-    protected void addMusicianToPosition(Musician musician, DutyPosition dutyPosition) {
-        LOG.debug("Selected musician changed");
-        LOG.error("TODO: add musician to position here");
-    }
-
-    private void setActualPosition(DutyPosition dutyPosition) {
-        LOG.debug(dutyPosition.getEntity().getDescription());
-        this.selectedDutyPosition = dutyPosition;
-    }
-
-    @Override
-    public void registerController() {
-        MasterController mc = MasterController.getInstance();
-        mc.put("DutyScheduleController", this);
-    }
-
-    @Override
-    public void show() {
-        this.initDutyPositionsTableWithMusicians();
-        this.initMusicianTableWithRequests();
-        this.initMusicianTableWithoutRequests();
-
-        this.dutySchedule.setVisible(true);
-    }
-
-    @Override
-    public void hide() {
-        this.dutySchedule.setVisible(false);
     }
 
     private void initDutyPositionsTableWithMusicians() {
@@ -221,12 +216,11 @@ public class DutyScheduleController implements Initializable, Controllable {
                 )
             );
 
-        // TODO fix this
-        Section s = new Section(new SectionEntity());
-        s.getEntity().setSectionId(1);
-        Optional<ActualSectionInstrumentation> asi = this.dutyScheduleManager.getInstrumentationDetails(
+        Optional<ActualSectionInstrumentation> asi = this
+            .dutyScheduleManager
+            .getInstrumentationDetails(
             this.duty,
-            s
+            section
         );
 
         if (!asi.isPresent()) {
@@ -242,6 +236,24 @@ public class DutyScheduleController implements Initializable, Controllable {
         }
 
         this.positionsTable.setItems(poslist);
+    }
+
+    protected void addMusicianToPosition(Musician musician, DutyPosition dutyPosition) {
+        LOG.debug("Selected musician changed");
+        LOG.error("TODO: add musician to position here");
+    }
+
+    private void setActualPosition(DutyPosition dutyPosition) {
+        /*
+        LOG.debug(dutyPosition
+            .getEntity()
+            .getInstrumentationPosition()
+            .getPositionDescription()
+        );
+        LOG.debug("Current Object" + this);
+         */
+        System.out.println(this);
+        this.selectedDutyPosition = dutyPosition;
     }
 
     /**
@@ -265,5 +277,9 @@ public class DutyScheduleController implements Initializable, Controllable {
                     + duty.getTitle()
             )
         );
+    }
+
+    public void setSection(Section section) {
+        this.section = section;
     }
 }
