@@ -1,7 +1,9 @@
 package at.fhv.teamb.symphoniacus.domain;
 
+import at.fhv.teamb.symphoniacus.persistence.model.DutyPositionEntity;
 import at.fhv.teamb.symphoniacus.persistence.model.MusicianEntity;
 import at.fhv.teamb.symphoniacus.persistence.model.UserEntity;
+import java.util.List;
 
 /**
  * Domain object for Musician.
@@ -29,6 +31,10 @@ public class Musician {
 
     public String getShortcut() {
         return this.userEntity.getShortcut();
+    }
+
+    public List<DutyPositionEntity> getAssignedDutyPositions() {
+        return this.entity.getDutyPositions();
     }
 
     public MusicianEntity getEntity() {
