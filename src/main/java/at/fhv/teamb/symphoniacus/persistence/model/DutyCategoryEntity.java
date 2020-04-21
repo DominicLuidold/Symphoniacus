@@ -1,15 +1,18 @@
 package at.fhv.teamb.symphoniacus.persistence.model;
 
+import java.util.LinkedList;
+import java.util.List;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
 @Entity
 @Table(name = "dutyCategory")
-public class DutyCategory {
+public class DutyCategoryEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "dutyCategoryId")
@@ -23,6 +26,37 @@ public class DutyCategory {
 
     @Column(name = "points")
     private Integer points;
+
+    @OneToMany(orphanRemoval = true)
+    private List<DutyCategoryChangelogEntity> dutyCategoryChangelogs = new LinkedList<>();
+
+    @OneToMany(orphanRemoval = true)
+    private List<DutyEntity> duties = new LinkedList<>();
+
+    public List<DutyCategoryChangelogEntity> getDutyCategoryChangelogs() {
+        return this.dutyCategoryChangelogs;
+    }
+
+    public void addDutyCategoryChangelog(DutyCategoryChangelogEntity dutyCategoryChangelog) {
+        this.dutyCategoryChangelogs.add(dutyCategoryChangelog);
+    }
+
+    public void addAllDutyCategoryChangelogs(
+        List<DutyCategoryChangelogEntity> dutyCategoryChangelogs) {
+        this.dutyCategoryChangelogs.addAll(dutyCategoryChangelogs);
+    }
+
+    public List<DutyEntity> getDuties() {
+        return this.duties;
+    }
+
+    public void addDuty(DutyEntity duty) {
+        this.duties.add(duty);
+    }
+
+    public void addAllDuties(List<DutyEntity> duties) {
+        this.duties.addAll(duties);
+    }
 
     public Integer getDutyCategoryId() {
         return this.dutyCategoryId;

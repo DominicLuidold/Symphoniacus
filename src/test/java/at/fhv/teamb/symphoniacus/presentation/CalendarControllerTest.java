@@ -8,7 +8,7 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.doAnswer;
 import static org.mockito.Mockito.spy;
 
-import at.fhv.teamb.symphoniacus.persistence.model.Duty;
+import at.fhv.teamb.symphoniacus.persistence.model.DutyEntity;
 import at.fhv.teamb.symphoniacus.persistence.model.Section;
 import com.calendarfx.model.Calendar;
 import com.calendarfx.model.CalendarSource;
@@ -79,13 +79,13 @@ class CalendarControllerTest {
         // Given
         CalendarController controller = new CalendarController();
         Calendar calendar = new Calendar();
-        List<Entry<Duty>> entries = controller.createDutyCalendarEntries(prepareTestDuties());
+        List<Entry<DutyEntity>> entries = controller.createDutyCalendarEntries(prepareTestDuties());
 
         // When
         controller.fillCalendar(calendar, entries);
 
         // Then
-        for (Entry<Duty> entry : entries) {
+        for (Entry<DutyEntity> entry : entries) {
             assertFalse(
                 calendar.findEntries(entry.getTitle()).isEmpty(),
                 "Calendar should contain Entry"
@@ -101,10 +101,11 @@ class CalendarControllerTest {
     @Test
     void createDutyCalendarEntries_ShouldCreateEntries() {
         // Given
-        List<Duty> duties = prepareTestDuties();
+        List<DutyEntity> duties = prepareTestDuties();
 
         // When
-        List<Entry<Duty>> entries = new CalendarController().createDutyCalendarEntries(duties);
+        List<Entry<DutyEntity>> entries =
+            new CalendarController().createDutyCalendarEntries(duties);
 
         // Then
         assertEquals(duties.size(), entries.size(), "Amount of Duties and Entries should be equal");
@@ -128,17 +129,17 @@ class CalendarControllerTest {
     }
 
     /**
-     * Prepares a List of {@link Duty} objects with test data.
+     * Prepares a List of {@link DutyEntity} objects with test data.
      *
      * @return A List of Duties
      */
-    private List<Duty> prepareTestDuties() {
-        Duty testDuty1 = new Duty();
+    private List<DutyEntity> prepareTestDuties() {
+        DutyEntity testDuty1 = new DutyEntity();
         testDuty1.setDescription("A very descriptive title");
         testDuty1.setStart(LocalDateTime.of(LocalDate.now(), LocalTime.MIDNIGHT));
         testDuty1.setEnd(LocalDateTime.of(LocalDate.now(), LocalTime.NOON));
 
-        Duty testDuty2 = new Duty();
+        DutyEntity testDuty2 = new DutyEntity();
         testDuty2.setDescription("Completely random something");
         testDuty2.setStart(LocalDateTime.of(LocalDate.now().plusDays(1), LocalTime.NOON));
         testDuty2.setEnd(LocalDateTime.of(LocalDate.now().plusDays(1), LocalTime.MAX));

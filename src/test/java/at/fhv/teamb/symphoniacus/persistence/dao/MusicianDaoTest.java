@@ -2,7 +2,7 @@ package at.fhv.teamb.symphoniacus.persistence.dao;
 
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-import at.fhv.teamb.symphoniacus.persistence.model.Musician;
+import at.fhv.teamb.symphoniacus.persistence.model.MusicianEntity;
 import java.util.Optional;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -23,7 +23,7 @@ class MusicianDaoTest {
     @Test
     void testFindMusician_ShouldReturnAMusician() {
         // When
-        Optional<Musician> m = this.dao.find(1);
+        Optional<MusicianEntity> m = this.dao.find(1);
 
         // Then
         assertTrue(m.isPresent());

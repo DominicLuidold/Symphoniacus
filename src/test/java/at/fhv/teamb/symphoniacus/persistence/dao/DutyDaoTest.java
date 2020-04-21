@@ -2,8 +2,10 @@ package at.fhv.teamb.symphoniacus.persistence.dao;
 
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
-import at.fhv.teamb.symphoniacus.persistence.model.Duty;
+import at.fhv.teamb.symphoniacus.persistence.model.DutyEntity;
+import at.fhv.teamb.symphoniacus.persistence.model.MusicianEntity;
 import at.fhv.teamb.symphoniacus.persistence.model.Section;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 import org.apache.logging.log4j.LogManager;
@@ -25,7 +27,7 @@ class DutyDaoTest {
     @Test
     void testFindAllDutiesForWeek_ShouldReturnNotNull() {
         // When
-        List<Duty> list = this.dao.findAllInRange(
+        List<DutyEntity> list = this.dao.findAllInRange(
             LocalDateTime.of(2020, 3, 30, 0, 0, 0),
             LocalDateTime.of(2020, 4, 5, 0, 0, 0)
         );
@@ -41,12 +43,27 @@ class DutyDaoTest {
         s.setSectionId(1);
 
         // When
-        List<Duty> list = this.dao.findAllInRangeWithSection(s,
+        List<DutyEntity> list = this.dao.findAllInRangeWithSection(s,
             LocalDateTime.of(2020, 5, 1, 0, 0, 0),
             LocalDateTime.of(2020, 5, 1, 14, 0, 0),
             true, false, false);
 
         // Then
+        LOG.debug("Result size? " + list.size());
+        assertNotNull(list);
+    }
+
+    @Test
+    void getAllDutiesInRangeFromMusician_ShouldReturnNotNull() {
+        //Given
+        MusicianEntity musician = new MusicianEntity();
+        musician.setMusicianId(1);
+        LocalDate month = LocalDate.of(2020,5,1);
+
+        //When
+        List<DutyEntity> list = this.dao.getAllDutiesInRangeFromMusician(musician, month);
+
+        //Then
         LOG.debug("Result size? " + list.size());
         assertNotNull(list);
     }

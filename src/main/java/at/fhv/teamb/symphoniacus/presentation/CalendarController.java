@@ -3,8 +3,8 @@ package at.fhv.teamb.symphoniacus.presentation;
 import at.fhv.teamb.symphoniacus.application.DutyManager;
 import at.fhv.teamb.symphoniacus.application.LoginManager;
 import at.fhv.teamb.symphoniacus.application.MusicianManager;
-import at.fhv.teamb.symphoniacus.persistence.model.Duty;
-import at.fhv.teamb.symphoniacus.persistence.model.Musician;
+import at.fhv.teamb.symphoniacus.persistence.model.DutyEntity;
+import at.fhv.teamb.symphoniacus.persistence.model.MusicianEntity;
 import at.fhv.teamb.symphoniacus.persistence.model.Section;
 import at.fhv.teamb.symphoniacus.persistence.model.User;
 import com.calendarfx.model.Calendar;
@@ -54,7 +54,7 @@ public class CalendarController implements Initializable {
     public void initialize(URL location, ResourceBundle resources) {
         // TODO - Temporarily used until proper login is introduced
         Optional<User> user = new LoginManager().login("vaubou", "eItFAJSb");
-        Optional<Musician> musician = new MusicianManager().loadMusician(user.get());
+        Optional<MusicianEntity> musician = new MusicianManager().loadMusician(user.get());
         Section section = musician.get().getSection();
 
         this.calendarView.getCalendarSources().setAll(
@@ -104,8 +104,8 @@ public class CalendarController implements Initializable {
      * @param calendar The calendar to fill
      * @param entries  A List of Entries
      */
-    public void fillCalendar(Calendar calendar, List<Entry<Duty>> entries) {
-        for (Entry<Duty> entry : entries) {
+    public void fillCalendar(Calendar calendar, List<Entry<DutyEntity>> entries) {
+        for (Entry<DutyEntity> entry : entries) {
             entry.setCalendar(calendar);
         }
     }
@@ -117,7 +117,7 @@ public class CalendarController implements Initializable {
      * {@link LocalDate#now()} are getting used.
      *
      * @param calendar The calendar to fill
-     * @param section  The section used to determine required {@link Duty} objects
+     * @param section  The section used to determine required {@link DutyEntity} objects
      * @see #DEFAULT_INTERVAL_START
      * @see #DEFAULT_INTERVAL_END
      */
@@ -136,7 +136,7 @@ public class CalendarController implements Initializable {
      * dates.
      *
      * @param calendar  The calendar to fill
-     * @param section   The section used to determine which {@link Duty} objects
+     * @param section   The section used to determine which {@link DutyEntity} objects
      * @param startDate Start date of the desired interval
      * @param endDate   End date of the desired interval
      */
@@ -156,21 +156,21 @@ public class CalendarController implements Initializable {
     }
 
     /**
-     * Returns a list of CalendarFX {@link Entry} objects based on {@link Duty} objects.
+     * Returns a list of CalendarFX {@link Entry} objects based on {@link DutyEntity} objects.
      *
      * @param duties A List of Duties
      * @return A list of Entries
      */
-    public List<Entry<Duty>> createDutyCalendarEntries(List<Duty> duties) {
-        List<Entry<Duty>> calendarEntries = new LinkedList<>();
-        for (Duty duty : duties) {
+    public List<Entry<DutyEntity>> createDutyCalendarEntries(List<DutyEntity> duties) {
+        List<Entry<DutyEntity>> calendarEntries = new LinkedList<>();
+        for (DutyEntity duty : duties) {
             Interval interval = new Interval(
                 duty.getStart().toLocalDate(),
                 duty.getStart().toLocalTime(),
                 duty.getEnd().toLocalDate(),
                 duty.getEnd().toLocalTime()
             );
-            Entry<Duty> entry = new Entry<>(duty.getDescription(), interval);
+            Entry<DutyEntity> entry = new Entry<>(duty.getDescription(), interval);
             calendarEntries.add(entry);
         }
         return calendarEntries;

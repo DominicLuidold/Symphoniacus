@@ -26,7 +26,7 @@ import javax.persistence.Table;
         @NamedAttributeNode("musicianRoles")
     }
 )
-public class Musician {
+public class MusicianEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "musicianId")
@@ -50,6 +50,14 @@ public class Musician {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "sectionId")
     private Section section;
+
+
+    @JoinTable(name = "dutyPosition_musician",
+        joinColumns = @JoinColumn(name = "musicianId"),
+        inverseJoinColumns = @JoinColumn(name = "dutyPositionId")
+    )
+    @ManyToMany
+    private List<DutyPositionEntity> dutyPositions = new LinkedList<>();
 
     public Integer getMusicianId() {
         return this.musicianId;
@@ -87,6 +95,18 @@ public class Musician {
 
     public void setSection(Section section) {
         this.section = section;
+    }
+
+    public List<DutyPositionEntity> getDutyPositions() {
+        return this.dutyPositions;
+    }
+
+    public void addDutyPosition(DutyPositionEntity position) {
+        this.dutyPositions.add(position);
+    }
+
+    public void addAllDutyPositions(List<DutyPositionEntity> positions) {
+        this.dutyPositions.addAll(positions);
     }
 
     @Override
