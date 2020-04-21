@@ -1,11 +1,6 @@
 package at.fhv.teamb.symphoniacus;
 
-import at.fhv.teamb.symphoniacus.persistence.dao.DutyDao;
-import at.fhv.teamb.symphoniacus.persistence.model.DutyEntity;
-import at.fhv.teamb.symphoniacus.persistence.model.MusicianEntity;
 import java.io.IOException;
-import java.time.LocalDate;
-import java.util.List;
 import java.util.Locale;
 import java.util.ResourceBundle;
 import javafx.application.Application;
@@ -13,7 +8,6 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
-
 
 public class Main extends Application {
 

@@ -30,8 +30,9 @@ public class DutyEntity {
     @Column(name = "weeklyScheduleId", insertable = false, updatable = false)
     private Integer weeklyScheduleId;
 
-    @Column(name = "dutyCategoryId")
-    private Integer dutyCategoryId;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "dutyCategoryId")
+    private DutyCategoryEntity dutyCategory;
 
     @Column(name = "description")
     private String description;
@@ -111,14 +112,6 @@ public class DutyEntity {
         this.weeklyScheduleId = weeklyScheduleId;
     }
 
-    public Integer getDutyCategoryId() {
-        return this.dutyCategoryId;
-    }
-
-    public void setDutyCategoryId(Integer dutyCategoryId) {
-        this.dutyCategoryId = dutyCategoryId;
-    }
-
     public String getDescription() {
         return this.description;
     }
@@ -181,4 +174,13 @@ public class DutyEntity {
     public Month getMonth() {
         return this.start.getMonth();
     }
+
+    public DutyCategoryEntity getDutyCategory() {
+        return dutyCategory;
+    }
+
+    public void setDutyCategory(DutyCategoryEntity dutyCategory) {
+        this.dutyCategory = dutyCategory;
+    }
+
 }

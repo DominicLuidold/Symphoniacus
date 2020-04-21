@@ -49,7 +49,8 @@ public class PointsManager {
         } else {
             LOG.debug("Given musician for getDebitPointsFromMusician is not Valid");
             throw new NotFoundException(
-                "Given musician for getDebitPointsFromMusician is not Valid");
+                "Given musician for getDebitPointsFromMusician is not Valid"
+            );
         }
         return Optional.empty();
     }
@@ -63,9 +64,10 @@ public class PointsManager {
      * @return Points domain object containing the number of Points (getValue)
      * @throws NotFoundException if the given musician is not valid
      */
-    public Optional<Points> getGainedPointsForMonthFromMusician(MusicianEntity musician,
-                                                                LocalDate month)
-        throws NotFoundException {
+    public Optional<Points> getGainedPointsForMonthFromMusician(
+        MusicianEntity musician,
+        LocalDate month
+    ) throws NotFoundException {
         if (isMusicianValid(musician)) {
             DutyDao dutyDao = new DutyDao();
             DutyCategoryDao dutyCatDao = new DutyCategoryDao();
@@ -77,10 +79,7 @@ public class PointsManager {
 
             // get all dutyCategories to all duties
             for (DutyEntity d : duties) {
-                Optional<DutyCategoryEntity> dutyCatEntity = dutyCatDao.getCategoryFromDuty(d);
-                if (dutyCatEntity.isPresent()) {
-                    dutyCategories.add(dutyCatEntity.get());
-                }
+                dutyCategories.add(d.getDutyCategory());
             }
 
             List<DutyCategoryChangelogEntity> dutyCategoryChangelogs = new LinkedList<>();
@@ -95,9 +94,10 @@ public class PointsManager {
             }
             return (Points.calcGainedPoints(duties, dutyCategoryChangelogs));
         } else {
-            LOG.debug("Given musician for getGainedPointsForMonthFromMusician is not Valid");
+            LOG.error("Given musician for getGainedPointsForMonthFromMusician is not Valid");
             throw new NotFoundException(
-                "Given musician for getGainedPointsForMonthFromMusician is not Valid");
+                "Given musician for getGainedPointsForMonthFromMusician is not Valid"
+            );
         }
     }
 
@@ -130,9 +130,10 @@ public class PointsManager {
             }
             return Points.calcBalancePoints(duties, dutyCategories);
         } else {
-            LOG.debug("Given musician for getBalanceFromMusician is not Valid");
+            LOG.error("Given musician for getBalanceFromMusician is not Valid");
             throw new NotFoundException(
-                "Given musician for getBalanceFromMusician is not Valid");
+                "Given musician for getBalanceFromMusician is not Valid"
+            );
         }
     }
 

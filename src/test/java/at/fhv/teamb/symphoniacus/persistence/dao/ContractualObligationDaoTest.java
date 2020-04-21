@@ -43,7 +43,7 @@ class ContractualObligationDaoTest {
         conEntity.ifPresentOrElse(entity -> {
             Assertions.assertEquals(conEntity.get(), entity);
         }, () -> {
-                LOG.debug("ContractualObligationEntity wasn't returned by its dao");
+                LOG.error("ContractualObligationEntity wasn't returned by its dao");
             });
 
         conEntity.ifPresent(contractualObligationEntity -> Assertions

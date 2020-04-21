@@ -51,20 +51,22 @@ public class Points {
      *                      history of changed points to dutycategories
      * @return Points
      */
-    public static Optional<Points> calcGainedPoints(List<DutyEntity> duties,
-                                                    List<DutyCategoryChangelogEntity>
-                                                        catChangeLogs) {
+    public static Optional<Points> calcGainedPoints(
+        List<DutyEntity> duties,
+        List<DutyCategoryChangelogEntity> catChangeLogs
+    ) {
         if (!duties.isEmpty()) {
             int points = 0;
             for (DutyEntity duty : duties) {
                 if (duty.getStart().isBefore(LocalDateTime.now())
-                    || duty.getStart().isEqual(LocalDateTime.now())) {
+                    || duty.getStart().isEqual(LocalDateTime.now())
+                ) {
                     points += giveChangeLogPointsOfDuty(duty, catChangeLogs);
                 }
             }
             return Optional.of(new Points(points));
         }
-        LOG.debug("No duties delivered -> Points cannot be calculated");
+        LOG.error("No duties delivered -> Points cannot be calculated");
         return Optional.empty();
     }
 
@@ -76,8 +78,10 @@ public class Points {
      * @param dutyCategories Set of dutyCategories (contain Points)
      * @return Points
      */
-    public static Optional<Points> calcBalancePoints(List<DutyEntity> duties,
-                                                     Set<DutyCategoryEntity> dutyCategories) {
+    public static Optional<Points> calcBalancePoints(
+        List<DutyEntity> duties,
+        Set<DutyCategoryEntity> dutyCategories
+    ) {
         if (!duties.isEmpty()) {
             int points = 0;
             if (isGivenMonthCurrentMonth(duties.get(0).getStart())) {
@@ -91,7 +95,8 @@ public class Points {
                         for (Iterator<DutyCategoryEntity> it = dutyCategories.iterator();
                              it.hasNext(); ) {
                             DutyCategoryEntity cat = it.next();
-                            if (cat.getDutyCategoryId().equals(duty.getDutyCategoryId())) {
+                            if (cat.getDutyCategoryId()
+                                .equals(duty.getDutyCategory().getDutyCategoryId())) {
                                 points = points + cat.getPoints();
                                 break;
                             }
@@ -106,7 +111,8 @@ public class Points {
                     for (Iterator<DutyCategoryEntity> it = dutyCategories.iterator();
                          it.hasNext(); ) {
                         DutyCategoryEntity cat = it.next();
-                        if (duty.getDutyCategoryId().equals(cat.getDutyCategoryId())) {
+                        if (duty.getDutyCategory().getDutyCategoryId()
+                            .equals(cat.getDutyCategoryId())) {
                             points = points + cat.getPoints();
                             break;
                         }
@@ -122,20 +128,24 @@ public class Points {
     /**
      * Search for the correct ChangeLog (containing the changed number of Points) to a given duty.
      *
-     * @param duty Duty that delivers the startTime to get the right changelog
+     * @param duty          Duty that delivers the startTime to get the right changelog
      * @param catChangeLogs List of DutyCategoryChangelogEntities
      * @return The number of relevant/correct points at the time of the duty
      */
-    private static int giveChangeLogPointsOfDuty(DutyEntity duty,
-                                                 List<DutyCategoryChangelogEntity> catChangeLogs) {
+    private static int giveChangeLogPointsOfDuty(
+        DutyEntity duty,
+        List<DutyCategoryChangelogEntity> catChangeLogs
+    ) {
         int points = 0;
         DutyCategoryChangelogEntity temp = null;
         LocalDate dutyTime = duty.getStart().toLocalDate();
         for (DutyCategoryChangelogEntity catChangeLogEntity : catChangeLogs) {
-            if (duty.getDutyCategoryId().equals(catChangeLogEntity.getDutyCategoryId())) {
+            if (duty.getDutyCategory().getDutyCategoryId()
+                .equals(catChangeLogEntity.getDutyCategoryId())) {
                 if (temp == null
                     || (catChangeLogEntity.getStartDate().isAfter(temp.getStartDate()))
-                    && dutyTime.isAfter(catChangeLogEntity.getStartDate())) {
+                    && dutyTime.isAfter(catChangeLogEntity.getStartDate())
+                ) {
                     temp = catChangeLogEntity;
                     points = temp.getPoints();
                 }
@@ -143,7 +153,6 @@ public class Points {
         }
         return points;
     }
-
 
     private static boolean isGivenMonthBeforeCurrentMonth(LocalDateTime month) {
         if (month.getYear() < LocalDate.now().getYear()) {

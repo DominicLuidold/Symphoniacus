@@ -56,7 +56,7 @@ public class ContractualObligationDao extends BaseDao<ContractualObligationEntit
         if (co.getMusicianId().equals(musician.getMusicianId())) {
             return Optional.of(co);
         } else {
-            LOG.debug(
+            LOG.error(
                 "ContractualObligation.musicianId is not the same as givenMusician.musicianId");
             return Optional.empty();
         }

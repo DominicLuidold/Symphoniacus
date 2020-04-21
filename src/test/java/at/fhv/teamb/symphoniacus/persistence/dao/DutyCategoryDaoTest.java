@@ -35,7 +35,7 @@ public class DutyCategoryDaoTest {
         category.ifPresentOrElse(entity -> {
             Assertions.assertEquals(category.get(), entity);
         }, () -> {
-                LOG.debug("DutyCategoryEntity wasn't returned by its dao");
+                LOG.error("DutyCategoryEntity wasn't returned by its dao");
             });
 
         category.ifPresent(categoryEntity -> Assertions
