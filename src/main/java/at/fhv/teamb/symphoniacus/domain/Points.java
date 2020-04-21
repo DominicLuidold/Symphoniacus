@@ -42,17 +42,37 @@ public class Points {
         return debit;
     }
 
+    /**
+     * Calculate Gained Points (Ist-Zustand) of a musician observing the current Date.
+     *
+     * @param duties        All given Duties by the Points Manager
+     *                      -> All of the duties are within the same month
+     * @param catChangeLogs List of changelogs containing
+     *                      history of changed points to dutycategories
+     * @return Points
+     */
     public static Optional<Points> calcGainedPoints(List<DutyEntity> duties,
-                                                    Set<DutyCategoryEntity> dutyCategories,
                                                     List<DutyCategoryChangelogEntity>
                                                         catChangeLogs) {
-        return null;
+        if (!duties.isEmpty()) {
+            int points = 0;
+            for (DutyEntity duty : duties) {
+                if (duty.getStart().isBefore(LocalDateTime.now())
+                    || duty.getStart().isEqual(LocalDateTime.now())) {
+                    points += giveChangeLogPointsOfDuty(duty, catChangeLogs);
+                }
+            }
+            return Optional.of(new Points(points));
+        }
+        LOG.debug("No duties delivered -> Points cannot be calculated");
+        return Optional.empty();
     }
 
     /**
      * Calculate Balance Points (Saldo) observing the month of which the duties are in.
      *
-     * @param duties List of duties
+     * @param duties         List of duties
+     *                       -> All of the duties are within the same month
      * @param dutyCategories Set of dutyCategories (contain Points)
      * @return Points
      */
@@ -98,6 +118,32 @@ public class Points {
         LOG.debug("No duties delivered -> Points cannot be calculated");
         return Optional.empty();
     }
+
+    /**
+     * Search for the correct ChangeLog (containing the changed number of Points) to a given duty.
+     *
+     * @param duty Duty that delivers the startTime to get the right changelog
+     * @param catChangeLogs List of DutyCategoryChangelogEntities
+     * @return The number of relevant/correct points at the time of the duty
+     */
+    private static int giveChangeLogPointsOfDuty(DutyEntity duty,
+                                                 List<DutyCategoryChangelogEntity> catChangeLogs) {
+        int points = 0;
+        DutyCategoryChangelogEntity temp = null;
+        LocalDate dutyTime = duty.getStart().toLocalDate();
+        for (DutyCategoryChangelogEntity catChangeLogEntity : catChangeLogs) {
+            if (duty.getDutyCategoryId().equals(catChangeLogEntity.getDutyCategoryId())) {
+                if (temp == null
+                    || (catChangeLogEntity.getStartDate().isAfter(temp.getStartDate()))
+                    && dutyTime.isAfter(catChangeLogEntity.getStartDate())) {
+                    temp = catChangeLogEntity;
+                    points = temp.getPoints();
+                }
+            }
+        }
+        return points;
+    }
+
 
     private static boolean isGivenMonthBeforeCurrentMonth(LocalDateTime month) {
         if (month.getYear() < LocalDate.now().getYear()) {

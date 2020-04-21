@@ -93,7 +93,7 @@ public class PointsManager {
                     dutyCategoryChangelogs.addAll(changelogEntityList);
                 }
             }
-            return (Points.calcGainedPoints(duties, dutyCategories, dutyCategoryChangelogs));
+            return (Points.calcGainedPoints(duties, dutyCategoryChangelogs));
         } else {
             LOG.debug("Given musician for getGainedPointsForMonthFromMusician is not Valid");
             throw new NotFoundException(
