@@ -3,7 +3,6 @@ package at.fhv.teamb.symphoniacus.application;
 import at.fhv.teamb.symphoniacus.domain.Points;
 import at.fhv.teamb.symphoniacus.persistence.dao.ContractualObligationDao;
 import at.fhv.teamb.symphoniacus.persistence.dao.DutyCategoryChangeLogDao;
-import at.fhv.teamb.symphoniacus.persistence.dao.DutyCategoryDao;
 import at.fhv.teamb.symphoniacus.persistence.dao.DutyDao;
 import at.fhv.teamb.symphoniacus.persistence.model.ContractualObligationEntity;
 import at.fhv.teamb.symphoniacus.persistence.model.DutyCategoryChangelogEntity;
@@ -70,7 +69,6 @@ public class PointsManager {
     ) throws NotFoundException {
         if (isMusicianValid(musician)) {
             DutyDao dutyDao = new DutyDao();
-            DutyCategoryDao dutyCatDao = new DutyCategoryDao();
             DutyCategoryChangeLogDao dutyCatChangeDao = new DutyCategoryChangeLogDao();
 
             // get all duties from a musician in a given month
@@ -115,7 +113,6 @@ public class PointsManager {
 
         if (isMusicianValid(musician)) {
             DutyDao dutyDao = new DutyDao();
-            DutyCategoryDao dutyCatDao = new DutyCategoryDao();
 
             // get all duties from a musician in a given month
             List<DutyEntity> duties = dutyDao.getAllDutiesInRangeFromMusician(musician, month);
@@ -123,10 +120,7 @@ public class PointsManager {
 
             // get all dutyCategories to all duties
             for (DutyEntity d : duties) {
-                Optional<DutyCategoryEntity> dutyCatEntity = dutyCatDao.getCategoryFromDuty(d);
-                if (dutyCatEntity.isPresent()) {
-                    dutyCategories.add(dutyCatEntity.get());
-                }
+                dutyCategories.add(d.getDutyCategory());
             }
             return Points.calcBalancePoints(duties, dutyCategories);
         } else {
