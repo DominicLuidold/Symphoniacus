@@ -196,10 +196,6 @@ public class DutyScheduleController implements Initializable, Controllable {
 
         // auto select current musician.
         if (selected != null) {
-            //this.musicianTableWithoutRequests.getSelectionModel().select(selected);
-            //this.musicianTableWithoutRequests.getFocusModel().focus(selectedIndex);
-
-
             this.musicianTableWithoutRequests.requestFocus();
             this.musicianTableWithoutRequests.getSelectionModel().select(selected);
             this.musicianTableWithoutRequests.scrollTo(selectedIndex);

@@ -1,6 +1,7 @@
 package at.fhv.teamb.symphoniacus.presentation.internal;
 
 import java.util.function.Function;
+import javafx.beans.property.SimpleBooleanProperty;
 import javafx.event.ActionEvent;
 import javafx.scene.control.Button;
 import javafx.scene.control.TableCell;
