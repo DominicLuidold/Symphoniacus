@@ -13,7 +13,7 @@ public class PointsNotCalculatedException extends Exception {
     private static final long serialVersionUID = 7047779152584394921L;
 
     /**
-     * Constructs an {@code BadRequestException} with {@code null}
+     * Constructs a {@code PointsNotCalculatedException} with {@code null}
      * as its error detail message.
      */
     public PointsNotCalculatedException() {
@@ -21,7 +21,7 @@ public class PointsNotCalculatedException extends Exception {
     }
 
     /**
-     * Constructs an {@code PointsNotCalculatedException} with the specified detail message.
+     * Constructs a {@code PointsNotCalculatedException} with the specified detail message.
      *
      * @param message The detail message. The detail message is saved for
      *                later retrieval by the {@link #getMessage()} method.
