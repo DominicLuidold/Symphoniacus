@@ -35,9 +35,7 @@ public class Duty {
      */
     public Duty(DutyEntity entity, List<DutyPosition> dutyPositions) {
         this.entity = entity;
-        if (dutyPositions == null) {
-            this.dutyPositions = null;
-        } else {
+        if (dutyPositions != null) {
             this.dutyPositions = Collections.unmodifiableList(dutyPositions);
         }
     }
