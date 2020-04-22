@@ -65,7 +65,7 @@ public class Duty {
         // this duty
         for (DutyPosition possibleConflict : this.getDutyPositions()) {
             if (possibleConflict.getAssignedMusician().isPresent()) {
-                allSectionMusicians.remove(possibleConflict.getAssignedMusician().get());
+                availableMusicians.remove(possibleConflict.getAssignedMusician().get());
             }
         }
 

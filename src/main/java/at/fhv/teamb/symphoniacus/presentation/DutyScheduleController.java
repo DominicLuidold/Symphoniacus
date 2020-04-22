@@ -128,7 +128,7 @@ public class DutyScheduleController implements Initializable, Controllable {
                 }
             )
         );
-        
+
         this.positionsTable
             .getSelectionModel()
             .selectedItemProperty()
@@ -164,7 +164,7 @@ public class DutyScheduleController implements Initializable, Controllable {
 
     private void initMusicianTableWithoutRequests() {
         List<Musician> list = this.dutyScheduleManager.getMusiciansAvailableForPosition(
-            this.duty,
+            this.actualSectionInstrumentation.getDuty(),
             this.selectedDutyPosition,
             Boolean.FALSE
         );
@@ -204,7 +204,7 @@ public class DutyScheduleController implements Initializable, Controllable {
 
     private void initMusicianTableWithRequests() {
         List<Musician> list = this.dutyScheduleManager.getMusiciansAvailableForPosition(
-            this.duty,
+            this.actualSectionInstrumentation.getDuty(),
             this.selectedDutyPosition,
             Boolean.TRUE
         );

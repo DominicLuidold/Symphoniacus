@@ -68,4 +68,23 @@ public class Musician {
     public MusicianEntity getEntity() {
         return this.entity;
     }
+
+    @Override
+    public boolean equals(Object obj) {
+        // Return true if object is compared with itself
+        if (obj == this) {
+            return true;
+        }
+
+        // Check if object is an instance of Musician or not
+        if (!(obj instanceof Musician)) {
+            return false;
+        }
+
+        // Typecast obj to Musician to compare data members
+        Musician m = (Musician) obj;
+
+        // Compare data members and return accordingly
+        return entity.getMusicianId().equals(m.getEntity().getMusicianId());
+    }
 }
