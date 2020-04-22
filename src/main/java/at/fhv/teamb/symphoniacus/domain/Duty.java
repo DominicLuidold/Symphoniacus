@@ -56,7 +56,7 @@ public class Duty {
         List<Musician> locallySetMusicians,
         List<Musician> locallyUnsetMusicians
     ) {
-        List<Musician> availableMusicians = new LinkedList<>();
+        List<Musician> availableMusicians = new LinkedList<>(allSectionMusicians);
 
         // Remove the current duty from the list of possible conflicts
         dutiesOfThisDay.remove(this);
