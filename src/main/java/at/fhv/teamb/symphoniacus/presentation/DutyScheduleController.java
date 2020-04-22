@@ -226,6 +226,9 @@ public class DutyScheduleController implements Initializable, Controllable {
             .position(Pos.CENTER)
             .hideAfter(new Duration(2000))
             .show();
+        
+        // this is obviously not good
+        this.initDutyPositionsTableWithMusicians();
     }
 
     private void setActualPosition(DutyPosition dutyPosition) {
