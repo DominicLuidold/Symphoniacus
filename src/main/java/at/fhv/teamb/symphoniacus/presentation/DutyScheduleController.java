@@ -147,44 +147,9 @@ public class DutyScheduleController implements Initializable, Controllable {
         //positionsTable.getSelectionModel().clearSelection();
     }
 
-    private List<Musician> getMockedMusicians() {
-        LOG.debug("returning mocked musicians");
-        Musician m = new Musician(new MusicianEntity());
-        m.getEntity().setUser(new UserEntity());
-        m.getEntity().setSection(new SectionEntity());
-
-        Musician m2 = new Musician(new MusicianEntity());
-        m2.getEntity().setUser(new UserEntity());
-        m2.getEntity().setSection(new SectionEntity());
-
-        List<Musician> demoMusicianList = new LinkedList<>();
-        demoMusicianList.add(m);
-        demoMusicianList.add(m2);
-
-        System.out.println(demoMusicianList);
-
-        return demoMusicianList;
-    }
-
     private void initMusicianTableWithoutRequests() {
-        // TODO remove mocking when finished
-        this.dutyScheduleManager = Mockito.mock(DutyScheduleManager.class);
-        try {
-            Mockito
-                .when(
-                    this.dutyScheduleManager.getMusiciansAvailableForPosition(
-                        any(DutyPosition.class),
-                        anyBoolean()
-                    )
-                )
-                .thenReturn(
-                    getMockedMusicians()
-                );
-        } catch (Exception e) {
-            LOG.error(e);
-        }
-
         List<Musician> list = this.dutyScheduleManager.getMusiciansAvailableForPosition(
+            this.duty,
             this.selectedDutyPosition,
             Boolean.FALSE
         );
@@ -200,24 +165,8 @@ public class DutyScheduleController implements Initializable, Controllable {
     }
 
     private void initMusicianTableWithRequests() {
-        // TODO remove mocking when finished
-        this.dutyScheduleManager = Mockito.mock(DutyScheduleManager.class);
-        try {
-            Mockito
-                .when(
-                    this.dutyScheduleManager.getMusiciansAvailableForPosition(
-                        any(DutyPosition.class),
-                        anyBoolean()
-                    )
-                )
-                .thenReturn(
-                    getMockedMusicians()
-                );
-        } catch (Exception e) {
-            LOG.error(e);
-        }
-
         List<Musician> list = this.dutyScheduleManager.getMusiciansAvailableForPosition(
+            this.duty,
             this.selectedDutyPosition,
             Boolean.TRUE
         );
@@ -254,7 +203,9 @@ public class DutyScheduleController implements Initializable, Controllable {
 
         for (DutyPosition dp : positionList) {
             // TODO
-            observablePositionList.add(new DutyPositionMusicianTableModel(dp, dp.getMusician()));
+            observablePositionList.add(
+                new DutyPositionMusicianTableModel(dp, dp.getAssignedMusician())
+            );
         }
         this.positionsTable.setItems(observablePositionList);
     }
