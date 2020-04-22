@@ -128,24 +128,7 @@ public class DutyScheduleController implements Initializable, Controllable {
                 }
             )
         );
-
-
-        /*
-        this.musicianTableWithoutRequests
-            .getSelectionModel()
-            .selectedItemProperty()
-            .addListener(
-                (observable, oldValue, newValue) -> {
-                    if (newValue != null) {
-                        addMusicianToPosition(
-                            this.actualSectionInstrumentation,
-                            newValue.getMusician(),
-                            this.selectedDutyPosition
-                        );
-                    }
-                }
-            );
-*/
+        
         this.positionsTable
             .getSelectionModel()
             .selectedItemProperty()
