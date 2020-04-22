@@ -1,8 +1,8 @@
 package at.fhv.teamb.symphoniacus.persistence.model;
 
 import java.time.LocalDate;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.LinkedList;
+import java.util.List;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -16,7 +16,7 @@ import javax.persistence.Table;
 
 @Entity
 @Table(name = "weeklySchedule")
-public class WeeklySchedule {
+public class WeeklyScheduleEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "weeklyScheduleId")
@@ -37,38 +37,12 @@ public class WeeklySchedule {
     @Column(name = "isConfirmed")
     private Boolean isConfirmed;
 
-    @Column(name = "monthlyScheduleId", insertable = false, updatable = false)
-    private Integer monthlyScheduleId;
-
-    //Many-To-One Part for MONTHLYSCHEDULE Table
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "monthlyScheduleId")
     private MonthlySchedule monthlySchedule;
 
-    //One-To-Many Part for DUTY Table
     @OneToMany(mappedBy = "weeklySchedule", orphanRemoval = true)
-    private Set<DutyEntity> dutySet = new HashSet<>();
-
-    public MonthlySchedule getMonthlySchedule() {
-        return this.monthlySchedule;
-    }
-
-    public void setMonthlySchedule(MonthlySchedule monthlySchedule) {
-        this.monthlySchedule = monthlySchedule;
-    }
-
-    public Set<DutyEntity> getDutySet() {
-        return this.dutySet;
-    }
-
-    public void setDutySet(Set<DutyEntity> dutySet) {
-        this.dutySet = dutySet;
-    }
-
-    public void addDuty(DutyEntity duty) {
-        this.dutySet.add(duty);
-        duty.setWeeklySchedule(this);
-    }
+    private List<DutyEntity> duties = new LinkedList<>();
 
     public Integer getWeeklyScheduleId() {
         return this.weeklyScheduleId;
@@ -118,11 +92,26 @@ public class WeeklySchedule {
         this.isConfirmed = isConfirmed;
     }
 
-    public Integer getMonthlyScheduleId() {
-        return this.monthlyScheduleId;
+    public MonthlySchedule getMonthlySchedule() {
+        return this.monthlySchedule;
     }
 
-    public void setMonthlyScheduleId(Integer monthlyScheduleId) {
-        this.monthlyScheduleId = monthlyScheduleId;
+    public void setMonthlySchedule(
+        MonthlySchedule monthlySchedule) {
+        this.monthlySchedule = monthlySchedule;
+    }
+
+    public List<DutyEntity> getDuties() {
+        return this.duties;
+    }
+
+    public void addDuty(DutyEntity duty) {
+        this.duties.add(duty);
+        duty.setWeeklySchedule(this);
+    }
+
+    public void removeDuty(DutyEntity duty) {
+        this.duties.remove(duty);
+        duty.setWeeklySchedule(null);
     }
 }

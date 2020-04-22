@@ -7,4 +7,5 @@
             fx:controller="at.fhv.teamb.symphoniacus.presentation.CalendarController">
     <CalendarView fx:id="calendarView" showAddCalendarButton="false" AnchorPane.bottomAnchor="0.0"
                   AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0"/>
+    <fx:include fx:id="dutySchedule" source="dutySchedule.fxml" />
 </AnchorPane>

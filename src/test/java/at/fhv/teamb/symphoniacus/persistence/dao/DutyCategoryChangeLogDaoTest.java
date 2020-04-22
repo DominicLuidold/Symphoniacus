@@ -42,12 +42,14 @@ class DutyCategoryChangeLogDaoTest {
         List<DutyCategoryChangelogEntity> changelogEntityList =
             this.dao.getDutyCategoryChangeLog(categoryEntity);
 
-        assertNotNull(changelogEntityList,"The returning List has to be not null");
+        assertNotNull(changelogEntityList, "The returning List has to be not null");
 
         if (!changelogEntityList.isEmpty()) {
             for (DutyCategoryChangelogEntity entity : changelogEntityList) {
-                assertEquals(entity.getDutyCategoryId(),
-                    categoryEntity.getDutyCategoryId());
+                assertEquals(
+                    entity.getDutyCategory().getDutyCategoryId(),
+                    categoryEntity.getDutyCategoryId()
+                );
             }
         }
     }

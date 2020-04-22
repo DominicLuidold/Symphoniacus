@@ -3,15 +3,18 @@ package at.fhv.teamb.symphoniacus.presentation;
 import at.fhv.teamb.symphoniacus.application.DutyManager;
 import at.fhv.teamb.symphoniacus.application.LoginManager;
 import at.fhv.teamb.symphoniacus.application.MusicianManager;
+import at.fhv.teamb.symphoniacus.domain.Duty;
 import at.fhv.teamb.symphoniacus.persistence.model.DutyEntity;
 import at.fhv.teamb.symphoniacus.persistence.model.MusicianEntity;
-import at.fhv.teamb.symphoniacus.persistence.model.Section;
-import at.fhv.teamb.symphoniacus.persistence.model.User;
+import at.fhv.teamb.symphoniacus.persistence.model.SectionEntity;
+import at.fhv.teamb.symphoniacus.persistence.model.UserEntity;
 import com.calendarfx.model.Calendar;
 import com.calendarfx.model.CalendarSource;
 import com.calendarfx.model.Entry;
 import com.calendarfx.model.Interval;
+import com.calendarfx.model.LoadEvent;
 import com.calendarfx.view.CalendarView;
+import com.calendarfx.view.DateControl;
 import java.net.URL;
 import java.time.LocalDate;
 import java.util.LinkedList;
@@ -20,6 +23,10 @@ import java.util.Optional;
 import java.util.ResourceBundle;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.scene.layout.AnchorPane;
+import javafx.util.Callback;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 /**
  * This controller is responsible for handling all CalendarFX related actions such as
@@ -28,7 +35,7 @@ import javafx.fxml.Initializable;
  *
  * @author Dominic Luidold
  */
-public class CalendarController implements Initializable {
+public class CalendarController implements Initializable, Controllable {
     /**
      * Default interval start date represents {@link LocalDate#now()}.
      */
@@ -44,24 +51,63 @@ public class CalendarController implements Initializable {
      */
     private static final LocalDate EXTENDED_INTERVAL_END = DEFAULT_INTERVAL_START.plusMonths(1);
 
+    private static final Logger LOG = LogManager.getLogger(CalendarController.class);
+
     @FXML
     private CalendarView calendarView;
+
+    @FXML
+    private AnchorPane dutySchedule;
 
     /**
      * {@inheritDoc}
      */
     @Override
     public void initialize(URL location, ResourceBundle resources) {
+        this.registerController();
+
         // TODO - Temporarily used until proper login is introduced
-        Optional<User> user = new LoginManager().login("vaubou", "eItFAJSb");
+        Optional<UserEntity> user = new LoginManager().login("vaubou", "eItFAJSb");
         Optional<MusicianEntity> musician = new MusicianManager().loadMusician(user.get());
-        Section section = musician.get().getSection();
+        SectionEntity section = musician.get().getSection();
 
         this.calendarView.getCalendarSources().setAll(
             prepareCalendarSource(
                 resources.getString("sections"),
                 section
             )
+        );
+
+        this.calendarView.addEventHandler(LoadEvent.LOAD, event -> {
+            LOG.debug("Calendar Load Event, loading");
+            LOG.debug("TODO: Would add lazy loading strategy here");
+        });
+
+        // Hide calendarView by clicking on Duty and load new Window for DutyScheduleView.
+        this.calendarView.setEntryDetailsCallback(
+            new Callback<DateControl.EntryDetailsParameter, Boolean>() {
+                @Override
+                public Boolean call(DateControl.EntryDetailsParameter param) {
+                    if (param.getEntry() instanceof Entry) {
+                        Entry<Duty> entry = (Entry<Duty>) param.getEntry();
+                        MasterController mc = MasterController.getInstance();
+                        if (mc.get("CalendarController") instanceof CalendarController) {
+                            CalendarController cc =
+                                (CalendarController) mc.get("CalendarController");
+                            cc.hide();
+                        }
+                        if (mc.get("DutyScheduleController") instanceof DutyScheduleController) {
+                            DutyScheduleController dsc =
+                                (DutyScheduleController) mc.get("DutyScheduleController");
+                            dsc.setDuty(entry.getUserObject());
+                            dsc.show();
+                        }
+                        return true;
+                    }
+                    LOG.error("Unrecognized Calendar Entry: No Duty found");
+                    return false;
+                }
+            }
         );
     }
 
@@ -73,7 +119,7 @@ public class CalendarController implements Initializable {
      * @param section The section to use
      * @return A CalendarSource containing a Calendar and Entries
      */
-    public CalendarSource prepareCalendarSource(String name, Section section) {
+    public CalendarSource prepareCalendarSource(String name, SectionEntity section) {
         CalendarSource calendarSource = new CalendarSource(name);
         Calendar calendar = createCalendar(section);
         fillCalendar(calendar, section);
@@ -82,7 +128,7 @@ public class CalendarController implements Initializable {
     }
 
     /**
-     * Creates a {@link Calendar} based on specified {@link Section}.
+     * Creates a {@link Calendar} based on specified {@link SectionEntity}.
      *
      * <p>The calendar will have a {@link Calendar.Style} assigned and will be marked as
      * {@code readOnly}.
@@ -90,7 +136,7 @@ public class CalendarController implements Initializable {
      * @param section The section to use
      * @return A Calendar
      */
-    public Calendar createCalendar(Section section) {
+    public Calendar createCalendar(SectionEntity section) {
         Calendar calendar = new Calendar(section.getDescription());
         calendar.setShortName(section.getSectionShortcut());
         calendar.setReadOnly(true);
@@ -104,14 +150,14 @@ public class CalendarController implements Initializable {
      * @param calendar The calendar to fill
      * @param entries  A List of Entries
      */
-    public void fillCalendar(Calendar calendar, List<Entry<DutyEntity>> entries) {
-        for (Entry<DutyEntity> entry : entries) {
+    public void fillCalendar(Calendar calendar, List<Entry<Duty>> entries) {
+        for (Entry<Duty> entry : entries) {
             entry.setCalendar(calendar);
         }
     }
 
     /**
-     * Fills a {@link Calendar} with {@link Entry} objects based on specified {@link Section}.
+     * Fills a {@link Calendar} with {@link Entry} objects based on specified {@link SectionEntity}.
      *
      * <p>Having no interval defined, the default interval start and end date (13 days from
      * {@link LocalDate#now()} are getting used.
@@ -121,7 +167,7 @@ public class CalendarController implements Initializable {
      * @see #DEFAULT_INTERVAL_START
      * @see #DEFAULT_INTERVAL_END
      */
-    public void fillCalendar(Calendar calendar, Section section) {
+    public void fillCalendar(Calendar calendar, SectionEntity section) {
         fillCalendar(calendar, createDutyCalendarEntries(
             new DutyManager().findAllInRangeWithSection(
                 section,
@@ -132,8 +178,8 @@ public class CalendarController implements Initializable {
     }
 
     /**
-     * Fills a {@link Calendar} with {@link Entry} objects based on supplied {@link Section} and
-     * dates.
+     * Fills a {@link Calendar} with {@link Entry} objects based on supplied {@link SectionEntity}
+     * and dates.
      *
      * @param calendar  The calendar to fill
      * @param section   The section used to determine which {@link DutyEntity} objects
@@ -142,7 +188,7 @@ public class CalendarController implements Initializable {
      */
     public void fillCalendar(
         Calendar calendar,
-        Section section,
+        SectionEntity section,
         LocalDate startDate,
         LocalDate endDate
     ) {
@@ -161,18 +207,35 @@ public class CalendarController implements Initializable {
      * @param duties A List of Duties
      * @return A list of Entries
      */
-    public List<Entry<DutyEntity>> createDutyCalendarEntries(List<DutyEntity> duties) {
-        List<Entry<DutyEntity>> calendarEntries = new LinkedList<>();
-        for (DutyEntity duty : duties) {
+    public List<Entry<Duty>> createDutyCalendarEntries(List<Duty> duties) {
+        List<Entry<Duty>> calendarEntries = new LinkedList<>();
+        for (Duty duty : duties) {
             Interval interval = new Interval(
-                duty.getStart().toLocalDate(),
-                duty.getStart().toLocalTime(),
-                duty.getEnd().toLocalDate(),
-                duty.getEnd().toLocalTime()
+                duty.getEntity().getStart().toLocalDate(),
+                duty.getEntity().getStart().toLocalTime(),
+                duty.getEntity().getEnd().toLocalDate(),
+                duty.getEntity().getEnd().toLocalTime()
             );
-            Entry<DutyEntity> entry = new Entry<>(duty.getDescription(), interval);
+            Entry<Duty> entry = new Entry<>(duty.getTitle(), interval);
+            entry.setUserObject(duty);
             calendarEntries.add(entry);
         }
         return calendarEntries;
+    }
+
+    @Override
+    public void registerController() {
+        MasterController mc = MasterController.getInstance();
+        mc.put("CalendarController", this);
+    }
+
+    @Override
+    public void show() {
+        this.calendarView.setVisible(true);
+    }
+
+    @Override
+    public void hide() {
+        this.calendarView.setVisible(false);
     }
 }

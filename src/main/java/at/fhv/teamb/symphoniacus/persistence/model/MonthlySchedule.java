@@ -43,7 +43,7 @@ public class MonthlySchedule {
 
     //One-To-Many Part for WEEKLYSCHEDULE Table
     @OneToMany(mappedBy = "monthlySchedule", orphanRemoval = true)
-    private Set<WeeklySchedule> weeklyScheduleSet = new HashSet<>();
+    private Set<WeeklyScheduleEntity> weeklyScheduleSet = new HashSet<>();
 
     public Set<SectionMonthlySchedule> getSectionMonthlyScheduleSet() {
         return this.sectionMonthlyScheduleSet;
@@ -59,15 +59,15 @@ public class MonthlySchedule {
         sectionMonthlySchedule.setMonthlySchedule(this);
     }
 
-    public Set<WeeklySchedule> getWeeklyScheduleSet() {
+    public Set<WeeklyScheduleEntity> getWeeklyScheduleSet() {
         return this.weeklyScheduleSet;
     }
 
-    public void setWeeklyScheduleSet(Set<WeeklySchedule> weeklyScheduleSet) {
+    public void setWeeklyScheduleSet(Set<WeeklyScheduleEntity> weeklyScheduleSet) {
         this.weeklyScheduleSet = weeklyScheduleSet;
     }
 
-    public void addWeeklySchedule(WeeklySchedule weeklySchedule) {
+    public void addWeeklySchedule(WeeklyScheduleEntity weeklySchedule) {
         this.weeklyScheduleSet.add(weeklySchedule);
         weeklySchedule.setMonthlySchedule(this);
     }

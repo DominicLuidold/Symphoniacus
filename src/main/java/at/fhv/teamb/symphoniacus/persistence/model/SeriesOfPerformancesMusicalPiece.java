@@ -27,13 +27,13 @@ public class SeriesOfPerformancesMusicalPiece {
     //Many-To-One Part for MUSICALPIECE Table
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "musicalPieceId")
-    private MusicalPiece musicalPiece;
+    private MusicalPieceEntity musicalPiece;
 
-    public MusicalPiece getMusicalPiece() {
+    public MusicalPieceEntity getMusicalPiece() {
         return this.musicalPiece;
     }
 
-    public void setMusicalPiece(MusicalPiece musicalPiece) {
+    public void setMusicalPiece(MusicalPieceEntity musicalPiece) {
         this.musicalPiece = musicalPiece;
     }
 

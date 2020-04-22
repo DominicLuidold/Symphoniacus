@@ -1,17 +1,21 @@
 package at.fhv.teamb.symphoniacus.persistence.model;
 
 import at.fhv.teamb.symphoniacus.application.type.DomainUserType;
+import java.util.LinkedList;
+import java.util.List;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.OneToMany;
+import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import javax.persistence.Transient;
 
 @Entity
 @Table(name = "user")
-public class User {
+public class UserEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "userId")
@@ -53,8 +57,14 @@ public class User {
     @Column(name = "passwordSalt")
     private String passwordSalt;
 
+    @OneToOne(mappedBy = "user")
+    private MusicianEntity musician;
+
+    @OneToMany(mappedBy = "user")
+    private List<AdministrativeAssistantEntity> administrativeAssistants = new LinkedList<>();
+
     @Transient
-    protected DomainUserType type;
+    protected DomainUserType type; // TODO
 
     public Integer getUserId() {
         return this.userId;
@@ -160,11 +170,36 @@ public class User {
         this.passwordSalt = passwordSalt;
     }
 
-    public DomainUserType getType() {
+    public MusicianEntity getMusician() {
+        return this.musician;
+    }
+
+    public void setMusician(MusicianEntity musician) {
+        this.musician = musician;
+        musician.setUser(this);
+    }
+
+    public List<AdministrativeAssistantEntity> getAdministrativeAssistants() {
+        return this.administrativeAssistants;
+    }
+
+    public void addAdministrativeAssistant(AdministrativeAssistantEntity administrativeAssistant) {
+        this.administrativeAssistants.add(administrativeAssistant);
+        administrativeAssistant.setUser(this);
+    }
+
+    public void removeAdministrativeAssistant(
+        AdministrativeAssistantEntity administrativeAssistant
+    ) {
+        this.administrativeAssistants.remove(administrativeAssistant);
+        administrativeAssistant.setUser(null);
+    }
+
+    public DomainUserType getType() { // TODO
         return this.type;
     }
 
-    public void setType(DomainUserType type) {
+    public void setType(DomainUserType type) { // TODO
         this.type = type;
     }
 }

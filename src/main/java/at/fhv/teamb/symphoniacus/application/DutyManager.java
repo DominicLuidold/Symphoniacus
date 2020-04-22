@@ -1,15 +1,17 @@
 package at.fhv.teamb.symphoniacus.application;
 
+import at.fhv.teamb.symphoniacus.domain.Duty;
 import at.fhv.teamb.symphoniacus.persistence.dao.DutyDao;
 import at.fhv.teamb.symphoniacus.persistence.model.DutyEntity;
-import at.fhv.teamb.symphoniacus.persistence.model.Section;
+import at.fhv.teamb.symphoniacus.persistence.model.SectionEntity;
 import java.time.DayOfWeek;
 import java.time.LocalDate;
+import java.util.LinkedList;
 import java.util.List;
 
 /**
  * This class is responsible for finding {@link DutyEntity} objects based on a range of time and
- * {@link Section}.
+ * {@link SectionEntity}.
  *
  * @author Nino Heinzle
  */
@@ -21,14 +23,34 @@ public class DutyManager {
     }
 
     /**
+     * Returns the Monday of the week based on the {@link LocalDate}.
+     *
+     * @param givenDate The date to determine the monday of the week
+     * @return A LocalDate representing the monday of the week
+     */
+    public static LocalDate getLastMondayDate(LocalDate givenDate) {
+        // Will always jump back to last monday
+        return givenDate.with(DayOfWeek.MONDAY);
+    }
+
+    /**
      * Finds all duties within a full week (any Date can be given).
      * converts the given Date the last Monday
      *
      * @param start is any given Date
      * @return a List of all matching duties
      */
-    public List<DutyEntity> findAllInWeek(LocalDate start) {
-        return this.dutyDao.findAllInWeek(getLastMondayDate(start).atStartOfDay());
+    public List<Duty> findAllInWeek(LocalDate start) {
+        List<DutyEntity> entityList = this.dutyDao.findAllInWeek(
+            getLastMondayDate(start).atStartOfDay()
+        );
+
+        List<Duty> dutyList = new LinkedList<>();
+        for (DutyEntity entity : entityList) {
+            dutyList.add(new Duty(entity));
+        }
+
+        return dutyList;
     }
 
     /**
@@ -38,16 +60,18 @@ public class DutyManager {
      * @param start         A LocalDate that represents the start
      * @return A List of the matching duties
      */
-    public List<DutyEntity> findAllInWeekWithSection(
-        Section sectionOfUser,
+    public List<Duty> findAllInWeekWithSection(
+        SectionEntity sectionOfUser,
         LocalDate start
     ) {
-        return this.dutyDao.findAllInWeekWithSection(
-            sectionOfUser,
-            getLastMondayDate(start).atStartOfDay(),
-            false,
-            false,
-            false
+        return convertEntitiesToDomainObjects(
+            this.dutyDao.findAllInWeekWithSection(
+                sectionOfUser,
+                getLastMondayDate(start).atStartOfDay(),
+                false,
+                false,
+                false
+            )
         );
     }
 
@@ -59,18 +83,20 @@ public class DutyManager {
      * @param end           A LocalDate that represents the end
      * @return A List of the matching duties
      */
-    public List<DutyEntity> findAllInRangeWithSection(
-        Section sectionOfUser,
+    public List<Duty> findAllInRangeWithSection(
+        SectionEntity sectionOfUser,
         LocalDate start,
         LocalDate end
     ) {
-        return this.dutyDao.findAllInRangeWithSection(
-            sectionOfUser,
-            start.atStartOfDay(),
-            end.atStartOfDay(),
-            true, // TODO - Add logic to determine which parameters are true
-            false,
-            false
+        return convertEntitiesToDomainObjects(
+            this.dutyDao.findAllInRangeWithSection(
+                sectionOfUser,
+                start.atStartOfDay(),
+                end.atStartOfDay(),
+                true, // TODO - Add logic to determine which parameters are true
+                false,
+                false
+            )
         );
     }
 
@@ -81,18 +107,26 @@ public class DutyManager {
      * @param end   A LocalDate that represents the end
      * @return A List of the matching duties
      */
-    public List<DutyEntity> findAllInRange(LocalDate start, LocalDate end) {
-        return this.dutyDao.findAllInRange(start.atStartOfDay(), end.atStartOfDay());
+    public List<Duty> findAllInRange(LocalDate start, LocalDate end) {
+        return convertEntitiesToDomainObjects(
+            this.dutyDao.findAllInRange(
+                start.atStartOfDay(),
+                end.atStartOfDay()
+            )
+        );
     }
 
     /**
-     * Returns the Monday of the week based on the {@link LocalDate}.
+     * Converts {@link DutyEntity} objects to {@link Duty} objects.
      *
-     * @param givenDate The date to determine the monday of the week
-     * @return A LocalDate representing the monday of the week
+     * @param entities The entities to convert
+     * @return A List of Duty objects
      */
-    public static LocalDate getLastMondayDate(LocalDate givenDate) {
-        // Will always jump back to last monday
-        return givenDate.with(DayOfWeek.MONDAY);
+    public static List<Duty> convertEntitiesToDomainObjects(List<DutyEntity> entities) {
+        List<Duty> duties = new LinkedList<>();
+        for (DutyEntity entity : entities) {
+            duties.add(new Duty(entity));
+        }
+        return duties;
     }
 }

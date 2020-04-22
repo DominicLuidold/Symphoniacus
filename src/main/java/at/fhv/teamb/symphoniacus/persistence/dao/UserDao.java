@@ -2,7 +2,7 @@ package at.fhv.teamb.symphoniacus.persistence.dao;
 
 import at.fhv.teamb.symphoniacus.persistence.BaseDao;
 import at.fhv.teamb.symphoniacus.persistence.model.MusicianEntity;
-import at.fhv.teamb.symphoniacus.persistence.model.User;
+import at.fhv.teamb.symphoniacus.persistence.model.UserEntity;
 import java.util.Optional;
 import javax.persistence.TypedQuery;
 
@@ -12,62 +12,62 @@ import javax.persistence.TypedQuery;
  * @author Danijel Antonijevic
  * @author Valentin Goronjic
  */
-public class UserDao extends BaseDao<User> {
+public class UserDao extends BaseDao<UserEntity> {
 
     @Override
-    public Optional<User> find(Object key) {
+    public Optional<UserEntity> find(Object key) {
         return Optional.empty();
     }
 
     @Override
-    public Optional<User> persist(User elem) {
+    public Optional<UserEntity> persist(UserEntity elem) {
         return Optional.empty();
     }
 
     @Override
-    public Optional<User> update(User elem) {
+    public Optional<UserEntity> update(UserEntity elem) {
         return Optional.empty();
     }
 
     @Override
-    public Boolean remove(User elem) {
+    public Boolean remove(UserEntity elem) {
         return false;
     }
 
     /**
-     * Returns a {@link User} if provided shortcut and password match a database entry.
+     * Returns a {@link UserEntity} if provided shortcut and password match a database entry.
      *
      * @param userShortCut The shortcut to identify the user
      * @param password     The password to authenticate the user
      * @return A user matching provided credentials
      */
-    public Optional<User> login(String userShortCut, String password) {
+    public Optional<UserEntity> login(String userShortCut, String password) {
         this.createEntityManager();
-        TypedQuery<User> query = this.entityManager.createQuery(
-            "SELECT u FROM User u WHERE u.shortcut = :shortc AND u.password = :pwd",
-            User.class
+        TypedQuery<UserEntity> query = this.entityManager.createQuery(
+            "SELECT u FROM UserEntity u WHERE u.shortcut = :shortc AND u.password = :pwd",
+            UserEntity.class
         );
         query.setParameter("shortc", userShortCut);
         query.setParameter("pwd", password);
-        User result = query.getSingleResult();
+        UserEntity result = query.getSingleResult();
         this.tearDown();
 
         return Optional.of(result);
     }
 
     /**
-     * Checks whether the provided {@link User} is a {@link MusicianEntity}.
+     * Checks whether the provided {@link UserEntity} is a {@link MusicianEntity}.
      *
      * @param currentUser The user to check
      * @return True if user is a musician, false otherwise
      */
-    public boolean isUserMusician(User currentUser) {
+    public boolean isUserMusician(UserEntity currentUser) {
         this.createEntityManager();
         TypedQuery<Long> query = this.entityManager.createQuery(
-            "SELECT COUNT(m) FROM MusicianEntity m WHERE m.userId = :uId",
+            "SELECT COUNT(m) FROM MusicianEntity m WHERE m.user = :user",
             Long.class
         );
-        query.setParameter("uId", currentUser.getUserId());
+        query.setParameter("user", currentUser);
         Long result = query.getSingleResult();
         this.tearDown();
 

@@ -17,7 +17,7 @@ import org.mockito.Mock;
 
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 class DutyDaoMockedTest {
-    private DutyDao dao;
+
     private EntityManager entityManager;
     @Mock
     private TypedQuery<DutyEntity> mockedQuery;
@@ -38,6 +38,5 @@ class DutyDaoMockedTest {
         when(this.entityManager.createQuery(anyString(), eq(DutyEntity.class)))
             .thenReturn(this.mockedQuery);
         when(this.mockedQuery.getResultList()).thenReturn(tempList);
-        this.dao = new DutyDao();
     }
 }

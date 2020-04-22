@@ -8,8 +8,9 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.doAnswer;
 import static org.mockito.Mockito.spy;
 
+import at.fhv.teamb.symphoniacus.domain.Duty;
 import at.fhv.teamb.symphoniacus.persistence.model.DutyEntity;
-import at.fhv.teamb.symphoniacus.persistence.model.Section;
+import at.fhv.teamb.symphoniacus.persistence.model.SectionEntity;
 import com.calendarfx.model.Calendar;
 import com.calendarfx.model.CalendarSource;
 import com.calendarfx.model.Entry;
@@ -27,7 +28,7 @@ class CalendarControllerTest {
     @Test
     void prepareCalendarSource_ShouldPrepareCalendarSource() {
         // Given
-        Section section = new Section();
+        SectionEntity section = new SectionEntity();
         section.setDescription("Test Section 1");
         section.setSectionShortcut("TS1");
         String name = "Test Source";
@@ -39,7 +40,7 @@ class CalendarControllerTest {
                 controller.createDutyCalendarEntries(prepareTestDuties())
             );
             return null;
-        }).when(controller).fillCalendar(any(Calendar.class), any(Section.class));
+        }).when(controller).fillCalendar(any(Calendar.class), any(SectionEntity.class));
 
         // When
         CalendarSource source = controller.prepareCalendarSource(name, section);
@@ -52,7 +53,7 @@ class CalendarControllerTest {
     @Test
     void createCalendar_ShouldCreateCalendar() {
         // Given
-        Section section = new Section();
+        SectionEntity section = new SectionEntity();
         section.setDescription("Test Section 1");
         section.setSectionShortcut("TS1");
 
@@ -79,13 +80,13 @@ class CalendarControllerTest {
         // Given
         CalendarController controller = new CalendarController();
         Calendar calendar = new Calendar();
-        List<Entry<DutyEntity>> entries = controller.createDutyCalendarEntries(prepareTestDuties());
+        List<Entry<Duty>> entries = controller.createDutyCalendarEntries(prepareTestDuties());
 
         // When
         controller.fillCalendar(calendar, entries);
 
         // Then
-        for (Entry<DutyEntity> entry : entries) {
+        for (Entry<Duty> entry : entries) {
             assertFalse(
                 calendar.findEntries(entry.getTitle()).isEmpty(),
                 "Calendar should contain Entry"
@@ -101,27 +102,27 @@ class CalendarControllerTest {
     @Test
     void createDutyCalendarEntries_ShouldCreateEntries() {
         // Given
-        List<DutyEntity> duties = prepareTestDuties();
+        List<Duty> duties = prepareTestDuties();
 
         // When
-        List<Entry<DutyEntity>> entries =
+        List<Entry<Duty>> entries =
             new CalendarController().createDutyCalendarEntries(duties);
 
         // Then
         assertEquals(duties.size(), entries.size(), "Amount of Duties and Entries should be equal");
         for (int i = 0; i < duties.size(); i++) {
             assertEquals(
-                duties.get(i).getDescription(),
+                duties.get(i).getTitle(),
                 entries.get(i).getTitle(),
                 "Duty and Entry should have same description"
             );
             assertEquals(
-                duties.get(i).getStart(),
+                duties.get(i).getEntity().getStart(),
                 entries.get(i).getStartAsLocalDateTime(),
                 "Duty and Entry should have same start time/day"
             );
             assertEquals(
-                duties.get(i).getEnd(),
+                duties.get(i).getEntity().getEnd(),
                 entries.get(i).getEndAsLocalDateTime(),
                 "Duty and Entry should have same end time/day"
             );
@@ -129,20 +130,25 @@ class CalendarControllerTest {
     }
 
     /**
-     * Prepares a List of {@link DutyEntity} objects with test data.
+     * Prepares a List of {@link Duty} objects with test data.
      *
      * @return A List of Duties
      */
-    private List<DutyEntity> prepareTestDuties() {
-        DutyEntity testDuty1 = new DutyEntity();
-        testDuty1.setDescription("A very descriptive title");
-        testDuty1.setStart(LocalDateTime.of(LocalDate.now(), LocalTime.MIDNIGHT));
-        testDuty1.setEnd(LocalDateTime.of(LocalDate.now(), LocalTime.NOON));
+    private List<Duty> prepareTestDuties() {
+        Duty testDuty1 = new Duty(new DutyEntity());
+        testDuty1.getEntity().setDescription("A very descriptive title");
+        testDuty1.getEntity().setStart(LocalDateTime.of(LocalDate.now(), LocalTime.MIDNIGHT));
+        testDuty1.getEntity().setEnd(LocalDateTime.of(LocalDate.now(), LocalTime.NOON));
 
-        DutyEntity testDuty2 = new DutyEntity();
-        testDuty2.setDescription("Completely random something");
-        testDuty2.setStart(LocalDateTime.of(LocalDate.now().plusDays(1), LocalTime.NOON));
-        testDuty2.setEnd(LocalDateTime.of(LocalDate.now().plusDays(1), LocalTime.MAX));
+        Duty testDuty2 = new Duty(new DutyEntity());
+        testDuty2.getEntity().setDescription("Completely random something");
+        testDuty2.getEntity().setStart(
+            LocalDateTime.of(
+                LocalDate.now().plusDays(1),
+                LocalTime.NOON
+            )
+        );
+        testDuty2.getEntity().setEnd(LocalDateTime.of(LocalDate.now().plusDays(1), LocalTime.MAX));
 
         return new LinkedList<>(Arrays.asList(testDuty1, testDuty2));
     }

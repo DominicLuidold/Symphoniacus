@@ -3,7 +3,7 @@ package at.fhv.teamb.symphoniacus.persistence.dao;
 import at.fhv.teamb.symphoniacus.persistence.BaseDao;
 import at.fhv.teamb.symphoniacus.persistence.model.DutyEntity;
 import at.fhv.teamb.symphoniacus.persistence.model.MusicianEntity;
-import at.fhv.teamb.symphoniacus.persistence.model.Section;
+import at.fhv.teamb.symphoniacus.persistence.model.SectionEntity;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.YearMonth;
@@ -53,7 +53,11 @@ public class DutyDao extends BaseDao<DutyEntity> {
     public List<DutyEntity> findAllInRange(LocalDateTime start, LocalDateTime end) {
         this.createEntityManager();
         TypedQuery<DutyEntity> query = this.entityManager.createQuery(
-            "SELECT d FROM DutyEntity d WHERE d.start >= :start AND d.end <= :end",
+            "SELECT d FROM DutyEntity d "
+                + "JOIN FETCH d.dutyCategory dc "
+                + "JOIN FETCH d.seriesOfPerformances sop "
+                + "WHERE d.start >= :start "
+                + "AND d.end <= :end",
             DutyEntity.class
         );
         query.setMaxResults(300);
@@ -75,7 +79,7 @@ public class DutyDao extends BaseDao<DutyEntity> {
      * (Section, LocalDateTime, LocalDateTime, boolean, boolean, boolean)
      */
     public List<DutyEntity> findAllInWeekWithSection(
-        Section section,
+        SectionEntity section,
         LocalDateTime start,
         boolean isReadyForDutyScheduler,
         boolean isReadyForOrganisationManager,
@@ -102,7 +106,7 @@ public class DutyDao extends BaseDao<DutyEntity> {
      * @return A List of the corresponding duties that were found
      */
     public List<DutyEntity> findAllInRangeWithSection(
-        Section section,
+        SectionEntity section,
         LocalDateTime start,
         LocalDateTime end,
         boolean isReadyForDutyScheduler,
@@ -113,6 +117,8 @@ public class DutyDao extends BaseDao<DutyEntity> {
         TypedQuery<DutyEntity> query = this.entityManager.createQuery("SELECT d FROM DutyEntity d "
             + "INNER JOIN d.sectionMonthlySchedules sms "
             + "INNER JOIN sms.section s "
+            + "JOIN FETCH d.dutyCategory dc "
+            + "JOIN FETCH d.seriesOfPerformances sop "
             + "WHERE d.start >= :start AND d.end <= :end "
             + "AND s.sectionId = :sectionId "
             + "AND sms.isReadyForDutyScheduler = :isReadyForDutyScheduler "
@@ -141,9 +147,10 @@ public class DutyDao extends BaseDao<DutyEntity> {
      * @param month    A LocalDateTime that represents the month
      * @return A List of the corresponding duties that were found
      */
-    public List<DutyEntity> getAllDutiesInRangeFromMusician(MusicianEntity musician,
-                                                            LocalDate month) {
-
+    public List<DutyEntity> getAllDutiesInRangeFromMusician(
+        MusicianEntity musician,
+        LocalDate month
+    ) {
         this.createEntityManager();
         YearMonth yearMonth = YearMonth.from(month);
         LocalDate start = yearMonth.atDay(1); // Find first day of month
@@ -152,12 +159,12 @@ public class DutyDao extends BaseDao<DutyEntity> {
         LocalDateTime endWithTime = end.atStartOfDay();
         TypedQuery<DutyEntity> query = this.entityManager.createQuery("SELECT d FROM DutyEntity d "
                 + "INNER JOIN d.dutyPositions dp "
-                + "INNER JOIN dp.musicians m "
+                + "INNER JOIN dp.musician m "
                 + "JOIN FETCH d.dutyCategory "
-                + "WHERE d.end <= :end AND d.start >= :start AND m.musicianId = :mid",
+                + "WHERE d.end <= :end AND d.start >= :start AND m = :musician",
             DutyEntity.class
         );
-        query.setParameter("mid", musician.getMusicianId());
+        query.setParameter("musician", musician);
         query.setParameter("start", startWithTime);
         query.setParameter("end", endWithTime);
         List<DutyEntity> dutyCategories = query.getResultList();

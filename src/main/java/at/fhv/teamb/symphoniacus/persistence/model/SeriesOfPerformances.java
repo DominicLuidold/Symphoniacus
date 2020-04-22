@@ -1,11 +1,13 @@
 package at.fhv.teamb.symphoniacus.persistence.model;
 
 import java.time.LocalDate;
+import java.util.Set;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
 @Entity
@@ -30,6 +32,9 @@ public class SeriesOfPerformances {
 
     @Column(name = "instrumentationId")
     private Integer instrumentationId;
+
+    @OneToMany(mappedBy = "seriesOfPerformances", orphanRemoval = false)
+    private Set<DutyEntity> dutyEntities;
 
     public Integer getSeriesOfPerformancesId() {
         return this.seriesOfPerformancesId;
@@ -77,5 +82,15 @@ public class SeriesOfPerformances {
 
     public void setInstrumentationId(Integer instrumentationId) {
         this.instrumentationId = instrumentationId;
+    }
+
+    public void addDuty(DutyEntity dutyEntity) {
+        this.dutyEntities.add(dutyEntity);
+        dutyEntity.setSeriesOfPerformances(this);
+    }
+
+    public void removeDuty(DutyEntity dutyEntity) {
+        this.dutyEntities.remove(dutyEntity);
+        dutyEntity.setSeriesOfPerformances(null);
     }
 }

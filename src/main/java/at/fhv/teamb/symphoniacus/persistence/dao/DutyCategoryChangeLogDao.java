@@ -44,11 +44,11 @@ public class DutyCategoryChangeLogDao extends BaseDao<DutyCategoryChangelogEntit
         DutyCategoryEntity categoryEntity) {
         this.createEntityManager();
         TypedQuery<DutyCategoryChangelogEntity> query = this.entityManager.createQuery(
-            "SELECT changelog FROM DutyCategoryChangelogEntity changelog"
-                + " WHERE changelog.dutyCategoryId = :givenCategory",
+            "SELECT changelog FROM DutyCategoryChangelogEntity changelog "
+                + "WHERE changelog.dutyCategory = :givenCategory",
             DutyCategoryChangelogEntity.class);
 
-        query.setParameter("givenCategory", categoryEntity.getDutyCategoryId());
+        query.setParameter("givenCategory", categoryEntity);
         List<DutyCategoryChangelogEntity> result = query.getResultList();
         this.tearDown();
 

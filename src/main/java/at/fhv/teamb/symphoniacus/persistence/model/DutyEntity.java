@@ -1,7 +1,6 @@
 package at.fhv.teamb.symphoniacus.persistence.model;
 
 import java.time.LocalDateTime;
-import java.time.Month;
 import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
@@ -27,8 +26,9 @@ public class DutyEntity {
     @Column(name = "dutyId")
     private Integer dutyId;
 
-    @Column(name = "weeklyScheduleId", insertable = false, updatable = false)
-    private Integer weeklyScheduleId;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "weeklyScheduleId")
+    private WeeklyScheduleEntity weeklySchedule;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "dutyCategoryId")
@@ -40,23 +40,18 @@ public class DutyEntity {
     @Column(name = "timeOfDay")
     private String timeOfDay;
 
-    @Column(name = "end")
-    private LocalDateTime end;
-
     @Column(name = "start")
     private LocalDateTime start;
 
-    @Column(name = "seriesOfPerformancesId")
-    private Integer seriesOfPerformancesId;
+    @Column(name = "end")
+    private LocalDateTime end;
 
-    //One-To-Many Part for DUTYPOSITION Table
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "seriesOfPerformancesId")
+    private SeriesOfPerformances seriesOfPerformances;
+
     @OneToMany(mappedBy = "duty", orphanRemoval = true)
     private List<DutyPositionEntity> dutyPositions = new LinkedList<>();
-
-    //Many-To-One Part for WEEKLYSCHEDULE Table
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "weeklyScheduleId")
-    private WeeklySchedule weeklySchedule;
 
     @ManyToMany
     @JoinTable(
@@ -70,6 +65,21 @@ public class DutyEntity {
     )
     private Set<SectionMonthlySchedule> sectionMonthlySchedules = new HashSet<>();
 
+    public Integer getDutyId() {
+        return this.dutyId;
+    }
+
+    public void setDutyId(Integer dutyId) {
+        this.dutyId = dutyId;
+    }
+
+    public WeeklyScheduleEntity getWeeklySchedule() {
+        return this.weeklySchedule;
+    }
+
+    public void setWeeklySchedule(WeeklyScheduleEntity weeklySchedule) {
+        this.weeklySchedule = weeklySchedule;
+    }
 
     public List<DutyPositionEntity> getDutyPositions() {
         return this.dutyPositions;
@@ -88,28 +98,12 @@ public class DutyEntity {
         this.dutyPositions.addAll(dutyPositions);
     }
 
-    public WeeklySchedule getWeeklySchedule() {
-        return this.weeklySchedule;
+    public DutyCategoryEntity getDutyCategory() {
+        return dutyCategory;
     }
 
-    public void setWeeklySchedule(WeeklySchedule weeklySchedule) {
-        this.weeklySchedule = weeklySchedule;
-    }
-
-    public Integer getDutyId() {
-        return this.dutyId;
-    }
-
-    public void setDutyId(Integer dutyId) {
-        this.dutyId = dutyId;
-    }
-
-    public Integer getWeeklyScheduleId() {
-        return this.weeklyScheduleId;
-    }
-
-    public void setWeeklyScheduleId(Integer weeklyScheduleId) {
-        this.weeklyScheduleId = weeklyScheduleId;
+    public void setDutyCategory(DutyCategoryEntity dutyCategory) {
+        this.dutyCategory = dutyCategory;
     }
 
     public String getDescription() {
@@ -128,14 +122,6 @@ public class DutyEntity {
         this.timeOfDay = timeOfDay;
     }
 
-    public LocalDateTime getEnd() {
-        return this.end;
-    }
-
-    public void setEnd(LocalDateTime end) {
-        this.end = end;
-    }
-
     public LocalDateTime getStart() {
         return this.start;
     }
@@ -144,12 +130,26 @@ public class DutyEntity {
         this.start = start;
     }
 
-    public Integer getSeriesOfPerformancesId() {
-        return this.seriesOfPerformancesId;
+    public LocalDateTime getEnd() {
+        return this.end;
     }
 
-    public void setSeriesOfPerformancesId(Integer seriesOfPerformancesId) {
-        this.seriesOfPerformancesId = seriesOfPerformancesId;
+    public void setEnd(LocalDateTime end) {
+        this.end = end;
+    }
+
+    public SeriesOfPerformances getSeriesOfPerformances() {
+        return seriesOfPerformances;
+    }
+
+    public void setSeriesOfPerformances(
+        SeriesOfPerformances seriesOfPerformances
+    ) {
+        this.seriesOfPerformances = seriesOfPerformances;
+    }
+
+    public Set<SectionMonthlySchedule> getSectionMonthlySchedules() {
+        return this.sectionMonthlySchedules;
     }
 
     public void addSectionMonthlySchedule(SectionMonthlySchedule sms) {
@@ -161,26 +161,4 @@ public class DutyEntity {
         this.sectionMonthlySchedules.remove(sms);
         sms.getDuties().remove(this);
     }
-
-    public Set<SectionMonthlySchedule> getSectionMonthlySchedules() {
-        return this.sectionMonthlySchedules;
-    }
-
-    public void setSectionMonthlySchedules(
-        Set<SectionMonthlySchedule> sectionMonthlySchedules) {
-        this.sectionMonthlySchedules = sectionMonthlySchedules;
-    }
-
-    public Month getMonth() {
-        return this.start.getMonth();
-    }
-
-    public DutyCategoryEntity getDutyCategory() {
-        return dutyCategory;
-    }
-
-    public void setDutyCategory(DutyCategoryEntity dutyCategory) {
-        this.dutyCategory = dutyCategory;
-    }
-
 }

@@ -4,7 +4,7 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 import at.fhv.teamb.symphoniacus.persistence.model.DutyEntity;
 import at.fhv.teamb.symphoniacus.persistence.model.MusicianEntity;
-import at.fhv.teamb.symphoniacus.persistence.model.Section;
+import at.fhv.teamb.symphoniacus.persistence.model.SectionEntity;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
@@ -15,8 +15,8 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInstance;
 
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
-class DutyDaoTest {
-    private static final Logger LOG = LogManager.getLogger(DutyDaoTest.class);
+class DutyEntityDaoTest {
+    private static final Logger LOG = LogManager.getLogger(DutyEntityDaoTest.class);
     private DutyDao dao;
 
     @BeforeAll
@@ -39,7 +39,7 @@ class DutyDaoTest {
     @Test
     void findAllInRangeWithSection_ShouldReturnNotNull() {
         // Given
-        Section s = new Section();
+        SectionEntity s = new SectionEntity();
         s.setSectionId(1);
 
         // When

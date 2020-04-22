@@ -44,7 +44,7 @@ public class SectionMonthlySchedule {
     //Many-To-One Part for SECTION Table
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "sectionId")
-    private Section section;
+    private SectionEntity section;
 
     @ManyToMany(mappedBy = "sectionMonthlySchedules")
     private Set<DutyEntity> duties = new HashSet<>();
@@ -57,11 +57,11 @@ public class SectionMonthlySchedule {
         this.monthlySchedule = monthlySchedule;
     }
 
-    public Section getSection() {
+    public SectionEntity getSection() {
         return this.section;
     }
 
-    public void setSection(Section section) {
+    public void setSection(SectionEntity section) {
         this.section = section;
     }
 
@@ -69,18 +69,18 @@ public class SectionMonthlySchedule {
         return this.duties;
     }
 
-    public void setDuties(Set<DutyEntity> dutySet) {
-        this.duties = dutySet;
+    public void setDuties(Set<DutyEntity> dutyEntitySet) {
+        this.duties = dutyEntitySet;
     }
 
-    public void addDuty(DutyEntity duty) {
-        this.duties.add(duty);
-        duty.getSectionMonthlySchedules().add(this);
+    public void addDuty(DutyEntity dutyEntity) {
+        this.duties.add(dutyEntity);
+        dutyEntity.getSectionMonthlySchedules().add(this);
     }
 
-    public void removeDuty(DutyEntity duty) {
-        this.duties.remove(duty);
-        duty.getSectionMonthlySchedules().remove(this);
+    public void removeDuty(DutyEntity dutyEntity) {
+        this.duties.remove(dutyEntity);
+        dutyEntity.getSectionMonthlySchedules().remove(this);
     }
 
     public Integer getSectionMonthlyScheduleId() {
