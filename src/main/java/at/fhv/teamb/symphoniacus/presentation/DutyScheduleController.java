@@ -199,7 +199,7 @@ public class DutyScheduleController implements Initializable, Controllable {
         for (DutyPosition dp : positionList) {
             // TODO
             observablePositionList.add(
-                new DutyPositionMusicianTableModel(dp, dp.getAssignedMusician())
+                new DutyPositionMusicianTableModel(dp)
             );
         }
         this.positionsTable.setItems(observablePositionList);
