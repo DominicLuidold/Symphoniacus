@@ -1,12 +1,17 @@
 package at.fhv.teamb.symphoniacus.presentation.internal;
 
 import at.fhv.teamb.symphoniacus.domain.Musician;
+import at.fhv.teamb.symphoniacus.domain.exception.PointsNotCalculatedException;
+import at.fhv.teamb.symphoniacus.presentation.DutyScheduleController;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.property.SimpleStringProperty;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 public class MusicianTableModel {
 
+    private static final Logger LOG = LogManager.getLogger(MusicianTableModel.class);
     private SimpleStringProperty name;
     private SimpleIntegerProperty points;
     private SimpleStringProperty wishType;
@@ -22,11 +27,16 @@ public class MusicianTableModel {
      */
     public MusicianTableModel(Musician m) {
         this.musician = m;
-        this.name = new SimpleStringProperty("name");
-        this.points = new SimpleIntegerProperty(17);
-        this.wishType = new SimpleStringProperty("POS_SOP");
-        this.details = new SimpleStringProperty("lalala");
-        this.date = new SimpleStringProperty("17.05.2020");
+        this.name = new SimpleStringProperty(m.getFullName());
+        try {
+            this.points = new SimpleIntegerProperty(m.getPoints().getValue());
+        } catch (PointsNotCalculatedException e) {
+            LOG.error(e);
+            this.points = new SimpleIntegerProperty(-1);
+        }
+        this.wishType = new SimpleStringProperty("NOP");
+        this.details = new SimpleStringProperty("NOP");
+        this.date = new SimpleStringProperty("NOP");
         this.schedule = new SimpleBooleanProperty(false);
     }
 
