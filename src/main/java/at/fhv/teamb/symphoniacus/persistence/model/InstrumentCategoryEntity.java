@@ -24,7 +24,7 @@ public class InstrumentCategoryEntity {
     @OneToMany(mappedBy = "instrumentCategory")
     private List<ContractualObligationEntity> contractualObligations = new LinkedList<>();
 
-    // TODO - @ManyToMany
+    // TODO - @ManyToMany InstrumentationCategory - InstrumentationCategory_Musician - Musician
 
     public Integer getInstrumentCategoryId() {
         return this.instrumentCategoryId;
