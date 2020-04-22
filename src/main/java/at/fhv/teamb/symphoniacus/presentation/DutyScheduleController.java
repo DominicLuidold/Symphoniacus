@@ -229,7 +229,8 @@ public class DutyScheduleController implements Initializable, Controllable {
             .getPositionDescription() + "  Current Object: " + this
         );
         this.selectedDutyPosition = dutyPosition;
-        this.initMusicianTableWithRequests();
+        // TODO enable this when requests are implemented
+        // this.initMusicianTableWithRequests();
         this.initMusicianTableWithoutRequests();
     }
 
