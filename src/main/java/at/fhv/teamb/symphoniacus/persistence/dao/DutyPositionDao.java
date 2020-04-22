@@ -36,7 +36,7 @@ public class DutyPositionDao extends BaseDao<DutyPositionEntity> {
         TypedQuery<DutyPositionEntity> query = this.entityManager.createQuery(
             "SELECT p FROM DutyPositionEntity p "
                 + "JOIN FETCH p.instrumentationPosition "
-                + "JOIN FETCH p.musicians m "
+                + "JOIN FETCH p.musician m "
                 + "JOIN FETCH m.user "
                 + "WHERE p.duty = :duty AND p.section = :section",
             DutyPositionEntity.class

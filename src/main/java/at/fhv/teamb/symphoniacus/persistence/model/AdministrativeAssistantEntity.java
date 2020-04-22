@@ -5,29 +5,34 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
+import javax.persistence.FetchType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.MapsId;
 import javax.persistence.Table;
 
 @Entity
 @Table(name = "administrativeAssistant")
-public class AdministrativeAssistant {
+public class AdministrativeAssistantEntity {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "userId")
-    private Integer userId;
+    private int userId;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @MapsId
+    @JoinColumn(name = "userId")
+    private UserEntity user;
 
     @Enumerated(EnumType.STRING)
     @Column(name = "description")
     private AdministrativeAssistantType description;
 
-    public Integer getUserId() {
-        return this.userId;
+    public UserEntity getUser() {
+        return this.user;
     }
 
-    public void setUserId(Integer userId) {
-        this.userId = userId;
+    public void setUser(UserEntity user) {
+        this.user = user;
     }
 
     public AdministrativeAssistantType getDescription() {

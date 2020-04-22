@@ -64,7 +64,7 @@ public class DutyManager {
         SectionEntity sectionOfUser,
         LocalDate start
     ) {
-        return convertToDuties(
+        return convertEntitiesToDomainObjects(
             this.dutyDao.findAllInWeekWithSection(
                 sectionOfUser,
                 getLastMondayDate(start).atStartOfDay(),
@@ -88,7 +88,7 @@ public class DutyManager {
         LocalDate start,
         LocalDate end
     ) {
-        return convertToDuties(
+        return convertEntitiesToDomainObjects(
             this.dutyDao.findAllInRangeWithSection(
                 sectionOfUser,
                 start.atStartOfDay(),
@@ -108,7 +108,7 @@ public class DutyManager {
      * @return A List of the matching duties
      */
     public List<Duty> findAllInRange(LocalDate start, LocalDate end) {
-        return convertToDuties(
+        return convertEntitiesToDomainObjects(
             this.dutyDao.findAllInRange(
                 start.atStartOfDay(),
                 end.atStartOfDay()
@@ -116,11 +116,17 @@ public class DutyManager {
         );
     }
 
-    protected List<Duty> convertToDuties(List<DutyEntity> el) {
-        List<Duty> dutyList = new LinkedList<>();
-        for (DutyEntity de : el) {
-            dutyList.add(new Duty(de));
+    /**
+     * Converts {@link DutyEntity} objects to {@link Duty} objects.
+     *
+     * @param entities The entities to convert
+     * @return A List of Duty objects
+     */
+    public static List<Duty> convertEntitiesToDomainObjects(List<DutyEntity> entities) {
+        List<Duty> duties = new LinkedList<>();
+        for (DutyEntity entity : entities) {
+            duties.add(new Duty(entity));
         }
-        return dutyList;
+        return duties;
     }
 }

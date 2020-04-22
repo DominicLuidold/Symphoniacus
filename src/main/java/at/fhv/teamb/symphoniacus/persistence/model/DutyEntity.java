@@ -27,8 +27,12 @@ public class DutyEntity {
     private Integer dutyId;
 
     @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "weeklyScheduleId")
+    private WeeklyScheduleEntity weeklySchedule;
+
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "dutyCategoryId")
-    private DutyCategory dutyCategory;
+    private DutyCategoryEntity dutyCategory;
 
     @Column(name = "description")
     private String description;
@@ -36,25 +40,18 @@ public class DutyEntity {
     @Column(name = "timeOfDay")
     private String timeOfDay;
 
-    @Column(name = "end")
-    private LocalDateTime end;
-
     @Column(name = "start")
     private LocalDateTime start;
+
+    @Column(name = "end")
+    private LocalDateTime end;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "seriesOfPerformancesId")
     private SeriesOfPerformances seriesOfPerformances;
 
-
-    //One-To-Many Part for DUTYPOSITION Table
     @OneToMany(mappedBy = "duty", orphanRemoval = true)
     private List<DutyPositionEntity> dutyPositions = new LinkedList<>();
-
-    //Many-To-One Part for WEEKLYSCHEDULE Table
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "weeklyScheduleId")
-    private WeeklySchedule weeklySchedule;
 
     @ManyToMany
     @JoinTable(
@@ -68,6 +65,21 @@ public class DutyEntity {
     )
     private Set<SectionMonthlySchedule> sectionMonthlySchedules = new HashSet<>();
 
+    public Integer getDutyId() {
+        return this.dutyId;
+    }
+
+    public void setDutyId(Integer dutyId) {
+        this.dutyId = dutyId;
+    }
+
+    public WeeklyScheduleEntity getWeeklySchedule() {
+        return this.weeklySchedule;
+    }
+
+    public void setWeeklySchedule(WeeklyScheduleEntity weeklySchedule) {
+        this.weeklySchedule = weeklySchedule;
+    }
 
     public List<DutyPositionEntity> getDutyPositions() {
         return this.dutyPositions;
@@ -86,20 +98,12 @@ public class DutyEntity {
         this.dutyPositions.addAll(dutyPositions);
     }
 
-    public WeeklySchedule getWeeklySchedule() {
-        return this.weeklySchedule;
+    public DutyCategoryEntity getDutyCategory() {
+        return dutyCategory;
     }
 
-    public void setWeeklySchedule(WeeklySchedule weeklySchedule) {
-        this.weeklySchedule = weeklySchedule;
-    }
-
-    public Integer getDutyId() {
-        return this.dutyId;
-    }
-
-    public void setDutyId(Integer dutyId) {
-        this.dutyId = dutyId;
+    public void setDutyCategory(DutyCategoryEntity dutyCategory) {
+        this.dutyCategory = dutyCategory;
     }
 
     public String getDescription() {
@@ -118,6 +122,14 @@ public class DutyEntity {
         this.timeOfDay = timeOfDay;
     }
 
+    public LocalDateTime getStart() {
+        return this.start;
+    }
+
+    public void setStart(LocalDateTime start) {
+        this.start = start;
+    }
+
     public LocalDateTime getEnd() {
         return this.end;
     }
@@ -126,12 +138,18 @@ public class DutyEntity {
         this.end = end;
     }
 
-    public LocalDateTime getStart() {
-        return this.start;
+    public SeriesOfPerformances getSeriesOfPerformances() {
+        return seriesOfPerformances;
     }
 
-    public void setStart(LocalDateTime start) {
-        this.start = start;
+    public void setSeriesOfPerformances(
+        SeriesOfPerformances seriesOfPerformances
+    ) {
+        this.seriesOfPerformances = seriesOfPerformances;
+    }
+
+    public Set<SectionMonthlySchedule> getSectionMonthlySchedules() {
+        return this.sectionMonthlySchedules;
     }
 
     public void addSectionMonthlySchedule(SectionMonthlySchedule sms) {
@@ -142,31 +160,5 @@ public class DutyEntity {
     public void removeSectionMonthlySchedule(SectionMonthlySchedule sms) {
         this.sectionMonthlySchedules.remove(sms);
         sms.getDuties().remove(this);
-    }
-
-    public Set<SectionMonthlySchedule> getSectionMonthlySchedules() {
-        return this.sectionMonthlySchedules;
-    }
-
-    public void setSectionMonthlySchedules(
-        Set<SectionMonthlySchedule> sectionMonthlySchedules) {
-        this.sectionMonthlySchedules = sectionMonthlySchedules;
-    }
-
-    public DutyCategory getDutyCategory() {
-        return dutyCategory;
-    }
-
-    public void setDutyCategory(DutyCategory dutyCategory) {
-        this.dutyCategory = dutyCategory;
-    }
-
-    public SeriesOfPerformances getSeriesOfPerformances() {
-        return seriesOfPerformances;
-    }
-
-    public void setSeriesOfPerformances(
-        SeriesOfPerformances seriesOfPerformances) {
-        this.seriesOfPerformances = seriesOfPerformances;
     }
 }

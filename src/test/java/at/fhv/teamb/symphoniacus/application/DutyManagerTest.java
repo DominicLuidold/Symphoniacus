@@ -19,6 +19,11 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInstance;
 import org.mockito.Mockito;
 
+/**
+ * Tests for ContractualObligation.
+ *
+ * @author Nino Heinzle
+ */
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 class DutyManagerTest {
     private LocalDate testDate;
@@ -71,7 +76,7 @@ class DutyManagerTest {
         List<DutyEntity> el = new LinkedList<>();
         el.add(new DutyEntity());
         el.add(new DutyEntity());
-        List<Duty> duties = this.dutyManager.convertToDuties(el);
+        List<Duty> duties = DutyManager.convertEntitiesToDomainObjects(el);
         assertEquals(el.size(), duties.size());
     }
 }

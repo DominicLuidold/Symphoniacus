@@ -1,12 +1,14 @@
 package at.fhv.teamb.symphoniacus.persistence.model;
 
 import java.time.LocalDate;
-//
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
 @Entity
@@ -29,12 +31,13 @@ public class ContractualObligationEntity {
     @Column(name = "endDate")
     private LocalDate endDate;
 
-    @Column(name = "musicianId")
-    private Integer musicianId;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "musicianId")
+    private MusicianEntity musician;
 
-    @Column(name = "instrumentCategoryId")
-    private Integer instrumentCategoryId;
-
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "instrumentCategoryId")
+    private InstrumentCategoryEntity instrumentCategory;
 
     public Integer getContractNr() {
         return this.contractNr;
@@ -76,19 +79,21 @@ public class ContractualObligationEntity {
         this.endDate = endDate;
     }
 
-    public Integer getMusicianId() {
-        return this.musicianId;
+    public MusicianEntity getMusician() {
+        return this.musician;
     }
 
-    public void setMusicianId(Integer musicianId) {
-        this.musicianId = musicianId;
+    public void setMusician(MusicianEntity musician) {
+        this.musician = musician;
     }
 
-    public Integer getInstrumentCategoryId() {
-        return this.instrumentCategoryId;
+    public InstrumentCategoryEntity getInstrumentCategory() {
+        return this.instrumentCategory;
     }
 
-    public void setInstrumentCategoryId(Integer instrumentCategoryId) {
-        this.instrumentCategoryId = instrumentCategoryId;
+    public void setInstrumentCategory(
+        InstrumentCategoryEntity instrumentCategory
+    ) {
+        this.instrumentCategory = instrumentCategory;
     }
 }

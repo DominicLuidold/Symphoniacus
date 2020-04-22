@@ -3,21 +3,25 @@ package at.fhv.teamb.symphoniacus.persistence.model;
 import java.time.LocalDate;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
 @Entity
 @Table(name = "vacation")
-public class Vacation {
+public class VacationEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "vacationId")
     private Integer vacationId;
 
-    @Column(name = "musicianId")
-    private Integer musicianId;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "musicianId")
+    private MusicianEntity musician;
 
     @Column(name = "startDate")
     private LocalDate startDate;
@@ -36,12 +40,12 @@ public class Vacation {
         this.vacationId = vacationId;
     }
 
-    public Integer getMusicianId() {
-        return this.musicianId;
+    public MusicianEntity getMusician() {
+        return this.musician;
     }
 
-    public void setMusicianId(Integer musicianId) {
-        this.musicianId = musicianId;
+    public void setMusician(MusicianEntity musician) {
+        this.musician = musician;
     }
 
     public LocalDate getStartDate() {
