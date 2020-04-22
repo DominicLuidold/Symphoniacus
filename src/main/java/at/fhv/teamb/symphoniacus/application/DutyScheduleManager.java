@@ -30,6 +30,7 @@ public class DutyScheduleManager {
     private final DutyDao dutyDao;
     private final DutyPositionDao dutyPositionDao;
     private final MusicianDao musicianDao;
+    private PointsManager pointsManager;
     private List<Musician> setMusicians;
     private List<Musician> unsetMusicians;
 
@@ -42,6 +43,7 @@ public class DutyScheduleManager {
         this.musicianDao = new MusicianDao();
         this.setMusicians = new LinkedList<>();
         this.unsetMusicians = new LinkedList<>();
+        this.pointsManager = new PointsManager();
     }
 
     /**
@@ -108,7 +110,7 @@ public class DutyScheduleManager {
             this.musicianDao.findAllWithSection(position.getEntity().getSection())
         ) {
             // Get points for musician
-            Optional<Points> points = new PointsManager().getBalanceFromMusician(
+            Optional<Points> points = this.pointsManager.getBalanceFromMusician(
                 entity,
                 duty.getEntity().getStart().toLocalDate()
             );

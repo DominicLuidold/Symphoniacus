@@ -26,6 +26,15 @@ import org.apache.logging.log4j.Logger;
  */
 public class PointsManager {
     private static final Logger LOG = LogManager.getLogger(PointsManager.class);
+    private DutyDao dutyDao;
+    private ContractualObligationDao conDao;
+    private DutyCategoryChangeLogDao dutyCatChangeDao;
+
+    public PointsManager() {
+        dutyDao = new DutyDao();
+        conDao = new ContractualObligationDao();
+        dutyCatChangeDao = new DutyCategoryChangeLogDao();
+    }
 
     /**
      * Responsible for giving the Debit (Soll-Punkte)
@@ -35,7 +44,7 @@ public class PointsManager {
      * @return Points domain object containing the number of Points (getValue)
      */
     public Optional<Points> getDebitPointsFromMusician(MusicianEntity musician) {
-        ContractualObligationDao conDao = new ContractualObligationDao();
+
         Optional<ContractualObligationEntity> conEntity =
             conDao.getContractualObligation(musician);
         if (conEntity.isPresent()) {
@@ -57,7 +66,7 @@ public class PointsManager {
         LocalDate month
     ) {
         DutyDao dutyDao = new DutyDao();
-        DutyCategoryChangeLogDao dutyCatChangeDao = new DutyCategoryChangeLogDao();
+
 
         // get all duties from a musician in a given month
         List<DutyEntity> duties = dutyDao.getAllDutiesInRangeFromMusician(musician, month);
@@ -90,8 +99,6 @@ public class PointsManager {
      * @return Points domain object containing the number of Points (getValue)
      */
     public Optional<Points> getBalanceFromMusician(MusicianEntity musician, LocalDate month) {
-        DutyDao dutyDao = new DutyDao();
-
         // get all duties from a musician in a given month
         List<DutyEntity> duties = dutyDao.getAllDutiesInRangeFromMusician(musician, month);
         Set<DutyCategoryEntity> dutyCategories = new LinkedHashSet<>();
