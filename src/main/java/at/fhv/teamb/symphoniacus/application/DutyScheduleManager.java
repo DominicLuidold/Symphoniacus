@@ -4,11 +4,13 @@ import at.fhv.teamb.symphoniacus.domain.ActualSectionInstrumentation;
 import at.fhv.teamb.symphoniacus.domain.Duty;
 import at.fhv.teamb.symphoniacus.domain.DutyPosition;
 import at.fhv.teamb.symphoniacus.domain.Musician;
+import at.fhv.teamb.symphoniacus.domain.Points;
 import at.fhv.teamb.symphoniacus.domain.Section;
 import at.fhv.teamb.symphoniacus.persistence.dao.DutyDao;
 import at.fhv.teamb.symphoniacus.persistence.dao.DutyPositionDao;
 import at.fhv.teamb.symphoniacus.persistence.dao.MusicianDao;
 import at.fhv.teamb.symphoniacus.persistence.model.DutyPositionEntity;
+import at.fhv.teamb.symphoniacus.persistence.model.MusicianEntity;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.LinkedList;
@@ -85,12 +87,13 @@ public class DutyScheduleManager {
      * @param position     The position to determine musicians for
      * @param withRequests Indicator whether musicians with duty requests should be part of the list
      * @return A List of available musicians for the given duty position
+     * @throws IllegalStateException if a Musician or Points object has an illegal state
      */
     public List<Musician> getMusiciansAvailableForPosition(
         Duty duty,
         DutyPosition position,
         boolean withRequests
-    ) {
+    ) throws IllegalStateException {
         if (position == null) {
             LOG.error("Fetching available musicians not possible - duty position is null");
             return new LinkedList<>();
@@ -100,11 +103,23 @@ public class DutyScheduleManager {
         }
 
         // Get all Musician entities from database and convert them
-        List<Musician> sectionMusicians = MusicianManager.convertEntitiesToDomainObjects(
-            this.musicianDao.findAllWithSection(
-                position.getEntity().getSection()
-            )
-        );
+        List<Musician> sectionMusicians = new LinkedList<>();
+        for (MusicianEntity entity :
+            this.musicianDao.findAllWithSection(position.getEntity().getSection())
+        ) {
+            // Get points for musician
+            Optional<Points> points = new PointsManager().getBalanceFromMusician(
+                entity,
+                duty.getEntity().getStart().toLocalDate()
+            );
+
+            // Throw exception if points are missing
+            if (points.isEmpty()) {
+                throw new IllegalStateException("Points for musician cannot be calculated");
+            }
+
+            sectionMusicians.add(new Musician(entity, points.get()));
+        }
 
         // Get all duties that occur at the same day
         List<Duty> dutiesOfThisDay = DutyManager.convertEntitiesToDomainObjects(
