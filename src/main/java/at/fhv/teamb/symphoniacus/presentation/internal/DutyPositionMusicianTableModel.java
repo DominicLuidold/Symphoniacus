@@ -3,13 +3,10 @@ package at.fhv.teamb.symphoniacus.presentation.internal;
 import at.fhv.teamb.symphoniacus.domain.DutyPosition;
 import at.fhv.teamb.symphoniacus.domain.Musician;
 import java.util.Optional;
-import javafx.beans.property.SimpleStringProperty;
 
 public class DutyPositionMusicianTableModel {
-    private SimpleStringProperty role;
-    private SimpleStringProperty musicanShortcut;
     private DutyPosition dutyPosition;
-    private Musician musician;
+    private Optional<Musician> musician;
 
     /**
      * Consruct a new Duty Position Musician Table Model.
@@ -19,42 +16,21 @@ public class DutyPositionMusicianTableModel {
      */
     public DutyPositionMusicianTableModel(DutyPosition dutyPosition, Optional<Musician> musician) {
         this.dutyPosition = dutyPosition;
-        this.musician = musician.get();
-        this.role = new SimpleStringProperty(
-            dutyPosition
-                .getEntity()
-                .getInstrumentationPosition()
-                .getPositionDescription()
-        );
-
-        if (musician.isPresent()) {
-            this.musicanShortcut = new SimpleStringProperty(musician.get().getShortcut());
-        }
-
+        this.musician = musician;
     }
 
     public String getRole() {
-        return role.get();
-    }
-
-    public void setRole(String role) {
-        this.role.set(role);
-    }
-
-    public SimpleStringProperty roleProperty() {
-        return role;
+        return this.dutyPosition
+            .getEntity()
+            .getInstrumentationPosition()
+            .getPositionDescription();
     }
 
     public String getMusicanShortcut() {
-        return musicanShortcut.get();
-    }
-
-    public void setMusicanShortcut(String musicanShortcut) {
-        this.musicanShortcut.set(musicanShortcut);
-    }
-
-    public SimpleStringProperty musicanShortcutProperty() {
-        return musicanShortcut;
+        if (this.musician.isPresent()) {
+            return musician.get().getShortcut();
+        }
+        return "";
     }
 
     public DutyPosition getDutyPosition() {
@@ -65,11 +41,11 @@ public class DutyPositionMusicianTableModel {
         this.dutyPosition = dutyPosition;
     }
 
-    public Musician getMusician() {
+    public Optional<Musician> getMusician() {
         return musician;
     }
 
-    public void setMusician(Musician musician) {
+    public void setMusician(Optional<Musician> musician) {
         this.musician = musician;
     }
 }
