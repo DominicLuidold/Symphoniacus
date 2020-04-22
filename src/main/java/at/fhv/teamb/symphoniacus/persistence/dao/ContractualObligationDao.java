@@ -48,7 +48,8 @@ public class ContractualObligationDao extends BaseDao<ContractualObligationEntit
         TypedQuery<ContractualObligationEntity> query = this.entityManager.createQuery(
             "SELECT co FROM ContractualObligationEntity co "
                 + "WHERE co.musician = :musician "
-                + "AND co.startDate <= :currentDate AND co.endDate >= :currentDate",
+                + "AND co.startDate <= :currentDate "
+                + "AND co.endDate >= :currentDate",
             ContractualObligationEntity.class
         );
         query.setParameter("musician", musician);
