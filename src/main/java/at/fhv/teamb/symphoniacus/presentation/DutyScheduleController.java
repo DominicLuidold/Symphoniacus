@@ -1,18 +1,11 @@
 package at.fhv.teamb.symphoniacus.presentation;
 
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.anyBoolean;
-
 import at.fhv.teamb.symphoniacus.application.DutyScheduleManager;
 import at.fhv.teamb.symphoniacus.domain.ActualSectionInstrumentation;
 import at.fhv.teamb.symphoniacus.domain.Duty;
 import at.fhv.teamb.symphoniacus.domain.DutyPosition;
 import at.fhv.teamb.symphoniacus.domain.Musician;
 import at.fhv.teamb.symphoniacus.domain.Section;
-import at.fhv.teamb.symphoniacus.persistence.model.DutyPositionEntity;
-import at.fhv.teamb.symphoniacus.persistence.model.MusicianEntity;
-import at.fhv.teamb.symphoniacus.persistence.model.SectionEntity;
-import at.fhv.teamb.symphoniacus.persistence.model.UserEntity;
 import at.fhv.teamb.symphoniacus.presentation.internal.DutyPositionMusicianTableModel;
 import at.fhv.teamb.symphoniacus.presentation.internal.MusicianTableModel;
 import java.net.URL;
@@ -36,7 +29,6 @@ import javafx.util.Duration;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.controlsfx.control.Notifications;
-import org.mockito.Mockito;
 
 public class DutyScheduleController implements Initializable, Controllable {
 
@@ -92,6 +84,7 @@ public class DutyScheduleController implements Initializable, Controllable {
                 (observable, oldValue, newValue) -> {
                     if (newValue != null) {
                         addMusicianToPosition(
+                            this.actualSectionInstrumentation,
                             newValue.getMusician(),
                             this.selectedDutyPosition
                         );
@@ -107,6 +100,7 @@ public class DutyScheduleController implements Initializable, Controllable {
                 (observable, oldValue, newValue) -> {
                     if (newValue != null) {
                         addMusicianToPosition(
+                            this.actualSectionInstrumentation,
                             newValue.getMusician(),
                             this.selectedDutyPosition
                         );
@@ -195,11 +189,12 @@ public class DutyScheduleController implements Initializable, Controllable {
             LOG.error("Found no asi for duty");
             return;
         }
+        this.actualSectionInstrumentation = actualSectionInstrumentation.get();
 
         ObservableList<DutyPositionMusicianTableModel> observablePositionList =
             FXCollections.observableArrayList();
         List<DutyPosition> positionList =
-            actualSectionInstrumentation.get().getDuty().getDutyPositions();
+            this.actualSectionInstrumentation.getDuty().getDutyPositions();
 
         for (DutyPosition dp : positionList) {
             // TODO
@@ -210,16 +205,27 @@ public class DutyScheduleController implements Initializable, Controllable {
         this.positionsTable.setItems(observablePositionList);
     }
 
-    protected void addMusicianToPosition(Musician musician, DutyPosition dutyPosition) {
-        LOG.debug("Selected musician changed");
-        LOG.error("TODO: add musician to position here");
+    protected void addMusicianToPosition(
+        ActualSectionInstrumentation asi,
+        Musician musician,
+        DutyPosition dutyPosition
+    ) {
+        LOG.debug(
+            "New musician for position {} is: {}",
+            dutyPosition.getEntity().getInstrumentationPosition().getPositionDescription(),
+            musician.getFullName()
+        );
+        this.dutyScheduleManager.assignMusicianToPosition(
+            asi,
+            musician,
+            dutyPosition
+        );
         Notifications.create()
             .title("Musician set")
             .text("Duty position has been updated.")
             .position(Pos.CENTER)
             .hideAfter(new Duration(2000))
             .show();
-
     }
 
     private void setActualPosition(DutyPosition dutyPosition) {
@@ -228,6 +234,7 @@ public class DutyScheduleController implements Initializable, Controllable {
             .getInstrumentationPosition()
             .getPositionDescription() + "  Current Object: " + this
         );
+
         this.selectedDutyPosition = dutyPosition;
         // TODO enable this when requests are implemented
         // this.initMusicianTableWithRequests();
