@@ -1,6 +1,6 @@
 package at.fhv.teamb.symphoniacus.domain;
 
-import at.fhv.teamb.symphoniacus.persistence.model.DutyCategory;
+import at.fhv.teamb.symphoniacus.persistence.model.DutyCategoryEntity;
 import at.fhv.teamb.symphoniacus.persistence.model.DutyEntity;
 import at.fhv.teamb.symphoniacus.persistence.model.SeriesOfPerformances;
 import java.time.LocalDateTime;
@@ -29,7 +29,7 @@ public class DutyTest {
             );
 
         Mockito.when(de.getDescription()).thenReturn("TV");
-        DutyCategory dc = new DutyCategory();
+        DutyCategoryEntity dc = new DutyCategoryEntity();
         dc.setIsRehearsal(true);
         dc.setType("Konzert-Probe");
         Mockito.when(de.getDutyCategory()).thenReturn(dc);
@@ -61,7 +61,7 @@ public class DutyTest {
                 )
             );
 
-        DutyCategory dc = new DutyCategory();
+        DutyCategoryEntity dc = new DutyCategoryEntity();
         dc.setIsRehearsal(false);
         dc.setType("Nicht-musikalischer Dienst");
         Mockito.when(de.getDutyCategory()).thenReturn(dc);

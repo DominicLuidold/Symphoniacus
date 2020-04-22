@@ -147,9 +147,10 @@ public class DutyDao extends BaseDao<DutyEntity> {
      * @param month    A LocalDateTime that represents the month
      * @return A List of the corresponding duties that were found
      */
-    public List<DutyEntity> getAllDutiesInRangeFromMusician(MusicianEntity musician,
-                                                            LocalDate month) {
-
+    public List<DutyEntity> getAllDutiesInRangeFromMusician(
+        MusicianEntity musician,
+        LocalDate month
+    ) {
         this.createEntityManager();
         YearMonth yearMonth = YearMonth.from(month);
         LocalDate start = yearMonth.atDay(1); // Find first day of month
@@ -158,12 +159,12 @@ public class DutyDao extends BaseDao<DutyEntity> {
         LocalDateTime endWithTime = end.atStartOfDay();
         TypedQuery<DutyEntity> query = this.entityManager.createQuery("SELECT d FROM DutyEntity d "
                 + "INNER JOIN d.dutyPositions dp "
-                + "INNER JOIN dp.musicians m "
+                + "INNER JOIN dp.musician m "
                 + "JOIN FETCH d.dutyCategory "
-                + "WHERE d.end <= :end AND d.start >= :start AND m.musicianId = :mid",
+                + "WHERE d.end <= :end AND d.start >= :start AND m = :musician",
             DutyEntity.class
         );
-        query.setParameter("mid", musician.getMusicianId());
+        query.setParameter("musician", musician);
         query.setParameter("start", startWithTime);
         query.setParameter("end", endWithTime);
         List<DutyEntity> dutyCategories = query.getResultList();

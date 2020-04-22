@@ -27,36 +27,11 @@ public class DutyCategoryEntity {
     @Column(name = "points")
     private Integer points;
 
-    @OneToMany(orphanRemoval = true)
+    @OneToMany(mappedBy = "dutyCategory", orphanRemoval = true)
     private List<DutyCategoryChangelogEntity> dutyCategoryChangelogs = new LinkedList<>();
 
-    @OneToMany(orphanRemoval = true)
+    @OneToMany(mappedBy = "dutyCategory", orphanRemoval = true)
     private List<DutyEntity> duties = new LinkedList<>();
-
-    public List<DutyCategoryChangelogEntity> getDutyCategoryChangelogs() {
-        return this.dutyCategoryChangelogs;
-    }
-
-    public void addDutyCategoryChangelog(DutyCategoryChangelogEntity dutyCategoryChangelog) {
-        this.dutyCategoryChangelogs.add(dutyCategoryChangelog);
-    }
-
-    public void addAllDutyCategoryChangelogs(
-        List<DutyCategoryChangelogEntity> dutyCategoryChangelogs) {
-        this.dutyCategoryChangelogs.addAll(dutyCategoryChangelogs);
-    }
-
-    public List<DutyEntity> getDuties() {
-        return this.duties;
-    }
-
-    public void addDuty(DutyEntity duty) {
-        this.duties.add(duty);
-    }
-
-    public void addAllDuties(List<DutyEntity> duties) {
-        this.duties.addAll(duties);
-    }
 
     public Integer getDutyCategoryId() {
         return this.dutyCategoryId;
@@ -88,5 +63,33 @@ public class DutyCategoryEntity {
 
     public void setPoints(Integer points) {
         this.points = points;
+    }
+
+    public List<DutyCategoryChangelogEntity> getDutyCategoryChangelogs() {
+        return this.dutyCategoryChangelogs;
+    }
+
+    public void addDutyCategoryChangelog(DutyCategoryChangelogEntity dutyCategoryChangelog) {
+        this.dutyCategoryChangelogs.add(dutyCategoryChangelog);
+        dutyCategoryChangelog.setDutyCategory(this);
+    }
+
+    public void removeDutyCategoryChangelog(DutyCategoryChangelogEntity dutyCategoryChangelog) {
+        this.dutyCategoryChangelogs.remove(dutyCategoryChangelog);
+        dutyCategoryChangelog.setDutyCategory(null);
+    }
+
+    public List<DutyEntity> getDuties() {
+        return this.duties;
+    }
+
+    public void addDuty(DutyEntity duty) {
+        this.duties.add(duty);
+        duty.setDutyCategory(this);
+    }
+
+    public void removeDuty(DutyEntity duty) {
+        this.duties.remove(duty);
+        duty.setDutyCategory(null);
     }
 }

@@ -141,7 +141,7 @@ public class Points {
         LocalDate dutyTime = duty.getStart().toLocalDate();
         for (DutyCategoryChangelogEntity catChangeLogEntity : catChangeLogs) {
             if (duty.getDutyCategory().getDutyCategoryId()
-                .equals(catChangeLogEntity.getDutyCategoryId())) {
+                .equals(catChangeLogEntity.getDutyCategory().getDutyCategoryId())) {
                 if (temp == null
                     || (catChangeLogEntity.getStartDate().isAfter(temp.getStartDate()))
                     && dutyTime.isAfter(catChangeLogEntity.getStartDate())

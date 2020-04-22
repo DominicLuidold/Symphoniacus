@@ -34,6 +34,17 @@ public class MusicianEntity {
     @Column(name = "musicianId")
     private Integer musicianId;
 
+    @OneToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "userId")
+    private UserEntity user;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "sectionId")
+    private SectionEntity section;
+
+    @OneToMany(mappedBy = "musician")
+    private List<ContractualObligationEntity> contractualObligations = new LinkedList<>();
+
     @ManyToMany
     @JoinTable(
         name = "musicianRole_musician",
@@ -46,16 +57,11 @@ public class MusicianEntity {
     )
     private List<MusicianRole> musicianRoles = new LinkedList<>();
 
-    @OneToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "userId")
-    private UserEntity user;
-
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "sectionId")
-    private SectionEntity section;
-
     @OneToMany(mappedBy = "musician")
     private List<DutyPositionEntity> dutyPositions = new LinkedList<>();
+
+    @OneToMany(mappedBy = "musician")
+    private List<VacationEntity> vacations = new LinkedList<>();
 
     public Integer getMusicianId() {
         return this.musicianId;
@@ -73,6 +79,28 @@ public class MusicianEntity {
         this.user = user;
     }
 
+    public SectionEntity getSection() {
+        return section;
+    }
+
+    public void setSection(SectionEntity section) {
+        this.section = section;
+    }
+
+    public List<ContractualObligationEntity> getContractualObligations() {
+        return this.contractualObligations;
+    }
+
+    public void addContractualObligation(ContractualObligationEntity contractualObligation) {
+        this.contractualObligations.add(contractualObligation);
+        contractualObligation.setMusician(this);
+    }
+
+    public void removeContractualObligation(ContractualObligationEntity contractualObligation) {
+        this.contractualObligations.remove(contractualObligation);
+        contractualObligation.setMusician(null);
+    }
+
     public List<MusicianRole> getMusicianRoles() {
         return this.musicianRoles;
     }
@@ -85,14 +113,6 @@ public class MusicianEntity {
     public void removeMusicianRole(MusicianRole role) {
         this.musicianRoles.remove(role);
         role.removeMusician(this);
-    }
-
-    public SectionEntity getSection() {
-        return section;
-    }
-
-    public void setSection(SectionEntity section) {
-        this.section = section;
     }
 
     public List<DutyPositionEntity> getDutyPositions() {
@@ -109,13 +129,17 @@ public class MusicianEntity {
         position.setMusician(null);
     }
 
-    @Override
-    public String toString() {
-        return "Musician{"
-            + "musicianId=" + musicianId
-            + ", musicianRoles=" + musicianRoles
-            + ", user=" + user
-            + ", section=" + section
-            + '}';
+    public List<VacationEntity> getVacations() {
+        return this.vacations;
+    }
+
+    public void addVacation(VacationEntity vacation) {
+        this.vacations.add(vacation);
+        vacation.setMusician(this);
+    }
+
+    public void removeVacation(VacationEntity vacation) {
+        this.vacations.remove(vacation);
+        vacation.setMusician(null);
     }
 }
