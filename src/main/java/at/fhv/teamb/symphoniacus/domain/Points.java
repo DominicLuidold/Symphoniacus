@@ -6,7 +6,6 @@ import at.fhv.teamb.symphoniacus.persistence.model.DutyCategoryEntity;
 import at.fhv.teamb.symphoniacus.persistence.model.DutyEntity;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
@@ -92,9 +91,7 @@ public class Points {
 
                         // Iterate every dutyCategory and find match to duty -> count points
                         // and break from iterator
-                        for (Iterator<DutyCategoryEntity> it = dutyCategories.iterator();
-                             it.hasNext(); ) {
-                            DutyCategoryEntity cat = it.next();
+                        for (DutyCategoryEntity cat : dutyCategories) {
                             if (cat.getDutyCategoryId()
                                 .equals(duty.getDutyCategory().getDutyCategoryId())) {
                                 points = points + cat.getPoints();
@@ -108,9 +105,7 @@ public class Points {
                 return Optional.of(new Points(points));
             } else if (isGivenMonthAfterCurrentMonth(duties.get(0).getStart())) {
                 for (DutyEntity duty : duties) {
-                    for (Iterator<DutyCategoryEntity> it = dutyCategories.iterator();
-                         it.hasNext(); ) {
-                        DutyCategoryEntity cat = it.next();
+                    for (DutyCategoryEntity cat : dutyCategories) {
                         if (duty.getDutyCategory().getDutyCategoryId()
                             .equals(cat.getDutyCategoryId())) {
                             points = points + cat.getPoints();
@@ -158,9 +153,7 @@ public class Points {
         if (month.getYear() < LocalDate.now().getYear()) {
             return true;
         } else if (month.getYear() == LocalDate.now().getYear()) {
-            if (month.getMonthValue() < LocalDate.now().getMonthValue()) {
-                return true;
-            }
+            return month.getMonthValue() < LocalDate.now().getMonthValue();
         }
         return false;
     }
@@ -169,9 +162,7 @@ public class Points {
         if (month.getYear() > LocalDate.now().getYear()) {
             return true;
         } else if (month.getYear() == LocalDate.now().getYear()) {
-            if (month.getMonthValue() > LocalDate.now().getMonthValue()) {
-                return true;
-            }
+            return month.getMonthValue() > LocalDate.now().getMonthValue();
         }
         return false;
     }
