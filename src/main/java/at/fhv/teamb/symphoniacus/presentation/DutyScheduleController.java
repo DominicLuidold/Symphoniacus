@@ -6,6 +6,7 @@ import at.fhv.teamb.symphoniacus.domain.Duty;
 import at.fhv.teamb.symphoniacus.domain.DutyPosition;
 import at.fhv.teamb.symphoniacus.domain.Musician;
 import at.fhv.teamb.symphoniacus.domain.Section;
+import at.fhv.teamb.symphoniacus.presentation.internal.ActionButtonTableCell;
 import at.fhv.teamb.symphoniacus.presentation.internal.DutyPositionMusicianTableModel;
 import at.fhv.teamb.symphoniacus.presentation.internal.MusicianTableModel;
 import java.net.URL;
@@ -23,7 +24,10 @@ import javafx.geometry.Pos;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.SplitPane;
+import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
+import javafx.scene.input.MouseButton;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.util.Duration;
 import org.apache.logging.log4j.LogManager;
@@ -63,6 +67,9 @@ public class DutyScheduleController implements Initializable, Controllable {
     @FXML
     private SplitPane leftSplitPane;
 
+    @FXML
+    private TableColumn<MusicianTableModel, Button> columnSchedule2;
+
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         this.registerController();
@@ -92,7 +99,38 @@ public class DutyScheduleController implements Initializable, Controllable {
                 }
             );
 
-        // add selected item click listener
+
+        this.musicianTableWithoutRequests.setOnMouseClicked((MouseEvent event) -> {
+            // add selected item click listener
+            if (event.getButton().equals(MouseButton.PRIMARY) && event.getClickCount() == 2) {
+
+                MusicianTableModel mtm =
+                    this.musicianTableWithoutRequests.getSelectionModel().getSelectedItem();
+                addMusicianToPosition(
+                    this.actualSectionInstrumentation,
+                    mtm.getMusician(),
+                    this.selectedDutyPosition
+                );
+            }
+        });
+
+        this.columnSchedule2.setCellFactory(
+            ActionButtonTableCell.<MusicianTableModel>forTableColumn(
+                "Schedule",
+                (MusicianTableModel mtm) -> {
+                    LOG.debug("Schedule btn without requests has been pressed");
+                    addMusicianToPosition(
+                        this.actualSectionInstrumentation,
+                        mtm.getMusician(),
+                        this.selectedDutyPosition
+                    );
+                    return mtm;
+                }
+            )
+        );
+
+
+        /*
         this.musicianTableWithoutRequests
             .getSelectionModel()
             .selectedItemProperty()
@@ -107,7 +145,7 @@ public class DutyScheduleController implements Initializable, Controllable {
                     }
                 }
             );
-
+*/
         this.positionsTable
             .getSelectionModel()
             .selectedItemProperty()
@@ -149,13 +187,40 @@ public class DutyScheduleController implements Initializable, Controllable {
         );
 
         List<MusicianTableModel> guiList = new LinkedList<>();
+        int i = 0;
+        int selectedIndex = 0;
+        MusicianTableModel selected = null;
         for (Musician domainMusician : list) {
-            guiList.add(new MusicianTableModel(domainMusician));
+            MusicianTableModel mtm = new MusicianTableModel(domainMusician);
+            guiList.add(mtm);
+            if (this.selectedDutyPosition.getAssignedMusician().isPresent()) {
+                LOG.debug("There is already a musician assigned for this position");
+                if (domainMusician.getShortcut().equals(
+                    this.selectedDutyPosition.getAssignedMusician().get().getShortcut()
+                )) {
+                    LOG.debug("Selecting index {}", i);
+                    selectedIndex = i;
+                    selected = mtm;
+                }
+            }
+            i++;
         }
-        ObservableList<MusicianTableModel> observableList =
+
+        ObservableList<MusicianTableModel> observableListWithoutRequests =
             FXCollections.observableArrayList();
-        observableList.addAll(guiList);
-        this.musicianTableWithoutRequests.setItems(observableList);
+        observableListWithoutRequests.addAll(guiList);
+        this.musicianTableWithoutRequests.setItems(observableListWithoutRequests);
+
+        // auto select current musician.
+        if (selected != null) {
+            //this.musicianTableWithoutRequests.getSelectionModel().select(selected);
+            //this.musicianTableWithoutRequests.getFocusModel().focus(selectedIndex);
+
+
+            this.musicianTableWithoutRequests.requestFocus();
+            this.musicianTableWithoutRequests.getSelectionModel().select(selected);
+            this.musicianTableWithoutRequests.scrollTo(selectedIndex);
+        }
     }
 
     private void initMusicianTableWithRequests() {
@@ -226,7 +291,7 @@ public class DutyScheduleController implements Initializable, Controllable {
             .position(Pos.CENTER)
             .hideAfter(new Duration(2000))
             .show();
-        
+
         // this is obviously not good
         this.initDutyPositionsTableWithMusicians();
     }
