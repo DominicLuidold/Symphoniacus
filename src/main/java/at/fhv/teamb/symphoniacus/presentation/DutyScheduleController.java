@@ -21,7 +21,9 @@ import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.geometry.Pos;
+import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
+import javafx.scene.control.ButtonType;
 import javafx.scene.control.Label;
 import javafx.scene.control.SplitPane;
 import javafx.scene.control.TableColumn;
@@ -80,10 +82,7 @@ public class DutyScheduleController implements Initializable, Controllable {
 
         this.dutySchedule.setVisible(false);
         this.scheduleBackBtn.setOnAction(e -> {
-            this.hide();
-            MasterController mc = MasterController.getInstance();
-            CalendarController cc = (CalendarController) mc.get("CalendarController");
-            cc.show();
+            closeDutySchedule();
         });
 
         // add selected item click listener
@@ -246,15 +245,16 @@ public class DutyScheduleController implements Initializable, Controllable {
     }
 
     private void initDutyPositionsTableWithMusicians() {
-        Optional<ActualSectionInstrumentation> actualSectionInstrumentation = Optional.empty();
-        if (this.actualSectionInstrumentation == null) {
-            actualSectionInstrumentation = this
-                .dutyScheduleManager
-                .getInstrumentationDetails(
-                    this.duty,
-                    section
-                );
+        if (this.dutyScheduleManager == null) {
+            this.dutyScheduleManager = new DutyScheduleManager();
         }
+
+        Optional<ActualSectionInstrumentation> actualSectionInstrumentation = this
+            .dutyScheduleManager
+            .getInstrumentationDetails(
+                this.duty,
+                section
+            );
 
         if (!actualSectionInstrumentation.isPresent()) {
             LOG.error("Found no asi for duty");
@@ -282,21 +282,31 @@ public class DutyScheduleController implements Initializable, Controllable {
         Musician newMusician,
         DutyPosition dutyPosition
     ) {
+        if (dutyPosition == null) {
+            Notifications.create()
+                .title("No position available")
+                .text("You have to choose a position first")
+                .position(Pos.CENTER)
+                .hideAfter(new Duration(2000))
+                .show();
+            return;
+        }
+
+
         //TODO Fix OutOfBound Exceptins
         Optional<Musician> oldMusician = Optional.empty();
-
-        oldMusician = actualSectionInstrumentation.getDuty().getDutyPositions().get(
-            actualSectionInstrumentation
-                .getDuty()
-                .getDutyPositions()
-                .indexOf(dutyPosition)
-        ).getAssignedMusician();
+        if (dutyPosition.getAssignedMusician().isPresent()) {
+            oldMusician = dutyPosition.getAssignedMusician();
+        }
 
         LOG.debug(
-            "New musician for position {} is: {}",
+            "New musician for position {} is: {} and oldMusician id {}",
             dutyPosition.getEntity().getInstrumentationPosition().getPositionDescription(),
-            newMusician.getFullName() + "Old Musician is: " + oldMusician.toString()
+            newMusician.getFullName(),
+            (oldMusician.isPresent()
+                ? oldMusician.get().getFullName() : "Nixe gefunde diese musiker")
         );
+
         this.dutyScheduleManager.assignMusicianToPosition(
             asi,
             newMusician,
@@ -326,6 +336,51 @@ public class DutyScheduleController implements Initializable, Controllable {
         // this.initMusicianTableWithRequests();
         this.initMusicianTableWithoutRequests();
     }
+
+    private void closeDutySchedule() {
+        ButtonType userSelection = getConfirmation();
+
+        if ((userSelection == ButtonType.CLOSE) || (userSelection == ButtonType.CANCEL)) {
+            return;
+        } else if (userSelection == ButtonType.OK) {
+            this.hide();
+            //TODO abfrage Beenden ohne speichern ??
+            this.actualSectionInstrumentation = null;
+            this.dutyScheduleManager = null;
+            this.selectedDutyPosition = null;
+
+            MasterController mc = MasterController.getInstance();
+            CalendarController cc = (CalendarController) mc.get("CalendarController");
+            cc.show();
+        }
+    }
+
+    private ButtonType getConfirmation() {
+        Label label = new Label();;
+        ButtonType buttonType = null;
+
+        Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+        alert.setTitle("Closing without saving");
+        alert.setHeaderText("Are you sure want to close without saving?");
+
+        // option != null.
+        Optional<ButtonType> option = alert.showAndWait();
+
+        if (option.get() == null) {
+            buttonType = ButtonType.CLOSE;
+            label.setText("No selection!");
+        } else if (option.get() == ButtonType.OK) {
+            buttonType = ButtonType.OK;
+            label.setText("File deleted!");
+        } else if (option.get() == ButtonType.CANCEL) {
+            buttonType = ButtonType.CANCEL;
+            label.setText("Cancelled!");
+        } else {
+            label.setText("-");
+        }
+        return buttonType;
+    }
+
 
     /**
      * Set the actual Duty for Controller.
