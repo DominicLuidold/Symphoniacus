@@ -30,9 +30,10 @@ public class DutyScheduleManager {
     private final DutyDao dutyDao;
     private final DutyPositionDao dutyPositionDao;
     private final MusicianDao musicianDao;
-    private PointsManager pointsManager;
-    private List<Musician> setMusicians;
-    private List<Musician> unsetMusicians;
+    private final PointsManager pointsManager;
+    private final List<Musician> setMusicians;
+    private final List<Musician> unsetMusicians;
+    private List<Musician> sectionMusicians;
 
     /**
      * Initialize the DutyScheduleManager.
@@ -103,18 +104,21 @@ public class DutyScheduleManager {
             throw new UnsupportedOperationException("Not yet implemented");
         }
 
-        // Get all Musician entities from database and convert them
-        List<Musician> sectionMusicians = new LinkedList<>();
-        for (MusicianEntity entity :
-            this.musicianDao.findAllWithSection(position.getEntity().getSection())
-        ) {
-            // Get points for musician
-            Points points = this.pointsManager.getBalanceFromMusician(
-                entity,
-                duty.getEntity().getStart().toLocalDate()
-            );
+        // Fetch section musicians from database if not present
+        if (this.sectionMusicians == null) {
+            // Get all Musician entities from database and convert them
+            this.sectionMusicians = new LinkedList<>();
+            for (MusicianEntity entity :
+                this.musicianDao.findAllWithSection(position.getEntity().getSection())
+            ) {
+                // Get points for musician
+                Points points = this.pointsManager.getBalanceFromMusician(
+                    entity,
+                    duty.getEntity().getStart().toLocalDate()
+                );
 
-            sectionMusicians.add(new Musician(entity, points));
+                this.sectionMusicians.add(new Musician(entity, points));
+            }
         }
 
         // Get all duties that occur at the same day
@@ -126,10 +130,10 @@ public class DutyScheduleManager {
         );
 
         return duty.determineAvailableMusicians(
-            sectionMusicians,
+            this.sectionMusicians,
             dutiesOfThisDay,
-            setMusicians,
-            unsetMusicians
+            this.setMusicians,
+            this.unsetMusicians
         );
     }
 
