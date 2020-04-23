@@ -142,7 +142,6 @@ public class DutyScheduleController implements Initializable, Controllable {
 
                     this.selectedDutyPosition = dpmtm.getDutyPosition();
 
-                    LOG.debug("before {}", this.selectedDutyPosition.getAssignedMusician().get().getShortcut());
                     if (assignedMusician.isPresent()) {
                         this.dutyScheduleManager.removeMusicianFromPosition(
                             this.actualSectionInstrumentation,
@@ -151,7 +150,6 @@ public class DutyScheduleController implements Initializable, Controllable {
                         );
                         this.positionsTable.refresh();
                     }
-                    LOG.debug("after {}", this.selectedDutyPosition.getAssignedMusician().get().getShortcut());
                     return dpmtm;
                 }
             )
