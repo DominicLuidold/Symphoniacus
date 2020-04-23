@@ -47,7 +47,7 @@ public class MusicianDao extends BaseDao<MusicianEntity> {
         this.createEntityManager();
         TypedQuery<MusicianEntity> query = this.entityManager.createQuery(
             "SELECT m FROM MusicianEntity m "
-                + "JOIN FETCH m.dutyPositions "
+                + "LEFT JOIN FETCH m.dutyPositions "
                 + "WHERE m.section = :section",
             MusicianEntity.class
         );

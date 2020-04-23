@@ -30,6 +30,7 @@ import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.util.Duration;
+import javax.swing.text.html.Option;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.controlsfx.control.Notifications;
@@ -251,17 +252,33 @@ public class DutyScheduleController implements Initializable, Controllable {
 
     protected void addMusicianToPosition(
         ActualSectionInstrumentation asi,
-        Musician musician,
+        Musician newMusician,
         DutyPosition dutyPosition
     ) {
+        //TODO Fix OutOfBound Exceptins
+        Optional<Musician> oldMusician = Optional.empty();
+        if (actualSectionInstrumentation.getDuty().getDutyPositions().get(
+            actualSectionInstrumentation
+                .getDuty()
+                .getDutyPositions()
+                .indexOf(dutyPosition)
+        ).getAssignedMusician().isPresent()) {
+            oldMusician = actualSectionInstrumentation.getDuty().getDutyPositions().get(
+                actualSectionInstrumentation
+                    .getDuty()
+                    .getDutyPositions()
+                    .indexOf(dutyPosition)
+            ).getAssignedMusician();
+        }
+
         LOG.debug(
             "New musician for position {} is: {}",
             dutyPosition.getEntity().getInstrumentationPosition().getPositionDescription(),
-            musician.getFullName()
+            newMusician.getFullName()
         );
         this.dutyScheduleManager.assignMusicianToPosition(
             asi,
-            musician,
+            newMusician,
             dutyPosition
         );
         Notifications.create()
@@ -273,6 +290,7 @@ public class DutyScheduleController implements Initializable, Controllable {
 
         // this is obviously not good
         this.initDutyPositionsTableWithMusicians();
+        this.initMusicianTableWithoutRequests();
     }
 
     private void setActualPosition(DutyPosition dutyPosition) {
