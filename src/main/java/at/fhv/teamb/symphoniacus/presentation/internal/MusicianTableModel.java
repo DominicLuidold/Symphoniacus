@@ -25,6 +25,10 @@ public class MusicianTableModel {
         return this.musician.getFullName();
     }
 
+    /**
+     * Gets the points from the Musician.
+     * @return value of Points of Musician.
+     */
     public Integer getPoints() {
         try {
             return this.musician.getPoints().getValue();

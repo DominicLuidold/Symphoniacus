@@ -16,6 +16,10 @@ public class DutyPositionMusicianTableModel {
         this.dutyPosition = dutyPosition;
     }
 
+    /**
+     * Returns the position description.
+     * @return
+     */
     public String getRole() {
         return this.dutyPosition
             .getEntity()
@@ -23,6 +27,10 @@ public class DutyPositionMusicianTableModel {
             .getPositionDescription();
     }
 
+    /**
+     * Returns the musician Shortcut.
+     * @return
+     */
     public String getMusicanShortcut() {
 
         if (this.dutyPosition.getAssignedMusician().isPresent()) {

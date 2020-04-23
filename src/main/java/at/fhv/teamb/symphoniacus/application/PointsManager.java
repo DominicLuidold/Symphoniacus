@@ -30,6 +30,9 @@ public class PointsManager {
     private ContractualObligationDao conDao;
     private DutyCategoryChangeLogDao dutyCatChangeDao;
 
+    /**
+     * TODO JavaDoc.
+     */
     public PointsManager() {
         dutyDao = new DutyDao();
         conDao = new ContractualObligationDao();

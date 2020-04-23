@@ -9,12 +9,16 @@ import javafx.scene.control.TableColumn;
 import javafx.util.Callback;
 
 /**
+ * TODO Zusammenfassung.
  * @author Valentin
  */
 public class ActionButtonTableCell<S> extends TableCell<S, Button> {
 
     private final Button actionButton;
 
+    /**
+     * TODO Funktionsbeschreibung.
+     */
     public ActionButtonTableCell(String label, Function<S, S> function) {
         this.getStyleClass().add("action-button-table-cell");
 
