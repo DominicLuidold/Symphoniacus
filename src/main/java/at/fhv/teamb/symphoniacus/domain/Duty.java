@@ -61,8 +61,7 @@ public class Duty {
         // Remove the current duty from the list of possible conflicts
         dutiesOfThisDay.remove(this);
 
-        // Mark all musicians as available if they're not already assigned to a duty position of
-        // this duty
+        // Mark all musicians as unavailable that are already assigned to another duty position
         for (DutyPosition possibleConflict : this.getDutyPositions()) {
             if (possibleConflict.getAssignedMusician().isPresent()) {
                 availableMusicians.remove(possibleConflict.getAssignedMusician().get());
