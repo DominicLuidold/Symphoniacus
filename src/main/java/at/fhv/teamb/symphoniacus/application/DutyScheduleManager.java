@@ -89,13 +89,12 @@ public class DutyScheduleManager {
      * @param position     The position to determine musicians for
      * @param withRequests Indicator whether musicians with duty requests should be part of the list
      * @return A List of available musicians for the given duty position
-     * @throws IllegalStateException if a Musician or Points object has an illegal state
      */
     public List<Musician> getMusiciansAvailableForPosition(
         Duty duty,
         DutyPosition position,
         boolean withRequests
-    ) throws IllegalStateException {
+    ) {
         if (position == null) {
             LOG.error("Fetching available musicians not possible - duty position is null");
             return new LinkedList<>();
@@ -110,17 +109,12 @@ public class DutyScheduleManager {
             this.musicianDao.findAllWithSection(position.getEntity().getSection())
         ) {
             // Get points for musician
-            Optional<Points> points = this.pointsManager.getBalanceFromMusician(
+            Points points = this.pointsManager.getBalanceFromMusician(
                 entity,
                 duty.getEntity().getStart().toLocalDate()
             );
 
-            // Throw exception if points are missing
-            if (points.isEmpty()) {
-                throw new IllegalStateException("Points for musician cannot be calculated");
-            }
-
-            sectionMusicians.add(new Musician(entity, points.get()));
+            sectionMusicians.add(new Musician(entity, points));
         }
 
         // Get all duties that occur at the same day
