@@ -144,7 +144,8 @@ public class DutyScheduleController implements Initializable, Controllable {
 
                     LOG.debug("before {}", this.selectedDutyPosition.getAssignedMusician().get().getShortcut());
                     if (assignedMusician.isPresent()) {
-                        this.actualSectionInstrumentation.removeMusicianFromPosition(
+                        this.dutyScheduleManager.removeMusicianFromPosition(
+                            this.actualSectionInstrumentation,
                             assignedMusician.get(),
                             this.selectedDutyPosition
                         );
