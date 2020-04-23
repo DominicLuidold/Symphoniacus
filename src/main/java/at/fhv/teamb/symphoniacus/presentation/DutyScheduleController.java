@@ -6,7 +6,7 @@ import at.fhv.teamb.symphoniacus.domain.Duty;
 import at.fhv.teamb.symphoniacus.domain.DutyPosition;
 import at.fhv.teamb.symphoniacus.domain.Musician;
 import at.fhv.teamb.symphoniacus.domain.Section;
-import at.fhv.teamb.symphoniacus.presentation.internal.ActionButtonTableCell;
+import at.fhv.teamb.symphoniacus.presentation.internal.ScheduleButtonTableCell;
 import at.fhv.teamb.symphoniacus.presentation.internal.DutyPositionMusicianTableModel;
 import at.fhv.teamb.symphoniacus.presentation.internal.MusicianTableModel;
 import java.net.URL;
@@ -30,7 +30,6 @@ import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.util.Duration;
-import javax.swing.text.html.Option;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.controlsfx.control.Notifications;
@@ -71,6 +70,9 @@ public class DutyScheduleController implements Initializable, Controllable {
     @FXML
     private TableColumn<MusicianTableModel, Button> columnSchedule2;
 
+    @FXML
+    private TableColumn<DutyPositionMusicianTableModel, Button> columnUnsetPosition;
+
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         this.registerController();
@@ -100,7 +102,6 @@ public class DutyScheduleController implements Initializable, Controllable {
                 }
             );
 
-
         this.musicianTableWithoutRequests.setOnMouseClicked((MouseEvent event) -> {
             // add selected item click listener
             if (event.getButton().equals(MouseButton.PRIMARY) && event.getClickCount() == 2) {
@@ -116,7 +117,7 @@ public class DutyScheduleController implements Initializable, Controllable {
         });
 
         this.columnSchedule2.setCellFactory(
-            ActionButtonTableCell.<MusicianTableModel>forTableColumn(
+            ScheduleButtonTableCell.<MusicianTableModel>forTableColumn(
                 "Schedule",
                 (MusicianTableModel mtm) -> {
                     LOG.debug("Schedule btn without requests has been pressed");
@@ -126,6 +127,30 @@ public class DutyScheduleController implements Initializable, Controllable {
                         this.selectedDutyPosition
                     );
                     return mtm;
+                }
+            )
+        );
+
+        this.columnUnsetPosition.setCellFactory(
+            ScheduleButtonTableCell.<DutyPositionMusicianTableModel>forTableColumn(
+                "Unset",
+                (DutyPositionMusicianTableModel dpmtm) -> {
+                    LOG.debug("Unset musician button has been pressed");
+
+                    Optional<Musician> assignedMusician = dpmtm.getDutyPosition()
+                        .getAssignedMusician();
+
+                    this.selectedDutyPosition = dpmtm.getDutyPosition();
+
+                    if (assignedMusician.isPresent()) {
+                        this.actualSectionInstrumentation.removeMusicianFromPosition(
+                            assignedMusician.get(),
+                            this.selectedDutyPosition
+                        );
+                        this.positionsTable.refresh();
+                    }
+
+                    return dpmtm;
                 }
             )
         );
@@ -235,6 +260,7 @@ public class DutyScheduleController implements Initializable, Controllable {
             return;
         }
         this.actualSectionInstrumentation = actualSectionInstrumentation.get();
+        this.duty = this.actualSectionInstrumentation.getDuty();
 
         ObservableList<DutyPositionMusicianTableModel> observablePositionList =
             FXCollections.observableArrayList();

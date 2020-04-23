@@ -1,7 +1,6 @@
 package at.fhv.teamb.symphoniacus.presentation.internal;
 
 import java.util.function.Function;
-import javafx.beans.property.SimpleBooleanProperty;
 import javafx.event.ActionEvent;
 import javafx.scene.control.Button;
 import javafx.scene.control.TableCell;
@@ -12,14 +11,14 @@ import javafx.util.Callback;
  * TODO Zusammenfassung.
  * @author Valentin
  */
-public class ActionButtonTableCell<S> extends TableCell<S, Button> {
+public class ScheduleButtonTableCell<S> extends TableCell<S, Button> {
 
     private final Button actionButton;
 
     /**
      * TODO Funktionsbeschreibung.
      */
-    public ActionButtonTableCell(String label, Function<S, S> function) {
+    public ScheduleButtonTableCell(String label, Function<S, S> function) {
         this.getStyleClass().add("action-button-table-cell");
 
         this.actionButton = new Button(label);
@@ -35,7 +34,7 @@ public class ActionButtonTableCell<S> extends TableCell<S, Button> {
 
     public static <S> Callback<TableColumn<S, Button>, TableCell<S, Button>> forTableColumn(
         String label, Function<S, S> function) {
-        return param -> new ActionButtonTableCell<>(label, function);
+        return param -> new ScheduleButtonTableCell<>(label, function);
     }
 
     @Override

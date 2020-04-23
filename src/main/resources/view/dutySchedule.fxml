@@ -46,7 +46,9 @@
                         <cellValueFactory>
                             <PropertyValueFactory property="musicanShortcut" />
                         </cellValueFactory>
-                </TableColumn>
+                    </TableColumn>
+                    <TableColumn fx:id="columnUnsetPosition" prefWidth="100" text="%tab.duty.schedule.table.dutyposition.unset">
+                    </TableColumn>
                 </columns>
             </TableView>
             <SplitPane fx:id="rightSplitPane" prefHeight="191.0" prefWidth="523.0" dividerPositions="0.5" orientation="VERTICAL">
