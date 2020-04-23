@@ -6,9 +6,9 @@ import at.fhv.teamb.symphoniacus.domain.Duty;
 import at.fhv.teamb.symphoniacus.domain.DutyPosition;
 import at.fhv.teamb.symphoniacus.domain.Musician;
 import at.fhv.teamb.symphoniacus.domain.Section;
-import at.fhv.teamb.symphoniacus.presentation.internal.ScheduleButtonTableCell;
 import at.fhv.teamb.symphoniacus.presentation.internal.DutyPositionMusicianTableModel;
 import at.fhv.teamb.symphoniacus.presentation.internal.MusicianTableModel;
+import at.fhv.teamb.symphoniacus.presentation.internal.ScheduleButtonTableCell;
 import java.net.URL;
 import java.time.format.DateTimeFormatter;
 import java.util.LinkedList;
@@ -184,8 +184,6 @@ public class DutyScheduleController implements Initializable, Controllable {
     @Override
     public void hide() {
         this.dutySchedule.setVisible(false);
-        //TODO remove listener positionTable
-        //positionsTable.getSelectionModel().clearSelection();
     }
 
     private void initMusicianTableWithoutRequests() {
@@ -248,12 +246,15 @@ public class DutyScheduleController implements Initializable, Controllable {
     }
 
     private void initDutyPositionsTableWithMusicians() {
-        Optional<ActualSectionInstrumentation> actualSectionInstrumentation = this
-            .dutyScheduleManager
-            .getInstrumentationDetails(
-                this.duty,
-                section
-            );
+        Optional<ActualSectionInstrumentation> actualSectionInstrumentation = Optional.empty();
+        if (this.actualSectionInstrumentation == null) {
+            actualSectionInstrumentation = this
+                .dutyScheduleManager
+                .getInstrumentationDetails(
+                    this.duty,
+                    section
+                );
+        }
 
         if (!actualSectionInstrumentation.isPresent()) {
             LOG.error("Found no asi for duty");
@@ -283,24 +284,18 @@ public class DutyScheduleController implements Initializable, Controllable {
     ) {
         //TODO Fix OutOfBound Exceptins
         Optional<Musician> oldMusician = Optional.empty();
-        if (actualSectionInstrumentation.getDuty().getDutyPositions().get(
+
+        oldMusician = actualSectionInstrumentation.getDuty().getDutyPositions().get(
             actualSectionInstrumentation
                 .getDuty()
                 .getDutyPositions()
                 .indexOf(dutyPosition)
-        ).getAssignedMusician().isPresent()) {
-            oldMusician = actualSectionInstrumentation.getDuty().getDutyPositions().get(
-                actualSectionInstrumentation
-                    .getDuty()
-                    .getDutyPositions()
-                    .indexOf(dutyPosition)
-            ).getAssignedMusician();
-        }
+        ).getAssignedMusician();
 
         LOG.debug(
             "New musician for position {} is: {}",
             dutyPosition.getEntity().getInstrumentationPosition().getPositionDescription(),
-            newMusician.getFullName()
+            newMusician.getFullName() + "Old Musician is: " + oldMusician.toString()
         );
         this.dutyScheduleManager.assignMusicianToPosition(
             asi,
