@@ -8,6 +8,7 @@ import at.fhv.teamb.symphoniacus.persistence.model.ContractualObligationEntity;
 import at.fhv.teamb.symphoniacus.persistence.model.DutyCategoryChangelogEntity;
 import at.fhv.teamb.symphoniacus.persistence.model.DutyCategoryEntity;
 import at.fhv.teamb.symphoniacus.persistence.model.DutyEntity;
+import at.fhv.teamb.symphoniacus.persistence.model.DutyPositionEntity;
 import at.fhv.teamb.symphoniacus.persistence.model.MusicianEntity;
 import java.time.LocalDate;
 import java.util.LinkedHashSet;
@@ -26,6 +27,7 @@ import org.apache.logging.log4j.Logger;
  */
 public class PointsManager {
     private static final Logger LOG = LogManager.getLogger(PointsManager.class);
+    private List<DutyEntity> allDuties = new LinkedList<>();
 
     /**
      * Responsible for giving the Debit (Soll-Punkte)
@@ -60,11 +62,17 @@ public class PointsManager {
         DutyCategoryChangeLogDao dutyCatChangeDao = new DutyCategoryChangeLogDao();
 
         // get all duties from a musician in a given month
-        List<DutyEntity> duties = dutyDao.getAllDutiesInRangeFromMusician(musician, month);
+        //List<DutyEntity> duties = dutyDao.getAllDutiesInRangeFromMusician(musician, month);
+        List<DutyEntity> listOfDutiesFromMusician = new LinkedList<>();
+        if (this.allDuties.isEmpty()) {
+            listOfDutiesFromMusician = dutyDao.getAllDutiesInRangeFromMusician(musician,month);
+        } else {
+           listOfDutiesFromMusician = this.getAllDutiesFromMusician(musician);
+        }
         Set<DutyCategoryEntity> dutyCategories = new LinkedHashSet<>();
 
         // get all dutyCategories to all duties
-        for (DutyEntity d : duties) {
+        for (DutyEntity d : listOfDutiesFromMusician) {
             dutyCategories.add(d.getDutyCategory());
         }
 
@@ -78,7 +86,19 @@ public class PointsManager {
                 dutyCategoryChangelogs.addAll(changelogEntityList);
             }
         }
-        return (Points.calcGainedPoints(duties, dutyCategoryChangelogs));
+        return (Points.calcGainedPoints(listOfDutiesFromMusician, dutyCategoryChangelogs));
+    }
+
+    private List<DutyEntity> getAllDutiesFromMusician(MusicianEntity musician) {
+        List<DutyEntity> duties = new LinkedList<>();
+        for (DutyEntity duty : this.allDuties) {
+            for (DutyPositionEntity dp : musician.getDutyPositions()) {
+                if (duty.getDutyCategory().getDutyCategoryId().equals(dp.getDutyPositionId())) {
+                    duties.add(duty);
+                }
+            }
+        }
+        return duties;
     }
 
     /**
@@ -102,4 +122,5 @@ public class PointsManager {
         }
         return Points.calcBalancePoints(duties, dutyCategories);
     }
+
 }
