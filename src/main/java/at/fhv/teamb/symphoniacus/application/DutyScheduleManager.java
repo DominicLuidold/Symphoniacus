@@ -109,7 +109,9 @@ public class DutyScheduleManager {
             // Get all Musician entities from database and convert them
             this.sectionMusicians = new LinkedList<>();
             for (MusicianEntity entity :
-                this.musicianDao.findAllWithSectionAndActiveContract(position.getEntity().getSection())
+                this.musicianDao.findAllWithSectionAndActiveContract(
+                    position.getEntity().getSection()
+                )
             ) {
                 // Get points for musician
                 Points points = this.pointsManager.getBalanceFromMusician(
