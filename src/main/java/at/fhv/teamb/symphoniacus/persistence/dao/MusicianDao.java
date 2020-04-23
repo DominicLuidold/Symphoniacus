@@ -1,8 +1,10 @@
 package at.fhv.teamb.symphoniacus.persistence.dao;
 
 import at.fhv.teamb.symphoniacus.persistence.BaseDao;
+import at.fhv.teamb.symphoniacus.persistence.model.ContractualObligationEntity;
 import at.fhv.teamb.symphoniacus.persistence.model.MusicianEntity;
 import at.fhv.teamb.symphoniacus.persistence.model.SectionEntity;
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 import javax.persistence.EntityGraph;
@@ -38,20 +40,27 @@ public class MusicianDao extends BaseDao<MusicianEntity> {
     }
 
     /**
-     * Finds all {@link MusicianEntity} objects based on provided {@link SectionEntity}.
+     * Finds all {@link MusicianEntity} objects with an active {@link ContractualObligationEntity}
+     * based on provided {@link SectionEntity}.
      *
      * @param section The section to use
-     * @return A List of musicians belonging to the section
+     * @return A List of active musicians belonging to the section
      */
-    public List<MusicianEntity> findAllWithSection(SectionEntity section) {
+    public List<MusicianEntity> findAllWithSectionAndActiveContract(SectionEntity section) {
         this.createEntityManager();
         TypedQuery<MusicianEntity> query = this.entityManager.createQuery(
             "SELECT m FROM MusicianEntity m "
+                + "JOIN FETCH m.user "
                 + "LEFT JOIN FETCH m.dutyPositions "
-                + "WHERE m.section = :section",
+                + "INNER JOIN m.contractualObligations c "
+                + "WHERE m.section = :section "
+                + "AND c.startDate <= :startDate "
+                + "AND c.endDate >= :endDate",
             MusicianEntity.class
         );
         query.setParameter("section", section);
+        query.setParameter("startDate", LocalDate.now());
+        query.setParameter("endDate", LocalDate.now());
         List<MusicianEntity> result = query.getResultList();
         this.tearDown();
 
