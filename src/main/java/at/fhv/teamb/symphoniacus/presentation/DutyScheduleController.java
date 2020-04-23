@@ -55,6 +55,9 @@ public class DutyScheduleController implements Initializable, Controllable {
     private Label dutyTitle;
 
     @FXML
+    private Label labelCurrentPosition;
+
+    @FXML
     private TableView<DutyPositionMusicianTableModel> positionsTable;
 
     @FXML
@@ -335,6 +338,14 @@ public class DutyScheduleController implements Initializable, Controllable {
         // TODO enable this when requests are implemented
         // this.initMusicianTableWithRequests();
         this.initMusicianTableWithoutRequests();
+
+        this.labelCurrentPosition.textProperty().bindBidirectional(
+            new SimpleStringProperty(
+                "Current position: " +
+                    this.selectedDutyPosition
+                        .getEntity().getInstrumentationPosition().getPositionDescription()
+            )
+        );
     }
 
     private void closeDutySchedule() {

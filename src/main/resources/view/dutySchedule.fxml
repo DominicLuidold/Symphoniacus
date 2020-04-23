@@ -35,7 +35,7 @@
            <Insets top="5" right="5" bottom="5" left="5" />
        </padding>
        <items>
-            <TableView fx:id="positionsTable" prefHeight="360.0" prefWidth="241.0">
+            <TableView fx:id="positionsTable">
                 <columns>
                     <TableColumn fx:id="role"  prefWidth="120.0" text="%tab.duty.schedule.table.dutyrole.role" >
                         <cellValueFactory>
@@ -56,6 +56,11 @@
                     <Insets top="5" right="5" bottom="5" left="5" />
                 </padding>
                 <VBox>
+                    <Label fx:id="labelCurrentPosition" text="Current Position:">
+                        <font>
+                            <Font size="24" />
+                        </font>
+                    </Label>
                     <Label text="%tab.duty.schedule.table.musicians.without.request">
                         <font>
                             <Font size="18" />
