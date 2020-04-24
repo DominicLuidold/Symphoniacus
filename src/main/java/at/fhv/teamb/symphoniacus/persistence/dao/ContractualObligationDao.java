@@ -43,7 +43,7 @@ public class ContractualObligationDao extends BaseDao<ContractualObligationEntit
      * @param musician given musician contains musician.Id
      * @return ContractualObligationEntity
      */
-    public Optional<ContractualObligationEntity> getContractualObligation(MusicianEntity musician) {
+    public ContractualObligationEntity getContractualObligation(MusicianEntity musician) {
         this.createEntityManager();
         TypedQuery<ContractualObligationEntity> query = this.entityManager.createQuery(
             "SELECT co FROM ContractualObligationEntity co "
@@ -54,17 +54,9 @@ public class ContractualObligationDao extends BaseDao<ContractualObligationEntit
         );
         query.setParameter("musician", musician);
         query.setParameter("currentDate", LocalDate.now());
-        //TODO - check if returning object is valid
         ContractualObligationEntity co = query.getSingleResult();
         this.tearDown();
 
-        if (co.getMusician().getMusicianId().equals(musician.getMusicianId())) {
-            return Optional.of(co);
-        } else {
-            LOG.error(
-                "ContractualObligation.musicianId is not the same as givenMusician.musicianId"
-            );
-            return Optional.empty();
-        }
+        return co;
     }
 }
