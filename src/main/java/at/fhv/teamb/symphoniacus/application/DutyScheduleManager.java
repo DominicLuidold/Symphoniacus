@@ -35,6 +35,8 @@ public class DutyScheduleManager {
     private final PointsManager pointsManager;
     private final Set<Musician> setMusicians;
     private final Set<Musician> unsetMusicians;
+    private List<Duty> dutiesOfThisDay;
+    private List<MusicianEntity> sectionMusicianEntities;
     private Set<Musician> sectionMusicians;
 
     /**
@@ -109,13 +111,22 @@ public class DutyScheduleManager {
 
         // Fetch section musicians from database if not present
         if (this.sectionMusicians == null) {
-            // Get all Musician entities from database and convert them
+            // Get musician entities from database
             this.sectionMusicians = new HashSet<>();
-            for (MusicianEntity entity :
-                this.musicianDao.findAllWithSectionAndActiveContract(
+            if (this.sectionMusicianEntities == null) {
+                this.sectionMusicianEntities = this.musicianDao.findAllWithSectionAndActiveContract(
                     position.getEntity().getSection()
-                )
-            ) {
+                );
+            }
+
+            // Tell PointsManager to cache duties locally
+            this.pointsManager.loadAllDutiesOfMusicians(
+                this.sectionMusicianEntities,
+                duty.getEntity().getStart().toLocalDate()
+            );
+
+            // Convert musician entities to domain objects
+            for (MusicianEntity entity : this.sectionMusicianEntities) {
                 // Get points for musician
                 Optional<Points> points = this.pointsManager.getBalanceFromMusician(
                     entity,
@@ -131,17 +142,20 @@ public class DutyScheduleManager {
             }
         }
 
-        // Get all duties that occur at the same day
-        List<Duty> dutiesOfThisDay = DutyManager.convertEntitiesToDomainObjects(
-            this.dutyDao.findAllInRange(
-                LocalDateTime.of(duty.getEntity().getStart().toLocalDate(), LocalTime.MIN),
-                LocalDateTime.of(duty.getEntity().getStart().toLocalDate(), LocalTime.MAX)
-            )
-        );
+        // Fetch duties from database if not present
+        if (this.dutiesOfThisDay == null) {
+            // Get all duties that occur at the same day
+            this.dutiesOfThisDay = DutyManager.convertEntitiesToDomainObjects(
+                this.dutyDao.findAllInRange(
+                    LocalDateTime.of(duty.getEntity().getStart().toLocalDate(), LocalTime.MIN),
+                    LocalDateTime.of(duty.getEntity().getStart().toLocalDate(), LocalTime.MAX)
+                )
+            );
+        }
 
         return duty.determineAvailableMusicians(
             this.sectionMusicians,
-            dutiesOfThisDay,
+            this.dutiesOfThisDay,
             this.setMusicians,
             this.unsetMusicians
         );
