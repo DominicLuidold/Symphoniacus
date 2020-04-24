@@ -48,6 +48,9 @@ public class DutyScheduleController implements Initializable, Controllable {
     private DutyPosition selectedDutyPosition;
 
     @FXML
+    public Button scheduleSaveBtn;
+
+    @FXML
     private AnchorPane dutySchedule;
 
     @FXML
@@ -86,6 +89,11 @@ public class DutyScheduleController implements Initializable, Controllable {
         this.dutyScheduleManager = new DutyScheduleManager();
 
         this.dutySchedule.setVisible(false);
+
+        this.scheduleSaveBtn.setOnAction(e -> {
+            this.dutyScheduleManager.persist(this.actualSectionInstrumentation);
+        });
+
         this.scheduleBackBtn.setOnAction(e -> {
             closeDutySchedule();
         });
