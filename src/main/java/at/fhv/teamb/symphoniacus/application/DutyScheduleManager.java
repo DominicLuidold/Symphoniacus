@@ -162,6 +162,27 @@ public class DutyScheduleManager {
     }
 
     /**
+     * Assigns a {@link Musician} to a {@link DutyPosition} and removes the old.
+     *
+     * @param actualSectionInstrumentation The actual section instrumentation to use
+     * @param newMusician                  The musician to assign
+     * @param oldMusician                  The musician to remove
+     * @param position                     The duty position to use
+     */
+    public void assignMusicianToPosition(
+        ActualSectionInstrumentation actualSectionInstrumentation,
+        Musician newMusician,
+        Musician oldMusician,
+        DutyPosition position
+    ) {
+        // Update local musician list
+        this.unsetMusicians.add(oldMusician);
+
+        // Delegate to default method
+        this.assignMusicianToPosition(actualSectionInstrumentation, newMusician, position);
+    }
+
+    /**
      * Assigns a {@link Musician} to a {@link DutyPosition}.
      *
      * @param actualSectionInstrumentation The actual section instrumentation to use

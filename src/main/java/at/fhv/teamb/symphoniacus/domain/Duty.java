@@ -85,9 +85,11 @@ public class Duty {
 
         // Mark all musicians as unavailable that are locally already assigned to a duty position
         availableMusicians.removeAll(locallySetMusicians);
+        locallySetMusicians.clear();
 
         // Mark all musicians as available that are locally not assigned to a duty position anymore
         availableMusicians.addAll(locallyUnsetMusicians);
+        locallyUnsetMusicians.clear();
 
         return availableMusicians;
     }

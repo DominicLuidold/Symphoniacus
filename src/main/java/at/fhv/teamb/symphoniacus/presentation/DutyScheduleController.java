@@ -315,25 +315,32 @@ public class DutyScheduleController implements Initializable, Controllable {
             return;
         }
 
-        //TODO Fix OutOfBound Exceptins
-        Optional<Musician> oldMusician = Optional.empty();
         if (dutyPosition.getAssignedMusician().isPresent()) {
-            oldMusician = dutyPosition.getAssignedMusician();
+            this.dutyScheduleManager.assignMusicianToPosition(
+                asi,
+                newMusician,
+                dutyPosition.getAssignedMusician().get(),
+                dutyPosition
+            );
+            LOG.debug(
+                "New musician for position {} is: {} and oldMusician id {}",
+                dutyPosition.getEntity().getInstrumentationPosition().getPositionDescription(),
+                newMusician.getFullName(),
+                dutyPosition.getAssignedMusician().get()
+            );
+        } else {
+            this.dutyScheduleManager.assignMusicianToPosition(
+                asi,
+                newMusician,
+                dutyPosition
+            );
+            LOG.debug(
+                "New musician for position {} is: {}",
+                dutyPosition.getEntity().getInstrumentationPosition().getPositionDescription(),
+                newMusician.getFullName()
+            );
         }
 
-        LOG.debug(
-            "New musician for position {} is: {} and oldMusician id {}",
-            dutyPosition.getEntity().getInstrumentationPosition().getPositionDescription(),
-            newMusician.getFullName(),
-            (oldMusician.isPresent()
-                ? oldMusician.get().getFullName() : "Nixe gefunde diese musiker")
-        );
-
-        this.dutyScheduleManager.assignMusicianToPosition(
-            asi,
-            newMusician,
-            dutyPosition
-        );
         Notifications.create()
             .title("Musician set")
             .text("Duty position has been updated.")
