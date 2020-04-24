@@ -15,6 +15,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Optional;
 import java.util.ResourceBundle;
+import java.util.Set;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -189,7 +190,7 @@ public class DutyScheduleController implements Initializable, Controllable {
     }
 
     private void initMusicianTableWithoutRequests() {
-        List<Musician> list = this.dutyScheduleManager.getMusiciansAvailableForPosition(
+        Set<Musician> list = this.dutyScheduleManager.getMusiciansAvailableForPosition(
             this.actualSectionInstrumentation.getDuty(),
             this.selectedDutyPosition,
             Boolean.FALSE
@@ -229,7 +230,7 @@ public class DutyScheduleController implements Initializable, Controllable {
     }
 
     private void initMusicianTableWithRequests() {
-        List<Musician> list = this.dutyScheduleManager.getMusiciansAvailableForPosition(
+        Set<Musician> list = this.dutyScheduleManager.getMusiciansAvailableForPosition(
             this.actualSectionInstrumentation.getDuty(),
             this.selectedDutyPosition,
             Boolean.TRUE

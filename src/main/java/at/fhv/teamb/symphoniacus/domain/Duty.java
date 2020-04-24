@@ -2,11 +2,13 @@ package at.fhv.teamb.symphoniacus.domain;
 
 import at.fhv.teamb.symphoniacus.persistence.model.DutyEntity;
 import java.util.Collections;
+import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Locale;
 import java.util.Objects;
 import java.util.ResourceBundle;
+import java.util.Set;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -44,19 +46,19 @@ public class Duty {
      * Determines which {@link Musician}s are available for a given {@link DutyPosition} that
      * belongs to this {@link Duty}.
      *
-     * @param allSectionMusicians   A List of all {@link Section} musicians
-     * @param dutiesOfThisDay       A list of duties
-     * @param locallySetMusicians   A List of musicians locally assigned to a duty position
-     * @param locallyUnsetMusicians A list of musicians locally removed from a duty position
-     * @return A List of musicians that are available for a given position
+     * @param allSectionMusicians   A Set of all {@link Section} musicians
+     * @param dutiesOfThisDay       A List of duties
+     * @param locallySetMusicians   A Set of musicians locally assigned to a duty position
+     * @param locallyUnsetMusicians A Set of musicians locally removed from a duty position
+     * @return A Set of musicians that are available for a given position
      */
-    public List<Musician> determineAvailableMusicians(
-        List<Musician> allSectionMusicians,
+    public Set<Musician> determineAvailableMusicians(
+        Set<Musician> allSectionMusicians,
         List<Duty> dutiesOfThisDay,
-        List<Musician> locallySetMusicians,
-        List<Musician> locallyUnsetMusicians
+        Set<Musician> locallySetMusicians,
+        Set<Musician> locallyUnsetMusicians
     ) {
-        List<Musician> availableMusicians = new LinkedList<>(allSectionMusicians);
+        Set<Musician> availableMusicians = new HashSet<>(allSectionMusicians);
 
         // Remove the current duty from the list of possible conflicts
         dutiesOfThisDay.remove(this);
@@ -146,5 +148,24 @@ public class Duty {
 
     public DutyEntity getEntity() {
         return this.entity;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        // Return true if object is compared with itself
+        if (obj == this) {
+            return true;
+        }
+
+        // Check if object is an instance of Musician or not
+        if (!(obj instanceof Duty)) {
+            return false;
+        }
+
+        // Typecast obj to Musician to compare data members
+        Duty d = (Duty) obj;
+
+        // Compare data members and return accordingly
+        return this.entity.getDutyId().equals(d.getEntity().getDutyId());
     }
 }

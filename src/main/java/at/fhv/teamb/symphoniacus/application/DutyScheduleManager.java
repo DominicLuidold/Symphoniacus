@@ -13,9 +13,11 @@ import at.fhv.teamb.symphoniacus.persistence.model.DutyPositionEntity;
 import at.fhv.teamb.symphoniacus.persistence.model.MusicianEntity;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
+import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -31,9 +33,9 @@ public class DutyScheduleManager {
     private final DutyPositionDao dutyPositionDao;
     private final MusicianDao musicianDao;
     private final PointsManager pointsManager;
-    private final List<Musician> setMusicians;
-    private final List<Musician> unsetMusicians;
-    private List<Musician> sectionMusicians;
+    private final Set<Musician> setMusicians;
+    private final Set<Musician> unsetMusicians;
+    private Set<Musician> sectionMusicians;
 
     /**
      * Initialize the DutyScheduleManager.
@@ -42,8 +44,8 @@ public class DutyScheduleManager {
         this.dutyDao = new DutyDao();
         this.dutyPositionDao = new DutyPositionDao();
         this.musicianDao = new MusicianDao();
-        this.setMusicians = new LinkedList<>();
-        this.unsetMusicians = new LinkedList<>();
+        this.setMusicians = new HashSet<>();
+        this.unsetMusicians = new HashSet<>();
         this.pointsManager = new PointsManager();
     }
 
@@ -84,21 +86,21 @@ public class DutyScheduleManager {
     }
 
     /**
-     * Returns a List of {@link Musician}s that are available for a given {@link DutyPosition}.
+     * Returns a Set of {@link Musician}s that are available for a given {@link DutyPosition}.
      *
      * @param duty         The currently edited duty
      * @param position     The position to determine musicians for
      * @param withRequests Indicator whether musicians with duty requests should be part of the list
-     * @return A List of available musicians for the given duty position
+     * @return A Set of available musicians for the given duty position
      */
-    public List<Musician> getMusiciansAvailableForPosition(
+    public Set<Musician> getMusiciansAvailableForPosition(
         Duty duty,
         DutyPosition position,
         boolean withRequests
     ) {
         if (position == null) {
             LOG.error("Fetching available musicians not possible - duty position is null");
-            return new LinkedList<>();
+            return new HashSet<>();
         }
         if (withRequests) {
             throw new UnsupportedOperationException("Not yet implemented");
@@ -107,7 +109,7 @@ public class DutyScheduleManager {
         // Fetch section musicians from database if not present
         if (this.sectionMusicians == null) {
             // Get all Musician entities from database and convert them
-            this.sectionMusicians = new LinkedList<>();
+            this.sectionMusicians = new HashSet<>();
             for (MusicianEntity entity :
                 this.musicianDao.findAllWithSectionAndActiveContract(
                     position.getEntity().getSection()

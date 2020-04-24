@@ -5,6 +5,7 @@ import at.fhv.teamb.symphoniacus.persistence.model.DutyPositionEntity;
 import at.fhv.teamb.symphoniacus.persistence.model.MusicianEntity;
 import at.fhv.teamb.symphoniacus.persistence.model.UserEntity;
 import java.util.List;
+import java.util.Objects;
 
 /**
  * Domain object for Musician.
@@ -85,6 +86,11 @@ public class Musician {
         Musician m = (Musician) obj;
 
         // Compare data members and return accordingly
-        return entity.getMusicianId().equals(m.getEntity().getMusicianId());
+        return this.entity.getMusicianId().equals(m.getEntity().getMusicianId());
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(this.userEntity.getUserId(), this.entity.getMusicianId());
     }
 }
