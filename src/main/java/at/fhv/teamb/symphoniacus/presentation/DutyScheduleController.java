@@ -392,7 +392,6 @@ public class DutyScheduleController implements Initializable, Controllable {
                 this.dutyScheduleManager,
                 this.actualSectionInstrumentation
             );
-            this.dutyScheduleManager.discardChanges(this.actualSectionInstrumentation);
             this.actualSectionInstrumentation = null;
             this.dutyScheduleManager = null;
             this.selectedDutyPosition = null;
