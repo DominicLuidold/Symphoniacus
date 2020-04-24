@@ -152,6 +152,7 @@ public class DutyScheduleController implements Initializable, Controllable {
                             assignedMusician.get(),
                             this.selectedDutyPosition
                         );
+                        this.initMusicianTableWithoutRequests();
                         this.positionsTable.refresh();
                     }
                     return dpmtm;
