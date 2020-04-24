@@ -27,7 +27,12 @@ import org.apache.logging.log4j.Logger;
  */
 public class PointsManager {
     private static final Logger LOG = LogManager.getLogger(PointsManager.class);
-    private List<DutyEntity> allDuties = new LinkedList<>();
+    private Set<DutyEntity> allDuties;
+
+    public void loadAllDutiesOfMusicians(List<MusicianEntity> musicians, LocalDate month) {
+        DutyDao dutyDao = new DutyDao();
+        allDuties = dutyDao.getAllDutiesOfMusicians(musicians,month);
+    }
 
     /**
      * Responsible for giving the Debit (Soll-Punkte)
@@ -64,7 +69,9 @@ public class PointsManager {
         // get all duties from a musician in a given month
         //List<DutyEntity> duties = dutyDao.getAllDutiesInRangeFromMusician(musician, month);
         List<DutyEntity> listOfDutiesFromMusician = new LinkedList<>();
-        if (this.allDuties.isEmpty()) {
+        // Beware! if allDuties isn't loaded this method will load
+        // the musicians individually from the DAO
+        if (this.allDuties == null) {
             listOfDutiesFromMusician = dutyDao.getAllDutiesInRangeFromMusician(musician,month);
         } else {
            listOfDutiesFromMusician = this.getAllDutiesFromMusician(musician);
@@ -92,8 +99,9 @@ public class PointsManager {
     private List<DutyEntity> getAllDutiesFromMusician(MusicianEntity musician) {
         List<DutyEntity> duties = new LinkedList<>();
         for (DutyEntity duty : this.allDuties) {
-            for (DutyPositionEntity dp : musician.getDutyPositions()) {
-                if (duty.getDutyCategory().getDutyCategoryId().equals(dp.getDutyPositionId())) {
+            for (DutyPositionEntity dpM : musician.getDutyPositions()) {
+                for (DutyPositionEntity dp : duty.getDutyPositions())
+                if (dpM.getDutyPositionId().equals(dp.getDutyPositionId())) {
                     duties.add(duty);
                 }
             }

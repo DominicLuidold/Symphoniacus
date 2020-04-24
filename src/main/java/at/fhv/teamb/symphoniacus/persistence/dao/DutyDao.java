@@ -4,11 +4,14 @@ import at.fhv.teamb.symphoniacus.persistence.BaseDao;
 import at.fhv.teamb.symphoniacus.persistence.model.DutyEntity;
 import at.fhv.teamb.symphoniacus.persistence.model.MusicianEntity;
 import at.fhv.teamb.symphoniacus.persistence.model.SectionEntity;
+import java.sql.ResultSet;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.YearMonth;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 import javax.persistence.TypedQuery;
 
 /**
@@ -171,6 +174,32 @@ public class DutyDao extends BaseDao<DutyEntity> {
         this.tearDown();
 
         return dutyCategories;
+    }
+
+    public Set<DutyEntity> getAllDutiesOfMusicians(List<MusicianEntity> musicians,
+                                                   LocalDate month) {
+        this.createEntityManager();
+        YearMonth yearMonth = YearMonth.from(month);
+        LocalDate start = yearMonth.atDay(1); // Find first day of month
+        LocalDate end = yearMonth.atEndOfMonth(); // Find last day of month
+        LocalDateTime startWithTime = start.atStartOfDay();
+        LocalDateTime endWithTime = end.atStartOfDay();
+
+        TypedQuery<DutyEntity> query = this.entityManager.createQuery(""
+                + "SELECT d FROM DutyEntity d "
+                + "INNER JOIN d.dutyPositions dp "
+                + "INNER JOIN dp.musician m "
+                + "WHERE d.end <= :end AND d.start >= :start AND m IN :musicians",
+            DutyEntity.class);
+
+        query.setParameter("start", startWithTime);
+        query.setParameter("end", endWithTime);
+        query.setParameter("musicians", musicians);
+
+        Set<DutyEntity> duties = new LinkedHashSet<>();
+        duties.addAll(query.getResultList());
+
+        return duties;
     }
 
     /**
