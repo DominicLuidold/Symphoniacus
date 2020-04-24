@@ -83,7 +83,7 @@ public class DutyScheduleController implements Initializable, Controllable {
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         this.registerController();
-        this.dutyScheduleManager = new DutyScheduleManager();
+        this.dutyScheduleManager = null;
 
         this.dutySchedule.setVisible(false);
         this.scheduleBackBtn.setOnAction(e -> {
@@ -125,7 +125,7 @@ public class DutyScheduleController implements Initializable, Controllable {
                 "Schedule",
                 (MusicianTableModel mtm) -> {
                     LOG.debug("Schedule btn without requests has been pressed");
-                    addMusicianToPosition(
+                    this.addMusicianToPosition(
                         this.actualSectionInstrumentation,
                         mtm.getMusician(),
                         this.selectedDutyPosition
@@ -147,16 +147,7 @@ public class DutyScheduleController implements Initializable, Controllable {
                     this.selectedDutyPosition = dpmtm.getDutyPosition();
 
                     if (assignedMusician.isPresent()) {
-                        this.dutyScheduleManager.getMusiciansAvailableForPosition(
-                            this.duty,
-                            this.selectedDutyPosition,
-                            Boolean.FALSE
-                        );
-                        this.dutyScheduleManager.removeMusicianFromPosition(
-                            this.actualSectionInstrumentation,
-                            assignedMusician.get(),
-                            this.selectedDutyPosition
-                        );
+                        this.removeMusicianFromPosition(assignedMusician.get());
                         this.initMusicianTableWithoutRequests();
                         this.positionsTable.refresh();
                     }
@@ -271,18 +262,23 @@ public class DutyScheduleController implements Initializable, Controllable {
         MasterController mc = MasterController.getInstance();
         mc.showStatusBarLoading();
 
-        Optional<ActualSectionInstrumentation> actualSectionInstrumentation = this
-            .dutyScheduleManager
-            .getInstrumentationDetails(
-                this.duty,
-                section
-            );
 
-        if (!actualSectionInstrumentation.isPresent()) {
-            LOG.error("Found no asi for duty");
-            return;
+        if (actualSectionInstrumentation == null) {
+            Optional<ActualSectionInstrumentation> actualSectionInstrumentation = this
+                .dutyScheduleManager
+                .getInstrumentationDetails(
+                    this.duty,
+                    section
+                );
+            if (actualSectionInstrumentation.isEmpty()) {
+                LOG.error("Found no asi for duty");
+                return;
+            } else {
+                this.actualSectionInstrumentation = actualSectionInstrumentation.get();
+            }
         }
-        this.actualSectionInstrumentation = actualSectionInstrumentation.get();
+
+
         this.duty = this.actualSectionInstrumentation.getDuty();
 
         ObservableList<DutyPositionMusicianTableModel> observablePositionList =
@@ -352,6 +348,19 @@ public class DutyScheduleController implements Initializable, Controllable {
         this.initMusicianTableWithoutRequests();
     }
 
+    private void removeMusicianFromPosition(Musician musician) {
+        this.dutyScheduleManager.getMusiciansAvailableForPosition(
+            this.duty,
+            this.selectedDutyPosition,
+            Boolean.FALSE
+        );
+        this.dutyScheduleManager.removeMusicianFromPosition(
+            this.actualSectionInstrumentation,
+            musician,
+            this.selectedDutyPosition
+        );
+    }
+
     private void setActualPosition(DutyPosition dutyPosition) {
         LOG.debug("Current DutyPosition: " + dutyPosition
             .getEntity()
@@ -360,8 +369,6 @@ public class DutyScheduleController implements Initializable, Controllable {
         );
 
         this.selectedDutyPosition = dutyPosition;
-        // TODO enable this when requests are implemented
-        // this.initMusicianTableWithRequests();
         this.initMusicianTableWithoutRequests();
 
         this.labelCurrentPosition.textProperty().bindBidirectional(
@@ -376,15 +383,26 @@ public class DutyScheduleController implements Initializable, Controllable {
     private void closeDutySchedule() {
         ButtonType userSelection = getConfirmation();
 
+        //TODO Abfrage SaveState(old, newold)? von actualSectionInstrumentation
         if ((userSelection == ButtonType.CLOSE) || (userSelection == ButtonType.CANCEL)) {
             return;
         } else if (userSelection == ButtonType.OK) {
-            this.hide();
-            //TODO abfrage Beenden ohne speichern ??
+            LOG.debug(
+                "Current dutyScheduleManager: {} ,Current actualSectionInstrumentation: {}",
+                this.dutyScheduleManager,
+                this.actualSectionInstrumentation
+            );
+            this.dutyScheduleManager.discardChanges(this.actualSectionInstrumentation);
             this.actualSectionInstrumentation = null;
             this.dutyScheduleManager = null;
             this.selectedDutyPosition = null;
-
+            this.duty = null;
+            this.section = null;
+            this.musicianTableWithoutRequests.getItems().clear();
+            this.positionsTable.getItems().clear();
+            this.musicianTableWithoutRequests.refresh();
+            this.positionsTable.refresh();
+            this.hide();
             MasterController mc = MasterController.getInstance();
             CalendarController cc = (CalendarController) mc.get("CalendarController");
             cc.show();
