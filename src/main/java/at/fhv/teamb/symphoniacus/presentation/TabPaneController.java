@@ -16,33 +16,9 @@ public class TabPaneController implements Initializable {
     @FXML
     private StatusBar statusBar;
 
-    private Label statusTextField;
-
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         MasterController mc = MasterController.getInstance();
         mc.setStatusBar(this.statusBar);
-
-        HBox box = new HBox();
-        box.setSpacing(10);
-
-        statusTextField = new Label();
-        statusTextField.setText("Loaded");
-        statusTextField.textProperty().addListener(
-            it -> statusBar.setText(statusTextField.getText())
-        );
-
-        box.getChildren().add(statusTextField);
-
-        this.statusBar.getLeftItems().add(box);
-        this.statusBar.setText("");
-    }
-
-    public Label getStatusTextField() {
-        return statusTextField;
-    }
-
-    public void setStatusTextField(Label statusTextField) {
-        this.statusTextField = statusTextField;
     }
 }
