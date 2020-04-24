@@ -4,7 +4,6 @@ import at.fhv.teamb.symphoniacus.domain.Points;
 import at.fhv.teamb.symphoniacus.persistence.dao.ContractualObligationDao;
 import at.fhv.teamb.symphoniacus.persistence.dao.DutyCategoryChangeLogDao;
 import at.fhv.teamb.symphoniacus.persistence.dao.DutyDao;
-import at.fhv.teamb.symphoniacus.persistence.model.ContractualObligationEntity;
 import at.fhv.teamb.symphoniacus.persistence.model.DutyCategoryChangelogEntity;
 import at.fhv.teamb.symphoniacus.persistence.model.DutyCategoryEntity;
 import at.fhv.teamb.symphoniacus.persistence.model.DutyEntity;
@@ -16,8 +15,6 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
 
 /**
  * UseCase Controller responsible for delivering all requested Points of a musician w/ timespan.
@@ -26,8 +23,19 @@ import org.apache.logging.log4j.Logger;
  * @author Nino Heinzle
  */
 public class PointsManager {
-    private static final Logger LOG = LogManager.getLogger(PointsManager.class);
+    private final ContractualObligationDao conDao;
+    private final DutyCategoryChangeLogDao dutyCatChangeDao;
+    private final DutyDao dutyDao;
     private Set<DutyEntity> allDuties;
+
+    /**
+     * Initialize PointsManager.
+     */
+    public PointsManager() {
+        this.conDao = new ContractualObligationDao();
+        this.dutyCatChangeDao = new DutyCategoryChangeLogDao();
+        this.dutyDao = new DutyDao();
+    }
 
     /**
      * Is important for preloading all Duties of given musicians within a month,
@@ -37,8 +45,7 @@ public class PointsManager {
      * @param month     LocalDate any day of a month represents the whole month
      */
     public void loadAllDutiesOfMusicians(List<MusicianEntity> musicians, LocalDate month) {
-        DutyDao dutyDao = new DutyDao();
-        allDuties = dutyDao.getAllDutiesOfMusicians(musicians, month);
+        this.allDuties = this.dutyDao.getAllDutiesOfMusicians(musicians, month);
     }
 
     /**
@@ -49,10 +56,7 @@ public class PointsManager {
      * @return Points domain object containing the number of Points (getValue)
      */
     public Optional<Points> getDebitPointsFromMusician(MusicianEntity musician) {
-        ContractualObligationDao conDao = new ContractualObligationDao();
-        ContractualObligationEntity conEntity
-            = conDao.getContractualObligation(musician);
-        return (Points.calcDebitPoints(conEntity));
+        return Points.calcDebitPoints(this.conDao.getContractualObligation(musician));
     }
 
     /**
@@ -60,21 +64,19 @@ public class PointsManager {
      * Points from a given musician+month as a Points Object (implements getValue).
      *
      * @param musician point of interest
-     * @param month    LocalDate any day of a month represents the whole monthcccccc
+     * @param month    LocalDate any day of a month represents the whole month
      * @return Points domain object containing the number of Points (getValue)
      */
     public Optional<Points> getGainedPointsForMonthFromMusician(
         MusicianEntity musician,
         LocalDate month
     ) {
-        DutyDao dutyDao = new DutyDao();
-        DutyCategoryChangeLogDao dutyCatChangeDao = new DutyCategoryChangeLogDao();
-
         List<DutyEntity> listOfDutiesFromMusician;
         // Beware! if allDuties isn't loaded this method will load
         // the musicians individually from the DAO
         if (this.allDuties == null) {
-            listOfDutiesFromMusician = dutyDao.getAllDutiesInRangeFromMusician(musician, month);
+            listOfDutiesFromMusician =
+                this.dutyDao.getAllDutiesInRangeFromMusician(musician, month);
         } else {
             listOfDutiesFromMusician = this.getAllDutiesFromMusician(musician);
         }
@@ -90,7 +92,7 @@ public class PointsManager {
         // get all dutyCategoryChangelogs to all dutyCategories
         for (DutyCategoryEntity dc : dutyCategories) {
             List<DutyCategoryChangelogEntity> changelogEntityList =
-                dutyCatChangeDao.getDutyCategoryChangeLog(dc);
+                this.dutyCatChangeDao.getDutyCategoryChangeLog(dc);
             if (changelogEntityList != null) {
                 dutyCategoryChangelogs.addAll(changelogEntityList);
             }
@@ -109,7 +111,9 @@ public class PointsManager {
         List<DutyEntity> duties = new LinkedList<>();
         for (DutyEntity duty : this.allDuties) {
             for (DutyPositionEntity dp : duty.getDutyPositions()) {
-                if (dp.getMusician().getMusicianId().equals(musician.getMusicianId())) {
+                if (dp.getMusician() != null
+                    && dp.getMusician().getMusicianId().equals(musician.getMusicianId())
+                ) {
                     duties.add(duty);
                 }
             }
@@ -126,13 +130,12 @@ public class PointsManager {
      * @return Points domain object containing the number of Points (getValue)
      */
     public Optional<Points> getBalanceFromMusician(MusicianEntity musician, LocalDate month) {
-        DutyDao dutyDao = new DutyDao();
-
         List<DutyEntity> listOfDutiesFromMusician;
         // Beware! if allDuties isn't loaded this method will load
         // the musicians individually from the DAO
         if (this.allDuties == null) {
-            listOfDutiesFromMusician = dutyDao.getAllDutiesInRangeFromMusician(musician, month);
+            listOfDutiesFromMusician =
+                this.dutyDao.getAllDutiesInRangeFromMusician(musician, month);
         } else {
             listOfDutiesFromMusician = this.getAllDutiesFromMusician(musician);
         }
@@ -144,5 +147,4 @@ public class PointsManager {
         }
         return Points.calcBalancePoints(listOfDutiesFromMusician, dutyCategories);
     }
-
 }
