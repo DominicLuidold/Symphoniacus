@@ -336,8 +336,9 @@ public class DutyScheduleController implements Initializable, Controllable {
             .show();
 
         // this is obviously not good
-        this.initDutyPositionsTableWithMusicians();
-        this.initMusicianTableWithoutRequests();
+        //this.initDutyPositionsTableWithMusicians();
+        //this.initMusicianTableWithoutRequests();
+        this.positionsTable.refresh();
     }
 
     private void setActualPosition(DutyPosition dutyPosition) {
