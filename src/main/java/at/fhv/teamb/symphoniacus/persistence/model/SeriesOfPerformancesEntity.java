@@ -1,6 +1,8 @@
 package at.fhv.teamb.symphoniacus.persistence.model;
 
 import java.time.LocalDate;
+import java.util.LinkedList;
+import java.util.List;
 import java.util.Set;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -12,7 +14,7 @@ import javax.persistence.Table;
 
 @Entity
 @Table(name = "seriesOfPerformances")
-public class SeriesOfPerformances {
+public class SeriesOfPerformancesEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "seriesOfPerformancesId")
@@ -35,6 +37,38 @@ public class SeriesOfPerformances {
 
     @OneToMany(mappedBy = "seriesOfPerformances", orphanRemoval = false)
     private Set<DutyEntity> dutyEntities;
+
+    @OneToMany(mappedBy = "seriesOfPerformances")
+    private List<PositiveWishEntity> positiveWishes = new LinkedList<>();
+
+    @OneToMany(mappedBy = "seriesOfPerformances")
+    private List<NegativeDutyWishEntity> negativeDutyWishes = new LinkedList<>();
+
+    public Boolean getTour() {
+        return isTour;
+    }
+
+    public void setTour(Boolean tour) {
+        isTour = tour;
+    }
+
+    public Set<DutyEntity> getDutyEntities() {
+        return dutyEntities;
+    }
+
+    public void setDutyEntities(
+        Set<DutyEntity> dutyEntities) {
+        this.dutyEntities = dutyEntities;
+    }
+
+    public List<PositiveWishEntity> getPositiveWishes() {
+        return positiveWishes;
+    }
+
+    public void setPositiveWishes(
+        List<PositiveWishEntity> positiveWishes) {
+        this.positiveWishes = positiveWishes;
+    }
 
     public Integer getSeriesOfPerformancesId() {
         return this.seriesOfPerformancesId;
@@ -92,5 +126,14 @@ public class SeriesOfPerformances {
     public void removeDuty(DutyEntity dutyEntity) {
         this.dutyEntities.remove(dutyEntity);
         dutyEntity.setSeriesOfPerformances(null);
+    }
+
+    public List<NegativeDutyWishEntity> getNegativeDutyWishes() {
+        return negativeDutyWishes;
+    }
+
+    public void setNegativeDutyWishes(
+        List<NegativeDutyWishEntity> negativeDutyWishes) {
+        this.negativeDutyWishes = negativeDutyWishes;
     }
 }

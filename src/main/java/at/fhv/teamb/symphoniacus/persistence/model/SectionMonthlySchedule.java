@@ -39,7 +39,7 @@ public class SectionMonthlySchedule {
     //Many-To-One Part for MONTHLYSCHEDULE Table
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "monthlyScheduleId")
-    private MonthlySchedule monthlySchedule;
+    private MonthlyScheduleEntity monthlySchedule;
 
     //Many-To-One Part for SECTION Table
     @ManyToOne(fetch = FetchType.LAZY)
@@ -49,11 +49,11 @@ public class SectionMonthlySchedule {
     @ManyToMany(mappedBy = "sectionMonthlySchedules")
     private Set<DutyEntity> duties = new HashSet<>();
 
-    public MonthlySchedule getMonthlySchedule() {
+    public MonthlyScheduleEntity getMonthlySchedule() {
         return this.monthlySchedule;
     }
 
-    public void setMonthlySchedule(MonthlySchedule monthlySchedule) {
+    public void setMonthlySchedule(MonthlyScheduleEntity monthlySchedule) {
         this.monthlySchedule = monthlySchedule;
     }
 

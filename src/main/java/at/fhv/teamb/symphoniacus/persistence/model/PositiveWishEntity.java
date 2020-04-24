@@ -2,14 +2,17 @@ package at.fhv.teamb.symphoniacus.persistence.model;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
 @Entity
 @Table(name = "positiveWish")
-public class PositiveWish {
+public class PositiveWishEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "positiveWishId")
@@ -18,11 +21,33 @@ public class PositiveWish {
     @Column(name = "seriesOfPerformancesId")
     private Integer seriesOfPerformancesId;
 
-    @Column(name = "musicianId")
-    private Integer musicianId;
-
     @Column(name = "description")
     private String description;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "musicianId")
+    private MusicianEntity musician;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "seriesOfPerformancesId")
+    private SeriesOfPerformancesEntity seriesOfPerformances;
+
+    public MusicianEntity getMusician() {
+        return musician;
+    }
+
+    public void setMusician(MusicianEntity musician) {
+        this.musician = musician;
+    }
+
+    public SeriesOfPerformancesEntity getSeriesOfPerformances() {
+        return seriesOfPerformances;
+    }
+
+    public void setSeriesOfPerformances(
+        SeriesOfPerformancesEntity seriesOfPerformances) {
+        this.seriesOfPerformances = seriesOfPerformances;
+    }
 
     public Integer getPositiveWishId() {
         return this.positiveWishId;
@@ -38,14 +63,6 @@ public class PositiveWish {
 
     public void setSeriesOfPerformancesId(Integer seriesOfPerformancesId) {
         this.seriesOfPerformancesId = seriesOfPerformancesId;
-    }
-
-    public Integer getMusicianId() {
-        return this.musicianId;
-    }
-
-    public void setMusicianId(Integer musicianId) {
-        this.musicianId = musicianId;
     }
 
     public String getDescription() {

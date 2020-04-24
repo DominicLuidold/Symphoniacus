@@ -48,7 +48,7 @@ public class DutyEntity {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "seriesOfPerformancesId")
-    private SeriesOfPerformances seriesOfPerformances;
+    private SeriesOfPerformancesEntity seriesOfPerformances;
 
     @OneToMany(mappedBy = "duty", orphanRemoval = true)
     private List<DutyPositionEntity> dutyPositions = new LinkedList<>();
@@ -138,12 +138,12 @@ public class DutyEntity {
         this.end = end;
     }
 
-    public SeriesOfPerformances getSeriesOfPerformances() {
+    public SeriesOfPerformancesEntity getSeriesOfPerformances() {
         return seriesOfPerformances;
     }
 
     public void setSeriesOfPerformances(
-        SeriesOfPerformances seriesOfPerformances
+        SeriesOfPerformancesEntity seriesOfPerformances
     ) {
         this.seriesOfPerformances = seriesOfPerformances;
     }

@@ -39,7 +39,7 @@ public class WeeklyScheduleEntity {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "monthlyScheduleId")
-    private MonthlySchedule monthlySchedule;
+    private MonthlyScheduleEntity monthlySchedule;
 
     @OneToMany(mappedBy = "weeklySchedule", orphanRemoval = true)
     private List<DutyEntity> duties = new LinkedList<>();
@@ -92,12 +92,12 @@ public class WeeklyScheduleEntity {
         this.isConfirmed = isConfirmed;
     }
 
-    public MonthlySchedule getMonthlySchedule() {
+    public MonthlyScheduleEntity getMonthlySchedule() {
         return this.monthlySchedule;
     }
 
     public void setMonthlySchedule(
-        MonthlySchedule monthlySchedule) {
+        MonthlyScheduleEntity monthlySchedule) {
         this.monthlySchedule = monthlySchedule;
     }
 
