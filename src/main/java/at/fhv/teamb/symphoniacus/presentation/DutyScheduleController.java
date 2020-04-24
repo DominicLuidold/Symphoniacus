@@ -341,8 +341,8 @@ public class DutyScheduleController implements Initializable, Controllable {
 
         this.labelCurrentPosition.textProperty().bindBidirectional(
             new SimpleStringProperty(
-                "Current position: " +
-                    this.selectedDutyPosition
+                "Current position: "
+                    + this.selectedDutyPosition
                         .getEntity().getInstrumentationPosition().getPositionDescription()
             )
         );
