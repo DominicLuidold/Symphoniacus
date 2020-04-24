@@ -23,6 +23,10 @@ public class NegativeDateWishEntity {
     @Column(name = "negativeDateId")
     private Integer negativeDateId;
 
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "musicianId")
+    private MusicianEntity musician;
+
     @Column(name = "description")
     private String description;
 
@@ -35,10 +39,6 @@ public class NegativeDateWishEntity {
     public Integer getNegativeDateId() {
         return this.negativeDateId;
     }
-
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "musicianId")
-    private MusicianEntity musician;
 
     @ManyToMany
     @JoinTable(name = "negativeDate_monthlySchedule")

@@ -161,4 +161,9 @@ public class DutyEntity {
         this.sectionMonthlySchedules.remove(sms);
         sms.getDuties().remove(this);
     }
+
+    public void setSectionMonthlySchedules(
+        Set<SectionMonthlySchedule> sectionMonthlySchedules) {
+        this.sectionMonthlySchedules = sectionMonthlySchedules;
+    }
 }

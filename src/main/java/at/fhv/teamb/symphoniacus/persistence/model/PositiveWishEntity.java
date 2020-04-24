@@ -18,15 +18,12 @@ public class PositiveWishEntity {
     @Column(name = "positiveWishId")
     private Integer positiveWishId;
 
-    @Column(name = "seriesOfPerformancesId")
-    private Integer seriesOfPerformancesId;
-
-    @Column(name = "description")
-    private String description;
-
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "musicianId")
     private MusicianEntity musician;
+
+    @Column(name = "description")
+    private String description;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "seriesOfPerformancesId")
@@ -55,14 +52,6 @@ public class PositiveWishEntity {
 
     public void setPositiveWishId(Integer positiveWishId) {
         this.positiveWishId = positiveWishId;
-    }
-
-    public Integer getSeriesOfPerformancesId() {
-        return this.seriesOfPerformancesId;
-    }
-
-    public void setSeriesOfPerformancesId(Integer seriesOfPerformancesId) {
-        this.seriesOfPerformancesId = seriesOfPerformancesId;
     }
 
     public String getDescription() {
