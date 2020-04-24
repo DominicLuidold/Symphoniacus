@@ -6,7 +6,7 @@ package at.fhv.teamb.symphoniacus.domain;
  * @author Dominic Luidold
  */
 public class ActualSectionInstrumentation {
-    private Duty duty;
+    private final Duty duty;
 
     public ActualSectionInstrumentation(Duty duty) {
         this.duty = duty;
@@ -34,5 +34,9 @@ public class ActualSectionInstrumentation {
 
     public Duty getDuty() {
         return this.duty;
+    }
+
+    public PersistenceState getPersistenceState() {
+        return this.duty.getPersistenceState();
     }
 }

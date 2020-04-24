@@ -23,6 +23,7 @@ public class Duty {
     private DutyEntity entity;
     private List<DutyPosition> dutyPositions;
     private String title;
+    private PersistenceState persistenceState;
 
     public Duty(DutyEntity entity) {
         this(entity, null);
@@ -150,6 +151,14 @@ public class Duty {
 
     public DutyEntity getEntity() {
         return this.entity;
+    }
+
+    public PersistenceState getPersistenceState() {
+        return this.persistenceState;
+    }
+
+    public void setPersistenceState(PersistenceState persistenceState) {
+        this.persistenceState = persistenceState;
     }
 
     @Override
