@@ -176,6 +176,13 @@ public class DutyDao extends BaseDao<DutyEntity> {
         return dutyCategories;
     }
 
+    /**
+     * Get all Duties for all given musicians within a given month.
+     *
+     * @param musicians List of musicians
+     * @param month LocalDate any day of a month represents the whole month
+     * @return A set uf DutyEntities, because duplicates of duties are unnecessary
+     */
     public Set<DutyEntity> getAllDutiesOfMusicians(List<MusicianEntity> musicians,
                                                    LocalDate month) {
         this.createEntityManager();
