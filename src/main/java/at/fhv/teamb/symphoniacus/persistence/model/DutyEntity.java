@@ -5,6 +5,7 @@ import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -50,7 +51,7 @@ public class DutyEntity {
     @JoinColumn(name = "seriesOfPerformancesId")
     private SeriesOfPerformances seriesOfPerformances;
 
-    @OneToMany(mappedBy = "duty", orphanRemoval = true)
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "duty", orphanRemoval = true)
     private List<DutyPositionEntity> dutyPositions = new LinkedList<>();
 
     @ManyToMany

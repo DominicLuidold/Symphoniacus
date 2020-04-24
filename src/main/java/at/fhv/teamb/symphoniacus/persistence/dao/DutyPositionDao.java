@@ -32,21 +32,19 @@ public class DutyPositionDao extends BaseDao<DutyPositionEntity> {
         DutyEntity duty,
         SectionEntity section
     ) {
-        this.createEntityManager();
-        TypedQuery<DutyPositionEntity> query = this.entityManager.createQuery(
+        TypedQuery<DutyPositionEntity> query = entityManager.createQuery(
             "SELECT p FROM DutyPositionEntity p "
                 + "JOIN FETCH p.instrumentationPosition "
-                + "JOIN FETCH p.musician m "
-                + "JOIN FETCH m.user "
+                + "LEFT JOIN FETCH p.musician m "
+                + "LEFT JOIN FETCH m.user "
                 + "WHERE p.duty = :duty AND p.section = :section",
             DutyPositionEntity.class
         );
+
         query.setParameter("duty", duty);
         query.setParameter("section", section);
-        List<DutyPositionEntity> result = query.getResultList();
-        this.tearDown();
 
-        return result;
+        return query.getResultList();
     }
 
     @Override

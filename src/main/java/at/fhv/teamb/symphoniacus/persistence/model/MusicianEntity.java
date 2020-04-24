@@ -2,6 +2,7 @@ package at.fhv.teamb.symphoniacus.persistence.model;
 
 import java.util.LinkedList;
 import java.util.List;
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -57,7 +58,7 @@ public class MusicianEntity {
     )
     private List<MusicianRole> musicianRoles = new LinkedList<>();
 
-    @OneToMany(mappedBy = "musician")
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "musician")
     private List<DutyPositionEntity> dutyPositions = new LinkedList<>();
 
     @OneToMany(mappedBy = "musician")

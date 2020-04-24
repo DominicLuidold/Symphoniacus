@@ -4,11 +4,13 @@ import at.fhv.teamb.symphoniacus.domain.ActualSectionInstrumentation;
 import at.fhv.teamb.symphoniacus.domain.Duty;
 import at.fhv.teamb.symphoniacus.domain.DutyPosition;
 import at.fhv.teamb.symphoniacus.domain.Musician;
+import at.fhv.teamb.symphoniacus.domain.PersistenceState;
 import at.fhv.teamb.symphoniacus.domain.Points;
 import at.fhv.teamb.symphoniacus.domain.Section;
 import at.fhv.teamb.symphoniacus.persistence.dao.DutyDao;
 import at.fhv.teamb.symphoniacus.persistence.dao.DutyPositionDao;
 import at.fhv.teamb.symphoniacus.persistence.dao.MusicianDao;
+import at.fhv.teamb.symphoniacus.persistence.model.DutyEntity;
 import at.fhv.teamb.symphoniacus.persistence.model.DutyPositionEntity;
 import at.fhv.teamb.symphoniacus.persistence.model.MusicianEntity;
 import java.time.LocalDateTime;
@@ -53,8 +55,8 @@ public class DutyScheduleManager {
 
     /**
      * Returns a {@link ActualSectionInstrumentation} domain object containing all available
-     * information about the actual section instrumentation for the given {@link Duty} and
-     * {@link Section}.
+     * information about the actual instrumentation for the given {@link Duty} and
+     * {@link Section} objects.
      *
      * @param duty    The duty to use
      * @param section The section to use
@@ -83,6 +85,7 @@ public class DutyScheduleManager {
 
         // Fill Duty with available information
         Duty dutyWithInformation = new Duty(duty.getEntity(), dutyPositions);
+        dutyWithInformation.setPersistenceState(PersistenceState.PERSISTED);
 
         return Optional.of(new ActualSectionInstrumentation(dutyWithInformation));
     }
@@ -164,13 +167,13 @@ public class DutyScheduleManager {
     /**
      * Assigns a {@link Musician} to a {@link DutyPosition} and removes the old.
      *
-     * @param actualSectionInstrumentation The actual section instrumentation to use
-     * @param newMusician                  The musician to assign
-     * @param oldMusician                  The musician to remove
-     * @param position                     The duty position to use
+     * @param instrumentation The instrumentation to use
+     * @param newMusician     The musician to assign
+     * @param oldMusician     The musician to remove
+     * @param position        The duty position to use
      */
     public void assignMusicianToPosition(
-        ActualSectionInstrumentation actualSectionInstrumentation,
+        ActualSectionInstrumentation instrumentation,
         Musician newMusician,
         Musician oldMusician,
         DutyPosition position
@@ -179,18 +182,18 @@ public class DutyScheduleManager {
         this.unsetMusicians.add(oldMusician);
 
         // Delegate to default method
-        this.assignMusicianToPosition(actualSectionInstrumentation, newMusician, position);
+        this.assignMusicianToPosition(instrumentation, newMusician, position);
     }
 
     /**
      * Assigns a {@link Musician} to a {@link DutyPosition}.
      *
-     * @param actualSectionInstrumentation The actual section instrumentation to use
-     * @param musician                     The musician to assign
-     * @param position                     The duty position to use
+     * @param instrumentation The instrumentation to use
+     * @param musician        The musician to assign
+     * @param position        The duty position to use
      */
     public void assignMusicianToPosition(
-        ActualSectionInstrumentation actualSectionInstrumentation,
+        ActualSectionInstrumentation instrumentation,
         Musician musician,
         DutyPosition position
     ) {
@@ -198,19 +201,22 @@ public class DutyScheduleManager {
         this.setMusicians.add(musician);
         this.unsetMusicians.remove(musician);
 
+        // Update object state
+        instrumentation.getDuty().setPersistenceState(PersistenceState.EDITED);
+
         // Delegate to domain object
-        actualSectionInstrumentation.assignMusicianToPosition(musician, position);
+        instrumentation.assignMusicianToPosition(musician, position);
     }
 
     /**
      * Removes a {@link Musician} from a {@link DutyPosition}.
      *
-     * @param actualSectionInstrumentation The actual section instrumentation to use
-     * @param musician                     The musician to remove
-     * @param position                     The duty position to use
+     * @param instrumentation The instrumentation to use
+     * @param musician        The musician to remove
+     * @param position        The duty position to use
      */
     public void removeMusicianFromPosition(
-        ActualSectionInstrumentation actualSectionInstrumentation,
+        ActualSectionInstrumentation instrumentation,
         Musician musician,
         DutyPosition position
     ) {
@@ -218,7 +224,38 @@ public class DutyScheduleManager {
         this.setMusicians.remove(musician);
         this.unsetMusicians.add(musician);
 
+        // Update object state
+        instrumentation.getDuty().setPersistenceState(PersistenceState.EDITED);
+
         // Delegate to domain object
-        actualSectionInstrumentation.removeMusicianFromPosition(musician, position);
+        instrumentation.removeMusicianFromPosition(musician, position);
+    }
+
+    /**
+     * Persists the {@link ActualSectionInstrumentation} object to the database.
+     *
+     * <p>The method will subsequently change the {@link PersistenceState} of the object
+     * from {@link PersistenceState#EDITED} to {@link PersistenceState#PERSISTED}, provided
+     * that the database update was successful.
+     *
+     * @param instrumentation The instrumentation to persist
+     */
+    public void persist(ActualSectionInstrumentation instrumentation) {
+        Optional<DutyEntity> persisted = this.dutyDao.update(instrumentation.getDuty().getEntity());
+
+        if (persisted.isPresent()) {
+            instrumentation.getDuty().setPersistenceState(PersistenceState.PERSISTED);
+            LOG.debug(
+                "Persisted instrumentation of duty {{}, '{}'}",
+                instrumentation.getDuty().getEntity().getDutyId(),
+                instrumentation.getDuty().getTitle()
+            );
+        } else {
+            LOG.error(
+                "Could not persist instrumentation of duty {{}, '{}'}",
+                instrumentation.getDuty().getEntity().getDutyId(),
+                instrumentation.getDuty().getTitle()
+            );
+        }
     }
 }
