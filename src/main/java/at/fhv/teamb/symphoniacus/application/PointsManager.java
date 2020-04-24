@@ -79,7 +79,7 @@ public class PointsManager {
         if (this.allDuties == null) {
             listOfDutiesFromMusician = dutyDao.getAllDutiesInRangeFromMusician(musician,month);
         } else {
-           listOfDutiesFromMusician = this.getAllDutiesFromMusician(musician);
+            listOfDutiesFromMusician = this.getAllDutiesFromMusician(musician);
         }
         Set<DutyCategoryEntity> dutyCategories = new LinkedHashSet<>();
 
