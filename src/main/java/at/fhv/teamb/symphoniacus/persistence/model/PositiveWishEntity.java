@@ -12,7 +12,7 @@ import javax.persistence.Table;
 
 @Entity
 @Table(name = "positiveWish")
-public class PositiveWishEntity {
+public class PositiveWishEntity implements WishRequestable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "positiveWishId")

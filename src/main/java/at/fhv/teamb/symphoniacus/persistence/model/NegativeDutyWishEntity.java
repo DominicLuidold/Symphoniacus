@@ -13,7 +13,7 @@ import javax.persistence.Table;
 
 @Entity
 @Table(name = "negativeDutyWish")
-public class NegativeDutyWishEntity {
+public class NegativeDutyWishEntity implements WishRequestable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "negativeDutyId")

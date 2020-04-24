@@ -3,6 +3,8 @@ package at.fhv.teamb.symphoniacus.persistence.dao;
 import at.fhv.teamb.symphoniacus.persistence.BaseDao;
 import at.fhv.teamb.symphoniacus.persistence.model.DutyEntity;
 import at.fhv.teamb.symphoniacus.persistence.model.PositiveWishEntity;
+import at.fhv.teamb.symphoniacus.persistence.model.WishRequestable;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Optional;
 import javax.persistence.TypedQuery;
@@ -28,12 +30,20 @@ public class PositiveWishDao extends BaseDao<PositiveWishEntity> {
         return null;
     }
 
-    public List<PositiveWishEntity> getAllPositiveWishes(DutyEntity duty) {
+    public List<WishRequestable> getAllPositiveWishes(DutyEntity duty) {
         this.createEntityManager();
 
-        TypedQuery<PositiveWishEntity> query =
-            this.entityManager.createQuery("", PositiveWishEntity.class);
+        TypedQuery<WishRequestable> query =
+            this.entityManager.createQuery(
+                "SELECT pw FROM PositiveWishEntity pw "
+                    + "JOIN pw.seriesOfPerformances sop "
+                    + "JOIN sop.dutyEntities de "
+                    + "WHERE de = :duty",
+                WishRequestable.class);
 
-        return null;
+        query.setParameter("duty",duty);
+
+        List<WishRequestable> result = query.getResultList();
+        return result;
     }
 }
