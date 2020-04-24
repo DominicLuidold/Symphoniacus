@@ -114,4 +114,16 @@ public class WeeklyScheduleEntity {
         this.duties.remove(duty);
         duty.setWeeklySchedule(null);
     }
+
+    public Boolean getConfirmed() {
+        return isConfirmed;
+    }
+
+    public void setConfirmed(Boolean confirmed) {
+        isConfirmed = confirmed;
+    }
+
+    public void setDuties(List<DutyEntity> duties) {
+        this.duties = duties;
+    }
 }

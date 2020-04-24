@@ -19,12 +19,12 @@ public class NegativeDutyWishEntity {
     @Column(name = "negativeDutyId")
     private Integer negativeDutyId;
 
-    @Column(name = "description")
-    private String description;
-
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "musicianId")
     private MusicianEntity musician;
+
+    @Column(name = "description")
+    private String description;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "seriesOfPerformancesId")
