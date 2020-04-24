@@ -1,23 +1,27 @@
 package at.fhv.teamb.symphoniacus.persistence.model;
 
 import java.time.LocalDate;
+import java.util.LinkedList;
+import java.util.List;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
+import javax.persistence.ManyToMany;
+import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
 @Entity
 @Table(name = "negativeDateWish")
-public class NegativeDateWish {
+public class NegativeDateWishEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "negativeDateId")
     private Integer negativeDateId;
-
-    @Column(name = "musicianId")
-    private Integer musicianId;
 
     @Column(name = "description")
     private String description;
@@ -32,17 +36,18 @@ public class NegativeDateWish {
         return this.negativeDateId;
     }
 
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "musicianId")
+    private MusicianEntity musician;
+
+    @ManyToMany
+    @JoinTable(name = "negativeDate_monthlySchedule")
+    private List<MonthlyScheduleEntity> monthlySchedules = new LinkedList<>();
+
     public void setNegativeDateId(Integer negativeDateId) {
         this.negativeDateId = negativeDateId;
     }
 
-    public Integer getMusicianId() {
-        return this.musicianId;
-    }
-
-    public void setMusicianId(Integer musicianId) {
-        this.musicianId = musicianId;
-    }
 
     public String getDescription() {
         return this.description;
@@ -66,5 +71,14 @@ public class NegativeDateWish {
 
     public void setEndDate(LocalDate endDate) {
         this.endDate = endDate;
+    }
+
+    public List<MonthlyScheduleEntity> getMonthlySchedules() {
+        return monthlySchedules;
+    }
+
+    public void setMonthlySchedules(
+        List<MonthlyScheduleEntity> monthlySchedules) {
+        this.monthlySchedules = monthlySchedules;
     }
 }

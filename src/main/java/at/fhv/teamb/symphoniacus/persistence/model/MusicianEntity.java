@@ -62,7 +62,55 @@ public class MusicianEntity {
     private List<DutyPositionEntity> dutyPositions = new LinkedList<>();
 
     @OneToMany(mappedBy = "musician")
+    private List<PositiveWishEntity> positiveWishes = new LinkedList<>();
+
+    @OneToMany(mappedBy = "musician")
+    private List<NegativeDutyWishEntity> negativeDutyWishes = new LinkedList<>();
+
+    @OneToMany(mappedBy = "musician")
     private List<VacationEntity> vacations = new LinkedList<>();
+
+    @OneToMany(mappedBy = "musician")
+    private List<NegativeDateWishEntity> negativeDateWishes = new LinkedList<>();
+
+    public void setContractualObligations(
+        List<ContractualObligationEntity> contractualObligations) {
+        this.contractualObligations = contractualObligations;
+    }
+
+    public List<NegativeDutyWishEntity> getNegativeDutyWishes() {
+        return negativeDutyWishes;
+    }
+
+    public void setNegativeDutyWishes(
+        List<NegativeDutyWishEntity> negativeDutyWishes) {
+        this.negativeDutyWishes = negativeDutyWishes;
+    }
+
+    public void setMusicianRoles(
+        List<MusicianRole> musicianRoles) {
+        this.musicianRoles = musicianRoles;
+    }
+
+    public void setDutyPositions(
+        List<DutyPositionEntity> dutyPositions) {
+        this.dutyPositions = dutyPositions;
+    }
+
+    public List<PositiveWishEntity> getPositiveWishes() {
+        return positiveWishes;
+    }
+
+    public void setPositiveWishes(
+        List<PositiveWishEntity> positiveWishes) {
+        this.positiveWishes = positiveWishes;
+    }
+
+
+    public void setVacations(
+        List<VacationEntity> vacations) {
+        this.vacations = vacations;
+    }
 
     public Integer getMusicianId() {
         return this.musicianId;
