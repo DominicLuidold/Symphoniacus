@@ -147,6 +147,11 @@ public class DutyScheduleController implements Initializable, Controllable {
                     this.selectedDutyPosition = dpmtm.getDutyPosition();
 
                     if (assignedMusician.isPresent()) {
+                        this.dutyScheduleManager.getMusiciansAvailableForPosition(
+                            this.duty,
+                            this.selectedDutyPosition,
+                            Boolean.FALSE
+                        );
                         this.dutyScheduleManager.removeMusicianFromPosition(
                             this.actualSectionInstrumentation,
                             assignedMusician.get(),
