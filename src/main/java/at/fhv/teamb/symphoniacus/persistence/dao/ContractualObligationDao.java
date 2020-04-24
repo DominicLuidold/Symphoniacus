@@ -6,6 +6,8 @@ import at.fhv.teamb.symphoniacus.persistence.model.MusicianEntity;
 import java.time.LocalDate;
 import java.util.Optional;
 import javax.persistence.TypedQuery;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 /**
  * DAO for ContractualObligation.
@@ -13,6 +15,7 @@ import javax.persistence.TypedQuery;
  * @author Nino Heinzle
  */
 public class ContractualObligationDao extends BaseDao<ContractualObligationEntity> {
+    private static final Logger LOG = LogManager.getLogger(ContractualObligationDao.class);
 
     @Override
     public Optional<ContractualObligationEntity> find(Object key) {
@@ -40,7 +43,7 @@ public class ContractualObligationDao extends BaseDao<ContractualObligationEntit
      * @param musician given musician contains musician.Id
      * @return ContractualObligationEntity
      */
-    public ContractualObligationEntity getContractualObligation(MusicianEntity musician) {
+    public Optional<ContractualObligationEntity> getContractualObligation(MusicianEntity musician) {
         this.createEntityManager();
         TypedQuery<ContractualObligationEntity> query = this.entityManager.createQuery(
             "SELECT co FROM ContractualObligationEntity co "
@@ -51,9 +54,17 @@ public class ContractualObligationDao extends BaseDao<ContractualObligationEntit
         );
         query.setParameter("musician", musician);
         query.setParameter("currentDate", LocalDate.now());
+        //TODO - check if returning object is valid
         ContractualObligationEntity co = query.getSingleResult();
         this.tearDown();
 
-        return co;
+        if (co.getMusician().getMusicianId().equals(musician.getMusicianId())) {
+            return Optional.of(co);
+        } else {
+            LOG.error(
+                "ContractualObligation.musicianId is not the same as givenMusician.musicianId"
+            );
+            return Optional.empty();
+        }
     }
 }

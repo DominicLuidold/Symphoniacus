@@ -1,10 +1,10 @@
 package at.fhv.teamb.symphoniacus.persistence.dao;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 import at.fhv.teamb.symphoniacus.persistence.model.ContractualObligationEntity;
 import at.fhv.teamb.symphoniacus.persistence.model.MusicianEntity;
+import java.util.Optional;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.junit.jupiter.api.BeforeAll;
@@ -38,11 +38,18 @@ class ContractualObligationDaoTest {
         MusicianEntity musicianEntity = new MusicianEntity();
         musicianEntity.setMusicianId(1);
 
-        // When
-        ContractualObligationEntity conEntity = this.dao.getContractualObligation(musicianEntity);
+        Optional<ContractualObligationEntity> conEntity =
+            this.dao.getContractualObligation(musicianEntity);
+        conEntity.ifPresentOrElse(
+            entity -> assertEquals(conEntity.get(), entity),
+            () -> LOG.error("ContractualObligationEntity wasn't returned by its dao")
+        );
 
-        // Then
-        assertNotNull(conEntity);
-        assertEquals(musicianEntity.getMusicianId(), conEntity.getMusician().getMusicianId());
+        conEntity.ifPresent(contractualObligationEntity ->
+            assertEquals(
+                contractualObligationEntity.getMusician().getMusicianId(),
+                musicianEntity.getMusicianId()
+            )
+        );
     }
 }
