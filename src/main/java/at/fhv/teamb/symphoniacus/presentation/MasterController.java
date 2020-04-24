@@ -6,6 +6,12 @@ import javafx.scene.control.Label;
 import org.apache.commons.collections4.map.HashedMap;
 import org.controlsfx.control.StatusBar;
 
+/**
+ * Little helper to assist us in various UI tasks.
+ * Mainly needed to switch visibiltiy in {@link DutyScheduleController}.
+ *
+ * @author Valentin Goronjic
+ */
 public class MasterController {
 
     private static MasterController INSTANCE;
@@ -38,6 +44,11 @@ public class MasterController {
         return map.put(key, value);
     }
 
+    /**
+     * Sets the StatusBar. Is called by {@link TabPaneController} once.
+     *
+     * @param statusBar The StatusBar which is defined in {@link TabPaneController} FXML
+     */
     public void setStatusBar(StatusBar statusBar) {
         this.statusBar = statusBar;
         this.statusTextField.textProperty().addListener(
