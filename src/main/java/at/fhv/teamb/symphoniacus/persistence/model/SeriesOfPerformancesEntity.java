@@ -44,6 +44,26 @@ public class SeriesOfPerformancesEntity {
     @OneToMany(mappedBy = "seriesOfPerformances")
     private List<NegativeDutyWishEntity> negativeDutyWishes = new LinkedList<>();
 
+    public void addPositiveWish(PositiveWishEntity positiveWishEntity) {
+        this.positiveWishes.add(positiveWishEntity);
+        positiveWishEntity.setSeriesOfPerformances(this);
+    }
+
+    public void removePositiveWish(PositiveWishEntity positiveWishEntity) {
+        this.positiveWishes.remove(positiveWishEntity);
+        positiveWishEntity.setSeriesOfPerformances(null);
+    }
+
+    public void addNegativeDutyWish(NegativeDutyWishEntity negativeDutyWishEntity) {
+        this.negativeDutyWishes.add(negativeDutyWishEntity);
+        negativeDutyWishEntity.setSeriesOfPerformances(this);
+    }
+
+    public void removeNegativeDutyWish(NegativeDutyWishEntity negativeDutyWishEntity) {
+        this.negativeDutyWishes.remove(negativeDutyWishEntity);
+        negativeDutyWishEntity.setSeriesOfPerformances(null);
+    }
+
     public Boolean getTour() {
         return isTour;
     }

@@ -44,10 +44,19 @@ public class NegativeDateWishEntity {
     @JoinTable(name = "negativeDate_monthlySchedule")
     private List<MonthlyScheduleEntity> monthlySchedules = new LinkedList<>();
 
+    public void addMonthlySchedule(MonthlyScheduleEntity monthlyScheduleEntity) {
+        this.monthlySchedules.add(monthlyScheduleEntity);
+        monthlyScheduleEntity.getNegativeDateWishes().add(this);
+    }
+
+    public void removeMonthlySchedule(MonthlyScheduleEntity monthlyScheduleEntity) {
+        this.monthlySchedules.remove(monthlyScheduleEntity);
+        monthlyScheduleEntity.getNegativeDateWishes().remove(this);
+    }
+
     public void setNegativeDateId(Integer negativeDateId) {
         this.negativeDateId = negativeDateId;
     }
-
 
     public String getDescription() {
         return this.description;
@@ -80,5 +89,13 @@ public class NegativeDateWishEntity {
     public void setMonthlySchedules(
         List<MonthlyScheduleEntity> monthlySchedules) {
         this.monthlySchedules = monthlySchedules;
+    }
+
+    public MusicianEntity getMusician() {
+        return musician;
+    }
+
+    public void setMusician(MusicianEntity musician) {
+        this.musician = musician;
     }
 }

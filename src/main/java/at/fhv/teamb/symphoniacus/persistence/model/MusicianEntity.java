@@ -73,6 +73,45 @@ public class MusicianEntity {
     @OneToMany(mappedBy = "musician")
     private List<NegativeDateWishEntity> negativeDateWishes = new LinkedList<>();
 
+    public void addPosition(DutyPositionEntity position) {
+        this.dutyPositions.add(position);
+        position.setMusician(this);
+    }
+
+    public void removePosition(DutyPositionEntity position) {
+        this.dutyPositions.remove(position);
+        position.setMusician(null);
+    }
+
+    public void addPositiveWish(PositiveWishEntity positiveWish) {
+        this.positiveWishes.add(positiveWish);
+        positiveWish.setMusician(this);
+    }
+
+    public void removePositiveWish(PositiveWishEntity positiveWish) {
+        this.positiveWishes.remove(positiveWish);
+        positiveWish.setMusician(null);
+    }
+
+    public void addNegativeDutyWish(NegativeDutyWishEntity negativeWish) {
+        this.negativeDutyWishes.add(negativeWish);
+        negativeWish.setMusician(this);
+    }
+    public void removeNegativeDutyWish(NegativeDutyWishEntity negativeWish) {
+        this.negativeDutyWishes.remove(negativeWish);
+        negativeWish.setMusician(null);
+    }
+
+    public void addNegativeDateWish(NegativeDateWishEntity negativeWish) {
+        this.negativeDateWishes.add(negativeWish);
+        negativeWish.setMusician(this);
+    }
+
+    public void removeNegativeDateWish(NegativeDateWishEntity negativeWish) {
+        this.negativeDateWishes.remove(negativeWish);
+        negativeWish.setMusician(null);
+    }
+
     public void setContractualObligations(
         List<ContractualObligationEntity> contractualObligations) {
         this.contractualObligations = contractualObligations;

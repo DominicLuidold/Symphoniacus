@@ -53,6 +53,26 @@ public class MonthlyScheduleEntity {
     @OneToMany(mappedBy = "monthlySchedule")
     private List<WeeklyScheduleEntity> weeklySchedules = new LinkedList<>();
 
+    public void addNegativeDateWish(NegativeDateWishEntity negativeDateWishEntity) {
+        this.negativeDateWishes.add(negativeDateWishEntity);
+        negativeDateWishEntity.getMonthlySchedules().add(this);
+    }
+
+    public void removeNegativeDateWish(NegativeDateWishEntity negativeDateWishEntity) {
+        this.negativeDateWishes.remove(negativeDateWishEntity);
+        negativeDateWishEntity.getMonthlySchedules().remove(this);
+    }
+
+    public void addWeeklySchedules(WeeklyScheduleEntity weeklyScheduleEntity) {
+        this.weeklySchedules.add(weeklyScheduleEntity);
+        weeklyScheduleEntity.setMonthlySchedule(this);
+    }
+
+    public void removeWeeklySchedules(WeeklyScheduleEntity weeklyScheduleEntity) {
+        this.weeklySchedules.remove(weeklyScheduleEntity);
+        weeklyScheduleEntity.setMonthlySchedule(null);
+    }
+
     public Set<SectionMonthlySchedule> getSectionMonthlyScheduleSet() {
         return this.sectionMonthlyScheduleSet;
     }
