@@ -34,11 +34,11 @@ public class PointsManager {
      * so that it isn't necessary to fetch all duties from every musician by itself.
      *
      * @param musicians List of MusicianEntity
-     * @param month LocalDate any day of a month represents the whole month
+     * @param month     LocalDate any day of a month represents the whole month
      */
     public void loadAllDutiesOfMusicians(List<MusicianEntity> musicians, LocalDate month) {
         DutyDao dutyDao = new DutyDao();
-        allDuties = dutyDao.getAllDutiesOfMusicians(musicians,month);
+        allDuties = dutyDao.getAllDutiesOfMusicians(musicians, month);
     }
 
     /**
@@ -50,12 +50,9 @@ public class PointsManager {
      */
     public Optional<Points> getDebitPointsFromMusician(MusicianEntity musician) {
         ContractualObligationDao conDao = new ContractualObligationDao();
-        Optional<ContractualObligationEntity> conEntity =
-            conDao.getContractualObligation(musician);
-        if (conEntity.isPresent()) {
-            return (Points.calcDebitPoints(conEntity.get()));
-        }
-        return Optional.empty();
+        ContractualObligationEntity conEntity
+            = conDao.getContractualObligation(musician);
+        return (Points.calcDebitPoints(conEntity));
     }
 
     /**
@@ -77,7 +74,7 @@ public class PointsManager {
         // Beware! if allDuties isn't loaded this method will load
         // the musicians individually from the DAO
         if (this.allDuties == null) {
-            listOfDutiesFromMusician = dutyDao.getAllDutiesInRangeFromMusician(musician,month);
+            listOfDutiesFromMusician = dutyDao.getAllDutiesInRangeFromMusician(musician, month);
         } else {
             listOfDutiesFromMusician = this.getAllDutiesFromMusician(musician);
         }
@@ -111,11 +108,9 @@ public class PointsManager {
     private List<DutyEntity> getAllDutiesFromMusician(MusicianEntity musician) {
         List<DutyEntity> duties = new LinkedList<>();
         for (DutyEntity duty : this.allDuties) {
-            for (DutyPositionEntity dpM : musician.getDutyPositions()) {
-                for (DutyPositionEntity dp : duty.getDutyPositions()) {
-                    if (dpM.getDutyPositionId().equals(dp.getDutyPositionId())) {
-                        duties.add(duty);
-                    }
+            for (DutyPositionEntity dp : duty.getDutyPositions()) {
+                if (dp.getMusician().getMusicianId().equals(musician.getMusicianId())) {
+                    duties.add(duty);
                 }
             }
         }
@@ -137,7 +132,7 @@ public class PointsManager {
         // Beware! if allDuties isn't loaded this method will load
         // the musicians individually from the DAO
         if (this.allDuties == null) {
-            listOfDutiesFromMusician = dutyDao.getAllDutiesInRangeFromMusician(musician,month);
+            listOfDutiesFromMusician = dutyDao.getAllDutiesInRangeFromMusician(musician, month);
         } else {
             listOfDutiesFromMusician = this.getAllDutiesFromMusician(musician);
         }
