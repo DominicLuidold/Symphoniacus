@@ -15,12 +15,16 @@ import org.mockito.Mockito;
 
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 class WishRequestDaoTest {
-    private static final Logger LOG = LogManager.getLogger(WishRequestDao.class);
-    private WishRequestDao dao;
+    private static final Logger LOG = LogManager.getLogger(WishRequestDaoTest.class);
+    private PositiveWishDao pdao;
+    private NegativeDutyWishDao ndutydao;
+    private NegativeDateWishDao ndatedao;
 
     @BeforeAll
     void initialize() {
-        this.dao = new WishRequestDao();
+        this.pdao = new PositiveWishDao();
+        this.ndutydao = new NegativeDutyWishDao();
+        this.ndatedao = new NegativeDateWishDao();
     }
 
     @Test
@@ -28,9 +32,9 @@ class WishRequestDaoTest {
         DutyEntity mockedDuty = Mockito.mock(DutyEntity.class);
         mockedDuty.setDutyId(Mockito.anyInt());
 
-        List<PositiveWishEntity> positiveWishes = dao.getAllPositiveWishes(mockedDuty);
-        List<NegativeDutyWishEntity> negativeDutyWishes = dao.getAllNegativeDutyWishes(mockedDuty);
-        List<NegativeDateWishEntity> negativeDateWishes = dao.getAllNegativeDateWishes(mockedDuty);
+        List<PositiveWishEntity> positiveWishes = pdao.getAllPositiveWishes(mockedDuty);
+        List<NegativeDutyWishEntity> negativeDutyWishes = ndutydao.getAllNegativeDutyWishes(mockedDuty);
+        List<NegativeDateWishEntity> negativeDateWishes = ndatedao.getAllNegativeDateWishes(mockedDuty);
 
         Assertions.assertNotNull(positiveWishes);
         Assertions.assertNotNull(negativeDutyWishes);
