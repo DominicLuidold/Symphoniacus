@@ -335,10 +335,8 @@ public class DutyScheduleController implements Initializable, Controllable {
             .hideAfter(new Duration(2000))
             .show();
 
-        // this is obviously not good
-        //this.initDutyPositionsTableWithMusicians();
-        //this.initMusicianTableWithoutRequests();
         this.positionsTable.refresh();
+        this.initMusicianTableWithoutRequests();
     }
 
     private void setActualPosition(DutyPosition dutyPosition) {
