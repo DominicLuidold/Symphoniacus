@@ -42,15 +42,13 @@ public class UserDao extends BaseDao<UserEntity> {
      * @return A user matching provided credentials
      */
     public Optional<UserEntity> login(String userShortCut, String password) {
-        this.createEntityManager();
-        TypedQuery<UserEntity> query = this.entityManager.createQuery(
+        TypedQuery<UserEntity> query = entityManager.createQuery(
             "SELECT u FROM UserEntity u WHERE u.shortcut = :shortc AND u.password = :pwd",
             UserEntity.class
         );
         query.setParameter("shortc", userShortCut);
         query.setParameter("pwd", password);
         UserEntity result = query.getSingleResult();
-        this.tearDown();
 
         return Optional.of(result);
     }
@@ -62,14 +60,12 @@ public class UserDao extends BaseDao<UserEntity> {
      * @return True if user is a musician, false otherwise
      */
     public boolean isUserMusician(UserEntity currentUser) {
-        this.createEntityManager();
-        TypedQuery<Long> query = this.entityManager.createQuery(
+        TypedQuery<Long> query = entityManager.createQuery(
             "SELECT COUNT(m) FROM MusicianEntity m WHERE m.user = :user",
             Long.class
         );
         query.setParameter("user", currentUser);
         Long result = query.getSingleResult();
-        this.tearDown();
 
         return result == 1;
     }
