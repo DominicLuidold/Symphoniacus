@@ -95,6 +95,10 @@ public class BrutalCalendarSkin extends SkinBase<CalendarView> {
     private final InvalidationListener printEntriesVisibilityListener =
         obs -> updatePrintVisibility();
 
+    /**
+     * This is the Ultimate Brutal Calendar Skin.
+     * @param view a view
+     */
     public BrutalCalendarSkin(CalendarView view) {
         super(view);
 
@@ -140,7 +144,7 @@ public class BrutalCalendarSkin extends SkinBase<CalendarView> {
         yearPage.hiddenProperty().addListener(updateSwitcherListener);
 
         this.leftMasterDetailPane = new MasterDetailPane(Side.LEFT);
-        TrayPane trayPane = new TrayPane();
+
         this.trayButton = new ToggleButton(
             Messages.getString("CalendarViewSkin.TOGGLE_SOURCE_TRAY")); //$NON-NLS-1$
         this.trayButton.setId("show-tray-button");
@@ -314,6 +318,7 @@ public class BrutalCalendarSkin extends SkinBase<CalendarView> {
 
         view.selectedPageProperty().addListener(it -> changePage());
 
+        TrayPane trayPane = new TrayPane();
         leftMasterDetailPane.setMasterNode(borderPane1);
         leftMasterDetailPane.setDetailNode(trayPane);
         leftMasterDetailPane.setId("tray-pane"); //$NON-NLS-1$
@@ -322,7 +327,7 @@ public class BrutalCalendarSkin extends SkinBase<CalendarView> {
         leftMasterDetailPane.getStylesheets().add(CalendarFXControl.class
             .getResource("calendar.css").toExternalForm()); //$NON-NLS-1$
 
-        MasterDetailPane rightMasterDetailPane = new MasterDetailPane(RIGHT);
+
         searchResultView = view.getSearchResultView();
 
         Bindings.bindContentBidirectional(searchResultView.getCalendarSources(),
@@ -335,6 +340,8 @@ public class BrutalCalendarSkin extends SkinBase<CalendarView> {
 
         view.showSearchResultsTrayProperty().bind(Bindings
             .not(Bindings.isEmpty(searchResultView.getSearchResults())));
+
+        MasterDetailPane rightMasterDetailPane = new MasterDetailPane(RIGHT);
 
         rightMasterDetailPane.setDetailNode(searchResultView);
         rightMasterDetailPane.setMasterNode(leftMasterDetailPane);
@@ -358,7 +365,7 @@ public class BrutalCalendarSkin extends SkinBase<CalendarView> {
         borderPane.setCenter(rightMasterDetailPane);
 
         if (Boolean.getBoolean("calendarfx.developer")) { //$NON-NLS-1$
-            DeveloperConsole developerConsole = view.getDeveloperConsole();
+
             MasterDetailPane developerConsoleMasterDetailPane = new MasterDetailPane(
                 Side.BOTTOM);
             developerConsoleMasterDetailPane.setDividerPosition(.6);
@@ -368,6 +375,8 @@ public class BrutalCalendarSkin extends SkinBase<CalendarView> {
                 .add("developer-master-detail-pane"); //$NON-NLS-1$
             developerConsoleMasterDetailPane.setDetailSide(Side.BOTTOM);
             developerConsoleMasterDetailPane.setMasterNode(borderPane);
+
+            DeveloperConsole developerConsole = view.getDeveloperConsole();
             developerConsoleMasterDetailPane.setDetailNode(developerConsole);
             developerConsoleMasterDetailPane.setShowDetailNode(true);
             developerConsoleMasterDetailPane.showDetailNodeProperty()

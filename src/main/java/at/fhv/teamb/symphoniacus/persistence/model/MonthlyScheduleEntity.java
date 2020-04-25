@@ -7,9 +7,11 @@ import java.util.List;
 import java.util.Set;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
 import javax.persistence.ManyToMany;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
@@ -69,20 +71,6 @@ public class MonthlyScheduleEntity {
     public void removeWeeklySchedules(WeeklyScheduleEntity weeklyScheduleEntity) {
         this.weeklySchedules.remove(weeklyScheduleEntity);
         weeklyScheduleEntity.setMonthlySchedule(null);
-    }
-
-    public Set<SectionMonthlyScheduleEntity> getSectionMonthlyScheduleSet() {
-        return this.sectionMonthlyScheduleSet;
-    }
-
-    public void setSectionMonthlyScheduleSet(
-        Set<SectionMonthlyScheduleEntity> sectionMonthlyScheduleSet) {
-        this.sectionMonthlyScheduleSet = sectionMonthlyScheduleSet;
-    }
-
-    public void addSectionMonthlySchedule(SectionMonthlyScheduleEntity sectionMonthlySchedule) {
-        this.sectionMonthlyScheduleSet.add(sectionMonthlySchedule);
-        sectionMonthlySchedule.setMonthlySchedule(this);
     }
 
     public Integer getMonthlyScheduleId() {

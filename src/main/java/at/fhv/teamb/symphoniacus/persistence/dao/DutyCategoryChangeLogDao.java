@@ -3,6 +3,7 @@ package at.fhv.teamb.symphoniacus.persistence.dao;
 import at.fhv.teamb.symphoniacus.persistence.BaseDao;
 import at.fhv.teamb.symphoniacus.persistence.model.DutyCategoryChangelogEntity;
 import at.fhv.teamb.symphoniacus.persistence.model.DutyCategoryEntity;
+import at.fhv.teamb.symphoniacus.persistence.model.DutyEntity;
 import java.util.List;
 import java.util.Optional;
 import javax.persistence.TypedQuery;
@@ -14,9 +15,15 @@ import javax.persistence.TypedQuery;
  */
 public class DutyCategoryChangeLogDao extends BaseDao<DutyCategoryChangelogEntity> {
 
+    /**
+     * Finds a duty by its key.
+     *
+     * @param key The key of the duty
+     * @return The duty that is looked for
+     */
     @Override
-    public Optional<DutyCategoryChangelogEntity> find(Object key) {
-        return Optional.empty();
+    public Optional<DutyCategoryChangelogEntity> find(Integer key) {
+        return this.find(DutyCategoryChangelogEntity.class, key);
     }
 
     @Override

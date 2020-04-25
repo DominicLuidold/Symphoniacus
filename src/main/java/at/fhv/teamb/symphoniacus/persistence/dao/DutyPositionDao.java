@@ -17,9 +17,15 @@ import javax.persistence.TypedQuery;
  */
 public class DutyPositionDao extends BaseDao<DutyPositionEntity> {
 
+    /**
+     * Finds a duty by its key.
+     *
+     * @param key The key of the duty
+     * @return The duty that is looked for
+     */
     @Override
-    public Optional<DutyPositionEntity> find(Object key) {
-        return Optional.empty();
+    public Optional<DutyPositionEntity> find(Integer key) {
+        return this.find(DutyPositionEntity.class, key);
     }
 
     /**

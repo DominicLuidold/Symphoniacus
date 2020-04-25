@@ -13,6 +13,7 @@ import at.fhv.teamb.symphoniacus.presentation.internal.MusicianTableModel;
 import at.fhv.teamb.symphoniacus.presentation.internal.OldDutyComboView;
 import at.fhv.teamb.symphoniacus.presentation.internal.ScheduleButtonTableCell;
 import at.fhv.teamb.symphoniacus.presentation.internal.tasks.GetMusiciansAvailableForPositionTask;
+import at.fhv.teamb.symphoniacus.presentation.internal.tasks.GetOtherDutiesTask;
 import java.net.URL;
 import java.time.format.DateTimeFormatter;
 import java.util.LinkedList;
@@ -20,6 +21,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.ResourceBundle;
 import java.util.Set;
+import java.util.stream.Collectors;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -38,6 +40,7 @@ import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.util.Duration;
+import javafx.util.StringConverter;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.controlsfx.control.Notifications;
@@ -45,16 +48,14 @@ import org.controlsfx.control.Notifications;
 public class DutyScheduleController implements Initializable, Controllable {
 
     private static final Logger LOG = LogManager.getLogger(DutyScheduleController.class);
+    @FXML
+    public Button scheduleSaveBtn;
     private Duty duty;
     private Section section;
     private DutyScheduleManager dutyScheduleManager;
     private DutyManager dutyManager;
     private ActualSectionInstrumentation actualSectionInstrumentation;
     private DutyPosition selectedDutyPosition;
-
-    @FXML
-    public Button scheduleSaveBtn;
-
     @FXML
     private AnchorPane dutySchedule;
 
@@ -94,8 +95,6 @@ public class DutyScheduleController implements Initializable, Controllable {
     @FXML
     private ComboBox<OldDutyComboView> oldDutySelect;
 
-
-
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         this.registerController();
@@ -124,7 +123,7 @@ public class DutyScheduleController implements Initializable, Controllable {
             } else {
                 Notifications.create()
                     .title("Not saving")
-                    .text("No changes was made.")
+                    .text("No changes were made.")
                     .position(Pos.CENTER)
                     .hideAfter(new Duration(4000))
                     .showError();
@@ -132,10 +131,10 @@ public class DutyScheduleController implements Initializable, Controllable {
             if (this.actualSectionInstrumentation
                 .getPersistenceState()
                 .equals(PersistenceState.EDITED)
-                ) {
+            ) {
                 Notifications.create()
                     .title("Saving Faild")
-                    .text("Fomething went wrong while saving.")
+                    .text("Something went wrong while saving.")
                     .position(Pos.CENTER)
                     .hideAfter(new Duration(4000))
                     .showError();
@@ -147,6 +146,7 @@ public class DutyScheduleController implements Initializable, Controllable {
         });
 
         this.getOldDuty.setOnAction(e -> {
+            System.out.println("Pressed");
             loadOldDuty();
         });
 
@@ -362,12 +362,51 @@ public class DutyScheduleController implements Initializable, Controllable {
     }
 
     private void initOldDutyComboView() {
-        OldDutyComboView o1 = new OldDutyComboView("OldDuty1");
-        OldDutyComboView o2 = new OldDutyComboView("OldDuty2");
+        GetOtherDutiesTask task = new GetOtherDutiesTask(
+            this.dutyManager,
+            this.duty,
+            this.section,
+            5
+        );
+        this.oldDutySelect.setPlaceholder(new Label("No duty selected"));
+        task.setOnSucceeded(event -> {
+            Optional<List<Duty>> list = task.getValue();
+            if (list.isPresent()) {
+                List<Duty> dutyList = list.get();
+                ObservableList<OldDutyComboView> observableList
+                    = FXCollections.observableArrayList();
+                LOG.debug("Found {} other duties", dutyList.size());
+                for (Duty d : dutyList) {
+                    observableList.add(
+                        new OldDutyComboView(duty)
+                    );
+                }
+                this.oldDutySelect.getItems().setAll(observableList);
+                this.oldDutySelect.setConverter(new StringConverter<OldDutyComboView>() {
+                    @Override
+                    public String toString(OldDutyComboView duty) {
+                        return duty.getType() + " | " + duty.getStart();
+                    }
 
-        ObservableList<OldDutyComboView> oldDutyComboViews = FXCollections.observableArrayList();
-        oldDutyComboViews.add(o1);
-        oldDutyComboViews.add(o2);
+                    @Override
+                    public OldDutyComboView fromString(String title) {
+                        return observableList.stream()
+                            .filter(
+                                item -> item
+                                    .getType()
+                                    .equals(
+                                        title.substring(0, title.lastIndexOf("|") - 1)
+                                    )
+                            )
+                            .collect(Collectors.toList()).get(0);
+                    }
+                });
+
+            } else {
+                LOG.error("Cannot load other duties in GUI");
+            }
+        });
+        new Thread(task).start();
 
         /*
         LinkedList<Duty> oldDutys = this.dutyScheduleManager.getOldDutys();
@@ -375,8 +414,6 @@ public class DutyScheduleController implements Initializable, Controllable {
             oldDutyComboViews.add(new OldDutyComboView(d));
         }
         */
-
-        this.oldDutySelect.setItems(oldDutyComboViews);
     }
 
     private void loadOldDuty() {
@@ -478,7 +515,7 @@ public class DutyScheduleController implements Initializable, Controllable {
             new SimpleStringProperty(
                 "Current position: "
                     + this.selectedDutyPosition
-                        .getEntity().getInstrumentationPosition().getPositionDescription()
+                    .getEntity().getInstrumentationPosition().getPositionDescription()
             )
         );
     }
@@ -494,7 +531,8 @@ public class DutyScheduleController implements Initializable, Controllable {
                 return;
             } else if (userSelection == ButtonType.OK) {
                 LOG.debug(
-                    "Current dutyScheduleManager: {} ,Current actualSectionInstrumentation: {}",
+                    "Current dutyScheduleManager: {} "
+                        + ",Current actualSectionInstrumentation: {}",
                     this.dutyScheduleManager,
                     this.actualSectionInstrumentation
                 );
@@ -536,7 +574,8 @@ public class DutyScheduleController implements Initializable, Controllable {
     }
 
     private ButtonType getConfirmation() {
-        Label label = new Label();;
+        Label label = new Label();
+        ;
         ButtonType buttonType = null;
 
         Alert alert = new Alert(Alert.AlertType.CONFIRMATION);

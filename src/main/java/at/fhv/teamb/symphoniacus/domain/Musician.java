@@ -1,11 +1,13 @@
 package at.fhv.teamb.symphoniacus.domain;
 
 import at.fhv.teamb.symphoniacus.domain.exception.PointsNotCalculatedException;
+import at.fhv.teamb.symphoniacus.persistence.model.DutyEntity;
 import at.fhv.teamb.symphoniacus.persistence.model.DutyPositionEntity;
 import at.fhv.teamb.symphoniacus.persistence.model.MusicianEntity;
 import at.fhv.teamb.symphoniacus.persistence.model.UserEntity;
 import java.util.List;
 import java.util.Objects;
+import java.util.Optional;
 
 /**
  * Domain object for Musician.
@@ -16,6 +18,7 @@ public class Musician {
     private final UserEntity userEntity;
     private MusicianEntity entity;
     private Points points;
+    private WishRequest wishRequest;
 
     public Musician(MusicianEntity entity) {
         this(entity, null);
@@ -68,6 +71,14 @@ public class Musician {
 
     public MusicianEntity getEntity() {
         return this.entity;
+    }
+
+    public WishRequest getWishRequest() {
+        return wishRequest;
+    }
+
+    public void setWishRequest(WishRequest wishRequest) {
+        this.wishRequest = wishRequest;
     }
 
     @Override

@@ -1,5 +1,6 @@
 package at.fhv.teamb.symphoniacus.persistence;
 
+import java.util.Optional;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.Persistence;
@@ -22,5 +23,41 @@ public abstract class BaseDao<T> implements Dao<T> {
 
     public BaseDao() {
         LOG.debug("Creating a new DAO and EntityManager");
+    }
+
+    /**
+     * Finds the object based on the provided primary key.
+     *
+     * @param clazz The class to use
+     * @param key   The primary key to use
+     * @return The object
+     */
+    protected Optional<T> find(Class<T> clazz, Integer key) {
+        // Disable cache because duty positions could be set.
+        entityManager.clear();
+        T elem = entityManager.find(clazz, key);
+        if (elem != null) {
+            return Optional.of(elem);
+        }
+        return Optional.empty();
+    }
+
+    /**
+     * Creates a new {@link EntityManager} that can be used to create new connections.
+     */
+    public void createEntityManager() {
+        LOG.debug("createEntityManager is currently NOP");
+        //this.entityManagerFactory = Persistence.createEntityManagerFactory(
+        //    "mysqldb"
+        //);
+        //this.entityManager = entityManagerFactory.createEntityManager();
+    }
+
+    /**
+     * Tears down the {@link EntityManagerFactory}, thus closing all open connections.
+     */
+    public void tearDown() {
+        LOG.debug("createEntityManager is currently NOP");
+        // this.entityManager.close();
     }
 }
