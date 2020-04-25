@@ -5,6 +5,7 @@ import at.fhv.teamb.symphoniacus.domain.ActualSectionInstrumentation;
 import at.fhv.teamb.symphoniacus.domain.Duty;
 import at.fhv.teamb.symphoniacus.domain.DutyPosition;
 import at.fhv.teamb.symphoniacus.domain.Musician;
+import at.fhv.teamb.symphoniacus.domain.PersistenceState;
 import at.fhv.teamb.symphoniacus.domain.Section;
 import at.fhv.teamb.symphoniacus.presentation.internal.DutyPositionMusicianTableModel;
 import at.fhv.teamb.symphoniacus.presentation.internal.MusicianTableModel;
@@ -92,6 +93,17 @@ public class DutyScheduleController implements Initializable, Controllable {
 
         this.scheduleSaveBtn.setOnAction(e -> {
             this.dutyScheduleManager.persist(this.actualSectionInstrumentation);
+            if (this.actualSectionInstrumentation
+                .getPersistenceState()
+                .equals(PersistenceState.EDITED)
+            ) {
+                Notifications.create()
+                    .title("Saving Faild")
+                    .text("Fomething went wrong while saving.")
+                    .position(Pos.CENTER)
+                    .hideAfter(new Duration(4000))
+                    .showError();
+            }
         });
 
         this.scheduleBackBtn.setOnAction(e -> {
@@ -389,12 +401,35 @@ public class DutyScheduleController implements Initializable, Controllable {
     }
 
     private void closeDutySchedule() {
-        ButtonType userSelection = getConfirmation();
-
         //TODO Abfrage SaveState(old, newold)? von actualSectionInstrumentation
-        if ((userSelection == ButtonType.CLOSE) || (userSelection == ButtonType.CANCEL)) {
-            return;
-        } else if (userSelection == ButtonType.OK) {
+        if (this.actualSectionInstrumentation
+            .getPersistenceState()
+            .equals(PersistenceState.EDITED)
+        ) {
+            ButtonType userSelection = getConfirmation();
+            if ((userSelection == ButtonType.CLOSE) || (userSelection == ButtonType.CANCEL)) {
+                return;
+            } else if (userSelection == ButtonType.OK) {
+                LOG.debug(
+                    "Current dutyScheduleManager: {} ,Current actualSectionInstrumentation: {}",
+                    this.dutyScheduleManager,
+                    this.actualSectionInstrumentation
+                );
+                this.actualSectionInstrumentation = null;
+                this.dutyScheduleManager = null;
+                this.selectedDutyPosition = null;
+                this.duty = null;
+                this.section = null;
+                this.musicianTableWithoutRequests.getItems().clear();
+                this.positionsTable.getItems().clear();
+                this.musicianTableWithoutRequests.refresh();
+                this.positionsTable.refresh();
+                this.hide();
+                MasterController mc = MasterController.getInstance();
+                CalendarController cc = (CalendarController) mc.get("CalendarController");
+                cc.show();
+            }
+        } else {
             LOG.debug(
                 "Current dutyScheduleManager: {} ,Current actualSectionInstrumentation: {}",
                 this.dutyScheduleManager,
@@ -414,6 +449,7 @@ public class DutyScheduleController implements Initializable, Controllable {
             CalendarController cc = (CalendarController) mc.get("CalendarController");
             cc.show();
         }
+
     }
 
     private ButtonType getConfirmation() {
