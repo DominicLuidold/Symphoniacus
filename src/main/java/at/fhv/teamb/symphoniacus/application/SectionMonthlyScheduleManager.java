@@ -1,4 +1,4 @@
-package at.fhv.teamb.symphoniacus.application.type;
+package at.fhv.teamb.symphoniacus.application;
 
 import at.fhv.teamb.symphoniacus.domain.SectionMonthlySchedule;
 import at.fhv.teamb.symphoniacus.persistence.dao.DutyPositionDao;
