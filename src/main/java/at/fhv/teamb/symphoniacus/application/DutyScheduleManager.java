@@ -117,6 +117,7 @@ public class DutyScheduleManager {
             // Get musician entities from database
             this.sectionMusicians = new HashSet<>();
             if (this.sectionMusicianEntities == null) {
+                //TODO external Musician have no Contract
                 this.sectionMusicianEntities = this.musicianDao.findAllWithSectionAndActiveContract(
                     position.getEntity().getSection()
                 );
