@@ -13,18 +13,18 @@
         <class>at.fhv.teamb.symphoniacus.persistence.model.InstrumentationEntity</class>
         <class>at.fhv.teamb.symphoniacus.persistence.model.InstrumentationPositionEntity</class>
         <class>at.fhv.teamb.symphoniacus.persistence.model.InstrumentCategoryEntity</class>
-        <class>at.fhv.teamb.symphoniacus.persistence.model.MonthlySchedule</class>
+        <class>at.fhv.teamb.symphoniacus.persistence.model.MonthlyScheduleEntity</class>
         <class>at.fhv.teamb.symphoniacus.persistence.model.MusicalPieceEntity</class>
         <class>at.fhv.teamb.symphoniacus.persistence.model.MusicianEntity</class>
         <class>at.fhv.teamb.symphoniacus.persistence.model.MusicianRole</class>
-        <class>at.fhv.teamb.symphoniacus.persistence.model.NegativeDateWish</class>
-        <class>at.fhv.teamb.symphoniacus.persistence.model.NegativeDutyWish</class>
-        <class>at.fhv.teamb.symphoniacus.persistence.model.PositiveWish</class>
+        <class>at.fhv.teamb.symphoniacus.persistence.model.NegativeDateWishEntity</class>
+        <class>at.fhv.teamb.symphoniacus.persistence.model.NegativeDutyWishEntity</class>
+        <class>at.fhv.teamb.symphoniacus.persistence.model.PositiveWishEntity</class>
         <class>at.fhv.teamb.symphoniacus.persistence.model.SectionEntity</class>
         <class>at.fhv.teamb.symphoniacus.persistence.model.SectionInstrumentationEntity</class>
         <class>at.fhv.teamb.symphoniacus.persistence.model.SectionInstrumentCategory</class>
-        <class>at.fhv.teamb.symphoniacus.persistence.model.SectionMonthlySchedule</class>
-        <class>at.fhv.teamb.symphoniacus.persistence.model.SeriesOfPerformances</class>
+        <class>at.fhv.teamb.symphoniacus.persistence.model.SectionMonthlyScheduleEntity</class>
+        <class>at.fhv.teamb.symphoniacus.persistence.model.SeriesOfPerformancesEntity</class>
         <class>at.fhv.teamb.symphoniacus.persistence.model.Substitute</class>
         <class>at.fhv.teamb.symphoniacus.persistence.model.UserEntity</class>
         <class>at.fhv.teamb.symphoniacus.persistence.model.VacationEntity</class>

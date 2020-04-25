@@ -115,7 +115,7 @@ public class DutyDao extends BaseDao<DutyEntity> {
         boolean isReadyForOrganisationManager,
         boolean isPublished
     ) {
-        TypedQuery<DutyEntity> query = this.entityManager.createQuery("SELECT d FROM DutyEntity d "
+        TypedQuery<DutyEntity> query = entityManager.createQuery("SELECT d FROM DutyEntity d "
             + "INNER JOIN d.sectionMonthlySchedules sms "
             + "INNER JOIN sms.section s "
             + "JOIN FETCH d.dutyCategory dc "
@@ -167,9 +167,8 @@ public class DutyDao extends BaseDao<DutyEntity> {
         query.setParameter("musician", musician);
         query.setParameter("start", startWithTime);
         query.setParameter("end", endWithTime);
-        List<DutyEntity> dutyCategories = query.getResultList();
 
-        return dutyCategories;
+        return query.getResultList();
     }
 
     /**

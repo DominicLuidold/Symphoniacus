@@ -1,7 +1,7 @@
-package at.fhv.teamb.symphoniacus.domain;
+package at.fhv.teamb.symphoniacus.persistence;
 
 /**
- * The State enum indicated whether a object has been persisted in the database or
+ * The PersistenceState enum indicates whether a object has been persisted in the database or
  * has unsaved changes.
  *
  * @author Tobias Moser

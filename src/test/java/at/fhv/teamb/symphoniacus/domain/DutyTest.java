@@ -2,7 +2,7 @@ package at.fhv.teamb.symphoniacus.domain;
 
 import at.fhv.teamb.symphoniacus.persistence.model.DutyCategoryEntity;
 import at.fhv.teamb.symphoniacus.persistence.model.DutyEntity;
-import at.fhv.teamb.symphoniacus.persistence.model.SeriesOfPerformances;
+import at.fhv.teamb.symphoniacus.persistence.model.SeriesOfPerformancesEntity;
 import java.time.LocalDateTime;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
@@ -34,7 +34,7 @@ public class DutyTest {
         dc.setType("Konzert-Probe");
         Mockito.when(de.getDutyCategory()).thenReturn(dc);
 
-        SeriesOfPerformances sp = new SeriesOfPerformances();
+        SeriesOfPerformancesEntity sp = new SeriesOfPerformancesEntity();
         sp.setDescription("Aida");
         Mockito.when(de.getSeriesOfPerformances()).thenReturn(sp);
 
