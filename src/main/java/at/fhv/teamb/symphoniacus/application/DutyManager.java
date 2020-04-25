@@ -153,6 +153,12 @@ public class DutyManager {
         );
     }
 
+    /**
+     * TODO JAVADOC.
+
+     * @return
+     */
+
     public Optional<List<Duty>> getOtherDutiesForSopOrSection(
         Duty duty,
         Section section,

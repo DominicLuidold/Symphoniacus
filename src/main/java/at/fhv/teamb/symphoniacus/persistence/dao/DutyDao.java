@@ -249,6 +249,10 @@ public class DutyDao extends BaseDao<DutyEntity> {
         return false;
     }
 
+    /**
+     * TODO JAVADOC.
+     * @return
+     */
     public List<DutyEntity> getOtherDutiesForSeriesOfPerformances(
         SeriesOfPerformancesEntity sop,
         Integer maxNumberOfDuties
@@ -265,6 +269,10 @@ public class DutyDao extends BaseDao<DutyEntity> {
         return query.getResultList();
     }
 
+    /**
+     * TODO JAVADOC.
+     * @return
+     */
     public List<DutyEntity> getOtherDutiesForSection(
         SectionEntity section,
         Integer maxNumberOfDuties

@@ -180,8 +180,6 @@ public class CalendarController implements Initializable, Controllable {
                                     setDisabled(false);
                                     setDisable(false);
                                 }
-
-
                             }
                         }
                     };

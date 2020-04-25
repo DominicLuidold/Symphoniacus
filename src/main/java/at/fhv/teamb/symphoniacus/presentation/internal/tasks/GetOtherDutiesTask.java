@@ -26,6 +26,9 @@ public class GetOtherDutiesTask extends Task<Optional<List<Duty>>> {
     private Section section;
     private Integer numberOfMaxDuties;
 
+    /**
+     * TODO JAVADOC.
+     */
     public GetOtherDutiesTask(
         DutyManager dutyManager,
         Duty duty,
