@@ -8,6 +8,7 @@ import java.time.DayOfWeek;
 import java.time.LocalDate;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Optional;
 
 /**
  * This class is responsible for finding {@link DutyEntity} objects based on a range of time and
@@ -31,6 +32,23 @@ public class DutyManager {
     public static LocalDate getLastMondayDate(LocalDate givenDate) {
         // Will always jump back to last monday
         return givenDate.with(DayOfWeek.MONDAY);
+    }
+
+    /**
+     * Returns a loaded duty from its id.
+     *
+     * @param dutyId The identifier of this duty
+     * @return A minimal-loaded duty
+     */
+    public Optional<Duty> loadDutyDetails(Integer dutyId) {
+        Optional<DutyEntity> dutyEntity = this.dutyDao.find(dutyId);
+
+        if (dutyEntity.isPresent()) {
+            Duty d = new Duty(dutyEntity.get());
+            return Optional.of(d);
+        } else {
+            return Optional.empty();
+        }
     }
 
     /**

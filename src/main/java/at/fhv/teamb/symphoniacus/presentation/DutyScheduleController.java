@@ -1,5 +1,6 @@
 package at.fhv.teamb.symphoniacus.presentation;
 
+import at.fhv.teamb.symphoniacus.application.DutyManager;
 import at.fhv.teamb.symphoniacus.application.DutyScheduleManager;
 import at.fhv.teamb.symphoniacus.domain.ActualSectionInstrumentation;
 import at.fhv.teamb.symphoniacus.domain.Duty;
@@ -47,6 +48,7 @@ public class DutyScheduleController implements Initializable, Controllable {
     private Duty duty;
     private Section section;
     private DutyScheduleManager dutyScheduleManager;
+    private DutyManager dutyManager;
     private ActualSectionInstrumentation actualSectionInstrumentation;
     private DutyPosition selectedDutyPosition;
 
@@ -302,7 +304,6 @@ public class DutyScheduleController implements Initializable, Controllable {
         MasterController mc = MasterController.getInstance();
         mc.showStatusBarLoading();
 
-
         if (actualSectionInstrumentation == null) {
             Optional<ActualSectionInstrumentation> actualSectionInstrumentation = this
                 .dutyScheduleManager
@@ -543,12 +544,21 @@ public class DutyScheduleController implements Initializable, Controllable {
      * @param duty actual Duty.
      */
     public void setDuty(Duty duty) {
-        this.duty = duty;
+        if (this.dutyManager == null) {
+            this.dutyManager = new DutyManager();
+        }
+        Optional<Duty> d = this.dutyManager.loadDutyDetails(duty.getEntity().getDutyId());
+        if (d.isEmpty()) {
+            Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+            alert.setTitle("Cannot load duty");
+            alert.setHeaderText("Something went wrong. Please try again.");
+        }
+        this.duty = d.get();
 
-        LOG.debug("Binding duty title to: " + duty.getTitle());
+        LOG.debug("Binding duty title to: " + this.duty.getTitle());
         this.dutyTitle.textProperty().bind(
             new SimpleStringProperty(
-                duty
+                this.duty
                     .getEntity()
                     .getStart()
                     .format(
