@@ -104,11 +104,35 @@ public class DutyScheduleController implements Initializable, Controllable {
         this.dutySchedule.setVisible(false);
 
         this.scheduleSaveBtn.setOnAction(e -> {
-            this.dutyScheduleManager.persist(this.actualSectionInstrumentation);
             if (this.actualSectionInstrumentation
                 .getPersistenceState()
                 .equals(PersistenceState.EDITED)
             ) {
+                this.dutyScheduleManager.persist(this.actualSectionInstrumentation);
+                if (this.actualSectionInstrumentation
+                    .getPersistenceState()
+                    .equals(PersistenceState.PERSISTED)
+                ) {
+                    Notifications.create()
+                        .title("Saving Successful")
+                        .text("Current Instrumentation was saved.")
+                        .position(Pos.CENTER)
+                        .hideAfter(new Duration(4000))
+                        .show();
+                }
+
+            } else {
+                Notifications.create()
+                    .title("Not saving")
+                    .text("No changes was made.")
+                    .position(Pos.CENTER)
+                    .hideAfter(new Duration(4000))
+                    .showError();
+            }
+            if (this.actualSectionInstrumentation
+                .getPersistenceState()
+                .equals(PersistenceState.EDITED)
+                ) {
                 Notifications.create()
                     .title("Saving Faild")
                     .text("Fomething went wrong while saving.")
@@ -517,7 +541,7 @@ public class DutyScheduleController implements Initializable, Controllable {
 
         Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
         alert.setTitle("Closing without saving");
-        alert.setHeaderText("Are you sure want to close without saving?");
+        alert.setHeaderText("Are you sure you want to close without saving?");
 
         // option != null.
         Optional<ButtonType> option = alert.showAndWait();
