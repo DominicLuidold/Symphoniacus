@@ -8,7 +8,7 @@ import javax.persistence.EntityTransaction;
 public class SectionMonthlyScheduleDao extends BaseDao<SectionMonthlyScheduleEntity> {
 
     @Override
-    public Optional<SectionMonthlyScheduleEntity> find(Object key) {
+    public Optional<SectionMonthlyScheduleEntity> find(Integer key) {
         return Optional.empty();
     }
 

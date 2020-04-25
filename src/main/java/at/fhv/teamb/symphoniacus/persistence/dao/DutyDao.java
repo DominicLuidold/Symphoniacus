@@ -29,11 +29,8 @@ public class DutyDao extends BaseDao<DutyEntity> {
      * @return The duty that is looked for
      */
     @Override
-    public Optional<DutyEntity> find(Object key) {
-        // Disable cache because duty positions could be set.
-        entityManager.clear();
-        DutyEntity d = entityManager.find(DutyEntity.class, key);
-        return Optional.of(d);
+    public Optional<DutyEntity> find(Integer key) {
+        return this.find(DutyEntity.class, key);
     }
 
     /**

@@ -1,8 +1,10 @@
 package at.fhv.teamb.symphoniacus.persistence.model;
 
 import java.time.LocalDateTime;
+import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Set;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -50,7 +52,7 @@ public class DutyEntity {
     private SeriesOfPerformancesEntity seriesOfPerformances;
 
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "duty", orphanRemoval = true)
-    private List<DutyPositionEntity> dutyPositions = new LinkedList<>();
+    private Set<DutyPositionEntity> dutyPositions = new HashSet<>();
 
     @ManyToMany
     @JoinTable(
@@ -62,7 +64,17 @@ public class DutyEntity {
             @JoinColumn(name = "sectionMonthlyScheduleId")
         }
     )
-    private List<SectionMonthlyScheduleEntity> sectionMonthlySchedules = new LinkedList<>();
+    private Set<SectionMonthlyScheduleEntity> sectionMonthlySchedules = new HashSet<>();
+
+    public void addDuty(DutyPositionEntity dutyPositionEntity) {
+        this.dutyPositions.add(dutyPositionEntity);
+        dutyPositionEntity.setDuty(this);
+    }
+
+    public void removeDuty(DutyPositionEntity dutyPositionEntity) {
+        this.dutyPositions.remove(dutyPositionEntity);
+        dutyPositionEntity.setDuty(null);
+    }
 
     public Integer getDutyId() {
         return this.dutyId;
@@ -121,14 +133,16 @@ public class DutyEntity {
     }
 
     public SeriesOfPerformancesEntity getSeriesOfPerformances() {
-        return this.seriesOfPerformances;
+        return seriesOfPerformances;
     }
 
-    public void setSeriesOfPerformances(SeriesOfPerformancesEntity seriesOfPerformances) {
+    public void setSeriesOfPerformances(
+        SeriesOfPerformancesEntity seriesOfPerformances
+    ) {
         this.seriesOfPerformances = seriesOfPerformances;
     }
 
-    public List<DutyPositionEntity> getDutyPositions() {
+    public Set<DutyPositionEntity> getDutyPositions() {
         return this.dutyPositions;
     }
 
@@ -142,7 +156,7 @@ public class DutyEntity {
         dutyPositionEntity.setDuty(null);
     }
 
-    public List<SectionMonthlyScheduleEntity> getSectionMonthlySchedules() {
+    public Set<SectionMonthlyScheduleEntity> getSectionMonthlySchedules() {
         return this.sectionMonthlySchedules;
     }
 
@@ -154,5 +168,10 @@ public class DutyEntity {
     public void removeSectionMonthlySchedule(SectionMonthlyScheduleEntity sms) {
         this.sectionMonthlySchedules.remove(sms);
         sms.getDuties().remove(this);
+    }
+
+    public void setSectionMonthlySchedules(
+        Set<SectionMonthlyScheduleEntity> sectionMonthlySchedules) {
+        this.sectionMonthlySchedules = sectionMonthlySchedules;
     }
 }
