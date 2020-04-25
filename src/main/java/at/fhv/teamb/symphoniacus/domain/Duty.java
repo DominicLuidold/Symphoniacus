@@ -169,12 +169,12 @@ public class Duty {
             return true;
         }
 
-        // Check if object is an instance of Musician or not
+        // Check if object is an instance of Duty or not
         if (!(obj instanceof Duty)) {
             return false;
         }
 
-        // Typecast obj to Musician to compare data members
+        // Typecast obj to Duty to compare data members
         Duty d = (Duty) obj;
 
         // Compare data members and return accordingly
