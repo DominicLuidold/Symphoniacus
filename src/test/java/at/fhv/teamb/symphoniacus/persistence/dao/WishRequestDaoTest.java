@@ -52,7 +52,8 @@ class WishRequestDaoTest {
 
             // TODO - kann erst gestestet werden, man ein Duty anhand einer ID aus dem DutyDao
             //  holen kann, denn für die ganzen vergleiche wird ein echtes valides Duty benötigt
-/*
+
+            /*
             if (!positiveWishes.isEmpty()) {
                 for (PositiveWishEntity wish : positiveWishes) {
                     Assertions
@@ -78,8 +79,7 @@ class WishRequestDaoTest {
                 }
             }
         }
-
- */
+             */
         }
     }
 }

@@ -38,6 +38,12 @@ public class PositiveWishDao extends BaseDao<PositiveWishEntity> {
         return null;
     }
 
+    /**
+     * Finds all PositiveWishes for a given duty.
+     *
+     * @param duty duty
+     * @return List of (Interface)WishRequestable
+     */
     public List<WishRequestable> getAllPositiveWishes(DutyEntity duty) {
         TypedQuery<WishRequestable> query =
             this.entityManager.createQuery(

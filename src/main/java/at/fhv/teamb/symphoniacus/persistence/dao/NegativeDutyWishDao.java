@@ -36,6 +36,12 @@ public class NegativeDutyWishDao extends BaseDao<NegativeDutyWishEntity> {
         return null;
     }
 
+    /**
+     * Finds all NegativeDutyWishes for a given duty.
+     *
+     * @param duty duty
+     * @return List of (Interface)WishRequestable
+     */
     public List<WishRequestable> getAllNegativeDutyWishes(DutyEntity duty) {
         TypedQuery<WishRequestable> query =
             this.entityManager.createQuery(

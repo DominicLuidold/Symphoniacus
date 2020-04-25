@@ -18,12 +18,15 @@ import java.util.Set;
  * @author Nino Heinzle
  */
 public class WishRequestManager {
-
     private final PositiveWishDao positiveWishDao;
     private final NegativeDutyWishDao negDutyWishDao;
     private final NegativeDateWishDao negDateWishDao;
     private Set<WishRequestable> allWishRequests;
 
+    /**
+     * Constructor.
+     *
+     */
     public WishRequestManager() {
         this.positiveWishDao = new PositiveWishDao();
         this.negDutyWishDao = new NegativeDutyWishDao();

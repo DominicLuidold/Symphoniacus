@@ -36,6 +36,12 @@ public class NegativeDateWishDao extends BaseDao<NegativeDateWishEntity> {
         return null;
     }
 
+    /**
+     * Finds all NegativeDateDateWishes for a given duty.
+     *
+     * @param duty duty
+     * @return List of (Interface)WishRequestable
+     */
     public List<WishRequestable> getAllNegativeDateWishes(DutyEntity duty) {
         TypedQuery<WishRequestable> query = this.entityManager.createQuery(""
             + "SELECT nd FROM NegativeDateWishEntity nd "
