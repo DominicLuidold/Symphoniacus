@@ -28,4 +28,8 @@ public class OldDutyComboView {
     public String getType() {
         return oldDuty.getEntity().getDutyCategory().getType();
     }
+
+    public Duty getOldDuty() {
+        return oldDuty;
+    }
 }

@@ -16,6 +16,7 @@ import at.fhv.teamb.symphoniacus.presentation.internal.tasks.GetMusiciansAvailab
 import at.fhv.teamb.symphoniacus.presentation.internal.tasks.GetOtherDutiesTask;
 import java.net.URL;
 import java.time.format.DateTimeFormatter;
+import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Optional;
@@ -123,7 +124,7 @@ public class DutyScheduleController implements Initializable, Controllable {
             } else {
                 Notifications.create()
                     .title("Not saving")
-                    .text("No changes were made.")
+                    .text("No changes was made.")
                     .position(Pos.CENTER)
                     .hideAfter(new Duration(4000))
                     .showError();
@@ -427,9 +428,37 @@ public class DutyScheduleController implements Initializable, Controllable {
                 .show();
         } else {
             LOG.debug("Load old Duty {}",
-                this.oldDutySelect.getSelectionModel().getSelectedItem().toString());
+                this.oldDutySelect.getSelectionModel().getSelectedItem().getTitle());
             if (this.actualSectionInstrumentation != null) {
-                //TODO get ASI for oldDuty from Manager
+                Optional<ActualSectionInstrumentation> oldasi = this.dutyScheduleManager
+                    .getInstrumentationDetails(
+                        this.oldDutySelect.getSelectionModel().getSelectedItem().getOldDuty(),
+                        this.section);
+
+                if (oldasi.isPresent()) {
+                    for (DutyPosition dp : this.actualSectionInstrumentation.getDuty()
+                        .getDutyPositions()) {
+                        Set<Musician> avMusicians = this.dutyScheduleManager
+                            .getMusiciansAvailableForPosition(this.duty, dp, false);
+                        Optional<Musician> oldMusician = Optional.empty();
+                        List<DutyPosition> oldDutyPositions =
+                            oldasi.get().getDuty().getDutyPositions();
+
+                        for (DutyPosition odp : oldDutyPositions) {
+                            if (odp.getEntity().getInstrumentationPosition()
+                                .getInstrumentationPositionId()
+                                == dp.getEntity().getInstrumentationPosition()
+                                    .getInstrumentationPositionId()) {
+                                oldMusician = dp.getAssignedMusician();
+                            }
+                        }
+
+                        if (avMusicians.contains(oldMusician.get())) {
+                            this.actualSectionInstrumentation
+                                .assignMusicianToPosition(oldMusician.get(), dp);
+                        }
+                    }
+                }
             }
         }
 
