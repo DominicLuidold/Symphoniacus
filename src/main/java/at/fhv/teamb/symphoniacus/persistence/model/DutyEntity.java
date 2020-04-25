@@ -48,7 +48,7 @@ public class DutyEntity {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "seriesOfPerformancesId")
-    private SeriesOfPerformances seriesOfPerformances;
+    private SeriesOfPerformancesEntity seriesOfPerformances;
 
     @OneToMany(mappedBy = "duty", orphanRemoval = true)
     private List<DutyPositionEntity> dutyPositions = new LinkedList<>();
@@ -64,6 +64,16 @@ public class DutyEntity {
         }
     )
     private Set<SectionMonthlySchedule> sectionMonthlySchedules = new HashSet<>();
+
+    public void addDuty(DutyPositionEntity dutyPositionEntity) {
+        this.dutyPositions.add(dutyPositionEntity);
+        dutyPositionEntity.setDuty(this);
+    }
+
+    public void removeDuty(DutyPositionEntity dutyPositionEntity) {
+        this.dutyPositions.remove(dutyPositionEntity);
+        dutyPositionEntity.setDuty(null);
+    }
 
     public Integer getDutyId() {
         return this.dutyId;
@@ -138,12 +148,12 @@ public class DutyEntity {
         this.end = end;
     }
 
-    public SeriesOfPerformances getSeriesOfPerformances() {
+    public SeriesOfPerformancesEntity getSeriesOfPerformances() {
         return seriesOfPerformances;
     }
 
     public void setSeriesOfPerformances(
-        SeriesOfPerformances seriesOfPerformances
+        SeriesOfPerformancesEntity seriesOfPerformances
     ) {
         this.seriesOfPerformances = seriesOfPerformances;
     }
@@ -160,5 +170,10 @@ public class DutyEntity {
     public void removeSectionMonthlySchedule(SectionMonthlySchedule sms) {
         this.sectionMonthlySchedules.remove(sms);
         sms.getDuties().remove(this);
+    }
+
+    public void setSectionMonthlySchedules(
+        Set<SectionMonthlySchedule> sectionMonthlySchedules) {
+        this.sectionMonthlySchedules = sectionMonthlySchedules;
     }
 }

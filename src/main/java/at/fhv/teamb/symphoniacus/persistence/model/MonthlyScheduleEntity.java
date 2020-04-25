@@ -2,18 +2,23 @@ package at.fhv.teamb.symphoniacus.persistence.model;
 
 import java.time.LocalDate;
 import java.util.HashSet;
+import java.util.LinkedList;
+import java.util.List;
 import java.util.Set;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToMany;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
 @Entity
 @Table(name = "monthlySchedule")
-public class MonthlySchedule {
+public class MonthlyScheduleEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "monthlyScheduleId")
@@ -41,9 +46,32 @@ public class MonthlySchedule {
     @OneToMany(mappedBy = "monthlySchedule", orphanRemoval = true)
     private Set<SectionMonthlySchedule> sectionMonthlyScheduleSet = new HashSet<>();
 
-    //One-To-Many Part for WEEKLYSCHEDULE Table
-    @OneToMany(mappedBy = "monthlySchedule", orphanRemoval = true)
-    private Set<WeeklyScheduleEntity> weeklyScheduleSet = new HashSet<>();
+    //monthlySchedules -> attribute bei many to many
+    @ManyToMany(mappedBy = "monthlySchedules")
+    private List<NegativeDateWishEntity> negativeDateWishes = new LinkedList<>();
+
+    @OneToMany(mappedBy = "monthlySchedule")
+    private List<WeeklyScheduleEntity> weeklySchedules = new LinkedList<>();
+
+    public void addNegativeDateWish(NegativeDateWishEntity negativeDateWishEntity) {
+        this.negativeDateWishes.add(negativeDateWishEntity);
+        negativeDateWishEntity.getMonthlySchedules().add(this);
+    }
+
+    public void removeNegativeDateWish(NegativeDateWishEntity negativeDateWishEntity) {
+        this.negativeDateWishes.remove(negativeDateWishEntity);
+        negativeDateWishEntity.getMonthlySchedules().remove(this);
+    }
+
+    public void addWeeklySchedules(WeeklyScheduleEntity weeklyScheduleEntity) {
+        this.weeklySchedules.add(weeklyScheduleEntity);
+        weeklyScheduleEntity.setMonthlySchedule(this);
+    }
+
+    public void removeWeeklySchedules(WeeklyScheduleEntity weeklyScheduleEntity) {
+        this.weeklySchedules.remove(weeklyScheduleEntity);
+        weeklyScheduleEntity.setMonthlySchedule(null);
+    }
 
     public Set<SectionMonthlySchedule> getSectionMonthlyScheduleSet() {
         return this.sectionMonthlyScheduleSet;
@@ -57,19 +85,6 @@ public class MonthlySchedule {
     public void addSectionMonthlySchedule(SectionMonthlySchedule sectionMonthlySchedule) {
         this.sectionMonthlyScheduleSet.add(sectionMonthlySchedule);
         sectionMonthlySchedule.setMonthlySchedule(this);
-    }
-
-    public Set<WeeklyScheduleEntity> getWeeklyScheduleSet() {
-        return this.weeklyScheduleSet;
-    }
-
-    public void setWeeklyScheduleSet(Set<WeeklyScheduleEntity> weeklyScheduleSet) {
-        this.weeklyScheduleSet = weeklyScheduleSet;
-    }
-
-    public void addWeeklySchedule(WeeklyScheduleEntity weeklySchedule) {
-        this.weeklyScheduleSet.add(weeklySchedule);
-        weeklySchedule.setMonthlySchedule(this);
     }
 
     public Integer getMonthlyScheduleId() {
@@ -126,5 +141,31 @@ public class MonthlySchedule {
 
     public void setEndWish(LocalDate endWish) {
         this.endWish = endWish;
+    }
+
+    public Boolean getPublished() {
+        return isPublished;
+    }
+
+    public void setPublished(Boolean published) {
+        isPublished = published;
+    }
+
+    public List<NegativeDateWishEntity> getNegativeDateWishes() {
+        return negativeDateWishes;
+    }
+
+    public void setNegativeDateWishes(
+        List<NegativeDateWishEntity> negativeDateWishes) {
+        this.negativeDateWishes = negativeDateWishes;
+    }
+
+    public List<WeeklyScheduleEntity> getWeeklySchedules() {
+        return weeklySchedules;
+    }
+
+    public void setWeeklySchedules(
+        List<WeeklyScheduleEntity> weeklySchedules) {
+        this.weeklySchedules = weeklySchedules;
     }
 }

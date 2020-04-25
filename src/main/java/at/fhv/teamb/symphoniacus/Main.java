@@ -8,11 +8,25 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 public class Main extends Application {
 
+    private static final Logger LOG = LogManager.getLogger(Main.class);
+
+    /**
+     * Main class for everything in the world.
+     *
+     * @param args A string array that will most-likely be empty for ad infinitum
+     */
     public static void main(String[] args) {
-        launch(args);
+        try {
+            launch(args);
+        } catch (Exception e) {
+            e.printStackTrace();
+            LOG.error(e);
+        }
     }
 
     @Override
@@ -30,7 +44,8 @@ public class Main extends Application {
             stage.setMinWidth(1366);
             stage.show();
         } catch (IOException e) {
-            e.fillInStackTrace();
+            e.printStackTrace();
+            LOG.error(e);
         }
     }
 }

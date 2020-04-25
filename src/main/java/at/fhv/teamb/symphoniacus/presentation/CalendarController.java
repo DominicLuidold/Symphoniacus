@@ -4,6 +4,7 @@ import at.fhv.teamb.symphoniacus.application.DutyManager;
 import at.fhv.teamb.symphoniacus.application.LoginManager;
 import at.fhv.teamb.symphoniacus.application.MusicianManager;
 import at.fhv.teamb.symphoniacus.domain.Duty;
+import at.fhv.teamb.symphoniacus.domain.Section;
 import at.fhv.teamb.symphoniacus.persistence.model.DutyEntity;
 import at.fhv.teamb.symphoniacus.persistence.model.MusicianEntity;
 import at.fhv.teamb.symphoniacus.persistence.model.SectionEntity;
@@ -53,6 +54,10 @@ public class CalendarController implements Initializable, Controllable {
 
     private static final Logger LOG = LogManager.getLogger(CalendarController.class);
 
+    private DutyScheduleController dutyScheduleController;
+
+    private Section section;
+
     @FXML
     private CalendarView calendarView;
 
@@ -69,12 +74,14 @@ public class CalendarController implements Initializable, Controllable {
         // TODO - Temporarily used until proper login is introduced
         Optional<UserEntity> user = new LoginManager().login("vaubou", "eItFAJSb");
         Optional<MusicianEntity> musician = new MusicianManager().loadMusician(user.get());
-        SectionEntity section = musician.get().getSection();
+        this.section = new Section(musician.get().getSection());
+
 
         this.calendarView.getCalendarSources().setAll(
             prepareCalendarSource(
                 resources.getString("sections"),
-                section
+                //TODO - Section Entity to Section
+                section.getEntity()
             )
         );
 
@@ -96,11 +103,19 @@ public class CalendarController implements Initializable, Controllable {
                                 (CalendarController) mc.get("CalendarController");
                             cc.hide();
                         }
-                        if (mc.get("DutyScheduleController") instanceof DutyScheduleController) {
-                            DutyScheduleController dsc =
-                                (DutyScheduleController) mc.get("DutyScheduleController");
-                            dsc.setDuty(entry.getUserObject());
-                            dsc.show();
+                        if (dutyScheduleController == null) {
+                            if (mc
+                                .get("DutyScheduleController") instanceof DutyScheduleController) {
+                                dutyScheduleController =
+                                    (DutyScheduleController) mc.get("DutyScheduleController");
+                                dutyScheduleController.setDuty(entry.getUserObject());
+                                dutyScheduleController.setSection(section);
+                                dutyScheduleController.show();
+                            }
+                        } else {
+                            dutyScheduleController.setDuty(entry.getUserObject());
+                            dutyScheduleController.setSection(section);
+                            dutyScheduleController.show();
                         }
                         return true;
                     }

@@ -13,9 +13,11 @@ import at.fhv.teamb.symphoniacus.persistence.model.DutyPositionEntity;
 import at.fhv.teamb.symphoniacus.persistence.model.MusicianEntity;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
+import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -30,8 +32,12 @@ public class DutyScheduleManager {
     private final DutyDao dutyDao;
     private final DutyPositionDao dutyPositionDao;
     private final MusicianDao musicianDao;
-    private List<Musician> setMusicians;
-    private List<Musician> unsetMusicians;
+    private final PointsManager pointsManager;
+    private final Set<Musician> setMusicians;
+    private final Set<Musician> unsetMusicians;
+    private List<Duty> dutiesOfThisDay;
+    private List<MusicianEntity> sectionMusicianEntities;
+    private Set<Musician> sectionMusicians;
 
     /**
      * Initialize the DutyScheduleManager.
@@ -40,8 +46,9 @@ public class DutyScheduleManager {
         this.dutyDao = new DutyDao();
         this.dutyPositionDao = new DutyPositionDao();
         this.musicianDao = new MusicianDao();
-        this.setMusicians = new LinkedList<>();
-        this.unsetMusicians = new LinkedList<>();
+        this.setMusicians = new HashSet<>();
+        this.unsetMusicians = new HashSet<>();
+        this.pointsManager = new PointsManager();
     }
 
     /**
@@ -81,60 +88,98 @@ public class DutyScheduleManager {
     }
 
     /**
-     * Returns a List of {@link Musician}s that are available for a given {@link DutyPosition}.
+     * Returns a Set of {@link Musician}s that are available for a given {@link DutyPosition}.
      *
      * @param duty         The currently edited duty
      * @param position     The position to determine musicians for
      * @param withRequests Indicator whether musicians with duty requests should be part of the list
-     * @return A List of available musicians for the given duty position
+     * @return A Set of available musicians for the given duty position
      * @throws IllegalStateException if a Musician or Points object has an illegal state
      */
-    public List<Musician> getMusiciansAvailableForPosition(
+    public Set<Musician> getMusiciansAvailableForPosition(
         Duty duty,
         DutyPosition position,
         boolean withRequests
     ) throws IllegalStateException {
         if (position == null) {
             LOG.error("Fetching available musicians not possible - duty position is null");
-            return new LinkedList<>();
+            return new HashSet<>();
         }
         if (withRequests) {
             throw new UnsupportedOperationException("Not yet implemented");
         }
 
-        // Get all Musician entities from database and convert them
-        List<Musician> sectionMusicians = new LinkedList<>();
-        for (MusicianEntity entity :
-            this.musicianDao.findAllWithSection(position.getEntity().getSection())
-        ) {
-            // Get points for musician
-            Optional<Points> points = new PointsManager().getBalanceFromMusician(
-                entity,
+        // Fetch section musicians from database if not present
+        if (this.sectionMusicians == null) {
+            // Get musician entities from database
+            this.sectionMusicians = new HashSet<>();
+            if (this.sectionMusicianEntities == null) {
+                this.sectionMusicianEntities = this.musicianDao.findAllWithSectionAndActiveContract(
+                    position.getEntity().getSection()
+                );
+            }
+
+            // Tell PointsManager to cache duties locally
+            this.pointsManager.loadAllDutiesOfMusicians(
+                this.sectionMusicianEntities,
                 duty.getEntity().getStart().toLocalDate()
             );
 
-            // Throw exception if points are missing
-            if (points.isEmpty()) {
-                throw new IllegalStateException("Points for musician cannot be calculated");
-            }
+            // Convert musician entities to domain objects
+            for (MusicianEntity entity : this.sectionMusicianEntities) {
+                // Get points for musician
+                Optional<Points> points = this.pointsManager.getBalanceFromMusician(
+                    entity,
+                    duty.getEntity().getStart().toLocalDate()
+                );
 
-            sectionMusicians.add(new Musician(entity, points.get()));
+                // Throw exception if points are missing
+                if (points.isEmpty()) {
+                    throw new IllegalStateException("Points for musician cannot be calculated");
+                }
+
+                this.sectionMusicians.add(new Musician(entity, points.get()));
+            }
         }
 
-        // Get all duties that occur at the same day
-        List<Duty> dutiesOfThisDay = DutyManager.convertEntitiesToDomainObjects(
-            this.dutyDao.findAllInRange(
-                LocalDateTime.of(duty.getEntity().getStart().toLocalDate(), LocalTime.MIN),
-                LocalDateTime.of(duty.getEntity().getStart().toLocalDate(), LocalTime.MAX)
-            )
-        );
+        // Fetch duties from database if not present
+        if (this.dutiesOfThisDay == null) {
+            // Get all duties that occur at the same day
+            this.dutiesOfThisDay = DutyManager.convertEntitiesToDomainObjects(
+                this.dutyDao.findAllInRange(
+                    LocalDateTime.of(duty.getEntity().getStart().toLocalDate(), LocalTime.MIN),
+                    LocalDateTime.of(duty.getEntity().getStart().toLocalDate(), LocalTime.MAX)
+                )
+            );
+        }
 
         return duty.determineAvailableMusicians(
-            sectionMusicians,
-            dutiesOfThisDay,
-            setMusicians,
-            unsetMusicians
+            this.sectionMusicians,
+            this.dutiesOfThisDay,
+            this.setMusicians,
+            this.unsetMusicians
         );
+    }
+
+    /**
+     * Assigns a {@link Musician} to a {@link DutyPosition} and removes the old.
+     *
+     * @param actualSectionInstrumentation The actual section instrumentation to use
+     * @param newMusician                  The musician to assign
+     * @param oldMusician                  The musician to remove
+     * @param position                     The duty position to use
+     */
+    public void assignMusicianToPosition(
+        ActualSectionInstrumentation actualSectionInstrumentation,
+        Musician newMusician,
+        Musician oldMusician,
+        DutyPosition position
+    ) {
+        // Update local musician list
+        this.unsetMusicians.add(oldMusician);
+
+        // Delegate to default method
+        this.assignMusicianToPosition(actualSectionInstrumentation, newMusician, position);
     }
 
     /**

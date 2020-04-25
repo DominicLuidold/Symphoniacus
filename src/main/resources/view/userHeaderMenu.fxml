@@ -13,9 +13,9 @@
             AnchorPane.topAnchor="0.0">
     <HBox prefHeight="34.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0"
           AnchorPane.topAnchor="0.0">
-        <TextFlow fx:id="txtFlowSection" textAlignment="CENTER" HBox.hgrow="ALWAYS"/>
-        <TextFlow textAlignment="CENTER" HBox.hgrow="ALWAYS"/>
-        <MenuBar nodeOrientation="RIGHT_TO_LEFT" HBox.hgrow="ALWAYS">
+        <TextFlow fx:id="txtFlowSection" textAlignment="CENTER" HBox.hgrow="ALWAYS" style="-fx-background-color: transparent;" />
+        <TextFlow textAlignment="CENTER" HBox.hgrow="ALWAYS" style="-fx-background-color: transparent;" />
+        <MenuBar nodeOrientation="RIGHT_TO_LEFT" HBox.hgrow="ALWAYS" style="-fx-background-color: transparent;" >
             <HBox.margin>
                 <Insets/>
             </HBox.margin>
