@@ -97,6 +97,7 @@ public class MusicianEntity {
         this.negativeDutyWishes.add(negativeWish);
         negativeWish.setMusician(this);
     }
+
     public void removeNegativeDutyWish(NegativeDutyWishEntity negativeWish) {
         this.negativeDutyWishes.remove(negativeWish);
         negativeWish.setMusician(null);
