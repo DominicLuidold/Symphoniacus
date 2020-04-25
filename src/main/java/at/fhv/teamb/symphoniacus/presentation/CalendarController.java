@@ -6,6 +6,7 @@ import at.fhv.teamb.symphoniacus.application.MusicianManager;
 import at.fhv.teamb.symphoniacus.domain.Duty;
 import at.fhv.teamb.symphoniacus.domain.Section;
 import at.fhv.teamb.symphoniacus.persistence.model.DutyEntity;
+import at.fhv.teamb.symphoniacus.persistence.model.MonthlySchedule;
 import at.fhv.teamb.symphoniacus.persistence.model.MusicianEntity;
 import at.fhv.teamb.symphoniacus.persistence.model.SectionEntity;
 import at.fhv.teamb.symphoniacus.persistence.model.SectionMonthlySchedule;
@@ -22,28 +23,27 @@ import com.calendarfx.view.DateControl;
 import impl.com.calendarfx.view.CalendarViewSkin;
 import java.net.URL;
 import java.time.LocalDate;
+import java.time.Month;
+import java.time.format.TextStyle;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Locale;
 import java.util.Optional;
 import java.util.ResourceBundle;
-import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
-import javafx.scene.control.Button;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.Dialog;
 import javafx.scene.control.Label;
-import javafx.scene.control.ListView;
+import javafx.scene.control.ListCell;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.text.Font;
 import javafx.stage.Modality;
+import javafx.stage.Stage;
 import javafx.util.Callback;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.controlsfx.control.ListActionView;
 import org.controlsfx.control.ListSelectionView;
-import org.controlsfx.control.action.Action;
 import org.kordamp.ikonli.fontawesome.FontAwesome;
 import org.kordamp.ikonli.javafx.FontIcon;
 
@@ -99,14 +99,39 @@ public class CalendarController implements Initializable, Controllable {
             PublishDutyRosterEvent.PUBLISH_DUTY_ROSTER_EVENT_EVENT_TYPE,
             event -> {
                 LOG.debug("Publish duty roster event callback!");
+                SectionMonthlySchedule sms = new SectionMonthlySchedule();
+                MonthlySchedule ms = new MonthlySchedule();
+                ms.setMonth(5);
+                sms.setMonthlySchedule(ms);
                 ListSelectionView<SectionMonthlySchedule> listSelectionView = new ListSelectionView();
-                listSelectionView.getSourceItems().add(
-                    new SectionMonthlySchedule()
-                );
+                listSelectionView.getSourceItems().add(sms);
                 FontIcon monthIcon = new FontIcon(FontAwesome.CALENDAR_PLUS_O);
                 monthIcon.getStyleClass().addAll("button-icon");
                 FontIcon selectedIcon = new FontIcon(FontAwesome.CHECK_SQUARE_O);
                 selectedIcon.getStyleClass().addAll("button-icon");
+
+                listSelectionView.setCellFactory(listView -> {
+                    ListCell<SectionMonthlySchedule> cell = new ListCell<SectionMonthlySchedule>() {
+                        @Override
+                        public void updateItem(SectionMonthlySchedule item, boolean empty) {
+                            super.updateItem(item, empty);
+
+                            if (empty) {
+                                setText(null);
+                                setGraphic(null);
+                            } else {
+                                Month m = Month.of(item.getMonthlySchedule().getMonth());
+                                setText(m.getDisplayName(TextStyle.FULL, Locale.US));
+                                setGraphic(null);
+                                setEditable(false);
+                                setDisabled(true);
+                                setDisable(true);
+                            }
+                        }
+                    };
+                    cell.setFont(Font.font(14));
+                    return cell;
+                });
 
                 Font f = new Font(14);
 
@@ -127,6 +152,10 @@ public class CalendarController implements Initializable, Controllable {
                 dialog.getDialogPane().setPrefWidth(600);
                 dialog.initModality(Modality.APPLICATION_MODAL);
                 dialog.setTitle("Publish Duty Roster");
+
+                FontIcon icon = new FontIcon(FontAwesome.ARROW_CIRCLE_UP);
+                icon.getStyleClass().addAll("button-icon",
+                    "add-calendar-button-icon");
 
                 dialog.show();
             }
