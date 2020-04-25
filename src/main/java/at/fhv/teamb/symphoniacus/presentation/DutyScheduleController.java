@@ -9,6 +9,7 @@ import at.fhv.teamb.symphoniacus.domain.PersistenceState;
 import at.fhv.teamb.symphoniacus.domain.Section;
 import at.fhv.teamb.symphoniacus.presentation.internal.DutyPositionMusicianTableModel;
 import at.fhv.teamb.symphoniacus.presentation.internal.MusicianTableModel;
+import at.fhv.teamb.symphoniacus.presentation.internal.OldDutyComboView;
 import at.fhv.teamb.symphoniacus.presentation.internal.ScheduleButtonTableCell;
 import at.fhv.teamb.symphoniacus.presentation.internal.tasks.GetMusiciansAvailableForPositionTask;
 import java.net.URL;
@@ -27,6 +28,7 @@ import javafx.geometry.Pos;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.ButtonType;
+import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.SplitPane;
 import javafx.scene.control.TableColumn;
@@ -58,6 +60,9 @@ public class DutyScheduleController implements Initializable, Controllable {
     private Button scheduleBackBtn;
 
     @FXML
+    private Button getOldDuty;
+
+    @FXML
     private Label dutyTitle;
 
     @FXML
@@ -84,6 +89,11 @@ public class DutyScheduleController implements Initializable, Controllable {
     @FXML
     private TableColumn<DutyPositionMusicianTableModel, Button> columnUnsetPosition;
 
+    @FXML
+    private ComboBox<OldDutyComboView> oldDutySelect;
+
+
+
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         this.registerController();
@@ -108,6 +118,10 @@ public class DutyScheduleController implements Initializable, Controllable {
 
         this.scheduleBackBtn.setOnAction(e -> {
             closeDutySchedule();
+        });
+
+        this.getOldDuty.setOnAction(e -> {
+            loadOldDuty();
         });
 
         // add selected item click listener
@@ -275,7 +289,13 @@ public class DutyScheduleController implements Initializable, Controllable {
         this.musicianTableWithoutRequests.setItems(observableList);
     }
 
+    /**
+     * Initialize the left side of the View with the Actualsectioninstrumentation
+     * and their Musicians.
+     */
+
     private void initDutyPositionsTableWithMusicians() {
+        this.initOldDutyComboView();
         if (this.dutyScheduleManager == null) {
             this.dutyScheduleManager = new DutyScheduleManager();
         }
@@ -314,6 +334,44 @@ public class DutyScheduleController implements Initializable, Controllable {
         }
         this.positionsTable.setItems(observablePositionList);
         mc.showStatusBarLoaded();
+    }
+
+    private void initOldDutyComboView() {
+        OldDutyComboView o1 = new OldDutyComboView("OldDuty1");
+        OldDutyComboView o2 = new OldDutyComboView("OldDuty2");
+
+        ObservableList<OldDutyComboView> oldDutyComboViews = FXCollections.observableArrayList();
+        oldDutyComboViews.add(o1);
+        oldDutyComboViews.add(o2);
+
+        /*
+        LinkedList<Duty> oldDutys = this.dutyScheduleManager.getOldDutys();
+        for (Duty d : oldDutys) {
+            oldDutyComboViews.add(new OldDutyComboView(d));
+        }
+        */
+
+        this.oldDutySelect.setItems(oldDutyComboViews);
+    }
+
+    private void loadOldDuty() {
+        if (this.oldDutySelect.getSelectionModel().getSelectedItem() == null) {
+            LOG.debug("No old Duty selected");
+            Notifications.create()
+                .title("No Duty selected")
+                .text("You have to choose a old Duty")
+                .position(Pos.CENTER)
+                .hideAfter(new Duration(2000))
+                .show();
+        } else {
+            LOG.debug("Load old Duty {}",
+                this.oldDutySelect.getSelectionModel().getSelectedItem().toString());
+            if (this.actualSectionInstrumentation != null) {
+                //TODO get ASI for oldDuty from Manager
+            }
+        }
+
+
     }
 
     protected void addMusicianToPosition(
