@@ -2,6 +2,7 @@ package at.fhv.teamb.symphoniacus.persistence.dao;
 
 import at.fhv.teamb.symphoniacus.persistence.BaseDao;
 import at.fhv.teamb.symphoniacus.persistence.model.DutyEntity;
+import at.fhv.teamb.symphoniacus.persistence.model.NegativeDutyWishEntity;
 import at.fhv.teamb.symphoniacus.persistence.model.PositiveWishEntity;
 import at.fhv.teamb.symphoniacus.persistence.model.WishRequestable;
 import java.util.LinkedList;
@@ -10,9 +11,16 @@ import java.util.Optional;
 import javax.persistence.TypedQuery;
 
 public class PositiveWishDao extends BaseDao<PositiveWishEntity> {
+
+    /**
+     * Finds a duty by its key.
+     *
+     * @param key The key of the duty
+     * @return The duty that is looked for
+     */
     @Override
-    public Optional<PositiveWishEntity> find(Object key) {
-        return Optional.empty();
+    public Optional<PositiveWishEntity> find(Integer key) {
+        return this.find(PositiveWishEntity.class, key);
     }
 
     @Override
@@ -31,8 +39,6 @@ public class PositiveWishDao extends BaseDao<PositiveWishEntity> {
     }
 
     public List<WishRequestable> getAllPositiveWishes(DutyEntity duty) {
-        this.createEntityManager();
-
         TypedQuery<WishRequestable> query =
             this.entityManager.createQuery(
                 "SELECT pw FROM PositiveWishEntity pw "

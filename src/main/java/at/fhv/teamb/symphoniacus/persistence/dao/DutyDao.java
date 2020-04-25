@@ -28,11 +28,8 @@ public class DutyDao extends BaseDao<DutyEntity> {
      * @return The duty that is looked for
      */
     @Override
-    public Optional<DutyEntity> find(Object key) {
-        this.createEntityManager();
-        DutyEntity d = this.entityManager.find(DutyEntity.class, key);
-        this.tearDown();
-        return Optional.of(d);
+    public Optional<DutyEntity> find(Integer key) {
+        return this.find(DutyEntity.class, key);
     }
 
     /**
@@ -180,7 +177,7 @@ public class DutyDao extends BaseDao<DutyEntity> {
      * Get all Duties for all given musicians within a given month.
      *
      * @param musicians List of musicians
-     * @param month LocalDate any day of a month represents the whole month
+     * @param month     LocalDate any day of a month represents the whole month
      * @return A set uf DutyEntities, because duplicates of duties are unnecessary
      */
     public Set<DutyEntity> getAllDutiesOfMusicians(List<MusicianEntity> musicians,

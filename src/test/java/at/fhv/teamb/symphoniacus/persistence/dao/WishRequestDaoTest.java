@@ -4,6 +4,7 @@ import at.fhv.teamb.symphoniacus.persistence.model.DutyEntity;
 import at.fhv.teamb.symphoniacus.persistence.model.NegativeDateWishEntity;
 import at.fhv.teamb.symphoniacus.persistence.model.NegativeDutyWishEntity;
 import at.fhv.teamb.symphoniacus.persistence.model.PositiveWishEntity;
+import at.fhv.teamb.symphoniacus.persistence.model.WishRequestable;
 import java.util.List;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -32,9 +33,9 @@ class WishRequestDaoTest {
         DutyEntity mockedDuty = Mockito.mock(DutyEntity.class);
         mockedDuty.setDutyId(Mockito.anyInt());
 
-        List<PositiveWishEntity> positiveWishes = pdao.getAllPositiveWishes(mockedDuty);
-        List<NegativeDutyWishEntity> negativeDutyWishes = ndutydao.getAllNegativeDutyWishes(mockedDuty);
-        List<NegativeDateWishEntity> negativeDateWishes = ndatedao.getAllNegativeDateWishes(mockedDuty);
+        List<WishRequestable> positiveWishes = pdao.getAllPositiveWishes(mockedDuty);
+        List<WishRequestable> negativeDutyWishes = ndutydao.getAllNegativeDutyWishes(mockedDuty);
+        List<WishRequestable> negativeDateWishes = ndatedao.getAllNegativeDateWishes(mockedDuty);
 
         Assertions.assertNotNull(positiveWishes);
         Assertions.assertNotNull(negativeDutyWishes);

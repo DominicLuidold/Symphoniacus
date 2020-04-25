@@ -1,6 +1,5 @@
 package at.fhv.teamb.symphoniacus.persistence.dao;
 
-import at.fhv.teamb.symphoniacus.domain.WishRequest;
 import at.fhv.teamb.symphoniacus.persistence.BaseDao;
 import at.fhv.teamb.symphoniacus.persistence.model.DutyEntity;
 import at.fhv.teamb.symphoniacus.persistence.model.NegativeDateWishEntity;
@@ -10,9 +9,16 @@ import java.util.Optional;
 import javax.persistence.TypedQuery;
 
 public class NegativeDateWishDao extends BaseDao<NegativeDateWishEntity> {
+
+    /**
+     * Finds a duty by its key.
+     *
+     * @param key The key of the duty
+     * @return The duty that is looked for
+     */
     @Override
-    public Optional<NegativeDateWishEntity> find(Object key) {
-        return Optional.empty();
+    public Optional<NegativeDateWishEntity> find(Integer key) {
+        return this.find(NegativeDateWishEntity.class, key);
     }
 
     @Override
@@ -31,7 +37,6 @@ public class NegativeDateWishDao extends BaseDao<NegativeDateWishEntity> {
     }
 
     public List<WishRequestable> getAllNegativeDateWishes(DutyEntity duty) {
-        this.createEntityManager();
         TypedQuery<WishRequestable> query = this.entityManager.createQuery(""
             + "SELECT nd FROM NegativeDateWishEntity nd "
             + "JOIN nd.monthlySchedules ms "

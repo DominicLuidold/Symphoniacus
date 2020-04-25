@@ -9,9 +9,16 @@ import java.util.Optional;
 import javax.persistence.TypedQuery;
 
 public class NegativeDutyWishDao extends BaseDao<NegativeDutyWishEntity> {
+
+    /**
+     * Finds a duty by its key.
+     *
+     * @param key The key of the duty
+     * @return The duty that is looked for
+     */
     @Override
-    public Optional<NegativeDutyWishEntity> find(Object key) {
-        return Optional.empty();
+    public Optional<NegativeDutyWishEntity> find(Integer key) {
+        return this.find(NegativeDutyWishEntity.class, key);
     }
 
     @Override
@@ -30,8 +37,6 @@ public class NegativeDutyWishDao extends BaseDao<NegativeDutyWishEntity> {
     }
 
     public List<WishRequestable> getAllNegativeDutyWishes(DutyEntity duty) {
-        this.createEntityManager();
-
         TypedQuery<WishRequestable> query =
             this.entityManager.createQuery(
                 "SELECT nw FROM NegativeDutyWishEntity nw "

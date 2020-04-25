@@ -2,6 +2,7 @@ package at.fhv.teamb.symphoniacus.persistence.dao;
 
 import at.fhv.teamb.symphoniacus.persistence.BaseDao;
 import at.fhv.teamb.symphoniacus.persistence.model.ContractualObligationEntity;
+import at.fhv.teamb.symphoniacus.persistence.model.DutyEntity;
 import at.fhv.teamb.symphoniacus.persistence.model.MusicianEntity;
 import at.fhv.teamb.symphoniacus.persistence.model.SectionEntity;
 import java.time.LocalDate;
@@ -19,24 +20,15 @@ import javax.persistence.TypedQuery;
  */
 public class MusicianDao extends BaseDao<MusicianEntity> {
 
+    /**
+     * Finds a duty by its key.
+     *
+     * @param key The key of the duty
+     * @return The duty that is looked for
+     */
     @Override
-    public Optional<MusicianEntity> find(Object key) {
-        this.createEntityManager();
-        EntityGraph graph = this.entityManager.getEntityGraph(
-            "musician-with-collections"
-        );
-
-        MusicianEntity m = entityManager.createQuery(
-            "select m from MusicianEntity m where m.user = :user",
-            MusicianEntity.class
-        )
-            .setParameter("user", key)
-            .setHint("javax.persistence.fetchgraph", graph)
-            .getSingleResult();
-        m.getMusicianRoles();
-        m.getSection();
-        this.tearDown();
-        return Optional.of(m);
+    public Optional<MusicianEntity> find(Integer key) {
+        return this.find(MusicianEntity.class, key);
     }
 
     /**
