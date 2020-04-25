@@ -5,11 +5,12 @@ import at.fhv.teamb.symphoniacus.application.LoginManager;
 import at.fhv.teamb.symphoniacus.application.MusicianManager;
 import at.fhv.teamb.symphoniacus.domain.Duty;
 import at.fhv.teamb.symphoniacus.domain.Section;
+import at.fhv.teamb.symphoniacus.domain.SectionMonthlySchedule;
 import at.fhv.teamb.symphoniacus.persistence.model.DutyEntity;
-import at.fhv.teamb.symphoniacus.persistence.model.MonthlySchedule;
+import at.fhv.teamb.symphoniacus.persistence.model.MonthlyScheduleEntity;
 import at.fhv.teamb.symphoniacus.persistence.model.MusicianEntity;
 import at.fhv.teamb.symphoniacus.persistence.model.SectionEntity;
-import at.fhv.teamb.symphoniacus.persistence.model.SectionMonthlySchedule;
+import at.fhv.teamb.symphoniacus.persistence.model.SectionMonthlyScheduleEntity;
 import at.fhv.teamb.symphoniacus.persistence.model.UserEntity;
 import at.fhv.teamb.symphoniacus.presentation.internal.BrutalCalendarSkin;
 import at.fhv.teamb.symphoniacus.presentation.internal.PublishDutyRosterEvent;
@@ -99,10 +100,12 @@ public class CalendarController implements Initializable, Controllable {
             PublishDutyRosterEvent.PUBLISH_DUTY_ROSTER_EVENT_EVENT_TYPE,
             event -> {
                 LOG.debug("Publish duty roster event callback!");
-                SectionMonthlySchedule sms = new SectionMonthlySchedule();
-                MonthlySchedule ms = new MonthlySchedule();
+
+                SectionMonthlyScheduleEntity entity = new SectionMonthlyScheduleEntity();
+                SectionMonthlySchedule sms = new SectionMonthlySchedule(entity);
+                MonthlyScheduleEntity ms = new MonthlyScheduleEntity();
                 ms.setMonth(5);
-                sms.setMonthlySchedule(ms);
+                sms.getEntity().setMonthlySchedule(ms);
                 ListSelectionView<SectionMonthlySchedule> listSelectionView = new ListSelectionView();
                 listSelectionView.getSourceItems().add(sms);
                 FontIcon monthIcon = new FontIcon(FontAwesome.CALENDAR_PLUS_O);
@@ -120,7 +123,9 @@ public class CalendarController implements Initializable, Controllable {
                                 setText(null);
                                 setGraphic(null);
                             } else {
-                                Month m = Month.of(item.getMonthlySchedule().getMonth());
+                                Month m = Month.of(
+                                    item.getEntity().getMonthlySchedule().getMonth()
+                                );
                                 setText(m.getDisplayName(TextStyle.FULL, Locale.US));
                                 setGraphic(null);
                                 setEditable(false);
