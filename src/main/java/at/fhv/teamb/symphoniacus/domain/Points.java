@@ -11,6 +11,7 @@ import java.util.Optional;
 import java.util.Set;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.checkerframework.checker.nullness.Opt;
 
 /**
  * Domain Object Points responsible for calculating correct amount of requested points.
@@ -147,6 +148,14 @@ public class Points {
             }
         }
         return points;
+    }
+
+    /**
+     * Returns 0 points for musicians.
+     * @return A Points Object with 0 Points (for External Musicians)
+     */
+    public static Optional<Points> getZeroPoints() {
+        return Optional.of(new Points(0));
     }
 
     private static boolean isGivenMonthBeforeCurrentMonth(LocalDateTime month) {
