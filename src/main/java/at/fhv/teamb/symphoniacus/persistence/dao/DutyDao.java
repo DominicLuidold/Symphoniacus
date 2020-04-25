@@ -1,12 +1,15 @@
 package at.fhv.teamb.symphoniacus.persistence.dao;
 
+import at.fhv.teamb.symphoniacus.domain.Section;
 import at.fhv.teamb.symphoniacus.persistence.BaseDao;
 import at.fhv.teamb.symphoniacus.persistence.model.DutyEntity;
 import at.fhv.teamb.symphoniacus.persistence.model.MusicianEntity;
 import at.fhv.teamb.symphoniacus.persistence.model.SectionEntity;
+import at.fhv.teamb.symphoniacus.persistence.model.SeriesOfPerformancesEntity;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.YearMonth;
+import java.util.HashSet;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Optional;
@@ -244,5 +247,38 @@ public class DutyDao extends BaseDao<DutyEntity> {
     @Override
     public Boolean remove(DutyEntity elem) {
         return false;
+    }
+
+    public List<DutyEntity> getOtherDutiesForSeriesOfPerformances(
+        SeriesOfPerformancesEntity sop,
+        Integer maxNumberOfDuties
+    ) {
+        TypedQuery<DutyEntity> query = entityManager.createQuery(
+            "SELECT d FROM DutyEntity d "
+                + "INNER JOIN d.seriesOfPerformances sop "
+                + "WHERE sop.seriesOfPerformancesId = :sopId ",
+            DutyEntity.class
+        );
+        query.setParameter("sopId", sop.getInstrumentationId());
+        query.setMaxResults(maxNumberOfDuties);
+
+        return query.getResultList();
+    }
+
+    public List<DutyEntity> getOtherDutiesForSection(
+        SectionEntity section,
+        Integer maxNumberOfDuties
+    ) {
+        TypedQuery<DutyEntity> query = entityManager.createQuery(
+            "SELECT d FROM DutyEntity d "
+                + "INNER JOIN d.sectionMonthlySchedules sms "
+                + "WHERE sms.section.sectionId = :sectionId "
+                + "AND d.seriesOfPerformances IS NULL",
+            DutyEntity.class
+        );
+        query.setParameter("sectionId", section.getSectionId());
+        query.setMaxResults(maxNumberOfDuties);
+
+        return query.getResultList();
     }
 }
