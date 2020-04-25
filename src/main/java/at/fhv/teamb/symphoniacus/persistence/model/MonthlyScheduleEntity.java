@@ -7,11 +7,9 @@ import java.util.List;
 import java.util.Set;
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.JoinColumn;
 import javax.persistence.ManyToMany;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
@@ -44,7 +42,7 @@ public class MonthlyScheduleEntity {
 
     //One-To-Many Part for SECTIONMONTHLYSCHEDULE Table
     @OneToMany(mappedBy = "monthlySchedule", orphanRemoval = true)
-    private Set<SectionMonthlySchedule> sectionMonthlyScheduleSet = new HashSet<>();
+    private Set<SectionMonthlyScheduleEntity> sectionMonthlyScheduleSet = new HashSet<>();
 
     //monthlySchedules -> attribute bei many to many
     @ManyToMany(mappedBy = "monthlySchedules")
@@ -73,16 +71,16 @@ public class MonthlyScheduleEntity {
         weeklyScheduleEntity.setMonthlySchedule(null);
     }
 
-    public Set<SectionMonthlySchedule> getSectionMonthlyScheduleSet() {
+    public Set<SectionMonthlyScheduleEntity> getSectionMonthlyScheduleSet() {
         return this.sectionMonthlyScheduleSet;
     }
 
     public void setSectionMonthlyScheduleSet(
-        Set<SectionMonthlySchedule> sectionMonthlyScheduleSet) {
+        Set<SectionMonthlyScheduleEntity> sectionMonthlyScheduleSet) {
         this.sectionMonthlyScheduleSet = sectionMonthlyScheduleSet;
     }
 
-    public void addSectionMonthlySchedule(SectionMonthlySchedule sectionMonthlySchedule) {
+    public void addSectionMonthlySchedule(SectionMonthlyScheduleEntity sectionMonthlySchedule) {
         this.sectionMonthlyScheduleSet.add(sectionMonthlySchedule);
         sectionMonthlySchedule.setMonthlySchedule(this);
     }

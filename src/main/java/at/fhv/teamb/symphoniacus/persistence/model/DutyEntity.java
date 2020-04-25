@@ -1,10 +1,8 @@
 package at.fhv.teamb.symphoniacus.persistence.model;
 
 import java.time.LocalDateTime;
-import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Set;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -64,17 +62,7 @@ public class DutyEntity {
             @JoinColumn(name = "sectionMonthlyScheduleId")
         }
     )
-    private Set<SectionMonthlySchedule> sectionMonthlySchedules = new HashSet<>();
-
-    public void addDuty(DutyPositionEntity dutyPositionEntity) {
-        this.dutyPositions.add(dutyPositionEntity);
-        dutyPositionEntity.setDuty(this);
-    }
-
-    public void removeDuty(DutyPositionEntity dutyPositionEntity) {
-        this.dutyPositions.remove(dutyPositionEntity);
-        dutyPositionEntity.setDuty(null);
-    }
+    private List<SectionMonthlyScheduleEntity> sectionMonthlySchedules = new LinkedList<>();
 
     public Integer getDutyId() {
         return this.dutyId;
@@ -92,25 +80,8 @@ public class DutyEntity {
         this.weeklySchedule = weeklySchedule;
     }
 
-    public List<DutyPositionEntity> getDutyPositions() {
-        return this.dutyPositions;
-    }
-
-    public void setDutyPositions(List<DutyPositionEntity> dutyPositions) {
-        this.dutyPositions = dutyPositions;
-    }
-
-    public void addDutyPosition(DutyPositionEntity dutyPosition) {
-        this.dutyPositions.add(dutyPosition);
-        dutyPosition.setDuty(this);
-    }
-
-    public void addAllDutyPositions(List<DutyPositionEntity> dutyPositions) {
-        this.dutyPositions.addAll(dutyPositions);
-    }
-
     public DutyCategoryEntity getDutyCategory() {
-        return dutyCategory;
+        return this.dutyCategory;
     }
 
     public void setDutyCategory(DutyCategoryEntity dutyCategory) {
@@ -150,25 +121,37 @@ public class DutyEntity {
     }
 
     public SeriesOfPerformancesEntity getSeriesOfPerformances() {
-        return seriesOfPerformances;
+        return this.seriesOfPerformances;
     }
 
-    public void setSeriesOfPerformances(
-        SeriesOfPerformancesEntity seriesOfPerformances
-    ) {
+    public void setSeriesOfPerformances(SeriesOfPerformancesEntity seriesOfPerformances) {
         this.seriesOfPerformances = seriesOfPerformances;
     }
 
-    public Set<SectionMonthlySchedule> getSectionMonthlySchedules() {
+    public List<DutyPositionEntity> getDutyPositions() {
+        return this.dutyPositions;
+    }
+
+    public void addDutyPosition(DutyPositionEntity dutyPositionEntity) {
+        this.dutyPositions.add(dutyPositionEntity);
+        dutyPositionEntity.setDuty(this);
+    }
+
+    public void removeDutyPosition(DutyPositionEntity dutyPositionEntity) {
+        this.dutyPositions.remove(dutyPositionEntity);
+        dutyPositionEntity.setDuty(null);
+    }
+
+    public List<SectionMonthlyScheduleEntity> getSectionMonthlySchedules() {
         return this.sectionMonthlySchedules;
     }
 
-    public void addSectionMonthlySchedule(SectionMonthlySchedule sms) {
+    public void addSectionMonthlySchedule(SectionMonthlyScheduleEntity sms) {
         this.sectionMonthlySchedules.add(sms);
         sms.getDuties().add(this);
     }
 
-    public void removeSectionMonthlySchedule(SectionMonthlySchedule sms) {
+    public void removeSectionMonthlySchedule(SectionMonthlyScheduleEntity sms) {
         this.sectionMonthlySchedules.remove(sms);
         sms.getDuties().remove(this);
     }
