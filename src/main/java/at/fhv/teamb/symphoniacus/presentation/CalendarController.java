@@ -8,6 +8,7 @@ import at.fhv.teamb.symphoniacus.domain.Section;
 import at.fhv.teamb.symphoniacus.persistence.model.DutyEntity;
 import at.fhv.teamb.symphoniacus.persistence.model.MusicianEntity;
 import at.fhv.teamb.symphoniacus.persistence.model.SectionEntity;
+import at.fhv.teamb.symphoniacus.persistence.model.SectionMonthlySchedule;
 import at.fhv.teamb.symphoniacus.persistence.model.UserEntity;
 import at.fhv.teamb.symphoniacus.presentation.internal.BrutalCalendarSkin;
 import at.fhv.teamb.symphoniacus.presentation.internal.PublishDutyRosterEvent;
@@ -25,12 +26,26 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Optional;
 import java.util.ResourceBundle;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.scene.control.Button;
+import javafx.scene.control.ButtonType;
+import javafx.scene.control.Dialog;
+import javafx.scene.control.Label;
+import javafx.scene.control.ListView;
 import javafx.scene.layout.AnchorPane;
+import javafx.scene.text.Font;
+import javafx.stage.Modality;
 import javafx.util.Callback;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.controlsfx.control.ListActionView;
+import org.controlsfx.control.ListSelectionView;
+import org.controlsfx.control.action.Action;
+import org.kordamp.ikonli.fontawesome.FontAwesome;
+import org.kordamp.ikonli.javafx.FontIcon;
 
 /**
  * This controller is responsible for handling all CalendarFX related actions such as
@@ -84,6 +99,36 @@ public class CalendarController implements Initializable, Controllable {
             PublishDutyRosterEvent.PUBLISH_DUTY_ROSTER_EVENT_EVENT_TYPE,
             event -> {
                 LOG.debug("Publish duty roster event callback!");
+                ListSelectionView<SectionMonthlySchedule> listSelectionView = new ListSelectionView();
+                listSelectionView.getSourceItems().add(
+                    new SectionMonthlySchedule()
+                );
+                FontIcon monthIcon = new FontIcon(FontAwesome.CALENDAR_PLUS_O);
+                monthIcon.getStyleClass().addAll("button-icon");
+                FontIcon selectedIcon = new FontIcon(FontAwesome.CHECK_SQUARE_O);
+                selectedIcon.getStyleClass().addAll("button-icon");
+
+                Font f = new Font(14);
+
+                Label monthLabel = new Label("Month", monthIcon);
+                monthLabel.setStyle("-fx-font-weight: bold");
+                monthLabel.setFont(f);
+                Label selectedLabel = new Label("Selected", selectedIcon);
+                selectedLabel.setStyle("-fx-font-weight: bold");
+                selectedLabel.setFont(f);
+
+                listSelectionView.sourceHeaderProperty().set(monthLabel);
+                listSelectionView.targetHeaderProperty().set(selectedLabel);
+                Dialog<ButtonType> dialog = new Dialog<>();
+                dialog.initOwner(this.calendarView.getParent().getScene().getWindow());
+                dialog.getDialogPane().getButtonTypes().addAll(ButtonType.CANCEL, ButtonType.OK);
+                dialog.getDialogPane().setContent(listSelectionView);
+                dialog.setResizable(true);
+                dialog.getDialogPane().setPrefWidth(600);
+                dialog.initModality(Modality.APPLICATION_MODAL);
+                dialog.setTitle("Publish Duty Roster");
+
+                dialog.show();
             }
         );
         this.calendarView.getCalendarSources().setAll(
