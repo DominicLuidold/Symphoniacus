@@ -24,11 +24,8 @@ public class WishRequestManager {
 
     public void loadAllWishRequests(DutyEntity duty) {
         this.allWishRequests.addAll(positiveWishDao.getAllPositiveWishes(duty));
-        /*
         this.allWishRequests.addAll(negDateWishDao.getAllNegativeDateWishes(duty));
         this.allWishRequests.addAll(negDateWishDao.getAllNegativeDateWishes(duty));
-         */
-
     }
 
 

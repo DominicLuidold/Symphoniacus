@@ -1,6 +1,10 @@
 package at.fhv.teamb.symphoniacus.persistence.dao;
 
 import at.fhv.teamb.symphoniacus.persistence.model.DutyEntity;
+import at.fhv.teamb.symphoniacus.persistence.model.MonthlyScheduleEntity;
+import at.fhv.teamb.symphoniacus.persistence.model.NegativeDateWishEntity;
+import at.fhv.teamb.symphoniacus.persistence.model.NegativeDutyWishEntity;
+import at.fhv.teamb.symphoniacus.persistence.model.PositiveWishEntity;
 import at.fhv.teamb.symphoniacus.persistence.model.WishRequestable;
 import java.util.List;
 import java.util.Optional;
@@ -31,43 +35,51 @@ class WishRequestDaoTest {
         Random rand = new Random();
         Integer rndId = rand.nextInt(100) + 1;
         DutyDao dutyDao = new DutyDao();
-        Optional<DutyEntity> realDuty = dutyDao.find(rndId);
+        Optional<DutyEntity> oprealDuty = dutyDao.find(rndId);
 
-        if (realDuty.isPresent()) {
-            List<WishRequestable> positiveWishes = pdao.getAllPositiveWishes(realDuty.get());
-            List<WishRequestable> negativeDutyWishes = ndutydao.getAllNegativeDutyWishes(realDuty.get());
-            List<WishRequestable> negativeDateWishes = ndatedao.getAllNegativeDateWishes(realDuty.get());
+        if (oprealDuty.isPresent()) {
+            DutyEntity realDuty = oprealDuty.get();
+            List<WishRequestable> positiveWishes = pdao.getAllPositiveWishes(realDuty);
+            List<WishRequestable> negativeDutyWishes =
+                ndutydao.getAllNegativeDutyWishes(realDuty);
+            List<WishRequestable> negativeDateWishes =
+                ndatedao.getAllNegativeDateWishes(realDuty);
 
             Assertions.assertNotNull(positiveWishes);
             Assertions.assertNotNull(negativeDutyWishes);
             Assertions.assertNotNull(negativeDateWishes);
-        }
 
-        // TODO - kann erst gestestet werden, man ein Duty anhand einer ID aus dem DutyDao
-        //  holen kann, denn für die ganzen vergleiche wird ein echtes valides Duty benötigt
-        /*
-        if (!positiveWishes.isEmpty()) {
-            for (PositiveWishEntity wish : positiveWishes) {
-                Assertions.assertEquals(wish.getSeriesOfPerformances().getSeriesOfPerformancesId(),
-                    mockedDuty.getSeriesOfPerformances().getInstrumentationId());
-            }
-        } else if (!negativeDutyWishes.isEmpty()) {
-            for (NegativeDutyWishEntity wish : negativeDutyWishes) {
-                Assertions.assertEquals(wish.getSeriesOfPerformances().getSeriesOfPerformancesId(),
-                    mockedDuty.getSeriesOfPerformances().getSeriesOfPerformancesId());
-            }
-        } else if (!negativeDateWishes.isEmpty()) {
-            for (NegativeDateWishEntity wish : negativeDateWishes) {
-                List<MonthlyScheduleEntity> monthlySchedules = wish.getMonthlySchedules();
-                if (!monthlySchedules.isEmpty()) {
-                    for (MonthlyScheduleEntity monthlySchedule : monthlySchedules) {
-                        Assertions.assertEquals(monthlySchedule.getMonthlyScheduleId(),
-                            mockedDuty.getWeeklySchedule().getMonthlySchedule()
-                                .getMonthlyScheduleId());
+
+            // TODO - kann erst gestestet werden, man ein Duty anhand einer ID aus dem DutyDao
+            //  holen kann, denn für die ganzen vergleiche wird ein echtes valides Duty benötigt
+/*
+            if (!positiveWishes.isEmpty()) {
+                for (PositiveWishEntity wish : positiveWishes) {
+                    Assertions
+                        .assertEquals(wish.getSeriesOfPerformances().getSeriesOfPerformancesId(),
+                            realDuty.getSeriesOfPerformances().getInstrumentationId());
+                }
+            } else if (!negativeDutyWishes.isEmpty()) {
+                for (NegativeDutyWishEntity wish : negativeDutyWishes) {
+                    Assertions
+                        .assertEquals(wish.getSeriesOfPerformances().getSeriesOfPerformancesId(),
+                            mockedDuty.getSeriesOfPerformances().getSeriesOfPerformancesId());
+                }
+            } else if (!negativeDateWishes.isEmpty()) {
+                for (NegativeDateWishEntity wish : negativeDateWishes) {
+                    List<MonthlyScheduleEntity> monthlySchedules = wish.getMonthlySchedules();
+                    if (!monthlySchedules.isEmpty()) {
+                        for (MonthlyScheduleEntity monthlySchedule : monthlySchedules) {
+                            Assertions.assertEquals(monthlySchedule.getMonthlyScheduleId(),
+                                mockedDuty.getWeeklySchedule().getMonthlySchedule()
+                                    .getMonthlyScheduleId());
+                        }
                     }
                 }
             }
         }
-         */
+
+ */
+        }
     }
 }
