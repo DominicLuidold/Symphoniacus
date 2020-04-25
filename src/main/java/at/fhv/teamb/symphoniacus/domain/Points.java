@@ -66,7 +66,7 @@ public class Points {
             return Optional.of(new Points(points));
         }
         LOG.error("No duties delivered -> Points cannot be calculated");
-        return Optional.empty();
+        return Optional.of(new Points(0));
     }
 
     /**
@@ -117,7 +117,7 @@ public class Points {
             return Optional.of(new Points(points));
         }
         LOG.debug("No duties delivered -> Points cannot be calculated");
-        return Optional.empty();
+        return Optional.of(new Points(0));
     }
 
     /**
