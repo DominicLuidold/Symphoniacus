@@ -1,18 +1,16 @@
 package at.fhv.teamb.symphoniacus.persistence.dao;
 
 import at.fhv.teamb.symphoniacus.persistence.model.DutyEntity;
-import at.fhv.teamb.symphoniacus.persistence.model.NegativeDateWishEntity;
-import at.fhv.teamb.symphoniacus.persistence.model.NegativeDutyWishEntity;
-import at.fhv.teamb.symphoniacus.persistence.model.PositiveWishEntity;
 import at.fhv.teamb.symphoniacus.persistence.model.WishRequestable;
 import java.util.List;
+import java.util.Optional;
+import java.util.Random;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInstance;
-import org.mockito.Mockito;
 
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 class WishRequestDaoTest {
@@ -30,17 +28,20 @@ class WishRequestDaoTest {
 
     @Test
     void getAllWishes_ShouldNotReturnNullAndWishesAreValid() {
-        DutyEntity mockedDuty = Mockito.mock(DutyEntity.class);
-        mockedDuty.setDutyId(Mockito.anyInt());
+        Random rand = new Random();
+        Integer rndId = rand.nextInt(100) + 1;
+        DutyDao dutyDao = new DutyDao();
+        Optional<DutyEntity> realDuty = dutyDao.find(rndId);
 
-        List<WishRequestable> positiveWishes = pdao.getAllPositiveWishes(mockedDuty);
-        List<WishRequestable> negativeDutyWishes = ndutydao.getAllNegativeDutyWishes(mockedDuty);
-        List<WishRequestable> negativeDateWishes = ndatedao.getAllNegativeDateWishes(mockedDuty);
+        if (realDuty.isPresent()) {
+            List<WishRequestable> positiveWishes = pdao.getAllPositiveWishes(realDuty.get());
+            List<WishRequestable> negativeDutyWishes = ndutydao.getAllNegativeDutyWishes(realDuty.get());
+            List<WishRequestable> negativeDateWishes = ndatedao.getAllNegativeDateWishes(realDuty.get());
 
-        Assertions.assertNotNull(positiveWishes);
-        Assertions.assertNotNull(negativeDutyWishes);
-        Assertions.assertNotNull(negativeDateWishes);
-
+            Assertions.assertNotNull(positiveWishes);
+            Assertions.assertNotNull(negativeDutyWishes);
+            Assertions.assertNotNull(negativeDateWishes);
+        }
 
         // TODO - kann erst gestestet werden, man ein Duty anhand einer ID aus dem DutyDao
         //  holen kann, denn für die ganzen vergleiche wird ein echtes valides Duty benötigt
