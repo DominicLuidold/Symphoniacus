@@ -9,6 +9,8 @@ import at.fhv.teamb.symphoniacus.persistence.model.DutyEntity;
 import at.fhv.teamb.symphoniacus.persistence.model.MusicianEntity;
 import at.fhv.teamb.symphoniacus.persistence.model.SectionEntity;
 import at.fhv.teamb.symphoniacus.persistence.model.UserEntity;
+import at.fhv.teamb.symphoniacus.presentation.internal.BrutalCalendarSkin;
+import at.fhv.teamb.symphoniacus.presentation.internal.PublishDutyRosterEvent;
 import com.calendarfx.model.Calendar;
 import com.calendarfx.model.CalendarSource;
 import com.calendarfx.model.Entry;
@@ -16,6 +18,7 @@ import com.calendarfx.model.Interval;
 import com.calendarfx.model.LoadEvent;
 import com.calendarfx.view.CalendarView;
 import com.calendarfx.view.DateControl;
+import impl.com.calendarfx.view.CalendarViewSkin;
 import java.net.URL;
 import java.time.LocalDate;
 import java.util.LinkedList;
@@ -75,8 +78,14 @@ public class CalendarController implements Initializable, Controllable {
         Optional<UserEntity> user = new LoginManager().login("vaubou", "eItFAJSb");
         Optional<MusicianEntity> musician = new MusicianManager().loadMusician(user.get());
         this.section = new Section(musician.get().getSection());
-
-
+        CalendarViewSkin skin = (CalendarViewSkin) this.calendarView.getSkin();
+        this.calendarView.setSkin(new BrutalCalendarSkin(this.calendarView));
+        this.calendarView.addEventHandler(
+            PublishDutyRosterEvent.PUBLISH_DUTY_ROSTER_EVENT_EVENT_TYPE,
+            event -> {
+                LOG.debug("Publish duty roster event callback!");
+            }
+        );
         this.calendarView.getCalendarSources().setAll(
             prepareCalendarSource(
                 resources.getString("sections"),
