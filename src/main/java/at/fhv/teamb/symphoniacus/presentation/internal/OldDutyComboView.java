@@ -2,6 +2,7 @@ package at.fhv.teamb.symphoniacus.presentation.internal;
 
 import at.fhv.teamb.symphoniacus.domain.ActualSectionInstrumentation;
 import at.fhv.teamb.symphoniacus.domain.Duty;
+import at.fhv.teamb.symphoniacus.persistence.model.DutyEntity;
 
 /**
  * This class is for Displaying the old Dutys in the Dutyscheduleview Dropdown.
@@ -10,30 +11,21 @@ import at.fhv.teamb.symphoniacus.domain.Duty;
  */
 
 public class OldDutyComboView {
-    ActualSectionInstrumentation oldAsi;
     Duty oldDuty;
-
-    String test;
 
     public OldDutyComboView(Duty oldDuty) {
         this.oldDuty = oldDuty;
     }
 
-    public OldDutyComboView(String test) {
-        this.test = test;
+    public String getTitle() {
+        return oldDuty.getTitle();
     }
 
-    public ActualSectionInstrumentation getOldAsi() {
-        return oldAsi;
+    public String getStart() {
+        return oldDuty.getEntity().getStart().toString();
     }
 
-    public void setOldAsi(ActualSectionInstrumentation oldAsi) {
-        this.oldAsi = oldAsi;
-    }
-
-    @Override
-    public String toString() {
-        return test;
-        //return oldDuty.getTitle() + " " + oldDuty.getEntity().getStart();
+    public String getType() {
+        return oldDuty.getEntity().getDutyCategory().getType();
     }
 }

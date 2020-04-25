@@ -1,6 +1,8 @@
 package at.fhv.teamb.symphoniacus.domain;
 
+import at.fhv.teamb.symphoniacus.persistence.model.MonthlyScheduleEntity;
 import at.fhv.teamb.symphoniacus.persistence.model.SectionMonthlyScheduleEntity;
+import java.util.Objects;
 
 /**
  * Domain object for SectionMonthlySchedule.
@@ -28,11 +30,13 @@ public class SectionMonthlySchedule {
         PUBLISHED
     }
 
+    private final MonthlyScheduleEntity monthlyScheduleEntity;
     private final SectionMonthlyScheduleEntity entity;
     private PublishState publishState;
 
     public SectionMonthlySchedule(SectionMonthlyScheduleEntity entity) {
         this.entity = entity;
+        this.monthlyScheduleEntity = entity.getMonthlySchedule();
     }
 
     public PublishState getPublishState() {
@@ -58,5 +62,31 @@ public class SectionMonthlySchedule {
 
     public SectionMonthlyScheduleEntity getEntity() {
         return this.entity;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        // Return true if object is compared with itself
+        if (obj == this) {
+            return true;
+        }
+
+        // Check if object is an instance of SectionMonthlySchedules or not
+        if (!(obj instanceof SectionMonthlySchedule)) {
+            return false;
+        }
+
+        // Typecast obj to SectionMonthlySchedule to compare data members
+        SectionMonthlySchedule sms = (SectionMonthlySchedule) obj;
+
+        // Compare data members and return accordingly
+        return this.entity.getSectionMonthlyScheduleId()
+            .equals(sms.getEntity().getSectionMonthlyScheduleId());
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(this.entity.getSectionMonthlyScheduleId(),
+            this.monthlyScheduleEntity.getMonthlyScheduleId());
     }
 }
