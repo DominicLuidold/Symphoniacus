@@ -1,4 +1,4 @@
-package at.fhv.teamb.symphoniacus.domain;
+package at.fhv.teamb.symphoniacus.persistence;
 
 /**
  * The State enum indicated whether a object has been persisted in the database or

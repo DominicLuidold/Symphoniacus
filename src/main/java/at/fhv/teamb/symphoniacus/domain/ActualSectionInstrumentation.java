@@ -1,5 +1,7 @@
 package at.fhv.teamb.symphoniacus.domain;
 
+import at.fhv.teamb.symphoniacus.persistence.PersistenceState;
+
 /**
  * Domain object responsible for handling the instrumentation for a {@link Duty}.
  *

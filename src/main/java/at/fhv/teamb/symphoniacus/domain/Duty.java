@@ -1,5 +1,6 @@
 package at.fhv.teamb.symphoniacus.domain;
 
+import at.fhv.teamb.symphoniacus.persistence.PersistenceState;
 import at.fhv.teamb.symphoniacus.persistence.model.DutyEntity;
 import java.util.Collections;
 import java.util.HashSet;
