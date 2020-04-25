@@ -48,9 +48,9 @@ public class DutyScheduleManager {
         this.dutyDao = new DutyDao();
         this.dutyPositionDao = new DutyPositionDao();
         this.musicianDao = new MusicianDao();
+        this.pointsManager = new PointsManager();
         this.setMusicians = new HashSet<>();
         this.unsetMusicians = new HashSet<>();
-        this.pointsManager = new PointsManager();
     }
 
     /**
