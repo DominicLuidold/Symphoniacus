@@ -1,5 +1,6 @@
 package at.fhv.teamb.symphoniacus.persistence.model;
 
+import at.fhv.teamb.symphoniacus.domain.SectionMonthlySchedule;
 import java.time.LocalDate;
 import java.util.HashSet;
 import java.util.LinkedList;
@@ -44,7 +45,7 @@ public class MonthlyScheduleEntity {
 
     //One-To-Many Part for SECTIONMONTHLYSCHEDULE Table
     @OneToMany(mappedBy = "monthlySchedule", orphanRemoval = true)
-    private Set<SectionMonthlySchedule> sectionMonthlyScheduleSet = new HashSet<>();
+    private Set<SectionMonthlyScheduleEntity> sectionMonthlyScheduleSet = new HashSet<>();
 
     //monthlySchedules -> attribute bei many to many
     @ManyToMany(mappedBy = "monthlySchedules")
@@ -71,20 +72,6 @@ public class MonthlyScheduleEntity {
     public void removeWeeklySchedules(WeeklyScheduleEntity weeklyScheduleEntity) {
         this.weeklySchedules.remove(weeklyScheduleEntity);
         weeklyScheduleEntity.setMonthlySchedule(null);
-    }
-
-    public Set<SectionMonthlySchedule> getSectionMonthlyScheduleSet() {
-        return this.sectionMonthlyScheduleSet;
-    }
-
-    public void setSectionMonthlyScheduleSet(
-        Set<SectionMonthlySchedule> sectionMonthlyScheduleSet) {
-        this.sectionMonthlyScheduleSet = sectionMonthlyScheduleSet;
-    }
-
-    public void addSectionMonthlySchedule(SectionMonthlySchedule sectionMonthlySchedule) {
-        this.sectionMonthlyScheduleSet.add(sectionMonthlySchedule);
-        sectionMonthlySchedule.setMonthlySchedule(this);
     }
 
     public Integer getMonthlyScheduleId() {
@@ -167,5 +154,17 @@ public class MonthlyScheduleEntity {
     public void setWeeklySchedules(
         List<WeeklyScheduleEntity> weeklySchedules) {
         this.weeklySchedules = weeklySchedules;
+    }
+
+    public Set<SectionMonthlyScheduleEntity> getSectionMonthlyScheduleSet() {
+        return this.sectionMonthlyScheduleSet;
+    }
+
+    public void setMonthlyScheduleSet(Set<SectionMonthlyScheduleEntity> scheduleSet) {
+        this.sectionMonthlyScheduleSet = scheduleSet;
+    }
+
+    public void addMonthlySchedule(SectionMonthlyScheduleEntity schedule) {
+        this.sectionMonthlyScheduleSet.add(schedule);
     }
 }

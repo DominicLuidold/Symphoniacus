@@ -15,6 +15,7 @@
 <?import javafx.scene.text.Font?>
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.cell.PropertyValueFactory?>
+<?import javafx.scene.control.ComboBox?>
 <AnchorPane fx:id="dutySchedule" prefHeight="226.0" prefWidth="364.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="at.fhv.teamb.symphoniacus.presentation.DutyScheduleController">
    <AnchorPane maxHeight="45.0" minHeight="45.0" prefHeight="45.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
       <children>
@@ -24,8 +25,10 @@
                <Separator />
                <Label fx:id="dutyTitle" />
                <Pane HBox.hgrow="ALWAYS" />
+               <Button fx:id="getOldDuty" mnemonicParsing="false" text="%tab.duty.schedule.table.btn.getolddutyschedule" />
+               <ComboBox fx:id="oldDutySelect" layoutX="15.0" layoutY="33.0" prefWidth="160.0" promptText="%tab.duty.schedule.table.chooseolddutyschedule" />
+               <Separator />
                <Button fx:id="scheduleSaveBtn" mnemonicParsing="false" text="%global.button.save" />
-               <Button fx:id="schedulePublishBtn" mnemonicParsing="false" text="%tab.duty.schedule.btn.publish" />
            </items>
          </ToolBar>
       </children>

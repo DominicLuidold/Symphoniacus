@@ -149,6 +149,14 @@ public class Points {
         return points;
     }
 
+    /**
+     * Returns 0 points for musicians.
+     * @return A Points Object with 0 Points (for External Musicians)
+     */
+    public static Optional<Points> getZeroPoints() {
+        return Optional.of(new Points(0));
+    }
+
     private static boolean isGivenMonthBeforeCurrentMonth(LocalDateTime month) {
         if (month.getYear() < LocalDate.now().getYear()) {
             return true;

@@ -3,12 +3,18 @@ package at.fhv.teamb.symphoniacus.presentation;
 import at.fhv.teamb.symphoniacus.application.DutyManager;
 import at.fhv.teamb.symphoniacus.application.LoginManager;
 import at.fhv.teamb.symphoniacus.application.MusicianManager;
+import at.fhv.teamb.symphoniacus.application.SectionMonthlyScheduleManager;
 import at.fhv.teamb.symphoniacus.domain.Duty;
 import at.fhv.teamb.symphoniacus.domain.Section;
+import at.fhv.teamb.symphoniacus.domain.SectionMonthlySchedule;
 import at.fhv.teamb.symphoniacus.persistence.model.DutyEntity;
+import at.fhv.teamb.symphoniacus.persistence.model.MonthlyScheduleEntity;
 import at.fhv.teamb.symphoniacus.persistence.model.MusicianEntity;
 import at.fhv.teamb.symphoniacus.persistence.model.SectionEntity;
+import at.fhv.teamb.symphoniacus.persistence.model.SectionMonthlyScheduleEntity;
 import at.fhv.teamb.symphoniacus.persistence.model.UserEntity;
+import at.fhv.teamb.symphoniacus.presentation.internal.BrutalCalendarSkin;
+import at.fhv.teamb.symphoniacus.presentation.internal.PublishDutyRosterEvent;
 import com.calendarfx.model.Calendar;
 import com.calendarfx.model.CalendarSource;
 import com.calendarfx.model.Entry;
@@ -16,18 +22,49 @@ import com.calendarfx.model.Interval;
 import com.calendarfx.model.LoadEvent;
 import com.calendarfx.view.CalendarView;
 import com.calendarfx.view.DateControl;
+import impl.com.calendarfx.view.CalendarViewSkin;
 import java.net.URL;
 import java.time.LocalDate;
+import java.time.Month;
+import java.time.Year;
+import java.time.format.TextStyle;
+import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Locale;
 import java.util.Optional;
 import java.util.ResourceBundle;
+import java.util.Set;
+import java.util.concurrent.atomic.AtomicReference;
+import javafx.application.Platform;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.geometry.Pos;
+import javafx.scene.Node;
+import javafx.scene.Scene;
+import javafx.scene.control.Button;
+import javafx.scene.control.ButtonType;
+import javafx.scene.control.Dialog;
+import javafx.scene.control.Label;
+import javafx.scene.control.ListCell;
+import javafx.scene.input.DragEvent;
 import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.StackPane;
+import javafx.scene.paint.Color;
+import javafx.scene.text.Font;
+import javafx.stage.Modality;
+import javafx.stage.Stage;
+import javafx.stage.StageStyle;
 import javafx.util.Callback;
+import javafx.util.Duration;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.controlsfx.control.ListSelectionView;
+import org.controlsfx.control.Notifications;
+import org.kordamp.ikonli.fontawesome.FontAwesome;
+import org.kordamp.ikonli.javafx.FontIcon;
 
 /**
  * This controller is responsible for handling all CalendarFX related actions such as
@@ -75,6 +112,148 @@ public class CalendarController implements Initializable, Controllable {
         Optional<UserEntity> user = new LoginManager().login("vaubou", "eItFAJSb");
         Optional<MusicianEntity> musician = new MusicianManager().loadMusician(user.get());
         this.section = new Section(musician.get().getSection());
+        CalendarViewSkin skin = (CalendarViewSkin) this.calendarView.getSkin();
+        this.calendarView.setSkin(new BrutalCalendarSkin(this.calendarView));
+
+        this.calendarView.addEventHandler(
+            PublishDutyRosterEvent.PUBLISH_DUTY_ROSTER_EVENT_EVENT_TYPE,
+            event -> {
+                LOG.debug("Publish duty roster event callback!");
+
+                SectionMonthlyScheduleEntity smse = new SectionMonthlyScheduleEntity();
+                smse.setSectionMonthlyScheduleId(3);
+                SectionMonthlySchedule smss = new SectionMonthlySchedule(smse);
+                MonthlyScheduleEntity ms = new MonthlyScheduleEntity();
+                ms.setMonthlyScheduleId(5);
+                ms.setMonth(6);
+                smss.getEntity().setMonthlySchedule(ms);
+                smss.setPublishState(SectionMonthlySchedule.PublishState.PUBLISHED);
+
+                SectionMonthlyScheduleManager smsm = new SectionMonthlyScheduleManager();
+                Set<SectionMonthlySchedule> sectionMonthlyScheduleSet =
+                    smsm.getSectionMonthlySchedules(Year.now());
+
+                //filter to get only current section
+                Iterator<SectionMonthlySchedule> itr = sectionMonthlyScheduleSet.iterator();
+                while (itr.hasNext()) {
+                    if (!itr.next().getEntity().getSection().getSectionId()
+                        .equals(this.section.getEntity().getSectionId())) {
+                        itr.remove();
+                    }
+                }
+
+
+                FontIcon monthIcon = new FontIcon(FontAwesome.CALENDAR_PLUS_O);
+                monthIcon.getStyleClass().addAll("button-icon");
+                FontIcon selectedIcon = new FontIcon(FontAwesome.CHECK_SQUARE_O);
+                selectedIcon.getStyleClass().addAll("button-icon");
+
+                ListSelectionView<SectionMonthlySchedule> listSelectionView =
+                    new ListSelectionView();
+
+                listSelectionView.getSourceItems().addAll(sectionMonthlyScheduleSet);
+                listSelectionView.setCellFactory(listView -> {
+                    ListCell<SectionMonthlySchedule> cell = new ListCell<SectionMonthlySchedule>() {
+                        @Override
+                        public void updateItem(SectionMonthlySchedule item, boolean empty) {
+                            super.updateItem(item, empty);
+
+                            if (empty) {
+                                setText(null);
+                                setGraphic(null);
+                            } else {
+                                Month m = Month.of(
+                                    item.getEntity().getMonthlySchedule().getMonth()
+                                );
+
+                                if (item.getEntity().isPublished()) {
+                                    setText(m.getDisplayName(TextStyle.FULL, Locale.US)
+                                        + "Already Published.");
+                                    setGraphic(null);
+                                    setEditable(false);
+                                    setDisabled(true);
+                                    setDisable(true);
+                                } else {
+                                    setText(m.getDisplayName(TextStyle.FULL, Locale.US));
+                                    setGraphic(null);
+                                    setEditable(true);
+                                    setDisabled(false);
+                                    setDisable(false);
+                                }
+                            }
+                        }
+                    };
+                    cell.setFont(Font.font(14));
+                    return cell;
+                });
+
+                Font f = new Font(14);
+
+                Label monthLabel = new Label("Month", monthIcon);
+                monthLabel.setStyle("-fx-font-weight: bold");
+                monthLabel.setFont(f);
+                Label selectedLabel = new Label("Selected", selectedIcon);
+                selectedLabel.setStyle("-fx-font-weight: bold");
+                selectedLabel.setFont(f);
+
+                listSelectionView.sourceHeaderProperty().set(monthLabel);
+                listSelectionView.targetHeaderProperty().set(selectedLabel);
+                Dialog<ButtonType> dialog = new Dialog<>();
+                dialog.initOwner(this.calendarView.getParent().getScene().getWindow());
+                dialog.getDialogPane().getButtonTypes().addAll(ButtonType.CANCEL, ButtonType.OK);
+                dialog.getDialogPane().setContent(listSelectionView);
+                dialog.setResizable(true);
+                dialog.getDialogPane().setPrefWidth(600);
+                dialog.initModality(Modality.APPLICATION_MODAL);
+                dialog.setTitle("Publish Duty Roster");
+
+                Button btn = (Button) dialog.getDialogPane().lookupButton(ButtonType.OK);
+
+                btn.setOnAction(event1 -> {
+                    ObservableList<SectionMonthlySchedule> list =
+                        listSelectionView.getTargetItems();
+                    for (SectionMonthlySchedule sms : list) {
+                        if (!sms.getPublishState()
+                            .equals(SectionMonthlySchedule.PublishState.PUBLISHED)) {
+
+                            LOG.debug("Publish SectionMonthlySchedule ID: {}",
+                                sms.getEntity().getSectionMonthlyScheduleId());
+                            smsm.makeAvailableForOrganisationManager(sms);
+
+                            if (!sms.getPublishState()
+                                .equals(SectionMonthlySchedule.PublishState.PUBLISHED)) {
+                                LOG.debug("Publish FAILD SectionMonthlySchedule ID: {} ",
+                                    sms.getEntity().getSectionMonthlyScheduleId());
+
+                                Notifications.create()
+                                    .owner(this.calendarView.getParent().getScene().getWindow())
+                                    .title("Publishing Faild")
+                                    .text("You cant Publish this yet.")
+                                    .position(Pos.CENTER)
+                                    .hideAfter(new Duration(3000))
+                                    .showError();
+                            } else if (sms.getPublishState()
+                                .equals(SectionMonthlySchedule.PublishState.PUBLISHED)) {
+                                Notifications.create()
+                                    .owner(this.calendarView.getParent().getScene().getWindow())
+                                    .title("Publishing Successful")
+                                    .text("Monthly Schedule is Successfuly published")
+                                    .position(Pos.CENTER)
+                                    .hideAfter(new Duration(3000))
+                                    .show();
+                            }
+                        }
+                    }
+                });
+
+                FontIcon icon = new FontIcon(FontAwesome.ARROW_CIRCLE_UP);
+                icon.getStyleClass().addAll("button-icon",
+                    "add-calendar-button-icon");
+
+
+                dialog.show();
+            }
+        );
 
 
         this.calendarView.getCalendarSources().setAll(

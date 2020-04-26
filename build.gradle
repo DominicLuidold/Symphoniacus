@@ -81,4 +81,6 @@ pmd {
     ruleSets = ['category/java/errorprone.xml', 'category/java/bestpractices.xml']
 }
 
+applicationDefaultJvmArgs = ["--add-opens=javafx.graphics/com.sun.javafx.css=ALL-UNNAMED"]
+
 build.dependsOn jacocoTestReport

@@ -25,7 +25,7 @@ public class SectionEntity {
     private String description;
 
     @OneToMany(mappedBy = "section", orphanRemoval = true)
-    private List<SectionMonthlySchedule> sectionMonthlySchedules = new LinkedList<>();
+    private List<SectionMonthlyScheduleEntity> sectionMonthlySchedules = new LinkedList<>();
 
     @OneToMany(mappedBy = "section", orphanRemoval = true)
     private List<MusicianEntity> musicians = new LinkedList<>();
@@ -60,16 +60,16 @@ public class SectionEntity {
         this.description = description;
     }
 
-    public List<SectionMonthlySchedule> getSectionMonthlySchedules() {
+    public List<SectionMonthlyScheduleEntity> getSectionMonthlySchedules() {
         return this.sectionMonthlySchedules;
     }
 
-    public void addSectionMonthlySchedule(SectionMonthlySchedule sectionMonthlySchedule) {
+    public void addSectionMonthlySchedule(SectionMonthlyScheduleEntity sectionMonthlySchedule) {
         this.sectionMonthlySchedules.add(sectionMonthlySchedule);
         sectionMonthlySchedule.setSection(this);
     }
 
-    public void removeSectionMonthlySchedule(SectionMonthlySchedule sectionMonthlySchedule) {
+    public void removeSectionMonthlySchedule(SectionMonthlyScheduleEntity sectionMonthlySchedule) {
         this.sectionMonthlySchedules.remove(sectionMonthlySchedule);
         sectionMonthlySchedule.setMonthlySchedule(null);
     }

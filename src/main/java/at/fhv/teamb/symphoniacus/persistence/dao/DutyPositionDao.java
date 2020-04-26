@@ -3,7 +3,9 @@ package at.fhv.teamb.symphoniacus.persistence.dao;
 import at.fhv.teamb.symphoniacus.persistence.BaseDao;
 import at.fhv.teamb.symphoniacus.persistence.model.DutyEntity;
 import at.fhv.teamb.symphoniacus.persistence.model.DutyPositionEntity;
+import at.fhv.teamb.symphoniacus.persistence.model.MusicianEntity;
 import at.fhv.teamb.symphoniacus.persistence.model.SectionEntity;
+import at.fhv.teamb.symphoniacus.persistence.model.SectionMonthlyScheduleEntity;
 import java.util.List;
 import java.util.Optional;
 import javax.persistence.TypedQuery;
@@ -38,21 +40,43 @@ public class DutyPositionDao extends BaseDao<DutyPositionEntity> {
         DutyEntity duty,
         SectionEntity section
     ) {
-        this.createEntityManager();
-        TypedQuery<DutyPositionEntity> query = this.entityManager.createQuery(
+        TypedQuery<DutyPositionEntity> query = entityManager.createQuery(
             "SELECT p FROM DutyPositionEntity p "
                 + "JOIN FETCH p.instrumentationPosition "
-                + "JOIN FETCH p.musician m "
-                + "JOIN FETCH m.user "
+                + "LEFT JOIN FETCH p.musician m "
+                + "LEFT JOIN FETCH m.user "
                 + "WHERE p.duty = :duty AND p.section = :section",
             DutyPositionEntity.class
         );
+
         query.setParameter("duty", duty);
         query.setParameter("section", section);
-        List<DutyPositionEntity> result = query.getResultList();
-        this.tearDown();
 
-        return result;
+        return query.getResultList();
+    }
+
+    /**
+     * Finds all {@link DutyPositionEntity} objects based on provided
+     * {@link SectionMonthlyScheduleEntity} that do not have any {@link MusicianEntity} set.
+     *
+     * @param sms The section monthly schedule to use
+     * @return A List of corresponding DutyPosition entities
+     */
+    public Long findCorrespondingPositionsWithoutMusician(
+        SectionMonthlyScheduleEntity sms
+    ) {
+        TypedQuery<Long> query = entityManager.createQuery(
+            "SELECT COUNT(p) FROM DutyPositionEntity p "
+                + "INNER JOIN p.duty d "
+                + "INNER JOIN d.sectionMonthlySchedules sms "
+                + "WHERE p.musician IS NULL "
+                + "AND sms.sectionMonthlyScheduleId = :sectionMonthlyScheduleId",
+            Long.class
+        );
+
+        query.setParameter("sectionMonthlyScheduleId", sms.getSectionMonthlyScheduleId());
+
+        return query.getSingleResult();
     }
 
     @Override

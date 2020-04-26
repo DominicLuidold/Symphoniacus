@@ -1,13 +1,18 @@
 package at.fhv.teamb.symphoniacus.application;
 
 import at.fhv.teamb.symphoniacus.domain.Duty;
+import at.fhv.teamb.symphoniacus.domain.Section;
 import at.fhv.teamb.symphoniacus.persistence.dao.DutyDao;
 import at.fhv.teamb.symphoniacus.persistence.model.DutyEntity;
 import at.fhv.teamb.symphoniacus.persistence.model.SectionEntity;
+import at.fhv.teamb.symphoniacus.persistence.model.SeriesOfPerformancesEntity;
 import java.time.DayOfWeek;
 import java.time.LocalDate;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Optional;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 /**
  * This class is responsible for finding {@link DutyEntity} objects based on a range of time and
@@ -16,6 +21,7 @@ import java.util.List;
  * @author Nino Heinzle
  */
 public class DutyManager {
+    private static final Logger LOG = LogManager.getLogger(DutyManager.class);
     protected DutyDao dutyDao;
 
     public DutyManager() {
@@ -31,6 +37,37 @@ public class DutyManager {
     public static LocalDate getLastMondayDate(LocalDate givenDate) {
         // Will always jump back to last monday
         return givenDate.with(DayOfWeek.MONDAY);
+    }
+
+    /**
+     * Converts {@link DutyEntity} objects to {@link Duty} objects.
+     *
+     * @param entities The entities to convert
+     * @return A List of Duty objects
+     */
+    public static List<Duty> convertEntitiesToDomainObjects(List<DutyEntity> entities) {
+        List<Duty> duties = new LinkedList<>();
+        for (DutyEntity entity : entities) {
+            duties.add(new Duty(entity));
+        }
+        return duties;
+    }
+
+    /**
+     * Returns a loaded duty from its id.
+     *
+     * @param dutyId The identifier of this duty
+     * @return A minimal-loaded duty
+     */
+    public Optional<Duty> loadDutyDetails(Integer dutyId) {
+        Optional<DutyEntity> dutyEntity = this.dutyDao.find(dutyId);
+
+        if (dutyEntity.isPresent()) {
+            Duty d = new Duty(dutyEntity.get());
+            return Optional.of(d);
+        } else {
+            return Optional.empty();
+        }
     }
 
     /**
@@ -117,16 +154,45 @@ public class DutyManager {
     }
 
     /**
-     * Converts {@link DutyEntity} objects to {@link Duty} objects.
-     *
-     * @param entities The entities to convert
-     * @return A List of Duty objects
+     * TODO JAVADOC.
+
+     * @return
      */
-    public static List<Duty> convertEntitiesToDomainObjects(List<DutyEntity> entities) {
-        List<Duty> duties = new LinkedList<>();
-        for (DutyEntity entity : entities) {
-            duties.add(new Duty(entity));
+
+    public Optional<List<Duty>> getOtherDutiesForSopOrSection(
+        Duty duty,
+        Section section,
+        Integer numberOfDuties
+    ) {
+        // Look whether it is a SoP or not.
+        if (duty == null) {
+            LOG.error("Cannot getLastDuties when duty is null");
+            return Optional.empty();
         }
-        return duties;
+
+        SeriesOfPerformancesEntity sop = duty
+            .getEntity()
+            .getSeriesOfPerformances();
+
+        List<DutyEntity> resultList = null;
+        if (sop.getSeriesOfPerformancesId() != null) {
+            // get last duties for this SoP
+            resultList = this.dutyDao.getOtherDutiesForSeriesOfPerformances(sop, numberOfDuties);
+        } else {
+            // get last duties of section
+            // TODO change this go get last 5 non-series of performances-duties
+            resultList = this.dutyDao.getOtherDutiesForSection(section.getEntity(), numberOfDuties);
+        }
+
+        if (resultList == null || resultList.isEmpty()) {
+            LOG.error("No results found for getOtherDutiesForSopOrSection");
+            return Optional.empty();
+        }
+
+        return Optional.of(
+            convertEntitiesToDomainObjects(
+                resultList
+            )
+        );
     }
 }

@@ -5,6 +5,7 @@ import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -50,8 +51,8 @@ public class DutyEntity {
     @JoinColumn(name = "seriesOfPerformancesId")
     private SeriesOfPerformancesEntity seriesOfPerformances;
 
-    @OneToMany(mappedBy = "duty", orphanRemoval = true)
-    private List<DutyPositionEntity> dutyPositions = new LinkedList<>();
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "duty", orphanRemoval = true)
+    private Set<DutyPositionEntity> dutyPositions = new HashSet<>();
 
     @ManyToMany
     @JoinTable(
@@ -63,7 +64,7 @@ public class DutyEntity {
             @JoinColumn(name = "sectionMonthlyScheduleId")
         }
     )
-    private Set<SectionMonthlySchedule> sectionMonthlySchedules = new HashSet<>();
+    private Set<SectionMonthlyScheduleEntity> sectionMonthlySchedules = new HashSet<>();
 
     public void addDuty(DutyPositionEntity dutyPositionEntity) {
         this.dutyPositions.add(dutyPositionEntity);
@@ -91,25 +92,8 @@ public class DutyEntity {
         this.weeklySchedule = weeklySchedule;
     }
 
-    public List<DutyPositionEntity> getDutyPositions() {
-        return this.dutyPositions;
-    }
-
-    public void setDutyPositions(List<DutyPositionEntity> dutyPositions) {
-        this.dutyPositions = dutyPositions;
-    }
-
-    public void addDutyPosition(DutyPositionEntity dutyPosition) {
-        this.dutyPositions.add(dutyPosition);
-        dutyPosition.setDuty(this);
-    }
-
-    public void addAllDutyPositions(List<DutyPositionEntity> dutyPositions) {
-        this.dutyPositions.addAll(dutyPositions);
-    }
-
     public DutyCategoryEntity getDutyCategory() {
-        return dutyCategory;
+        return this.dutyCategory;
     }
 
     public void setDutyCategory(DutyCategoryEntity dutyCategory) {
@@ -158,22 +142,36 @@ public class DutyEntity {
         this.seriesOfPerformances = seriesOfPerformances;
     }
 
-    public Set<SectionMonthlySchedule> getSectionMonthlySchedules() {
+    public Set<DutyPositionEntity> getDutyPositions() {
+        return this.dutyPositions;
+    }
+
+    public void addDutyPosition(DutyPositionEntity dutyPositionEntity) {
+        this.dutyPositions.add(dutyPositionEntity);
+        dutyPositionEntity.setDuty(this);
+    }
+
+    public void removeDutyPosition(DutyPositionEntity dutyPositionEntity) {
+        this.dutyPositions.remove(dutyPositionEntity);
+        dutyPositionEntity.setDuty(null);
+    }
+
+    public Set<SectionMonthlyScheduleEntity> getSectionMonthlySchedules() {
         return this.sectionMonthlySchedules;
     }
 
-    public void addSectionMonthlySchedule(SectionMonthlySchedule sms) {
+    public void addSectionMonthlySchedule(SectionMonthlyScheduleEntity sms) {
         this.sectionMonthlySchedules.add(sms);
         sms.getDuties().add(this);
     }
 
-    public void removeSectionMonthlySchedule(SectionMonthlySchedule sms) {
+    public void removeSectionMonthlySchedule(SectionMonthlyScheduleEntity sms) {
         this.sectionMonthlySchedules.remove(sms);
         sms.getDuties().remove(this);
     }
 
     public void setSectionMonthlySchedules(
-        Set<SectionMonthlySchedule> sectionMonthlySchedules) {
+        Set<SectionMonthlyScheduleEntity> sectionMonthlySchedules) {
         this.sectionMonthlySchedules = sectionMonthlySchedules;
     }
 }

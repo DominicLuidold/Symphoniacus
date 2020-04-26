@@ -39,8 +39,7 @@ public class MusicianDao extends BaseDao<MusicianEntity> {
      * @return A List of active musicians belonging to the section
      */
     public List<MusicianEntity> findAllWithSectionAndActiveContract(SectionEntity section) {
-        this.createEntityManager();
-        TypedQuery<MusicianEntity> query = this.entityManager.createQuery(
+        TypedQuery<MusicianEntity> query = entityManager.createQuery(
             "SELECT m FROM MusicianEntity m "
                 + "JOIN FETCH m.user "
                 + "LEFT JOIN FETCH m.dutyPositions "
@@ -53,10 +52,8 @@ public class MusicianDao extends BaseDao<MusicianEntity> {
         query.setParameter("section", section);
         query.setParameter("startDate", LocalDate.now());
         query.setParameter("endDate", LocalDate.now());
-        List<MusicianEntity> result = query.getResultList();
-        this.tearDown();
 
-        return result;
+        return query.getResultList();
     }
 
     @Override

@@ -1,23 +1,27 @@
 package at.fhv.teamb.symphoniacus.persistence.dao;
 
+import at.fhv.teamb.symphoniacus.domain.Section;
 import at.fhv.teamb.symphoniacus.persistence.BaseDao;
 import at.fhv.teamb.symphoniacus.persistence.model.DutyEntity;
 import at.fhv.teamb.symphoniacus.persistence.model.MusicianEntity;
 import at.fhv.teamb.symphoniacus.persistence.model.SectionEntity;
-import java.sql.ResultSet;
+import at.fhv.teamb.symphoniacus.persistence.model.SeriesOfPerformancesEntity;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.YearMonth;
+import java.util.HashSet;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
+import javax.persistence.EntityTransaction;
 import javax.persistence.TypedQuery;
 
 /**
  * DAO for Duty class.
  *
  * @author Valentin Goronjic
+ * @author Dominic Luidold
  */
 public class DutyDao extends BaseDao<DutyEntity> {
 
@@ -51,8 +55,7 @@ public class DutyDao extends BaseDao<DutyEntity> {
      * @return A List of all Duties that have the date between the given start and end dates
      */
     public List<DutyEntity> findAllInRange(LocalDateTime start, LocalDateTime end) {
-        this.createEntityManager();
-        TypedQuery<DutyEntity> query = this.entityManager.createQuery(
+        TypedQuery<DutyEntity> query = entityManager.createQuery(
             "SELECT d FROM DutyEntity d "
                 + "JOIN FETCH d.dutyCategory dc "
                 + "JOIN FETCH d.seriesOfPerformances sop "
@@ -60,13 +63,12 @@ public class DutyDao extends BaseDao<DutyEntity> {
                 + "AND d.end <= :end",
             DutyEntity.class
         );
+
         query.setMaxResults(300);
         query.setParameter("start", start);
         query.setParameter("end", end);
-        List<DutyEntity> resultList = query.getResultList();
-        this.tearDown();
 
-        return resultList;
+        return query.getResultList();
     }
 
     /**
@@ -113,8 +115,7 @@ public class DutyDao extends BaseDao<DutyEntity> {
         boolean isReadyForOrganisationManager,
         boolean isPublished
     ) {
-        this.createEntityManager();
-        TypedQuery<DutyEntity> query = this.entityManager.createQuery("SELECT d FROM DutyEntity d "
+        TypedQuery<DutyEntity> query = entityManager.createQuery("SELECT d FROM DutyEntity d "
             + "INNER JOIN d.sectionMonthlySchedules sms "
             + "INNER JOIN sms.section s "
             + "JOIN FETCH d.dutyCategory dc "
@@ -134,10 +135,7 @@ public class DutyDao extends BaseDao<DutyEntity> {
         query.setParameter("isReadyForOrganisationManager", isReadyForOrganisationManager);
         query.setParameter("isPublished", isPublished);
 
-        List<DutyEntity> result = query.getResultList();
-
-        this.tearDown();
-        return result;
+        return query.getResultList();
     }
 
     /**
@@ -151,26 +149,26 @@ public class DutyDao extends BaseDao<DutyEntity> {
         MusicianEntity musician,
         LocalDate month
     ) {
-        this.createEntityManager();
         YearMonth yearMonth = YearMonth.from(month);
         LocalDate start = yearMonth.atDay(1); // Find first day of month
         LocalDate end = yearMonth.atEndOfMonth(); // Find last day of month
         LocalDateTime startWithTime = start.atStartOfDay();
         LocalDateTime endWithTime = end.atStartOfDay();
-        TypedQuery<DutyEntity> query = this.entityManager.createQuery("SELECT d FROM DutyEntity d "
+
+        TypedQuery<DutyEntity> query = entityManager.createQuery(
+            "SELECT d FROM DutyEntity d "
                 + "INNER JOIN d.dutyPositions dp "
                 + "INNER JOIN dp.musician m "
                 + "JOIN FETCH d.dutyCategory "
                 + "WHERE d.end <= :end AND d.start >= :start AND m = :musician",
             DutyEntity.class
         );
+
         query.setParameter("musician", musician);
         query.setParameter("start", startWithTime);
         query.setParameter("end", endWithTime);
-        List<DutyEntity> dutyCategories = query.getResultList();
-        this.tearDown();
 
-        return dutyCategories;
+        return query.getResultList();
     }
 
     /**
@@ -180,30 +178,30 @@ public class DutyDao extends BaseDao<DutyEntity> {
      * @param month     LocalDate any day of a month represents the whole month
      * @return A set uf DutyEntities, because duplicates of duties are unnecessary
      */
-    public Set<DutyEntity> getAllDutiesOfMusicians(List<MusicianEntity> musicians,
-                                                   LocalDate month) {
-        this.createEntityManager();
+    public Set<DutyEntity> getAllDutiesOfMusicians(
+        List<MusicianEntity> musicians,
+        LocalDate month
+    ) {
         YearMonth yearMonth = YearMonth.from(month);
         LocalDate start = yearMonth.atDay(1); // Find first day of month
         LocalDate end = yearMonth.atEndOfMonth(); // Find last day of month
         LocalDateTime startWithTime = start.atStartOfDay();
         LocalDateTime endWithTime = end.atStartOfDay();
 
-        TypedQuery<DutyEntity> query = this.entityManager.createQuery(""
-                + "SELECT d FROM DutyEntity d "
+        TypedQuery<DutyEntity> query = entityManager.createQuery(
+            "SELECT d FROM DutyEntity d "
                 + "INNER JOIN d.dutyPositions dp "
                 + "INNER JOIN dp.musician m "
-                + "WHERE d.end <= :end AND d.start >= :start AND m IN :musicians",
-            DutyEntity.class);
+                + "WHERE d.end <= :end "
+                + " AND d.start >= :start AND m IN :musicians",
+            DutyEntity.class
+        );
 
         query.setParameter("start", startWithTime);
         query.setParameter("end", endWithTime);
         query.setParameter("musicians", musicians);
 
-        Set<DutyEntity> duties = new LinkedHashSet<>();
-        duties.addAll(query.getResultList());
-
-        return duties;
+        return new LinkedHashSet<>(query.getResultList());
     }
 
     /**
@@ -214,10 +212,7 @@ public class DutyDao extends BaseDao<DutyEntity> {
      */
     @Override
     public Optional<DutyEntity> persist(DutyEntity elem) {
-        this.createEntityManager();
-        this.entityManager.persist(elem);
-        this.tearDown();
-        return Optional.of(elem);
+        return Optional.empty();
     }
 
     /**
@@ -228,10 +223,19 @@ public class DutyDao extends BaseDao<DutyEntity> {
      */
     @Override
     public Optional<DutyEntity> update(DutyEntity elem) {
-        this.createEntityManager();
-        this.entityManager.merge(elem);
-        this.tearDown();
-        return Optional.of(elem);
+        EntityTransaction transaction = null;
+        try {
+            transaction = entityManager.getTransaction();
+            transaction.begin();
+            entityManager.merge(elem);
+            transaction.commit();
+            return Optional.of(elem);
+        } catch (Exception e) {
+            if (transaction != null && transaction.isActive()) {
+                transaction.rollback();
+            }
+        }
+        return Optional.empty();
     }
 
     /**
@@ -242,9 +246,47 @@ public class DutyDao extends BaseDao<DutyEntity> {
      */
     @Override
     public Boolean remove(DutyEntity elem) {
-        this.createEntityManager();
-        this.entityManager.remove(elem);
-        this.tearDown();
-        return true;
+        return false;
+    }
+
+    /**
+     * TODO JAVADOC.
+     * @return
+     */
+    public List<DutyEntity> getOtherDutiesForSeriesOfPerformances(
+        SeriesOfPerformancesEntity sop,
+        Integer maxNumberOfDuties
+    ) {
+        TypedQuery<DutyEntity> query = entityManager.createQuery(
+            "SELECT d FROM DutyEntity d "
+                + "INNER JOIN d.seriesOfPerformances sop "
+                + "WHERE sop.seriesOfPerformancesId = :sopId ",
+            DutyEntity.class
+        );
+        query.setParameter("sopId", sop.getInstrumentationId());
+        query.setMaxResults(maxNumberOfDuties);
+
+        return query.getResultList();
+    }
+
+    /**
+     * TODO JAVADOC.
+     * @return
+     */
+    public List<DutyEntity> getOtherDutiesForSection(
+        SectionEntity section,
+        Integer maxNumberOfDuties
+    ) {
+        TypedQuery<DutyEntity> query = entityManager.createQuery(
+            "SELECT d FROM DutyEntity d "
+                + "INNER JOIN d.sectionMonthlySchedules sms "
+                + "WHERE sms.section.sectionId = :sectionId "
+                + "AND d.seriesOfPerformances IS NULL",
+            DutyEntity.class
+        );
+        query.setParameter("sectionId", section.getSectionId());
+        query.setMaxResults(maxNumberOfDuties);
+
+        return query.getResultList();
     }
 }
