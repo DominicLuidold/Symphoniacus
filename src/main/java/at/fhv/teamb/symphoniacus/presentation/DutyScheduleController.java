@@ -468,13 +468,6 @@ public class DutyScheduleController implements Initializable, Controllable {
             }
         });
         new Thread(task).start();
-
-        /*
-        LinkedList<Duty> oldDutys = this.dutyScheduleManager.getOldDutys();
-        for (Duty d : oldDutys) {
-            oldDutyComboViews.add(new OldDutyComboView(d));
-        }
-        */
     }
 
     private void loadOldDuty() {
@@ -490,7 +483,7 @@ public class DutyScheduleController implements Initializable, Controllable {
             LOG.debug("Load old Duty {}",
                 this.oldDutySelect.getSelectionModel().getSelectedItem().getTitle());
             if (this.actualSectionInstrumentation != null) {
-                Optional<ActualSectionInstrumentation> oldasi = this.dutyScheduleManager
+                Optional<ActualSectionInstrumentation> oldasi = new DutyScheduleManager()
                     .getInstrumentationDetails(
                         this.oldDutySelect.getSelectionModel().getSelectedItem().getOldDuty(),
                         this.section);
@@ -509,13 +502,21 @@ public class DutyScheduleController implements Initializable, Controllable {
                                 .getInstrumentationPositionId()
                                 == dp.getEntity().getInstrumentationPosition()
                                 .getInstrumentationPositionId()) {
-                                oldMusician = dp.getAssignedMusician();
+                                if (odp.getAssignedMusician().isPresent()) {
+                                    oldMusician = odp.getAssignedMusician();
+                                }
                             }
                         }
 
-                        if (avMusicians.contains(oldMusician.get())) {
-                            this.actualSectionInstrumentation
-                                .assignMusicianToPosition(oldMusician.get(), dp);
+
+                        if (oldMusician.isPresent()) {
+                            for (Musician m : avMusicians) {
+                                if (m.getEntity().getMusicianId()
+                                    == oldMusician.get().getEntity().getMusicianId()) {
+                                    this.addMusicianToPosition(this.actualSectionInstrumentation, m,
+                                        dp);
+                                }
+                            }
                         }
                     }
                 }
