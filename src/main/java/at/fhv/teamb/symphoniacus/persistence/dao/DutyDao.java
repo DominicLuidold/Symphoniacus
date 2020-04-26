@@ -274,6 +274,7 @@ public class DutyDao extends BaseDao<DutyEntity> {
      * @return
      */
     public List<DutyEntity> getOtherDutiesForSection(
+        DutyEntity duty,
         SectionEntity section,
         Integer maxNumberOfDuties
     ) {
@@ -281,10 +282,12 @@ public class DutyDao extends BaseDao<DutyEntity> {
             "SELECT d FROM DutyEntity d "
                 + "INNER JOIN d.sectionMonthlySchedules sms "
                 + "WHERE sms.section.sectionId = :sectionId "
-                + "AND d.seriesOfPerformances IS NULL",
+                + "AND d.seriesOfPerformances IS NULL "
+                + "AND d.dutyCategory.dutyCategoryId = :dutyCategoryId ",
             DutyEntity.class
         );
         query.setParameter("sectionId", section.getSectionId());
+        query.setParameter("dutyCategoryId", duty.getDutyId());
         query.setMaxResults(maxNumberOfDuties);
 
         return query.getResultList();

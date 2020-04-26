@@ -181,7 +181,11 @@ public class DutyManager {
         } else {
             // get last duties of section
             // TODO change this go get last 5 non-series of performances-duties
-            resultList = this.dutyDao.getOtherDutiesForSection(section.getEntity(), numberOfDuties);
+            resultList = this.dutyDao.getOtherDutiesForSection(
+                duty.getEntity(),
+                section.getEntity(),
+                numberOfDuties
+            );
         }
 
         if (resultList == null || resultList.isEmpty()) {
