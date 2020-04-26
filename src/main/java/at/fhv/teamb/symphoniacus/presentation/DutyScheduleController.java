@@ -100,7 +100,6 @@ public class DutyScheduleController implements Initializable, Controllable {
     public void initialize(URL location, ResourceBundle resources) {
         this.registerController();
         this.dutyScheduleManager = null;
-
         this.dutySchedule.setVisible(false);
 
         this.musicianTableWithRequests.setRowFactory(row -> new TableRow<>() {
@@ -133,8 +132,8 @@ public class DutyScheduleController implements Initializable, Controllable {
                     .equals(PersistenceState.PERSISTED)
                 ) {
                     Notifications.create()
-                        .title("Saving Successful")
-                        .text("Current Instrumentation was saved.")
+                        .title("Saving successful")
+                        .text("Current Instrumentation has been saved.")
                         .position(Pos.CENTER)
                         .hideAfter(new Duration(4000))
                         .show();
@@ -142,8 +141,8 @@ public class DutyScheduleController implements Initializable, Controllable {
 
             } else {
                 Notifications.create()
-                    .title("Not saving")
-                    .text("No changes was made.")
+                    .title("Not saved")
+                    .text("No changes were made.")
                     .position(Pos.CENTER)
                     .hideAfter(new Duration(4000))
                     .showError();
@@ -153,7 +152,7 @@ public class DutyScheduleController implements Initializable, Controllable {
                 .equals(PersistenceState.EDITED)
             ) {
                 Notifications.create()
-                    .title("Saving Faild")
+                    .title("Saving failed")
                     .text("Something went wrong while saving.")
                     .position(Pos.CENTER)
                     .hideAfter(new Duration(4000))
@@ -684,6 +683,9 @@ public class DutyScheduleController implements Initializable, Controllable {
         this.musicianTableWithRequests.refresh();
         this.musicianTableWithoutRequests.refresh();
         this.positionsTable.refresh();
+        this.oldDutySelect.getItems().clear();
+        this.oldDutySelect.setPromptText("Load from history");
+        this.oldDutySelect.setPlaceholder(new Label("No duty selected"));
         this.hide();
         MasterController mc = MasterController.getInstance();
         CalendarController cc = (CalendarController) mc.get("CalendarController");
@@ -692,7 +694,6 @@ public class DutyScheduleController implements Initializable, Controllable {
 
     private ButtonType getConfirmation() {
         Label label = new Label();
-        ;
         ButtonType buttonType = null;
 
         Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
