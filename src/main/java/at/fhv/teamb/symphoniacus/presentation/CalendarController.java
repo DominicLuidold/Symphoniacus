@@ -145,6 +145,11 @@ public class CalendarController implements Initializable, Controllable {
                                     item.getEntity().getMonthlySchedule().getMonth()
                                 );
 
+                                LOG.debug(
+                                    "Is sms for month {} published? {}",
+                                    m.getDisplayName(TextStyle.FULL, Locale.US),
+                                    item.getEntity().isPublished()
+                                );
                                 if (item.getEntity().isPublished()) {
                                     setText(m.getDisplayName(TextStyle.FULL, Locale.US)
                                         + "Already Published.");
