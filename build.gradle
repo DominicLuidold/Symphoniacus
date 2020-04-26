@@ -10,6 +10,8 @@ plugins {
     id 'jacoco'
     id 'org.openjfx.javafxplugin' version '0.0.8'
     id 'pmd'
+    id "com.github.johnrengelman.shadow" version "5.2.0"
+    id 'distribution'
 }
 
 repositories {
@@ -33,16 +35,21 @@ dependencies {
     compile 'org.apache.logging.log4j:log4j-api:2.13.1'
     compile 'org.apache.logging.log4j:log4j-core:2.13.1'
     compile 'org.hibernate:hibernate-core:5.4.13.Final'
+    compile 'com.github.jengelman.gradle.plugins:shadow:5.2.0'
 
     implementation 'com.calendarfx:view:11.8.3'
+    implementation ('org.controlsfx:controlsfx:11.0.1') {
+        exclude group: 'org.controlsfx'
+    }
 
-    testCompile 'org.mockito:mockito-core:3.3.3'
+    compile 'org.mockito:mockito-core:3.3.3'
     testCompile 'org.testfx:testfx-core:4.0.16-alpha'
     testCompile 'org.testfx:testfx-junit5:4.0.16-alpha'
 }
 
 application {
     mainClassName = 'at.fhv.teamb.symphoniacus.Main'
+    applicationDefaultJvmArgs = ["--add-opens=javafx.graphics/com.sun.javafx.css=ALL-UNNAMED"]
 }
 
 test {
@@ -78,6 +85,24 @@ pmd {
     ignoreFailures = true
     rulePriority = 5
     ruleSets = ['category/java/errorprone.xml', 'category/java/bestpractices.xml']
+}
+
+shadowJar {
+    archiveFileName = 'Symphoniacus.jar'
+    mergeServiceFiles()
+    manifest {
+        attributes(
+                'Main-Class': "at.fhv.teamb.symphoniacus.Main"
+        )
+    }
+}
+distributions {
+    main {
+        distributionBaseName = "main"
+        contents {
+            from shadowJar
+        }
+    }
 }
 
 build.dependsOn jacocoTestReport

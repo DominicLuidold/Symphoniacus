@@ -5,7 +5,7 @@ import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
-import at.fhv.teamb.symphoniacus.persistence.model.Duty;
+import at.fhv.teamb.symphoniacus.persistence.model.DutyEntity;
 import java.util.LinkedList;
 import java.util.List;
 import javax.persistence.EntityManager;
@@ -17,10 +17,10 @@ import org.mockito.Mock;
 
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 class DutyDaoMockedTest {
-    private DutyDao dao;
+
     private EntityManager entityManager;
     @Mock
-    private TypedQuery<Duty> mockedQuery;
+    private TypedQuery<DutyEntity> mockedQuery;
 
     /**
      * Init method for all subsequent tests.
@@ -31,13 +31,12 @@ class DutyDaoMockedTest {
         EntityManagerFactory entityManagerFactory = mock(EntityManagerFactory.class);
         when(entityManagerFactory.createEntityManager()).thenReturn(this.entityManager);
 
-        List<Duty> tempList = new LinkedList<>();
-        tempList.add(new Duty());
-        tempList.add(new Duty());
+        List<DutyEntity> tempList = new LinkedList<>();
+        tempList.add(new DutyEntity());
+        tempList.add(new DutyEntity());
         // " select * from ... "
-        when(this.entityManager.createQuery(anyString(), eq(Duty.class)))
+        when(this.entityManager.createQuery(anyString(), eq(DutyEntity.class)))
             .thenReturn(this.mockedQuery);
         when(this.mockedQuery.getResultList()).thenReturn(tempList);
-        this.dao = new DutyDao();
     }
 }

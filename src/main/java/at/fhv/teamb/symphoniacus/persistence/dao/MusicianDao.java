@@ -1,49 +1,94 @@
 package at.fhv.teamb.symphoniacus.persistence.dao;
 
 import at.fhv.teamb.symphoniacus.persistence.BaseDao;
-import at.fhv.teamb.symphoniacus.persistence.model.Musician;
+import at.fhv.teamb.symphoniacus.persistence.model.ContractualObligationEntity;
+import at.fhv.teamb.symphoniacus.persistence.model.MusicianEntity;
+import at.fhv.teamb.symphoniacus.persistence.model.SectionEntity;
+import java.time.LocalDate;
+import java.util.List;
 import java.util.Optional;
-import javax.persistence.EntityGraph;
+import javax.persistence.TypedQuery;
 
 /**
  * DAO for Musicians.
  *
  * @author Valentin Goronjic
+ * @author Theresa Gierer
+ * @author Dominic Luidold
  */
-public class MusicianDao extends BaseDao<Musician> {
+public class MusicianDao extends BaseDao<MusicianEntity> {
 
+    /**
+     * Finds a duty by its key.
+     *
+     * @param key The key of the duty
+     * @return The duty that is looked for
+     */
     @Override
-    public Optional<Musician> find(Object key) {
-        this.createEntityManager();
-        EntityGraph graph = this.entityManager.getEntityGraph(
-            "musician-with-collections"
+    public Optional<MusicianEntity> find(Integer key) {
+        return this.find(MusicianEntity.class, key);
+    }
+
+    /**
+     * Finds all {@link MusicianEntity} objects with an active {@link ContractualObligationEntity}
+     * based on provided {@link SectionEntity}.
+     *
+     * @param section The section to use
+     * @return A List of active musicians belonging to the section
+     */
+    public List<MusicianEntity> findAllWithSectionAndActiveContract(SectionEntity section) {
+        TypedQuery<MusicianEntity> query = entityManager.createQuery(
+            "SELECT m FROM MusicianEntity m "
+                + "JOIN FETCH m.user "
+                + "LEFT JOIN FETCH m.dutyPositions "
+                + "INNER JOIN m.contractualObligations c "
+                + "WHERE m.section = :section "
+                + "AND c.startDate <= :startDate "
+                + "AND c.endDate >= :endDate",
+            MusicianEntity.class
+        );
+        query.setParameter("section", section);
+        query.setParameter("startDate", LocalDate.now());
+        query.setParameter("endDate", LocalDate.now());
+
+        return query.getResultList();
+    }
+
+    /**
+     * Finds all {@link MusicianEntity} objects that represent an external musician placeholder
+     * based on provided {@link SectionEntity}.
+     *
+     * @param section The section to use
+     * @return A List of external musicians belonging to the section
+     */
+    public List<MusicianEntity> findExternalsWithSection(SectionEntity section) {
+        TypedQuery<MusicianEntity> query = entityManager.createQuery(
+            "SELECT m FROM MusicianEntity m "
+                + "JOIN FETCH m.user u "
+                + "WHERE u.firstName = :firstName "
+                + "AND m.section = :section "
+                + "AND m.contractualObligations IS EMPTY",
+            MusicianEntity.class
         );
 
-        Musician m = entityManager.createQuery(
-            "select m from Musician m where m.userId = :id",
-            Musician.class
-        )
-            .setParameter("id", key)
-            .setHint("javax.persistence.fetchgraph", graph)
-            .getSingleResult();
-        m.getMusicianRoles();
-        m.getSection();
-        this.tearDown();
-        return Optional.of(m);
+        query.setParameter("firstName", "Extern");
+        query.setParameter("section", section);
+
+        return query.getResultList();
     }
 
     @Override
-    public Optional<Musician> persist(Musician elem) {
+    public Optional<MusicianEntity> persist(MusicianEntity elem) {
         return Optional.empty();
     }
 
     @Override
-    public Optional<Musician> update(Musician elem) {
+    public Optional<MusicianEntity> update(MusicianEntity elem) {
         return Optional.empty();
     }
 
     @Override
-    public Boolean remove(Musician elem) {
+    public Boolean remove(MusicianEntity elem) {
         return null;
     }
 }
