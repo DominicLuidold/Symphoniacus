@@ -17,6 +17,7 @@ import at.fhv.teamb.symphoniacus.presentation.internal.tasks.GetOtherDutiesTask;
 import java.net.URL;
 import java.time.format.DateTimeFormatter;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Optional;
@@ -271,16 +272,28 @@ public class DutyScheduleController implements Initializable, Controllable {
         GetMusiciansAvailableForPositionTask task = new GetMusiciansAvailableForPositionTask(
             this.dutyScheduleManager,
             this.actualSectionInstrumentation.getDuty(),
-            this.selectedDutyPosition,
-            Boolean.FALSE
+            this.selectedDutyPosition
         );
         task.setOnSucceeded(event -> {
-            Set<Musician> list = task.getValue();
+            Set<Musician> musiciansWithoutWishRequest = task.getValue();
+            Set<Musician> musiciansWithWishRequest = new HashSet<>();
+
+            Iterator<Musician> itr = musiciansWithoutWishRequest.iterator();
+            while (itr.hasNext()) {
+                Musician m = itr.next();
+                if (m.getWishRequest().isPresent()) {
+                    musiciansWithWishRequest.add(m);
+                    itr.remove();
+                }
+            }
+
+            this.initMusicianTableWithRequests(musiciansWithWishRequest);
+
             List<MusicianTableModel> guiList = new LinkedList<>();
             int i = 0;
             int selectedIndex = 0;
             MusicianTableModel selected = null;
-            for (Musician domainMusician : list) {
+            for (Musician domainMusician : musiciansWithoutWishRequest) {
                 MusicianTableModel mtm = new MusicianTableModel(domainMusician);
                 guiList.add(mtm);
                 if (this.selectedDutyPosition.getAssignedMusician().isPresent()) {
@@ -312,23 +325,49 @@ public class DutyScheduleController implements Initializable, Controllable {
         new Thread(task).start();
     }
 
-    private void initMusicianTableWithRequests() {
-        Set<Musician> list = this.dutyScheduleManager.getMusiciansAvailableForPosition(
-            this.actualSectionInstrumentation.getDuty(),
-            this.selectedDutyPosition,
-            Boolean.TRUE
-        );
-
-        System.out.println("musician available: " + list.size());
+    private void initMusicianTableWithRequests(Set<Musician> list) {
+//        System.out.println("musician available: " + list.size());
+//
+//        List<MusicianTableModel> guiList = new LinkedList<>();
+//        for (Musician domainMusician : list) {
+//            guiList.add(new MusicianTableModel(domainMusician));
+//        }
+//        ObservableList<MusicianTableModel> observableList =
+//            FXCollections.observableArrayList();
+//        observableList.addAll(guiList);
+//        this.musicianTableWithoutRequests.setItems(observableList);
 
         List<MusicianTableModel> guiList = new LinkedList<>();
+        int i = 0;
+        int selectedIndex = 0;
+        MusicianTableModel selected = null;
         for (Musician domainMusician : list) {
-            guiList.add(new MusicianTableModel(domainMusician));
+            MusicianTableModel mtm = new MusicianTableModel(domainMusician);
+            guiList.add(mtm);
+            if (this.selectedDutyPosition.getAssignedMusician().isPresent()) {
+                LOG.debug("There is already a musician assigned for this position");
+                if (domainMusician.getShortcut().equals(
+                    this.selectedDutyPosition.getAssignedMusician().get().getShortcut()
+                )) {
+                    LOG.debug("Selecting index {}", i);
+                    selectedIndex = i;
+                    selected = mtm;
+                }
+            }
+            i++;
         }
-        ObservableList<MusicianTableModel> observableList =
+
+        ObservableList<MusicianTableModel> observableListWithRequests =
             FXCollections.observableArrayList();
-        observableList.addAll(guiList);
-        this.musicianTableWithoutRequests.setItems(observableList);
+        observableListWithRequests.addAll(guiList);
+        this.musicianTableWithRequests.setItems(observableListWithRequests);
+
+        // auto select current musician.
+        if (selected != null) {
+            this.musicianTableWithRequests.requestFocus();
+            this.musicianTableWithRequests.getSelectionModel().select(selected);
+            this.musicianTableWithRequests.scrollTo(selectedIndex);
+        }
     }
 
     /**
@@ -455,7 +494,7 @@ public class DutyScheduleController implements Initializable, Controllable {
                     for (DutyPosition dp : this.actualSectionInstrumentation.getDuty()
                         .getDutyPositions()) {
                         Set<Musician> avMusicians = this.dutyScheduleManager
-                            .getMusiciansAvailableForPosition(this.duty, dp, false);
+                            .getMusiciansAvailableForPosition(this.duty, dp);
                         Optional<Musician> oldMusician = Optional.empty();
                         List<DutyPosition> oldDutyPositions =
                             oldasi.get().getDuty().getDutyPositions();
@@ -534,8 +573,7 @@ public class DutyScheduleController implements Initializable, Controllable {
     private void removeMusicianFromPosition(Musician musician) {
         this.dutyScheduleManager.getMusiciansAvailableForPosition(
             this.duty,
-            this.selectedDutyPosition,
-            Boolean.FALSE
+            this.selectedDutyPosition
         );
         this.dutyScheduleManager.removeMusicianFromPosition(
             this.actualSectionInstrumentation,

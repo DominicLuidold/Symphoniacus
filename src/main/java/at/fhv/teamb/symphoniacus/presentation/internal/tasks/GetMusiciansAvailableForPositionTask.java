@@ -17,7 +17,6 @@ public class GetMusiciansAvailableForPositionTask extends Task<Set<Musician>> {
     private DutyScheduleManager dutyScheduleManager;
     private Duty duty;
     private DutyPosition dutyPosition;
-    private Boolean withRequests;
 
     /**
      * Constructs a new Task.
@@ -26,26 +25,22 @@ public class GetMusiciansAvailableForPositionTask extends Task<Set<Musician>> {
      *      {@link at.fhv.teamb.symphoniacus.presentation.DutyScheduleController}
      * @param duty Current duty
      * @param dutyPosition Current duty position
-     * @param withRequests Whether to load requests for the musicians or not
      */
     public GetMusiciansAvailableForPositionTask(
         DutyScheduleManager dsm,
         Duty duty,
-        DutyPosition dutyPosition,
-        Boolean withRequests
+        DutyPosition dutyPosition
     ) {
         this.dutyScheduleManager = dsm;
         this.duty = duty;
         this.dutyPosition = dutyPosition;
-        this.withRequests = withRequests;
     }
 
     @Override
     protected Set<Musician> call() throws Exception {
         Set<Musician> set = this.dutyScheduleManager.getMusiciansAvailableForPosition(
             this.duty,
-            this.dutyPosition,
-            this.withRequests
+            this.dutyPosition
         );
         return set;
     }
