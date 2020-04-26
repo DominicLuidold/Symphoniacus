@@ -145,7 +145,12 @@ public class CalendarController implements Initializable, Controllable {
                                     item.getEntity().getMonthlySchedule().getMonth()
                                 );
 
-                                if (item.getEntity().isReadyForOrganisationManager()) {
+                                LOG.debug(
+                                    "Is sms for month {} published? {}",
+                                    m.getDisplayName(TextStyle.FULL, Locale.US),
+                                    item.getEntity().isPublished()
+                                );
+                                if (item.getEntity().isPublished()) {
                                     setText(m.getDisplayName(TextStyle.FULL, Locale.US)
                                         + " Already Published");
                                     setGraphic(null);
@@ -202,22 +207,24 @@ public class CalendarController implements Initializable, Controllable {
 
                             if (!sms.getPublishState()
                                 .equals(SectionMonthlySchedule.PublishState.PUBLISHED)) {
-                                LOG.debug("Publish FAILD SectionMonthlySchedule ID: {} ",
+                                LOG.debug("Publish FAILED for SectionMonthlySchedule "
+                                        + "ID: {} ",
                                     sms.getEntity().getSectionMonthlyScheduleId());
 
                                 Notifications.create()
                                     .owner(this.calendarView.getParent().getScene().getWindow())
                                     .title("Publishing Faild")
-                                    .text("You cant Publish this yet.")
+                                    .text("You cant publish this section monthly schedule yet.\n"
+                                        + " Have all duties been scheduled?")
                                     .position(Pos.CENTER)
-                                    .hideAfter(new Duration(3000))
+                                    .hideAfter(new Duration(5000))
                                     .showError();
                             } else if (sms.getPublishState()
                                 .equals(SectionMonthlySchedule.PublishState.PUBLISHED)) {
                                 Notifications.create()
                                     .owner(this.calendarView.getParent().getScene().getWindow())
                                     .title("Publishing Successful")
-                                    .text("Monthly Schedule is Successfuly published")
+                                    .text("Monthly Schedule has been published successfully")
                                     .position(Pos.CENTER)
                                     .hideAfter(new Duration(3000))
                                     .show();
