@@ -37,6 +37,7 @@ public class DutyScheduleManager {
     private final PointsManager pointsManager;
     private final Set<Musician> setMusicians;
     private final Set<Musician> unsetMusicians;
+    private final WishRequestManager wishRequestManager;
     private List<Duty> dutiesOfThisDay;
     private List<MusicianEntity> sectionMusicianEntities;
     private Set<Musician> sectionMusicians;
@@ -51,6 +52,7 @@ public class DutyScheduleManager {
         this.pointsManager = new PointsManager();
         this.setMusicians = new HashSet<>();
         this.unsetMusicians = new HashSet<>();
+        this.wishRequestManager = new WishRequestManager();
     }
 
     /**
@@ -93,23 +95,18 @@ public class DutyScheduleManager {
     /**
      * Returns a Set of {@link Musician}s that are available for a given {@link DutyPosition}.
      *
-     * @param duty         The currently edited duty
-     * @param position     The position to determine musicians for
-     * @param withRequests Indicator whether musicians with duty requests should be part of the list
+     * @param duty     The currently edited duty
+     * @param position The position to determine musicians for
      * @return A Set of available musicians for the given duty position
      * @throws IllegalStateException if a Musician or Points object has an illegal state
      */
     public Set<Musician> getMusiciansAvailableForPosition(
         Duty duty,
-        DutyPosition position,
-        boolean withRequests
+        DutyPosition position
     ) throws IllegalStateException {
         if (position == null) {
             LOG.error("Fetching available musicians not possible - duty position is null");
             return new HashSet<>();
-        }
-        if (withRequests) {
-            throw new UnsupportedOperationException("Not yet implemented");
         }
 
         // Fetch section musicians from database if not present
@@ -129,6 +126,9 @@ public class DutyScheduleManager {
                 duty.getEntity().getStart().toLocalDate()
             );
 
+            // Tell WishRequestManager to cache wish requests locally
+            this.wishRequestManager.loadAllWishRequests(duty.getEntity());
+
             // Convert musician entities to domain objects
             for (MusicianEntity entity : this.sectionMusicianEntities) {
                 // Get points for musician
@@ -142,7 +142,13 @@ public class DutyScheduleManager {
                     throw new IllegalStateException("Points for musician cannot be calculated");
                 }
 
-                this.sectionMusicians.add(new Musician(entity, points.get()));
+                // Create domain object
+                Musician m = new Musician(entity, points.get());
+
+                // Fill domain object with wish requests
+                this.wishRequestManager.setMusicianWishRequest(m, duty.getEntity());
+
+                this.sectionMusicians.add(m);
             }
         }
 
