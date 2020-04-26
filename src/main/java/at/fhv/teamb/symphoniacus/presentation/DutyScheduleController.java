@@ -643,7 +643,7 @@ public class DutyScheduleController implements Initializable, Controllable {
 
         this.labelCurrentPosition.textProperty().bindBidirectional(
             new SimpleStringProperty(
-                "Current position: "
+                "Current Position: "
                     + this.selectedDutyPosition
                     .getEntity().getInstrumentationPosition().getPositionDescription()
             )
@@ -686,6 +686,7 @@ public class DutyScheduleController implements Initializable, Controllable {
         this.oldDutySelect.getItems().clear();
         this.oldDutySelect.setPromptText("Load from history");
         this.oldDutySelect.setPlaceholder(new Label("No duty selected"));
+        this.labelCurrentPosition.setText("Current Position: ");
         this.hide();
         MasterController mc = MasterController.getInstance();
         CalendarController cc = (CalendarController) mc.get("CalendarController");
