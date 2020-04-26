@@ -20,50 +20,44 @@ import org.apache.logging.log4j.Logger;
  */
 public class WishRequest {
     private static final Logger LOG = LogManager.getLogger(WishRequest.class);
-    private WishRequestType wishRequestType;
-    private boolean isPositive;
-    private WishRequestable wishRequestEntity;
-    private DutyEntity duty;
+    private final DutyEntity duty;
+    private final boolean isPositive;
+    private final WishRequestable wishRequestEntity;
+    private final WishRequestType wishRequestType;
 
     /**
      * Private constructor -> factory pattern.
      *
-     * @param wishType type of the wish
+     * @param duty        the wish relating duty
+     * @param isPositive  boolean if request is a positive
      * @param wishRequest request itself
-     * @param isPositive boolean if request is a positive
-     * @param duty the wish relating duty
+     * @param wishType    type of the wish
      */
-    private WishRequest(WishRequestType wishType, WishRequestable wishRequest, boolean isPositive,
-                        DutyEntity duty) {
-        this.wishRequestType = wishType;
-        this.wishRequestEntity = wishRequest;
-        this.isPositive = isPositive;
+    private WishRequest(
+        DutyEntity duty,
+        boolean isPositive,
+        WishRequestType wishType,
+        WishRequestable wishRequest
+    ) {
         this.duty = duty;
-    }
-
-    public WishRequestType getWishRequestType() {
-        return this.wishRequestType;
-    }
-
-    public WishRequestable getWishRequestEntity() {
-        return this.wishRequestEntity;
-    }
-
-    public boolean isWishPositive() {
-        return this.isPositive;
+        this.isPositive = isPositive;
+        this.wishRequestEntity = wishRequest;
+        this.wishRequestType = wishType;
     }
 
     /**
      * Finds the first matching wish of a musician of a given Set of wishes.
      *
-     * @param musician musician
+     * @param musician     musician
      * @param wishRequests Set of wishRequests
-     * @param duty duty of relating wishRequests
+     * @param duty         duty of relating wishRequests
      * @return WishRequest or optional.empty if no wish was found
      */
-    public static Optional<WishRequest> getWishRequestToMusician(MusicianEntity musician,
-                                                                 Set<WishRequestable> wishRequests,
-                                                                 DutyEntity duty) {
+    public static Optional<WishRequest> getWishRequestToMusician(
+        MusicianEntity musician,
+        Set<WishRequestable> wishRequests,
+        DutyEntity duty
+    ) {
         for (WishRequestable wish : wishRequests) {
             if (wish.getMusician().getMusicianId().equals(musician.getMusicianId())) {
                 WishRequestType tempType = null;
@@ -80,7 +74,7 @@ public class WishRequest {
                 }
                 // Validation für zukünfigte Erweiterbarkeit der Wunscharten
                 if (tempType != null) {
-                    return Optional.of(new WishRequest(tempType, wish, isPositive,duty));
+                    return Optional.of(new WishRequest(duty, isPositive, tempType, wish));
                 } else {
                     LOG.error("A WishRequestType wasn't checked in getWishRequestToMusician");
                     return Optional.empty();
@@ -90,5 +84,17 @@ public class WishRequest {
         // Returns empty when there was no wish by this musician inside the wish Set
         LOG.error("Musician has no wish inside the given wishes");
         return Optional.empty();
+    }
+
+    public WishRequestType getWishRequestType() {
+        return this.wishRequestType;
+    }
+
+    public WishRequestable getWishRequestEntity() {
+        return this.wishRequestEntity;
+    }
+
+    public boolean isWishPositive() {
+        return this.isPositive;
     }
 }
