@@ -131,45 +131,7 @@ public class CalendarController implements Initializable, Controllable {
                     new ListSelectionView();
 
                 listSelectionView.getSourceItems().addAll(sectionMonthlyScheduleSet);
-                listSelectionView.setCellFactory(listView -> {
-                    ListCell<SectionMonthlySchedule> cell = new ListCell<SectionMonthlySchedule>() {
-                        @Override
-                        public void updateItem(SectionMonthlySchedule item, boolean empty) {
-                            super.updateItem(item, empty);
 
-                            if (empty) {
-                                setText(null);
-                                setGraphic(null);
-                            } else {
-                                Month m = Month.of(
-                                    item.getEntity().getMonthlySchedule().getMonth()
-                                );
-
-                                LOG.debug(
-                                    "Is sms for month {} published? {}",
-                                    m.getDisplayName(TextStyle.FULL, Locale.US),
-                                    item.getEntity().isPublished()
-                                );
-                                if (item.getEntity().isReadyForOrganisationManager()) {
-                                    setText(m.getDisplayName(TextStyle.FULL, Locale.US)
-                                        + " Already Published");
-                                    setGraphic(null);
-                                    setEditable(false);
-                                    setDisabled(true);
-                                    setDisable(true);
-                                } else {
-                                    setText(m.getDisplayName(TextStyle.FULL, Locale.US));
-                                    setGraphic(null);
-                                    setEditable(true);
-                                    setDisabled(false);
-                                    setDisable(false);
-                                }
-                            }
-                        }
-                    };
-                    cell.setFont(Font.font(14));
-                    return cell;
-                });
 
                 Font f = new Font(14);
 
@@ -189,46 +151,76 @@ public class CalendarController implements Initializable, Controllable {
                 dialog.setResizable(true);
                 dialog.getDialogPane().setPrefWidth(600);
                 dialog.initModality(Modality.APPLICATION_MODAL);
-                dialog.setTitle("Publish Duty Roster");
+                dialog.setTitle("Make ready for Organisation Manager");
 
                 Button btn = (Button) dialog.getDialogPane().lookupButton(ButtonType.OK);
-                btn.setText("Publish");
+                btn.setText("Forwarded to Organisation Manager");
 
                 btn.setOnAction(event1 -> {
                     ObservableList<SectionMonthlySchedule> list =
                         listSelectionView.getTargetItems();
                     for (SectionMonthlySchedule sms : list) {
-                        if (!sms.getPublishState()
-                            .equals(SectionMonthlySchedule.PublishState.PUBLISHED)) {
+                        if (sms.getPublishState()
+                            .equals(
+                                SectionMonthlySchedule
+                                    .PublishState.READY_FOR_ORGANISATION_MANAGER)) {
+                            Notifications.create()
+                                .owner(this.calendarView.getParent().getScene().getWindow())
+                                .title("Already forwarded to Organisation Manager")
+                                .text("Monthly Schedule for "
+                                    + Month.of(sms.getEntity().getMonthlySchedule().getMonth())
+                                        .getDisplayName(TextStyle.FULL, Locale.US)
+                                    + " already forwarded to Organisation Manager")
+                                .position(Pos.CENTER)
+                                .hideAfter(new Duration(7000))
+                                .show();
+                        } else if (!sms.getPublishState()
+                            .equals(
+                                SectionMonthlySchedule
+                                    .PublishState.READY_FOR_ORGANISATION_MANAGER)) {
 
-                            LOG.debug("Publish SectionMonthlySchedule ID: {}",
+                            LOG.debug(
+                                "Forward to Organisation Manager "
+                                    + "SectionMonthlySchedule ID: {}",
                                 sms.getEntity().getSectionMonthlyScheduleId());
                             smsManager.makeAvailableForOrganisationManager(sms);
 
                             if (!sms.getPublishState()
-                                .equals(SectionMonthlySchedule.PublishState.PUBLISHED)) {
-                                LOG.debug("Publish FAILED for SectionMonthlySchedule "
+                                .equals(
+                                    SectionMonthlySchedule
+                                        .PublishState.READY_FOR_ORGANISATION_MANAGER)) {
+                                LOG.debug(
+                                    "Forward to Organisation Manager "
+                                        + "FAILED for SectionMonthlySchedule "
                                         + "ID: {} ",
                                     sms.getEntity().getSectionMonthlyScheduleId());
 
                                 Notifications.create()
                                     .owner(this.calendarView.getParent().getScene().getWindow())
-                                    .title("Publishing Faild")
-                                    .text("You cant publish this section monthly schedule yet.\n"
+                                    .title("Forward to Organisation Manager Faild")
+                                    .text("You cant forward this section monthly schedule for "
+                                        + Month.of(sms.getEntity().getMonthlySchedule().getMonth())
+                                        .getDisplayName(TextStyle.FULL, Locale.US) + " yet.\n"
                                         + " Have all duties been scheduled?")
                                     .position(Pos.CENTER)
-                                    .hideAfter(new Duration(5000))
+                                    .hideAfter(new Duration(7000))
                                     .showError();
                             } else if (sms.getPublishState()
-                                .equals(SectionMonthlySchedule.PublishState.PUBLISHED)) {
+                                .equals(
+                                    SectionMonthlySchedule
+                                        .PublishState.READY_FOR_ORGANISATION_MANAGER)) {
                                 Notifications.create()
                                     .owner(this.calendarView.getParent().getScene().getWindow())
-                                    .title("Publishing Successful")
-                                    .text("Monthly Schedule has been published successfully")
+                                    .title("Forward to Organisation Manager Successful")
+                                    .text("Monthly Schedule for "
+                                        + Month.of(sms.getEntity().getMonthlySchedule().getMonth())
+                                        .getDisplayName(TextStyle.FULL, Locale.US)
+                                        + " has been forwarded successfully")
                                     .position(Pos.CENTER)
-                                    .hideAfter(new Duration(3000))
+                                    .hideAfter(new Duration(7000))
                                     .show();
                             }
+
                         }
                     }
                 });
@@ -236,6 +228,48 @@ public class CalendarController implements Initializable, Controllable {
                 FontIcon icon = new FontIcon(FontAwesome.ARROW_CIRCLE_UP);
                 icon.getStyleClass().addAll("button-icon",
                     "add-calendar-button-icon");
+
+                listSelectionView.setCellFactory(listView -> {
+                    ListCell<SectionMonthlySchedule> cell = new ListCell<SectionMonthlySchedule>() {
+                        @Override
+                        public void updateItem(SectionMonthlySchedule item, boolean empty) {
+                            super.updateItem(item, empty);
+
+                            if (empty) {
+                                setText(null);
+                                setGraphic(null);
+                            } else {
+                                Month m = Month.of(
+                                    item.getEntity().getMonthlySchedule().getMonth()
+                                );
+
+                                LOG.debug(
+                                    "Is sms for month {} published? {}",
+                                    m.getDisplayName(TextStyle.FULL, Locale.US),
+                                    item.getEntity().isReadyForOrganisationManager()
+                                );
+                                if (item.getEntity().isReadyForOrganisationManager()) {
+                                    setText(m.getDisplayName(TextStyle.FULL, Locale.US)
+                                        + " Already Published");
+                                    setStyle("-fx-text-fill: #59de00");
+                                    setGraphic(null);
+                                    setEditable(false);
+                                    setDisabled(true);
+                                    setDisable(true);
+                                } else {
+                                    setText(m.getDisplayName(TextStyle.FULL, Locale.US));
+                                    setStyle("-fx-text-fill: #ff0000");
+                                    setGraphic(null);
+                                    setEditable(true);
+                                    setDisabled(false);
+                                    setDisable(false);
+                                }
+                            }
+                        }
+                    };
+                    cell.setFont(Font.font(14));
+                    return cell;
+                });
 
 
                 dialog.show();

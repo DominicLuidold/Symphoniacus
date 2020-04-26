@@ -170,7 +170,7 @@ public class BrutalCalendarSkin extends SkinBase<CalendarView> {
         this.publishButton = new Button();
         this.publishButton.setId("publish");
         //this.publishButton.setContentDisplay(ContentDisplay.GRAPHIC_ONLY);
-        this.publishButton.setText("Publish");
+        this.publishButton.setText("Forward");
         this.publishButton.setOnAction(evt -> publish());
         FontIcon publishIcon = new FontIcon(FontAwesome.ARROW_CIRCLE_UP);
         publishIcon.getStyleClass().addAll("button-icon"); //$NON-NLS-1$ //$NON-NLS-2$
