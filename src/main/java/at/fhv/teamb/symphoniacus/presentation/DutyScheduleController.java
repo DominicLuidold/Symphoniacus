@@ -176,11 +176,26 @@ public class DutyScheduleController implements Initializable, Controllable {
 
                 MusicianTableModel mtm =
                     this.musicianTableWithRequests.getSelectionModel().getSelectedItem();
-                addMusicianToPosition(
-                    this.actualSectionInstrumentation,
-                    mtm.getMusician(),
-                    this.selectedDutyPosition
-                );
+
+                Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+                alert.setTitle("Musician has Negative Duty Wish");
+                alert.setContentText("Really schedule Musician with Negative Wish?");
+                ButtonType okButton = new ButtonType("Yes", ButtonBar.ButtonData.YES);
+                ButtonType noButton = new ButtonType("No", ButtonBar.ButtonData.NO);
+                alert.getButtonTypes().setAll(okButton, noButton);
+                alert.showAndWait().ifPresent(type -> {
+                    System.out.println(type);
+                    if (type.equals(okButton)) {
+                        this.addMusicianToPosition(
+                            this.actualSectionInstrumentation,
+                            mtm.getMusician(),
+                            this.selectedDutyPosition
+                        );
+                        alert.close();
+                    } else if (type.equals(noButton)) {
+                        alert.close();
+                    }
+                });
             }
         });
 
@@ -221,8 +236,8 @@ public class DutyScheduleController implements Initializable, Controllable {
                 (MusicianTableModel mtm) -> {
                     LOG.debug("Schedule btn with requests has been pressed");
                     Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
-                    alert.setTitle("Musician has negative duty wish");
-                    alert.setContentText("Really schedule musician with negative wish?");
+                    alert.setTitle("Musician has Negative Duty Wish");
+                    alert.setContentText("Really schedule Musician with Negative Wish?");
                     ButtonType okButton = new ButtonType("Yes", ButtonBar.ButtonData.YES);
                     ButtonType noButton = new ButtonType("No", ButtonBar.ButtonData.NO);
                     alert.getButtonTypes().setAll(okButton, noButton);
