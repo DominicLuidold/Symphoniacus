@@ -1,7 +1,6 @@
 package at.fhv.teamb.symphoniacus.domain;
 
 import at.fhv.teamb.symphoniacus.domain.exception.PointsNotCalculatedException;
-import at.fhv.teamb.symphoniacus.persistence.model.DutyEntity;
 import at.fhv.teamb.symphoniacus.persistence.model.DutyPositionEntity;
 import at.fhv.teamb.symphoniacus.persistence.model.MusicianEntity;
 import at.fhv.teamb.symphoniacus.persistence.model.UserEntity;
@@ -16,8 +15,8 @@ import java.util.Optional;
  */
 public class Musician {
     private final UserEntity userEntity;
-    private MusicianEntity entity;
-    private Points points;
+    private final MusicianEntity entity;
+    private final Points points;
     private WishRequest wishRequest;
 
     public Musician(MusicianEntity entity) {
@@ -29,7 +28,7 @@ public class Musician {
      * {@link Points} object.
      *
      * @param entity The entity to use
-     * @param points The points to use
+     * @param points The points of the musician
      */
     public Musician(MusicianEntity entity, Points points) {
         this.entity = entity;
@@ -62,23 +61,32 @@ public class Musician {
      * @throws PointsNotCalculatedException if points have not been calculated
      */
     public Points getPoints() throws PointsNotCalculatedException {
-        if (points == null) {
+        if (this.points == null) {
             throw new PointsNotCalculatedException("Points have not been calculated");
         } else {
             return this.points;
         }
     }
 
-    public MusicianEntity getEntity() {
-        return this.entity;
-    }
-
-    public WishRequest getWishRequest() {
-        return wishRequest;
+    /**
+     * Returns a {@link WishRequest} object that contains any wish requests a musician has.
+     *
+     * @return Optional of WishRequest, if the musician has a wish request
+     */
+    public Optional<WishRequest> getWishRequest() {
+        if (this.wishRequest == null) {
+            return Optional.empty();
+        } else {
+            return Optional.of(this.wishRequest);
+        }
     }
 
     public void setWishRequest(WishRequest wishRequest) {
         this.wishRequest = wishRequest;
+    }
+
+    public MusicianEntity getEntity() {
+        return this.entity;
     }
 
     @Override
