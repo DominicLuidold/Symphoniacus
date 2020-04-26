@@ -65,6 +65,14 @@ public class MusicianTableModel {
         }
     }
 
+    public boolean isWishPositive() {
+        if (!this.musician.getWishRequest().isPresent()) {
+            return false;
+        } else {
+            return this.musician.getWishRequest().get().isWishPositive();
+        }
+    }
+
     /**
      * Gets the wish request description from the wish request.
      *

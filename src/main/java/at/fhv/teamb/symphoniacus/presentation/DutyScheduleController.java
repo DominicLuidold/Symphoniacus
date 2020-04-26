@@ -37,6 +37,7 @@ import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.SplitPane;
 import javafx.scene.control.TableColumn;
+import javafx.scene.control.TableRow;
 import javafx.scene.control.TableView;
 import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseEvent;
@@ -106,6 +107,27 @@ public class DutyScheduleController implements Initializable, Controllable {
         this.dutyScheduleManager = null;
 
         this.dutySchedule.setVisible(false);
+
+        this.musicianTableWithRequests.setRowFactory(row -> new TableRow<>() {
+            @Override
+            protected void updateItem(MusicianTableModel item, boolean empty) {
+                super.updateItem(item, empty);
+
+                if (item == null || empty) {
+                    setStyle("");
+                } else {
+                    if(getTableView().getSelectionModel().getSelectedItems().contains(item)){
+                        setStyle("");
+                    } else if (item.isWishPositive()) {
+                        System.out.println("POS");
+                        setStyle("-fx-background-color: lightseagreen");
+                    } else {
+                        System.out.println("NEG");
+                        setStyle("-fx-background-color: lightcoral");
+                    }
+                }
+            }
+        });
 
         this.scheduleSaveBtn.setOnAction(e -> {
             if (this.actualSectionInstrumentation
