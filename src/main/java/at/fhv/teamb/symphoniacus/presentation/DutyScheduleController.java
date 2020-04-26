@@ -326,17 +326,6 @@ public class DutyScheduleController implements Initializable, Controllable {
     }
 
     private void initMusicianTableWithRequests(Set<Musician> list) {
-//        System.out.println("musician available: " + list.size());
-//
-//        List<MusicianTableModel> guiList = new LinkedList<>();
-//        for (Musician domainMusician : list) {
-//            guiList.add(new MusicianTableModel(domainMusician));
-//        }
-//        ObservableList<MusicianTableModel> observableList =
-//            FXCollections.observableArrayList();
-//        observableList.addAll(guiList);
-//        this.musicianTableWithoutRequests.setItems(observableList);
-
         List<MusicianTableModel> guiList = new LinkedList<>();
         int i = 0;
         int selectedIndex = 0;

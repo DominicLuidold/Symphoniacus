@@ -13,11 +13,12 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 /**
- * @author Valentin
+ * Main GUI Controller.
+ *
+ * @author Valentin Goronjic
  */
-public class MainGUI extends Application {
-
-    private static final Logger LOG = LogManager.getLogger(MainGUI.class);
+public class MainGui extends Application {
+    private static final Logger LOG = LogManager.getLogger(MainGui.class);
 
     @Override
     public void start(Stage stage) {
