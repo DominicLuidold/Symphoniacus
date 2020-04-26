@@ -11,7 +11,7 @@ import javafx.stage.Stage;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-public class Main extends Application {
+public class Main {
 
     private static final Logger LOG = LogManager.getLogger(Main.class);
 
@@ -22,28 +22,8 @@ public class Main extends Application {
      */
     public static void main(String[] args) {
         try {
-            launch(args);
+            MainGUI.main(args);
         } catch (Exception e) {
-            e.printStackTrace();
-            LOG.error(e);
-        }
-    }
-
-    @Override
-    public void start(Stage stage) {
-        try {
-            Locale locale = new Locale("en", "UK");
-            Locale.setDefault(locale);
-            ResourceBundle bundle = ResourceBundle.getBundle("bundles.language", locale);
-            Parent root = FXMLLoader.load(getClass().getResource("/view/mainWindow.fxml"), bundle);
-
-            Scene scene = new Scene(root);
-            stage.setTitle("Symphoniacus");
-            stage.setScene(scene);
-            stage.setMinHeight(768);
-            stage.setMinWidth(1366);
-            stage.show();
-        } catch (IOException e) {
             e.printStackTrace();
             LOG.error(e);
         }

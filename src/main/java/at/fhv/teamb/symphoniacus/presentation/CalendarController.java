@@ -187,6 +187,7 @@ public class CalendarController implements Initializable, Controllable {
                 dialog.setTitle("Publish Duty Roster");
 
                 Button btn = (Button) dialog.getDialogPane().lookupButton(ButtonType.OK);
+                btn.setText("Publish");
 
                 btn.setOnAction(event1 -> {
                     ObservableList<SectionMonthlySchedule> list =
