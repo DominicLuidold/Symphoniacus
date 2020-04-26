@@ -1,6 +1,5 @@
 package at.fhv.teamb.symphoniacus.persistence.dao;
 
-import at.fhv.teamb.symphoniacus.domain.Section;
 import at.fhv.teamb.symphoniacus.persistence.BaseDao;
 import at.fhv.teamb.symphoniacus.persistence.model.DutyEntity;
 import at.fhv.teamb.symphoniacus.persistence.model.MusicianEntity;
@@ -9,7 +8,6 @@ import at.fhv.teamb.symphoniacus.persistence.model.SeriesOfPerformancesEntity;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.YearMonth;
-import java.util.HashSet;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Optional;
@@ -251,19 +249,24 @@ public class DutyDao extends BaseDao<DutyEntity> {
 
     /**
      * TODO JAVADOC.
+     *
      * @return
      */
     public List<DutyEntity> getOtherDutiesForSeriesOfPerformances(
         SeriesOfPerformancesEntity sop,
+        LocalDateTime dutyStart,
         Integer maxNumberOfDuties
     ) {
         TypedQuery<DutyEntity> query = entityManager.createQuery(
             "SELECT d FROM DutyEntity d "
                 + "INNER JOIN d.seriesOfPerformances sop "
-                + "WHERE sop.seriesOfPerformancesId = :sopId ",
+                + "WHERE sop.seriesOfPerformancesId = :sopId "
+                + "AND d.start < :dutyStart ",
             DutyEntity.class
         );
-        query.setParameter("sopId", sop.getInstrumentationId());
+
+        query.setParameter("dutyStart", dutyStart);
+        query.setParameter("sopId", sop.getSeriesOfPerformancesId());
         query.setMaxResults(maxNumberOfDuties);
 
         return query.getResultList();
@@ -271,6 +274,7 @@ public class DutyDao extends BaseDao<DutyEntity> {
 
     /**
      * TODO JAVADOC.
+     *
      * @return
      */
     public List<DutyEntity> getOtherDutiesForSection(

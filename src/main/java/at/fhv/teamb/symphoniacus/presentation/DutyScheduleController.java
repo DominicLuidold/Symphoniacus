@@ -378,8 +378,9 @@ public class DutyScheduleController implements Initializable, Controllable {
                     = FXCollections.observableArrayList();
                 LOG.debug("Found {} other duties", dutyList.size());
                 for (Duty d : dutyList) {
+                    LOG.debug("Found duty: {}, {}", d.getTitle(), d.getEntity().getStart());
                     observableList.add(
-                        new OldDutyComboView(duty)
+                        new OldDutyComboView(d)
                     );
                 }
                 this.oldDutySelect.getItems().setAll(observableList);
@@ -448,7 +449,7 @@ public class DutyScheduleController implements Initializable, Controllable {
                             if (odp.getEntity().getInstrumentationPosition()
                                 .getInstrumentationPositionId()
                                 == dp.getEntity().getInstrumentationPosition()
-                                    .getInstrumentationPositionId()) {
+                                .getInstrumentationPositionId()) {
                                 oldMusician = dp.getAssignedMusician();
                             }
                         }
@@ -461,8 +462,6 @@ public class DutyScheduleController implements Initializable, Controllable {
                 }
             }
         }
-
-
     }
 
     protected void addMusicianToPosition(

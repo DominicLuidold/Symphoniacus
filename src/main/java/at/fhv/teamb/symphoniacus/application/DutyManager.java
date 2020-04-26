@@ -155,7 +155,7 @@ public class DutyManager {
 
     /**
      * TODO JAVADOC.
-
+     *
      * @return
      */
 
@@ -177,7 +177,9 @@ public class DutyManager {
         List<DutyEntity> resultList = null;
         if (sop.getSeriesOfPerformancesId() != null) {
             // get last duties for this SoP
-            resultList = this.dutyDao.getOtherDutiesForSeriesOfPerformances(sop, numberOfDuties);
+            resultList = this.dutyDao
+                .getOtherDutiesForSeriesOfPerformances(sop, duty.getEntity().getStart(),
+                    numberOfDuties);
         } else {
             // get last duties of section
             // TODO change this go get last 5 non-series of performances-duties
