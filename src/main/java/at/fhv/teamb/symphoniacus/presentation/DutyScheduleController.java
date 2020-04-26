@@ -116,7 +116,7 @@ public class DutyScheduleController implements Initializable, Controllable {
                 if (item == null || empty) {
                     setStyle("");
                 } else {
-                    if(getTableView().getSelectionModel().getSelectedItems().contains(item)){
+                    if (getTableView().getSelectionModel().getSelectedItems().contains(item)) {
                         setStyle("");
                     } else if (item.isWishPositive()) {
                         System.out.println("POS");
