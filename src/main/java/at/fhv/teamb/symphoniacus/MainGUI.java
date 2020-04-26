@@ -7,6 +7,7 @@ import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.image.Image;
 import javafx.stage.Stage;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -31,6 +32,11 @@ public class MainGUI extends Application {
             stage.setScene(scene);
             stage.setMinHeight(768);
             stage.setMinWidth(1366);
+            stage.getIcons().add(
+                new Image(
+                    "images/icon.png"
+                )
+            );
             stage.show();
         } catch (IOException e) {
             e.printStackTrace();
