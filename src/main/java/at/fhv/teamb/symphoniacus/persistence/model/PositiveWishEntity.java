@@ -1,5 +1,6 @@
 package at.fhv.teamb.symphoniacus.persistence.model;
 
+import java.time.LocalDate;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -60,5 +61,15 @@ public class PositiveWishEntity implements WishRequestable {
 
     public void setDescription(String description) {
         this.description = description;
+    }
+
+    @Override // TODO - Create own domain object and outsource this
+    public LocalDate getStartDate() {
+        return null;
+    }
+
+    @Override // TODO - Create own domain object and outsource this
+    public LocalDate getEndDate() {
+        return null;
     }
 }

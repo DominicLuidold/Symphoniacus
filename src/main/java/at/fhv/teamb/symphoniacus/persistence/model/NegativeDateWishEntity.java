@@ -17,7 +17,7 @@ import javax.persistence.Table;
 
 @Entity
 @Table(name = "negativeDateWish")
-public class NegativeDateWishEntity {
+public class NegativeDateWishEntity implements WishRequestable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "negativeDateId")
@@ -41,7 +41,9 @@ public class NegativeDateWishEntity {
     }
 
     @ManyToMany
-    @JoinTable(name = "negativeDate_monthlySchedule")
+    @JoinTable(name = "negativeDate_monthlySchedule",
+        joinColumns = @JoinColumn(name = "negativeDateId"),
+        inverseJoinColumns = @JoinColumn(name = "monthlyScheduleId"))
     private List<MonthlyScheduleEntity> monthlySchedules = new LinkedList<>();
 
     public void addMonthlySchedule(MonthlyScheduleEntity monthlyScheduleEntity) {

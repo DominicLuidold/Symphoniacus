@@ -25,7 +25,6 @@ public class WishRequestManager {
 
     /**
      * Constructor.
-     *
      */
     public WishRequestManager() {
         this.positiveWishDao = new PositiveWishDao();
@@ -52,7 +51,6 @@ public class WishRequestManager {
      * @return the same musician
      */
     public Musician setMusicianWishRequest(Musician musician, DutyEntity duty) {
-
         // Beware! if allWish isn't loaded this method will load
         // the wishes individually from the DAO
         if (this.allWishRequests == null) {
