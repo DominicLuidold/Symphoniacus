@@ -65,6 +65,10 @@ public class MusicianTableModel {
         }
     }
 
+    /**
+     * TODO JAVADOC.
+     * @return
+     */
     public boolean isWishPositive() {
         if (!this.musician.getWishRequest().isPresent()) {
             return false;
