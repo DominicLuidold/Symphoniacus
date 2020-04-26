@@ -1,5 +1,6 @@
 package at.fhv.teamb.symphoniacus.application;
 
+import at.fhv.teamb.symphoniacus.domain.Section;
 import at.fhv.teamb.symphoniacus.domain.SectionMonthlySchedule;
 import at.fhv.teamb.symphoniacus.persistence.PersistenceState;
 import at.fhv.teamb.symphoniacus.persistence.dao.DutyPositionDao;
@@ -32,14 +33,17 @@ public class SectionMonthlyScheduleManager {
     /**
      * Returns a list of section monthly schedules based on provided year.
      *
-     * @param year The year to use
+     * @param section The section to use
+     * @param year    The year to use
      * @return A List of section monthly schedules of this year
      */
-    public Set<SectionMonthlySchedule> getSectionMonthlySchedules(Year year) {
+    public Set<SectionMonthlySchedule> getSectionMonthlySchedules(Section section, Year year) {
         Set<SectionMonthlySchedule> sectionMonthlySchedules = new HashSet<>();
 
         // Fetch section monthly schedules from database
-        for (SectionMonthlyScheduleEntity smsEntity : this.smsDao.findAllInYear(year)) {
+        for (SectionMonthlyScheduleEntity smsEntity : this.smsDao
+            .findAllInYear(section.getEntity(), year)
+        ) {
             // Convert entity to domain object
             SectionMonthlySchedule sms = new SectionMonthlySchedule(smsEntity);
             setPersistenceState(sms);
@@ -50,15 +54,21 @@ public class SectionMonthlyScheduleManager {
     }
 
     /**
-     * Returns the section monthly schedule based in provided year and month.
+     * Returns the section monthly schedule based in provided year, month and {@link Section}.
      *
-     * @param year  The year to use
-     * @param month The month to use
+     * @param section The section to use
+     * @param year    The year to use
+     * @param month   The month to use
      * @return A section monthly schedule
      */
-    public SectionMonthlySchedule getSectionMonthlySchedule(Year year, Month month) {
+    public SectionMonthlySchedule getSectionMonthlySchedule(
+        Section section,
+        Year year,
+        Month month
+    ) {
         // Fetch section monthly schedule from database
-        SectionMonthlyScheduleEntity smsEntity = this.smsDao.findAllInYearAndMonth(year, month);
+        SectionMonthlyScheduleEntity smsEntity =
+            this.smsDao.findAllInYearAndMonth(section.getEntity(), year, month);
 
         // Convert entity to domain object
         SectionMonthlySchedule sms = new SectionMonthlySchedule(smsEntity);
