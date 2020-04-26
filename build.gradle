@@ -38,6 +38,9 @@ dependencies {
     compile 'com.github.jengelman.gradle.plugins:shadow:5.2.0'
 
     implementation 'com.calendarfx:view:11.8.3'
+    implementation ('org.controlsfx:controlsfx:11.0.1') {
+        exclude group: 'org.controlsfx'
+    }
 
     compile 'org.mockito:mockito-core:3.3.3'
     testCompile 'org.testfx:testfx-core:4.0.16-alpha'
