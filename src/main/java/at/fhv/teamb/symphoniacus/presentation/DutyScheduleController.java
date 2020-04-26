@@ -629,6 +629,7 @@ public class DutyScheduleController implements Initializable, Controllable {
                 this.selectedDutyPosition = null;
                 this.duty = null;
                 this.section = null;
+                this.musicianTableWithRequests.getItems().clear();
                 this.musicianTableWithoutRequests.getItems().clear();
                 this.positionsTable.getItems().clear();
                 this.musicianTableWithoutRequests.refresh();
@@ -649,6 +650,7 @@ public class DutyScheduleController implements Initializable, Controllable {
             this.selectedDutyPosition = null;
             this.duty = null;
             this.section = null;
+            this.musicianTableWithRequests.getItems().clear();
             this.musicianTableWithoutRequests.getItems().clear();
             this.positionsTable.getItems().clear();
             this.musicianTableWithoutRequests.refresh();
