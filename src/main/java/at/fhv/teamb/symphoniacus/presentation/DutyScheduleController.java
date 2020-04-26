@@ -181,6 +181,23 @@ public class DutyScheduleController implements Initializable, Controllable {
             }
         });
 
+        this.positionsTable.setOnMouseClicked((MouseEvent event) -> {
+            // add selected item click listener
+            if (event.getButton().equals(MouseButton.PRIMARY) && event.getClickCount() == 2) {
+
+                DutyPositionMusicianTableModel mtm =
+                    this.positionsTable.getSelectionModel().getSelectedItem();
+
+                if (mtm.getDutyPosition().getAssignedMusician().isPresent()) {
+                    this.removeMusicianFromPosition(
+                        mtm.getDutyPosition().getAssignedMusician().get()
+                    );
+                } else {
+                    LOG.error("Cannot unset null musician");
+                }
+            }
+        });
+
         this.columnSchedule2.setCellFactory(
             ScheduleButtonTableCell.<MusicianTableModel>forTableColumn(
                 "Schedule",
@@ -209,8 +226,6 @@ public class DutyScheduleController implements Initializable, Controllable {
 
                     if (assignedMusician.isPresent()) {
                         this.removeMusicianFromPosition(assignedMusician.get());
-                        this.initMusicianTableWithoutRequests();
-                        this.positionsTable.refresh();
                     }
                     return dpmtm;
                 }
@@ -527,6 +542,8 @@ public class DutyScheduleController implements Initializable, Controllable {
             musician,
             this.selectedDutyPosition
         );
+        this.positionsTable.refresh();
+        this.initMusicianTableWithoutRequests();
     }
 
     private void setActualPosition(DutyPosition dutyPosition) {
