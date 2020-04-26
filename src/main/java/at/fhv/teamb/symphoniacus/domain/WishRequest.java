@@ -63,13 +63,13 @@ public class WishRequest {
                 WishRequestType tempType = null;
                 boolean isPositive = true;
                 if (wish instanceof PositiveWishEntity) {
-                    tempType = WishRequestType.POSITIVEWISH;
+                    tempType = WishRequestType.POSITIVE_WISH;
                     isPositive = true;
                 } else if (wish instanceof NegativeDutyWishEntity) {
-                    tempType = WishRequestType.NEGATIVEDUTYWISH;
+                    tempType = WishRequestType.NEGATIVE_DUTY_WISH;
                     isPositive = false;
                 } else if (wish instanceof NegativeDateWishEntity) {
-                    tempType = WishRequestType.NEGATIVEDATEWISH;
+                    tempType = WishRequestType.NEGATIVE_DATE_WISH;
                     isPositive = false;
                 }
                 // Validation für zukünfigte Erweiterbarkeit der Wunscharten
