@@ -11,6 +11,7 @@ plugins {
     id 'org.openjfx.javafxplugin' version '0.0.8'
     id 'pmd'
     id "com.github.johnrengelman.shadow" version "5.2.0"
+    id 'distribution'
 }
 
 repositories {
@@ -90,6 +91,14 @@ shadowJar {
         attributes(
                 'Main-Class': "at.fhv.teamb.symphoniacus.Main"
         )
+    }
+}
+distributions {
+    main {
+        distributionBaseName = "main"
+        contents {
+            from shadowJar
+        }
     }
 }
 
