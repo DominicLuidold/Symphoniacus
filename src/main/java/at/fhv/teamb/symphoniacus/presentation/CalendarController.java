@@ -150,7 +150,7 @@ public class CalendarController implements Initializable, Controllable {
                                     m.getDisplayName(TextStyle.FULL, Locale.US),
                                     item.getEntity().isPublished()
                                 );
-                                if (item.getEntity().isPublished()) {
+                                if (item.getEntity().isReadyForOrganisationManager()) {
                                     setText(m.getDisplayName(TextStyle.FULL, Locale.US)
                                         + " Already Published");
                                     setGraphic(null);
