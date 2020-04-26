@@ -28,35 +28,24 @@ import java.time.LocalDate;
 import java.time.Month;
 import java.time.Year;
 import java.time.format.TextStyle;
-import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Locale;
 import java.util.Optional;
 import java.util.ResourceBundle;
 import java.util.Set;
-import java.util.concurrent.atomic.AtomicReference;
-import javafx.application.Platform;
-import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.geometry.Pos;
-import javafx.scene.Node;
-import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.Dialog;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListCell;
-import javafx.scene.input.DragEvent;
 import javafx.scene.layout.AnchorPane;
-import javafx.scene.layout.StackPane;
-import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.stage.Modality;
-import javafx.stage.Stage;
-import javafx.stage.StageStyle;
 import javafx.util.Callback;
 import javafx.util.Duration;
 import org.apache.logging.log4j.LogManager;
@@ -129,19 +118,9 @@ public class CalendarController implements Initializable, Controllable {
                 smss.getEntity().setMonthlySchedule(ms);
                 smss.setPublishState(SectionMonthlySchedule.PublishState.PUBLISHED);
 
-                SectionMonthlyScheduleManager smsm = new SectionMonthlyScheduleManager();
+                SectionMonthlyScheduleManager smsManager = new SectionMonthlyScheduleManager();
                 Set<SectionMonthlySchedule> sectionMonthlyScheduleSet =
-                    smsm.getSectionMonthlySchedules(Year.now());
-
-                //filter to get only current section
-                Iterator<SectionMonthlySchedule> itr = sectionMonthlyScheduleSet.iterator();
-                while (itr.hasNext()) {
-                    if (!itr.next().getEntity().getSection().getSectionId()
-                        .equals(this.section.getEntity().getSectionId())) {
-                        itr.remove();
-                    }
-                }
-
+                    smsManager.getSectionMonthlySchedules(this.section, Year.now());
 
                 FontIcon monthIcon = new FontIcon(FontAwesome.CALENDAR_PLUS_O);
                 monthIcon.getStyleClass().addAll("button-icon");
@@ -218,7 +197,7 @@ public class CalendarController implements Initializable, Controllable {
 
                             LOG.debug("Publish SectionMonthlySchedule ID: {}",
                                 sms.getEntity().getSectionMonthlyScheduleId());
-                            smsm.makeAvailableForOrganisationManager(sms);
+                            smsManager.makeAvailableForOrganisationManager(sms);
 
                             if (!sms.getPublishState()
                                 .equals(SectionMonthlySchedule.PublishState.PUBLISHED)) {

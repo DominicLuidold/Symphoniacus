@@ -9,6 +9,7 @@ import at.fhv.teamb.symphoniacus.persistence.model.DutyCategoryEntity;
 import at.fhv.teamb.symphoniacus.persistence.model.DutyEntity;
 import at.fhv.teamb.symphoniacus.persistence.model.DutyPositionEntity;
 import at.fhv.teamb.symphoniacus.persistence.model.MusicianEntity;
+import java.awt.Point;
 import java.time.LocalDate;
 import java.util.LinkedHashSet;
 import java.util.LinkedList;
@@ -56,7 +57,12 @@ public class PointsManager {
      * @return Points domain object containing the number of Points (getValue)
      */
     public Optional<Points> getDebitPointsFromMusician(MusicianEntity musician) {
-        return Points.calcDebitPoints(this.conDao.getContractualObligation(musician));
+        if (!isMusicianExternal(musician)) {
+            return Points.calcDebitPoints(this.conDao.getContractualObligation(musician));
+        } else {
+            return Points.getZeroPoints();
+        }
+
     }
 
     /**
@@ -71,33 +77,39 @@ public class PointsManager {
         MusicianEntity musician,
         LocalDate month
     ) {
-        List<DutyEntity> listOfDutiesFromMusician;
-        // Beware! if allDuties isn't loaded this method will load
-        // the musicians individually from the DAO
-        if (this.allDuties == null) {
-            listOfDutiesFromMusician =
-                this.dutyDao.getAllDutiesInRangeFromMusician(musician, month);
-        } else {
-            listOfDutiesFromMusician = this.getAllDutiesFromMusician(musician);
-        }
-        Set<DutyCategoryEntity> dutyCategories = new LinkedHashSet<>();
 
-        // get all dutyCategories to all duties
-        for (DutyEntity d : listOfDutiesFromMusician) {
-            dutyCategories.add(d.getDutyCategory());
-        }
-
-        List<DutyCategoryChangelogEntity> dutyCategoryChangelogs = new LinkedList<>();
-
-        // get all dutyCategoryChangelogs to all dutyCategories
-        for (DutyCategoryEntity dc : dutyCategories) {
-            List<DutyCategoryChangelogEntity> changelogEntityList =
-                this.dutyCatChangeDao.getDutyCategoryChangeLog(dc);
-            if (changelogEntityList != null) {
-                dutyCategoryChangelogs.addAll(changelogEntityList);
+        if (!isMusicianExternal(musician)) {
+            List<DutyEntity> listOfDutiesFromMusician;
+            // Beware! if allDuties isn't loaded this method will load
+            // the musicians individually from the DAO
+            if (this.allDuties == null) {
+                listOfDutiesFromMusician =
+                    this.dutyDao.getAllDutiesInRangeFromMusician(musician, month);
+            } else {
+                listOfDutiesFromMusician = this.getAllDutiesFromMusician(musician);
             }
+            Set<DutyCategoryEntity> dutyCategories = new LinkedHashSet<>();
+
+            // get all dutyCategories to all duties
+            for (DutyEntity d : listOfDutiesFromMusician) {
+                dutyCategories.add(d.getDutyCategory());
+            }
+
+            List<DutyCategoryChangelogEntity> dutyCategoryChangelogs = new LinkedList<>();
+
+            // get all dutyCategoryChangelogs to all dutyCategories
+            for (DutyCategoryEntity dc : dutyCategories) {
+                List<DutyCategoryChangelogEntity> changelogEntityList =
+                    this.dutyCatChangeDao.getDutyCategoryChangeLog(dc);
+                if (changelogEntityList != null) {
+                    dutyCategoryChangelogs.addAll(changelogEntityList);
+                }
+            }
+            return (Points.calcGainedPoints(listOfDutiesFromMusician, dutyCategoryChangelogs));
+        } else {
+            return Points.getZeroPoints();
         }
-        return (Points.calcGainedPoints(listOfDutiesFromMusician, dutyCategoryChangelogs));
+
     }
 
     /**
@@ -130,21 +142,30 @@ public class PointsManager {
      * @return Points domain object containing the number of Points (getValue)
      */
     public Optional<Points> getBalanceFromMusician(MusicianEntity musician, LocalDate month) {
-        List<DutyEntity> listOfDutiesFromMusician;
-        // Beware! if allDuties isn't loaded this method will load
-        // the musicians individually from the DAO
-        if (this.allDuties == null) {
-            listOfDutiesFromMusician =
-                this.dutyDao.getAllDutiesInRangeFromMusician(musician, month);
-        } else {
-            listOfDutiesFromMusician = this.getAllDutiesFromMusician(musician);
-        }
-        Set<DutyCategoryEntity> dutyCategories = new LinkedHashSet<>();
+        if (!isMusicianExternal(musician)) {
+            List<DutyEntity> listOfDutiesFromMusician;
+            // Beware! if allDuties isn't loaded this method will load
+            // the musicians individually from the DAO
+            if (this.allDuties == null) {
+                listOfDutiesFromMusician =
+                    this.dutyDao.getAllDutiesInRangeFromMusician(musician, month);
+            } else {
+                listOfDutiesFromMusician = this.getAllDutiesFromMusician(musician);
+            }
+            Set<DutyCategoryEntity> dutyCategories = new LinkedHashSet<>();
 
-        // get all dutyCategories to all duties
-        for (DutyEntity d : listOfDutiesFromMusician) {
-            dutyCategories.add(d.getDutyCategory());
+            // get all dutyCategories to all duties
+            for (DutyEntity d : listOfDutiesFromMusician) {
+                dutyCategories.add(d.getDutyCategory());
+            }
+            return Points.calcBalancePoints(listOfDutiesFromMusician, dutyCategories);
+        } else {
+            return Points.getZeroPoints();
         }
-        return Points.calcBalancePoints(listOfDutiesFromMusician, dutyCategories);
+
+    }
+
+    private boolean isMusicianExternal(MusicianEntity musician) {
+        return (musician.getUser().getFirstName().equals("Extern"));
     }
 }
