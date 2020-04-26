@@ -119,10 +119,7 @@
                                     <PropertyValueFactory property="date" />
                                 </cellValueFactory>
                             </TableColumn>
-                            <TableColumn id="columnSchedule" prefWidth="75.0" text="%tab.duty.schedule.table.musicians.schedule">
-                                <cellValueFactory>
-                                    <PropertyValueFactory property="schedule" />
-                                </cellValueFactory>
+                            <TableColumn fx:id="columnSchedule" prefWidth="75.0" text="%tab.duty.schedule.table.musicians.schedule">
                             </TableColumn>
                         </columns>
                     </TableView>

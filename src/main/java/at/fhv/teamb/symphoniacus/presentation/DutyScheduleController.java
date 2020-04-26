@@ -89,6 +89,9 @@ public class DutyScheduleController implements Initializable, Controllable {
     private SplitPane leftSplitPane;
 
     @FXML
+    private TableColumn<MusicianTableModel, Button> columnSchedule;
+
+    @FXML
     private TableColumn<MusicianTableModel, Button> columnSchedule2;
 
     @FXML
@@ -152,21 +155,19 @@ public class DutyScheduleController implements Initializable, Controllable {
             loadOldDuty();
         });
 
-        // add selected item click listener
-        this.musicianTableWithRequests
-            .getSelectionModel()
-            .selectedItemProperty()
-            .addListener(
-                (observable, oldValue, newValue) -> {
-                    if (newValue != null) {
-                        addMusicianToPosition(
-                            this.actualSectionInstrumentation,
-                            newValue.getMusician(),
-                            this.selectedDutyPosition
-                        );
-                    }
-                }
-            );
+        this.musicianTableWithRequests.setOnMouseClicked((MouseEvent event) -> {
+            // add selected item click listener
+            if (event.getButton().equals(MouseButton.PRIMARY) && event.getClickCount() == 2) {
+
+                MusicianTableModel mtm =
+                    this.musicianTableWithRequests.getSelectionModel().getSelectedItem();
+                addMusicianToPosition(
+                    this.actualSectionInstrumentation,
+                    mtm.getMusician(),
+                    this.selectedDutyPosition
+                );
+            }
+        });
 
         this.musicianTableWithoutRequests.setOnMouseClicked((MouseEvent event) -> {
             // add selected item click listener
@@ -198,6 +199,21 @@ public class DutyScheduleController implements Initializable, Controllable {
                 }
             }
         });
+
+        this.columnSchedule.setCellFactory(
+            ScheduleButtonTableCell.<MusicianTableModel>forTableColumn(
+                "Schedule",
+                (MusicianTableModel mtm) -> {
+                    LOG.debug("Schedule btn without requests has been pressed");
+                    this.addMusicianToPosition(
+                        this.actualSectionInstrumentation,
+                        mtm.getMusician(),
+                        this.selectedDutyPosition
+                    );
+                    return mtm;
+                }
+            )
+        );
 
         this.columnSchedule2.setCellFactory(
             ScheduleButtonTableCell.<MusicianTableModel>forTableColumn(
