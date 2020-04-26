@@ -504,7 +504,7 @@ public class DutyScheduleController implements Initializable, Controllable {
             LOG.debug("No old Duty selected");
             Notifications.create()
                 .title("No Duty selected")
-                .text("You have to choose a old Duty")
+                .text("You have to choose an old Duty")
                 .position(Pos.CENTER)
                 .hideAfter(new Duration(2000))
                 .show();
