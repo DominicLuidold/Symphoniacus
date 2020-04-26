@@ -1,5 +1,6 @@
 package at.fhv.teamb.symphoniacus.persistence.model;
 
+import at.fhv.teamb.symphoniacus.domain.SectionMonthlySchedule;
 import java.time.LocalDate;
 import java.util.HashSet;
 import java.util.LinkedList;
@@ -153,5 +154,17 @@ public class MonthlyScheduleEntity {
     public void setWeeklySchedules(
         List<WeeklyScheduleEntity> weeklySchedules) {
         this.weeklySchedules = weeklySchedules;
+    }
+
+    public Set<SectionMonthlyScheduleEntity> getSectionMonthlyScheduleSet() {
+        return this.sectionMonthlyScheduleSet;
+    }
+
+    public void setMonthlyScheduleSet(Set<SectionMonthlyScheduleEntity> scheduleSet) {
+        this.sectionMonthlyScheduleSet = scheduleSet;
+    }
+
+    public void addMonthlySchedule(SectionMonthlyScheduleEntity schedule) {
+        this.sectionMonthlyScheduleSet.add(schedule);
     }
 }
