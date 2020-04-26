@@ -39,6 +39,7 @@ public class DutyScheduleManager {
     private final Set<Musician> unsetMusicians;
     private final WishRequestManager wishRequestManager;
     private List<Duty> dutiesOfThisDay;
+    private List<MusicianEntity> externalMusicianEntities;
     private List<MusicianEntity> sectionMusicianEntities;
     private Set<Musician> sectionMusicians;
 
@@ -114,11 +115,17 @@ public class DutyScheduleManager {
             // Get musician entities from database
             this.sectionMusicians = new HashSet<>();
             if (this.sectionMusicianEntities == null) {
-                //TODO external Musician have no Contract
                 this.sectionMusicianEntities = this.musicianDao.findAllWithSectionAndActiveContract(
                     position.getEntity().getSection()
                 );
             }
+
+            // Fetch external musician placeholders from database
+            if (this.externalMusicianEntities == null) {
+                this.externalMusicianEntities =
+                    this.musicianDao.findExternalsWithSection(position.getEntity().getSection());
+            }
+            this.sectionMusicianEntities.addAll(externalMusicianEntities);
 
             // Tell PointsManager to cache duties locally
             this.pointsManager.loadAllDutiesOfMusicians(

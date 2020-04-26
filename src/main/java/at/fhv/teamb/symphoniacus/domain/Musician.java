@@ -14,8 +14,9 @@ import java.util.Optional;
  * @author Dominic Luidold
  */
 public class Musician {
-    private final UserEntity userEntity;
     private final MusicianEntity entity;
+    private final boolean isExternal;
+    private final UserEntity userEntity;
     private final Points points;
     private WishRequest wishRequest;
 
@@ -34,6 +35,7 @@ public class Musician {
         this.entity = entity;
         this.userEntity = entity.getUser();
         this.points = points;
+        this.isExternal = userEntity.getFirstName().equals("Extern");
     }
 
     /**
@@ -48,6 +50,10 @@ public class Musician {
 
     public String getShortcut() {
         return this.userEntity.getShortcut();
+    }
+
+    public boolean isExternal() {
+        return this.isExternal;
     }
 
     public List<DutyPositionEntity> getAssignedDutyPositions() {

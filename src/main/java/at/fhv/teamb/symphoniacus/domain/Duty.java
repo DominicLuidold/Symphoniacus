@@ -78,7 +78,10 @@ public class Duty {
                 && this.entity.getEnd().isAfter(duty.getEntity().getStart())
             ) {
                 for (DutyPosition possibleConflict : duty.getDutyPositions()) {
-                    if (possibleConflict.getAssignedMusician().isPresent()) {
+                    if (possibleConflict.getAssignedMusician().isPresent()
+                        // If musician is a placeholder for an external, don't mark as unavailable
+                        && !possibleConflict.getAssignedMusician().get().isExternal()
+                    ) {
                         availableMusicians.remove(possibleConflict.getAssignedMusician().get());
                     }
                 }
