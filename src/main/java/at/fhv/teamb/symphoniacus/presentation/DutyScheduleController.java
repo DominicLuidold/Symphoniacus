@@ -615,52 +615,36 @@ public class DutyScheduleController implements Initializable, Controllable {
             .equals(PersistenceState.EDITED)
         ) {
             ButtonType userSelection = getConfirmation();
-            if ((userSelection == ButtonType.CLOSE) || (userSelection == ButtonType.CANCEL)) {
-                return;
-            } else if (userSelection == ButtonType.OK) {
-                LOG.debug(
-                    "Current dutyScheduleManager: {} "
-                        + ",Current actualSectionInstrumentation: {}",
-                    this.dutyScheduleManager,
-                    this.actualSectionInstrumentation
-                );
-                this.actualSectionInstrumentation = null;
-                this.dutyScheduleManager = null;
-                this.selectedDutyPosition = null;
-                this.duty = null;
-                this.section = null;
-                this.musicianTableWithRequests.getItems().clear();
-                this.musicianTableWithoutRequests.getItems().clear();
-                this.positionsTable.getItems().clear();
-                this.musicianTableWithoutRequests.refresh();
-                this.positionsTable.refresh();
-                this.hide();
-                MasterController mc = MasterController.getInstance();
-                CalendarController cc = (CalendarController) mc.get("CalendarController");
-                cc.show();
+            if (userSelection == ButtonType.OK) {
+                tearDown();
             }
         } else {
-            LOG.debug(
-                "Current dutyScheduleManager: {} ,Current actualSectionInstrumentation: {}",
-                this.dutyScheduleManager,
-                this.actualSectionInstrumentation
-            );
-            this.actualSectionInstrumentation = null;
-            this.dutyScheduleManager = null;
-            this.selectedDutyPosition = null;
-            this.duty = null;
-            this.section = null;
-            this.musicianTableWithRequests.getItems().clear();
-            this.musicianTableWithoutRequests.getItems().clear();
-            this.positionsTable.getItems().clear();
-            this.musicianTableWithoutRequests.refresh();
-            this.positionsTable.refresh();
-            this.hide();
-            MasterController mc = MasterController.getInstance();
-            CalendarController cc = (CalendarController) mc.get("CalendarController");
-            cc.show();
+            tearDown();
         }
 
+    }
+
+    private void tearDown() {
+        LOG.debug(
+            "Current dutyScheduleManager: {} ,Current actualSectionInstrumentation: {}",
+            this.dutyScheduleManager,
+            this.actualSectionInstrumentation
+        );
+        this.actualSectionInstrumentation = null;
+        this.dutyScheduleManager = null;
+        this.selectedDutyPosition = null;
+        this.duty = null;
+        this.section = null;
+        this.musicianTableWithRequests.getItems().clear();
+        this.musicianTableWithoutRequests.getItems().clear();
+        this.positionsTable.getItems().clear();
+        this.musicianTableWithRequests.refresh();
+        this.musicianTableWithoutRequests.refresh();
+        this.positionsTable.refresh();
+        this.hide();
+        MasterController mc = MasterController.getInstance();
+        CalendarController cc = (CalendarController) mc.get("CalendarController");
+        cc.show();
     }
 
     private ButtonType getConfirmation() {
