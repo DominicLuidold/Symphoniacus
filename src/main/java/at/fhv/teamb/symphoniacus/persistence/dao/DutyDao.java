@@ -56,7 +56,7 @@ public class DutyDao extends BaseDao<DutyEntity> {
         TypedQuery<DutyEntity> query = entityManager.createQuery(
             "SELECT d FROM DutyEntity d "
                 + "JOIN FETCH d.dutyCategory dc "
-                + "JOIN FETCH d.seriesOfPerformances sop "
+                + "LEFT JOIN FETCH d.seriesOfPerformances sop "
                 + "WHERE d.start >= :start "
                 + "AND d.end <= :end",
             DutyEntity.class
@@ -117,7 +117,7 @@ public class DutyDao extends BaseDao<DutyEntity> {
             + "INNER JOIN d.sectionMonthlySchedules sms "
             + "INNER JOIN sms.section s "
             + "JOIN FETCH d.dutyCategory dc "
-            + "JOIN FETCH d.seriesOfPerformances sop "
+            + "LEFT JOIN FETCH d.seriesOfPerformances sop "
             + "WHERE d.start >= :start AND d.end <= :end "
             + "AND s.sectionId = :sectionId "
             + "AND sms.isReadyForDutyScheduler = :isReadyForDutyScheduler "
@@ -191,7 +191,7 @@ public class DutyDao extends BaseDao<DutyEntity> {
                 + "INNER JOIN d.dutyPositions dp "
                 + "INNER JOIN dp.musician m "
                 + "WHERE d.end <= :end "
-                + " AND d.start >= :start AND m IN :musicians",
+                + "AND d.start >= :start AND m IN :musicians",
             DutyEntity.class
         );
 
