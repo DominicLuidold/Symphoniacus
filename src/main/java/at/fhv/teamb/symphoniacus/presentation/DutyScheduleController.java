@@ -85,12 +85,6 @@ public class DutyScheduleController implements Initializable, Controllable {
     private TableView<MusicianTableModel> musicianTableWithoutRequests;
 
     @FXML
-    private SplitPane rightSplitPane;
-
-    @FXML
-    private SplitPane leftSplitPane;
-
-    @FXML
     private TableColumn<MusicianTableModel, Button> columnSchedule;
 
     @FXML
@@ -317,7 +311,6 @@ public class DutyScheduleController implements Initializable, Controllable {
     }
 
     private void initMusicianTableWithoutRequests() {
-
         MasterController mc = MasterController.getInstance();
         mc.showStatusBarLoading();
 
