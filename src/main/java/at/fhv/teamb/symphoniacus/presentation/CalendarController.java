@@ -154,7 +154,7 @@ public class CalendarController implements Initializable, Controllable {
                 dialog.setTitle("Make ready for Organisation Manager");
 
                 Button btn = (Button) dialog.getDialogPane().lookupButton(ButtonType.OK);
-                btn.setText("Forwarded to Organisation Manager");
+                btn.setText("Forward to Organisation Manager");
 
                 btn.setOnAction(event1 -> {
                     ObservableList<SectionMonthlySchedule> list =
@@ -250,15 +250,15 @@ public class CalendarController implements Initializable, Controllable {
                                 );
                                 if (item.getEntity().isReadyForOrganisationManager()) {
                                     setText(m.getDisplayName(TextStyle.FULL, Locale.US)
-                                        + " Already Published");
-                                    setStyle("-fx-text-fill: #59de00");
+                                        + " (Already Published)");
+                                    setStyle("-fx-text-fill: #3e681f");
                                     setGraphic(null);
                                     setEditable(false);
                                     setDisabled(true);
                                     setDisable(true);
                                 } else {
                                     setText(m.getDisplayName(TextStyle.FULL, Locale.US));
-                                    setStyle("-fx-text-fill: #ff0000");
+                                    setStyle("-fx-text-fill: #631616");
                                     setGraphic(null);
                                     setEditable(true);
                                     setDisabled(false);
