@@ -70,7 +70,8 @@ public class DutyPositionDao extends BaseDao<DutyPositionEntity> {
                 + "INNER JOIN p.duty d "
                 + "INNER JOIN d.sectionMonthlySchedules sms "
                 + "WHERE p.musician IS NULL "
-                + "AND sms.sectionMonthlyScheduleId = :sectionMonthlyScheduleId",
+                + "AND sms.sectionMonthlyScheduleId = :sectionMonthlyScheduleId "
+                + "AND sms.section = p.section",
             Long.class
         );
 

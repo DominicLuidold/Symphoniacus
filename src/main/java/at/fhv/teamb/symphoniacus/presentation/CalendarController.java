@@ -66,7 +66,7 @@ public class CalendarController implements Initializable, Controllable {
     /**
      * Default interval start date represents {@link LocalDate#now()}.
      */
-    private static final LocalDate DEFAULT_INTERVAL_START = LocalDate.now();
+    private static final LocalDate DEFAULT_INTERVAL_START = LocalDate.now().minusMonths(2);
 
     /**
      * Default interval end date represents {@link #DEFAULT_INTERVAL_START} plus 13 days.
@@ -76,7 +76,7 @@ public class CalendarController implements Initializable, Controllable {
     /**
      * Extended interval end date represents {@link #DEFAULT_INTERVAL_START} plus one month.
      */
-    private static final LocalDate EXTENDED_INTERVAL_END = DEFAULT_INTERVAL_START.plusMonths(1);
+    private static final LocalDate EXTENDED_INTERVAL_END = DEFAULT_INTERVAL_START.plusMonths(4);
 
     private static final Logger LOG = LogManager.getLogger(CalendarController.class);
 
