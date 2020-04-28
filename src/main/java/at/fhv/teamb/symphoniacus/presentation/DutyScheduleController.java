@@ -36,7 +36,6 @@ import javafx.scene.control.ButtonBar;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
-import javafx.scene.control.SplitPane;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableRow;
 import javafx.scene.control.TableView;
@@ -60,6 +59,8 @@ public class DutyScheduleController implements Initializable, Controllable {
     private DutyManager dutyManager;
     private ActualSectionInstrumentation actualSectionInstrumentation;
     private DutyPosition selectedDutyPosition;
+    private ResourceBundle resources;
+
     @FXML
     private AnchorPane dutySchedule;
 
@@ -101,7 +102,7 @@ public class DutyScheduleController implements Initializable, Controllable {
         this.registerController();
         this.dutyScheduleManager = null;
         this.dutySchedule.setVisible(false);
-
+        this.resources = resources;
         this.musicianTableWithRequests.setRowFactory(row -> new TableRow<>() {
             @Override
             protected void updateItem(MusicianTableModel item, boolean empty) {
@@ -132,8 +133,8 @@ public class DutyScheduleController implements Initializable, Controllable {
                     .equals(PersistenceState.PERSISTED)
                 ) {
                     Notifications.create()
-                        .title("Saving successful")
-                        .text("Current Instrumentation has been saved.")
+                        .title(resources.getString("notification.save.successful.title"))
+                        .text(resources.getString("notification.save.successful.message"))
                         .position(Pos.CENTER)
                         .hideAfter(new Duration(4000))
                         .show();
@@ -141,8 +142,8 @@ public class DutyScheduleController implements Initializable, Controllable {
 
             } else {
                 Notifications.create()
-                    .title("Not saved")
-                    .text("No changes were made.")
+                    .title(resources.getString("notification.save.nochange.title"))
+                    .text(resources.getString("notification.save.nochange.message"))
                     .position(Pos.CENTER)
                     .hideAfter(new Duration(4000))
                     .showError();
@@ -152,8 +153,8 @@ public class DutyScheduleController implements Initializable, Controllable {
                 .equals(PersistenceState.EDITED)
             ) {
                 Notifications.create()
-                    .title("Saving failed")
-                    .text("Something went wrong while saving.")
+                    .title(resources.getString("notification.save.failed.title"))
+                    .text(resources.getString("notification.save.failed.message"))
                     .position(Pos.CENTER)
                     .hideAfter(new Duration(4000))
                     .showError();
@@ -165,7 +166,7 @@ public class DutyScheduleController implements Initializable, Controllable {
         });
 
         this.getOldDuty.setOnAction(e -> {
-            System.out.println("Pressed");
+            LOG.debug("Load old Duty pressed");
             loadOldDuty();
         });
 
@@ -176,10 +177,14 @@ public class DutyScheduleController implements Initializable, Controllable {
                     this.musicianTableWithRequests.getSelectionModel().getSelectedItem();
                 if (!mtm.isWishPositive()) {
                     Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
-                    alert.setTitle("Musician has Negative Duty Wish");
-                    alert.setContentText("Really schedule Musician with Negative Wish?");
-                    ButtonType okButton = new ButtonType("Yes", ButtonBar.ButtonData.YES);
-                    ButtonType noButton = new ButtonType("No", ButtonBar.ButtonData.NO);
+                    alert.setTitle(resources
+                        .getString("notification.duty.schedule.musician.withnegativewhish.title"));
+                    alert.setContentText(resources.getString(
+                        "notification.duty.schedule.musician.withnegativewhish.message"));
+                    ButtonType okButton = new ButtonType(resources.getString("global.button.yes"),
+                        ButtonBar.ButtonData.YES);
+                    ButtonType noButton = new ButtonType(resources.getString("global.button.no"),
+                        ButtonBar.ButtonData.NO);
 
                     alert.getButtonTypes().setAll(okButton, noButton);
                     alert.showAndWait().ifPresent(type -> {
@@ -245,10 +250,18 @@ public class DutyScheduleController implements Initializable, Controllable {
 
                     if (!mtm.isWishPositive()) {
                         Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
-                        alert.setTitle("Musician has Negative Duty Wish");
-                        alert.setContentText("Really schedule Musician with Negative Wish?");
-                        ButtonType okButton = new ButtonType("Yes", ButtonBar.ButtonData.YES);
-                        ButtonType noButton = new ButtonType("No", ButtonBar.ButtonData.NO);
+                        alert.setTitle(resources.getString(
+                            "notification.duty.schedule.musician.withnegativewhish.title")
+                        );
+                        alert.setContentText(resources.getString(
+                            "notification.duty.schedule.musician.withnegativewhish.message")
+                        );
+                        ButtonType okButton =
+                            new ButtonType(resources.getString("global.button.yes"),
+                                ButtonBar.ButtonData.YES);
+                        ButtonType noButton =
+                            new ButtonType(resources.getString("global.button.no"),
+                                ButtonBar.ButtonData.NO);
                         alert.getButtonTypes().setAll(okButton, noButton);
 
                         alert.showAndWait().ifPresent(type -> {
@@ -441,7 +454,6 @@ public class DutyScheduleController implements Initializable, Controllable {
      * Initialize the left side of the View with the Actualsectioninstrumentation
      * and their Musicians.
      */
-
     private void initDutyPositionsTableWithMusicians() {
         this.initOldDutyComboView();
         if (this.dutyScheduleManager == null) {
@@ -490,7 +502,8 @@ public class DutyScheduleController implements Initializable, Controllable {
             this.section,
             5
         );
-        this.oldDutySelect.setPlaceholder(new Label("No duty selected"));
+        this.oldDutySelect.setPlaceholder(new Label(resources.getString(
+            "tab.duty.schedule.oldduty.select.default")));
         task.setOnSucceeded(event -> {
             Optional<List<Duty>> list = task.getValue();
             if (list.isPresent()) {
@@ -536,8 +549,12 @@ public class DutyScheduleController implements Initializable, Controllable {
         if (this.oldDutySelect.getSelectionModel().getSelectedItem() == null) {
             LOG.debug("No old Duty selected");
             Notifications.create()
-                .title("No Duty selected")
-                .text("You have to choose an old Duty")
+                .title(
+                    resources
+                        .getString("notification.duty.schedule.oldduty.nodutyselected.titel"))
+                .text(
+                    resources
+                        .getString("notification.duty.schedule.oldduty.nodutyselected.message"))
                 .position(Pos.CENTER)
                 .hideAfter(new Duration(2000))
                 .show();
@@ -593,8 +610,10 @@ public class DutyScheduleController implements Initializable, Controllable {
     ) {
         if (dutyPosition == null) {
             Notifications.create()
-                .title("No position available")
-                .text("You have to choose a position first")
+                .title(resources
+                    .getString("notification.duty.schedule.addMusicianToPosition.noposition.title"))
+                .text(resources.getString(
+                    "notification.duty.schedule.addMusicianToPosition.noposition.message"))
                 .position(Pos.CENTER)
                 .hideAfter(new Duration(2000))
                 .show();
@@ -628,8 +647,10 @@ public class DutyScheduleController implements Initializable, Controllable {
         }
 
         Notifications.create()
-            .title("Musician set")
-            .text("Duty position has been updated.")
+            .title(resources
+                .getString("notification.duty.schedule.addMusicianToPosition.musicianset.title"))
+            .text(resources
+                .getString("notification.duty.schedule.addMusicianToPosition.musicianset.message"))
             .position(Pos.CENTER)
             .hideAfter(new Duration(2000))
             .show();
@@ -664,7 +685,7 @@ public class DutyScheduleController implements Initializable, Controllable {
 
         this.labelCurrentPosition.textProperty().bindBidirectional(
             new SimpleStringProperty(
-                "Current Position: "
+                resources.getString("tab.duty.schedule.currentposition")
                     + this.selectedDutyPosition
                     .getEntity().getInstrumentationPosition().getPositionDescription()
             )
@@ -705,9 +726,11 @@ public class DutyScheduleController implements Initializable, Controllable {
         this.musicianTableWithoutRequests.refresh();
         this.positionsTable.refresh();
         this.oldDutySelect.getItems().clear();
-        this.oldDutySelect.setPromptText("Load from history");
-        this.oldDutySelect.setPlaceholder(new Label("No duty selected"));
-        this.labelCurrentPosition.setText("Current Position: ");
+        this.oldDutySelect
+            .setPromptText(resources.getString("tab.duty.scheudle.oldduty.select.button"));
+        this.oldDutySelect.setPlaceholder(
+            new Label(resources.getString("tab.duty.schedule.oldduty.select.default")));
+        this.labelCurrentPosition.setText(resources.getString("tab.duty.schedule.currentposition"));
         this.hide();
         MasterController mc = MasterController.getInstance();
         CalendarController cc = (CalendarController) mc.get("CalendarController");
@@ -719,21 +742,18 @@ public class DutyScheduleController implements Initializable, Controllable {
         ButtonType buttonType = null;
 
         Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
-        alert.setTitle("Closing without saving");
-        alert.setHeaderText("Are you sure you want to close without saving?");
+        alert.setTitle(resources.getString("dialog.save.closewithoutsaving.title"));
+        alert.setHeaderText(resources.getString("dialog.save.closewithoutsaving.message"));
 
         // option != null.
         Optional<ButtonType> option = alert.showAndWait();
 
         if (option.get() == null) {
             buttonType = ButtonType.CLOSE;
-            label.setText("No selection!");
         } else if (option.get() == ButtonType.OK) {
             buttonType = ButtonType.OK;
-            label.setText("File deleted!");
         } else if (option.get() == ButtonType.CANCEL) {
             buttonType = ButtonType.CANCEL;
-            label.setText("Cancelled!");
         } else {
             label.setText("-");
         }
