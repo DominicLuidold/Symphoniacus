@@ -10,33 +10,6 @@ pool:
   vmImage: 'ubuntu-latest'
 
 steps:
-#- task: SonarQubePrepare@4
-#  inputs:
-#    SonarQube: '***REMOVED***'
-#    scannerMode: 'Other'
-#    extraProperties: |
-#          # Additional properties that will be passed to the scanner, 
-#          # Put one key=value per line, example:
-#          # sonar.exclusions=**/*.bin
-#          sonar.projectName=***REMOVED***
-#          sonar.branch.name=master
-- task: DotNetCoreInstaller@0
-  displayName: Install .NET Core SDK
-  name: install_dotnetcore_sdk
-  enabled: true
-  inputs:
-    packageType: 'sdk'
-    version: '3.1.201'
-- task: CmdLine@2
-  displayName: 'Install Sonar Tools and Start Scanner'
-  inputs:
-    script: |
-      echo Installing sonarScanner tool
-      dotnet tool install --global dotnet-sonarscanner 
-
-      echo Start Scanner
-      dotnet-sonarscanner begin /k:"***REMOVED***" /n:"***REMOVED***" /d:sonar.host.url="http://52.166.233.189" /d:sonar.login="0cf9d9fe838e0fa6eaf3e15c2903988afb3921c6"
-
 - task: Gradle@2
   inputs:
     gradleWrapperFile: 'gradlew'
@@ -49,18 +22,8 @@ steps:
     checkStyleRunAnalysis: true
     pmdRunAnalysis: true
     tasks: 'build'
-    sonarQubeRunAnalysis: false
-- task: CmdLine@2
-  displayName: 'Collect Sonar results and Upload'
-  inputs:
-    script: |
-      echo Run Sonar End
-      dotnet-sonarscanner end /d:sonar.login="0cf9d9fe838e0fa6eaf3e15c2903988afb3921c6"
 - task: PublishCodeCoverageResults@1
   inputs:
     codeCoverageTool: 'JaCoCo'
     summaryFileLocation: '$(System.DefaultWorkingDirectory)/**/jacocoTestReport.xml'
     reportDirectory: '$(System.DefaultWorkingDirectory)/**/jacoco/test/**'
-- task: SonarQubePublish@4
-  inputs:
-    pollingTimeoutSec: '300'
