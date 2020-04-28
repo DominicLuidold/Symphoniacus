@@ -2,7 +2,6 @@ package at.fhv.teamb.symphoniacus.persistence.dao;
 
 import at.fhv.teamb.symphoniacus.persistence.BaseDao;
 import at.fhv.teamb.symphoniacus.persistence.model.MusicianEntity;
-import at.fhv.teamb.symphoniacus.persistence.model.NegativeDutyWishEntity;
 import at.fhv.teamb.symphoniacus.persistence.model.UserEntity;
 import java.util.Optional;
 import javax.persistence.TypedQuery;
@@ -16,7 +15,7 @@ import javax.persistence.TypedQuery;
 public class UserDao extends BaseDao<UserEntity> {
 
     /**
-     * Finds a duty by its key.
+     * Finds a {@link UserEntity} by its key.
      *
      * @param key The key of the duty
      * @return The duty that is looked for

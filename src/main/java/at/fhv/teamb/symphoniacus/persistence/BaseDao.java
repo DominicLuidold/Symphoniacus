@@ -41,23 +41,4 @@ public abstract class BaseDao<T> implements Dao<T> {
         }
         return Optional.empty();
     }
-
-    /**
-     * Creates a new {@link EntityManager} that can be used to create new connections.
-     */
-    public void createEntityManager() {
-        LOG.debug("createEntityManager is currently NOP");
-        //this.entityManagerFactory = Persistence.createEntityManagerFactory(
-        //    "mysqldb"
-        //);
-        //this.entityManager = entityManagerFactory.createEntityManager();
-    }
-
-    /**
-     * Tears down the {@link EntityManagerFactory}, thus closing all open connections.
-     */
-    public void tearDown() {
-        LOG.debug("createEntityManager is currently NOP");
-        // this.entityManager.close();
-    }
 }

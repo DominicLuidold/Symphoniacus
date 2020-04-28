@@ -11,7 +11,7 @@ import javax.persistence.TypedQuery;
 public class NegativeDutyWishDao extends BaseDao<NegativeDutyWishEntity> {
 
     /**
-     * Finds a duty by its key.
+     * Finds a {@link NegativeDutyWishEntity} by its key.
      *
      * @param key The key of the duty
      * @return The duty that is looked for
@@ -43,17 +43,16 @@ public class NegativeDutyWishDao extends BaseDao<NegativeDutyWishEntity> {
      * @return List of (Interface)WishRequestable
      */
     public List<WishRequestable> getAllNegativeDutyWishes(DutyEntity duty) {
-        TypedQuery<WishRequestable> query =
-            this.entityManager.createQuery(
-                "SELECT nw FROM NegativeDutyWishEntity nw "
-                    + "JOIN nw.seriesOfPerformances sop "
-                    + "JOIN sop.dutyEntities de "
-                    + "WHERE de = :duty",
-                WishRequestable.class);
+        TypedQuery<WishRequestable> query = entityManager.createQuery(
+            "SELECT nw FROM NegativeDutyWishEntity nw "
+                + "JOIN nw.seriesOfPerformances sop "
+                + "JOIN sop.dutyEntities de "
+                + "WHERE de = :duty",
+            WishRequestable.class
+        );
 
-        query.setParameter("duty",duty);
+        query.setParameter("duty", duty);
 
-        List<WishRequestable> result = query.getResultList();
-        return result;
+        return query.getResultList();
     }
 }
