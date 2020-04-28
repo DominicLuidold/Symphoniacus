@@ -1,14 +1,14 @@
 trigger:
-- develop
-- feature/*
-- release/*
-- bugfix/*
-- hotfix/*
+- master
 
 pool:
   vmImage: 'ubuntu-latest'
 
 steps:
+- task: SonarQubePrepare@4
+  inputs:
+    SonarQube: '***REMOVED***'
+    scannerMode: 'Other'
 - task: Gradle@2
   inputs:
     gradleWrapperFile: 'gradlew'
@@ -21,8 +21,12 @@ steps:
     checkStyleRunAnalysis: true
     pmdRunAnalysis: true
     tasks: 'build'
+    sonarQubeRunAnalysis: true
 - task: PublishCodeCoverageResults@1
   inputs:
     codeCoverageTool: 'JaCoCo'
     summaryFileLocation: '$(System.DefaultWorkingDirectory)/**/jacocoTestReport.xml'
     reportDirectory: '$(System.DefaultWorkingDirectory)/**/jacoco/test/**'
+- task: SonarQubePublish@4
+  inputs:
+    pollingTimeoutSec: '300'    
