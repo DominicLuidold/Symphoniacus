@@ -1,32 +1,32 @@
 trigger:
-    - master
-    
-    pool:
-      vmImage: 'ubuntu-latest'
-    
-    steps:
-    - task: SonarQubePrepare@4
-      inputs:
-        SonarQube: '***REMOVED***'
-        scannerMode: 'Other'
-    - task: Gradle@2
-      inputs:
-        gradleWrapperFile: 'gradlew'
-        gradleOptions: '-Xmx3072m'
-        javaHomeOption: 'JDKVersion'
-        jdkVersionOption: '1.11'
-        jdkArchitectureOption: 'x64'
-        publishJUnitResults: true
-        testResultsFiles: '**/TEST-*.xml'
-        checkStyleRunAnalysis: true
-        pmdRunAnalysis: true
-        tasks: 'build'
-        sonarQubeRunAnalysis: true
-    - task: PublishCodeCoverageResults@1
-      inputs:
-        codeCoverageTool: 'JaCoCo'
-        summaryFileLocation: '$(System.DefaultWorkingDirectory)/**/jacocoTestReport.xml'
-        reportDirectory: '$(System.DefaultWorkingDirectory)/**/jacoco/test/**'
-    - task: SonarQubePublish@4
-      inputs:
-        pollingTimeoutSec: '300'    
+- master
+
+pool:
+  vmImage: 'ubuntu-latest'
+
+steps:
+- task: SonarQubePrepare@4
+  inputs:
+    SonarQube: '***REMOVED***'
+    scannerMode: 'Other'
+- task: Gradle@2
+  inputs:
+    gradleWrapperFile: 'gradlew'
+    gradleOptions: '-Xmx3072m'
+    javaHomeOption: 'JDKVersion'
+    jdkVersionOption: '1.11'
+    jdkArchitectureOption: 'x64'
+    publishJUnitResults: true
+    testResultsFiles: '**/TEST-*.xml'
+    checkStyleRunAnalysis: true
+    pmdRunAnalysis: true
+    tasks: 'build'
+    sonarQubeRunAnalysis: true
+- task: PublishCodeCoverageResults@1
+  inputs:
+    codeCoverageTool: 'JaCoCo'
+    summaryFileLocation: '$(System.DefaultWorkingDirectory)/**/jacocoTestReport.xml'
+    reportDirectory: '$(System.DefaultWorkingDirectory)/**/jacoco/test/**'
+- task: SonarQubePublish@4
+  inputs:
+    pollingTimeoutSec: '300'    
