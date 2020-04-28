@@ -10,6 +10,10 @@ pool:
   vmImage: 'ubuntu-latest'
 
 steps:
+- task: SonarQubePrepare@4
+  inputs:
+    SonarQube: '***REMOVED***'
+    scannerMode: 'Other'
 - task: Gradle@2
   inputs:
     gradleWrapperFile: 'gradlew'
@@ -27,3 +31,6 @@ steps:
     codeCoverageTool: 'JaCoCo'
     summaryFileLocation: '$(System.DefaultWorkingDirectory)/**/jacocoTestReport.xml'
     reportDirectory: '$(System.DefaultWorkingDirectory)/**/jacoco/test/**'
+- task: SonarQubePublish@4
+  inputs:
+    pollingTimeoutSec: '300'
