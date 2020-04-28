@@ -26,6 +26,7 @@ steps:
     checkStyleRunAnalysis: true
     pmdRunAnalysis: true
     tasks: 'build'
+    sonarQubeRunAnalysis: true
 - task: PublishCodeCoverageResults@1
   inputs:
     codeCoverageTool: 'JaCoCo'
