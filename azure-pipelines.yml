@@ -35,7 +35,7 @@ steps:
       dotnet tool install --global dotnet-sonarscanner 
 
       echo Start Scanner
-      dotnet-sonarscanner begin /k:"***REMOVED***" /d:sonar.host.url="http://52.166.233.189" /d:sonar.login="Token0cf9d9fe838e0fa6eaf3e15c2903988afb3921c6"
+      dotnet-sonarscanner begin /k:"***REMOVED***" /n:"***REMOVED***" /d:sonar.host.url="http://52.166.233.189" /d:sonar.login="0cf9d9fe838e0fa6eaf3e15c2903988afb3921c6"
 
 - task: Gradle@2
   inputs:
@@ -55,7 +55,7 @@ steps:
   inputs:
     script: |
       echo Run Sonar End
-      dotnet-sonarscanner end /d:sonar.login="Token0cf9d9fe838e0fa6eaf3e15c2903988afb3921c6"
+      dotnet-sonarscanner end /d:sonar.login="0cf9d9fe838e0fa6eaf3e15c2903988afb3921c6"
 - task: PublishCodeCoverageResults@1
   inputs:
     codeCoverageTool: 'JaCoCo'
