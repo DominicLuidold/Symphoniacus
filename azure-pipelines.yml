@@ -20,6 +20,13 @@ steps:
 #          # sonar.exclusions=**/*.bin
 #          sonar.projectName=***REMOVED***
 #          sonar.branch.name=master
+- task: DotNetCoreInstaller@0
+  displayName: Install .NET Core SDK
+  name: install_dotnetcore_sdk
+  enabled: true
+  inputs:
+    packageType: 'sdk'
+    version: '3.1.3'
 - task: CmdLine@2
   displayName: 'Install Sonar Tools and Start Scanner'
   inputs:
