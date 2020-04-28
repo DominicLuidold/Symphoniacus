@@ -179,12 +179,12 @@ public class CalendarController implements Initializable, Controllable {
                             notification
                                 .owner(this.calendarView.getParent().getScene().getWindow())
                                 .title(resources.getString(
-                                    "notification.forward.schedule.already.title")
+                                    "notification.schedule.forward.already.title")
                                 )
                                 .text(
                                     MessageFormat.format(
                                         resources.getString(
-                                            "notification.forward.schedule.already.message"
+                                            "notification.schedule.forward.already.message"
                                         ),
                                         month
                                     )
@@ -221,12 +221,12 @@ public class CalendarController implements Initializable, Controllable {
                                 notification
                                     .owner(this.calendarView.getParent().getScene().getWindow())
                                     .title(resources.getString(
-                                        "notification.forward.schedule.fail.title")
+                                        "notification.schedule.forward.fail.title")
                                     )
                                     .text(
                                         MessageFormat.format(
                                             resources.getString(
-                                                "notification.forward.schedule.fail.message"
+                                                "notification.schedule.forward.fail.message"
                                             ),
                                             month
                                         )
@@ -242,12 +242,12 @@ public class CalendarController implements Initializable, Controllable {
                                 notification
                                     .owner(this.calendarView.getParent().getScene().getWindow())
                                     .title(resources.getString(
-                                        "notification.forward.schedule.ok.title")
+                                        "notification.schedule.forward.ok.title")
                                     )
                                     .text(
                                         MessageFormat.format(
                                             resources.getString(
-                                                "notification.forward.schedule.ok.message"
+                                                "notification.schedule.forward.ok.message"
                                             ),
                                             month
                                         )
