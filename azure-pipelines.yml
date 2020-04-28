@@ -14,6 +14,12 @@ steps:
   inputs:
     SonarQube: '***REMOVED***'
     scannerMode: 'Other'
+    extraProperties: |
+          # Additional properties that will be passed to the scanner, 
+          # Put one key=value per line, example:
+          # sonar.exclusions=**/*.bin
+          sonar.projectName=***REMOVED***
+
 - task: Gradle@2
   inputs:
     gradleWrapperFile: 'gradlew'
