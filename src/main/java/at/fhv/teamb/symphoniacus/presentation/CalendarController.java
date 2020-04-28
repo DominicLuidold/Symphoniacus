@@ -153,6 +153,7 @@ public class CalendarController implements Initializable, Controllable {
                 Button okButton = (Button) dialog.getDialogPane().lookupButton(ButtonType.OK);
                 okButton.setText(resources.getString("tab.duty.schedule.forward.button"));
 
+                // Logic for pressing forward button
                 okButton.setOnAction(event1 -> {
                     ObservableList<SectionMonthlySchedule> list =
                         listSelectionView.getTargetItems();
@@ -165,6 +166,9 @@ public class CalendarController implements Initializable, Controllable {
 
                     // Show appropriate message based on sms publish state
                     for (SectionMonthlySchedule sms : list) {
+                        String month = Month.of(sms.getEntity().getMonthlySchedule().getMonth())
+                            .getDisplayName(TextStyle.FULL, Locale.US);
+
                         if (sms.getPublishState()
                             .equals(
                                 SectionMonthlySchedule
@@ -182,9 +186,7 @@ public class CalendarController implements Initializable, Controllable {
                                         resources.getString(
                                             "notification.forward.schedule.already.message"
                                         ),
-                                        Month.of(
-                                            sms.getEntity().getMonthlySchedule().getMonth()
-                                        ).getDisplayName(TextStyle.FULL, Locale.US)
+                                        month
                                     )
                                 )
                                 .showError();
@@ -226,9 +228,7 @@ public class CalendarController implements Initializable, Controllable {
                                             resources.getString(
                                                 "notification.forward.schedule.fail.message"
                                             ),
-                                            Month.of(
-                                                sms.getEntity().getMonthlySchedule().getMonth()
-                                            ).getDisplayName(TextStyle.FULL, Locale.US)
+                                            month
                                         )
                                     )
                                     .showError();
@@ -249,9 +249,7 @@ public class CalendarController implements Initializable, Controllable {
                                             resources.getString(
                                                 "notification.forward.schedule.ok.message"
                                             ),
-                                            Month.of(
-                                                sms.getEntity().getMonthlySchedule().getMonth()
-                                            ).getDisplayName(TextStyle.FULL, Locale.US)
+                                            month
                                         )
                                     )
                                     .show();
@@ -260,7 +258,7 @@ public class CalendarController implements Initializable, Controllable {
                     }
                 });
 
-
+                // Handle items of list selection view
                 listSelectionView.setCellFactory(listView -> {
                     ListCell<SectionMonthlySchedule> cell = new ListCell<>() {
                         @Override
