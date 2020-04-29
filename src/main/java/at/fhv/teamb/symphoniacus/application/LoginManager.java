@@ -34,21 +34,22 @@ public class LoginManager {
             LOG.error("Login not possible - either userShortCut or userPassword is null");
             return Optional.empty();
         }
-
         Optional<UserEntity> userEntity = this.userDao.login(userShortCut, userPassword);
 
         // Login attempt failed
         if (userEntity.isEmpty()) {
             LOG.error("Login not possible");
             return Optional.empty();
+        } else {
+            this.currentLoggedInUser = new User(userEntity.get());
         }
 
-        this.currentLoggedInUser = new User(userEntity.get());
         // Login attempt succeeded
-        if (this.userDao.isUserMusician(userEntity.get())) {
+        if (this.userDao.isUserMusician(this.currentLoggedInUser.getUserEntity())) {
             this.currentLoggedInUser.getUserEntity().setType(DomainUserType.DOMAIN_MUSICIAN);
         } // TODO - More types
-        if (this.userDao.isUserAdministrativeAssistant(userEntity.get())) {
+
+        if (this.userDao.isUserAdministrativeAssistant(this.currentLoggedInUser.getUserEntity())) {
             this.currentLoggedInUser.getUserEntity()
                 .setType(DomainUserType.DOMAIN_ADMINISTRATIVEASSISTANT);
         }

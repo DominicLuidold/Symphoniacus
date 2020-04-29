@@ -97,15 +97,16 @@ public class LoginController implements Initializable {
                 sb.toString());
             return;
         }
-        //Backend validate User
         LoginManager loginManager = new LoginManager();
         Optional<User> userOptional =
             loginManager.login(this.userShortcutField.getText(), this.passwordField.getText());
+
         LOG.debug("Login with Username: {} and Password {}", this.userShortcutField.getText(),
             this.passwordField.getText());
 
+
         if (userOptional.isPresent()) {
-            loadMainScene();
+            loadMainScene(userOptional.get());
         } else {
             AlertHelper.showAlert(
                 Alert.AlertType.ERROR, owner,
@@ -118,7 +119,7 @@ public class LoginController implements Initializable {
     }
 
     // TODO change to accept login user as param here
-    private void loadMainScene() {
+    private void loadMainScene(User user) {
         Locale locale = new Locale("en", "UK");
         ResourceBundle bundle = ResourceBundle.getBundle("bundles.language", locale);
         try {
@@ -129,7 +130,7 @@ public class LoginController implements Initializable {
             Parent mainRoot = loader.load();
             MainController controller = loader.getController();
             LOG.debug("MainController is fully loaded now :-)");
-            // controller.setLoginUser(user) from params
+            controller.setLoginUser(user);
             Scene currentScene = this.submitButton.getScene();
             Stage owner = (Stage) this.submitButton.getScene().getWindow();
             Scene newScene = new Scene(mainRoot, currentScene.getWidth(), currentScene.getHeight());
