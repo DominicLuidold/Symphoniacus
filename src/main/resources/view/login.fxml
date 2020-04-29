@@ -27,7 +27,7 @@
         </ColumnConstraints>
     </columnConstraints>
 
-    <ImageView GridPane.rowIndex="0" GridPane.columnSpan="2"
+    <ImageView fx:id="image" GridPane.rowIndex="0" GridPane.columnSpan="2"
                GridPane.rowSpan="1" GridPane.halignment="CENTER"
                pickOnBounds="true" preserveRatio="true">
         <image>
@@ -40,7 +40,7 @@
     </ImageView>
 
     <!-- Add Header Label -->
-    <Label text="%login.field.title" GridPane.columnIndex="0"
+    <Label fx:id="label" text="%login.field.title" GridPane.columnIndex="0"
            GridPane.rowIndex="1" GridPane.columnSpan="2"
            GridPane.rowSpan="1" GridPane.halignment="CENTER">
         <font>

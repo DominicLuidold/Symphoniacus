@@ -5,9 +5,11 @@ import java.util.Locale;
 import java.util.ResourceBundle;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
+import javafx.geometry.Rectangle2D;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.image.Image;
+import javafx.stage.Screen;
 import javafx.stage.Stage;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -28,12 +30,18 @@ public class MainGui extends Application {
             ResourceBundle bundle = ResourceBundle.getBundle("bundles.language", locale);
             Parent root = FXMLLoader.load(getClass().getResource("/view/login.fxml"), bundle);
 
+            double minHeight=768;
+            double minWidth=1366;
+            Rectangle2D screenBounds = Screen.getPrimary().getVisualBounds();
+            stage.setX((screenBounds.getWidth() - minWidth) / 2);
+            stage.setY((screenBounds.getHeight() - minHeight) / 2);
+
             Scene scene = new Scene(root);
             scene.getStylesheets().add("css/styles.css");
             stage.setTitle("Symphoniacus");
             stage.setScene(scene);
-            stage.setMinHeight(768);
-            stage.setMinWidth(1366);
+            stage.setMinHeight(minHeight);
+            stage.setMinWidth(minWidth);
             stage.getIcons().add(
                 new Image(
                     "images/icon.png"
