@@ -13,8 +13,10 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
+import javafx.scene.control.Label;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
+import javafx.scene.image.ImageView;
 import javafx.stage.Stage;
 import javafx.stage.Window;
 import org.apache.logging.log4j.LogManager;
@@ -36,6 +38,12 @@ public class LoginController implements Initializable {
 
     @FXML
     private Button submitButton;
+
+    @FXML
+    private ImageView image;
+
+    @FXML
+    private Label label;
 
     private boolean isValid = false;
     private ValidationSupport validationSupport = new ValidationSupport();
@@ -86,19 +94,26 @@ public class LoginController implements Initializable {
         }
         LOG.debug("Login credentials filled in, checking credentials now");
         LOG.error("MISSING credentials check");
-        loadMainScene();
+        loadMainScene(); // TODO add loginUser here as param
     }
 
+    // TODO change to accept login user as param here
     private void loadMainScene() {
         Locale locale = new Locale("en", "UK");
         ResourceBundle bundle = ResourceBundle.getBundle("bundles.language", locale);
         try {
-            Parent mainRoot = FXMLLoader.load(getClass().getResource(
+            FXMLLoader loader = new FXMLLoader(getClass().getResource(
                 "/view/mainWindow.fxml"),
                 bundle);
+
+            Parent mainRoot = loader.load();
+            MainController controller = loader.getController();
+            LOG.debug("MainController is fully loaded now :-)");
+            // controller.setLoginUser(user) from params
             Scene scene = new Scene(mainRoot);
             Stage owner = (Stage) this.submitButton.getScene().getWindow();
             owner.setScene(scene);
+            owner.show();
         } catch (IOException e) {
             LOG.error(e);
             Stage owner = (Stage) this.submitButton.getScene().getWindow();

@@ -16,10 +16,10 @@
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.cell.PropertyValueFactory?>
 <?import javafx.scene.control.ComboBox?>
-<AnchorPane fx:id="dutySchedule" prefHeight="226.0" prefWidth="364.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="at.fhv.teamb.symphoniacus.presentation.DutyScheduleController">
+<AnchorPane fx:id="dutySchedule" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="at.fhv.teamb.symphoniacus.presentation.DutyScheduleController">
    <AnchorPane maxHeight="45.0" minHeight="45.0" prefHeight="45.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
       <children>
-         <ToolBar prefHeight="45.0" prefWidth="200.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+         <ToolBar prefHeight="45.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
            <items>
                <Button fx:id="scheduleBackBtn" mnemonicParsing="false" text="%global.button.back" />
                <Separator />
@@ -40,7 +40,7 @@
        <items>
             <TableView fx:id="positionsTable">
                 <columns>
-                    <TableColumn fx:id="role"  prefWidth="120.0" text="%tab.duty.schedule.table.dutyrole.role" >
+                    <TableColumn fx:id="role" prefWidth="120.0" text="%tab.duty.schedule.table.dutyrole.role" >
                         <cellValueFactory>
                             <PropertyValueFactory property="role" />
                         </cellValueFactory>
