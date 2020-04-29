@@ -44,7 +44,7 @@
             <Font name="Arial" size="24"></Font>
         </font>
         <GridPane.margin>
-            <Insets top="20" right="0" bottom="20" left="0"></Insets>
+            <Insets top="20" right="0" bottom="10" left="0"></Insets>
         </GridPane.margin>
     </Label>
 
@@ -62,7 +62,7 @@
             GridPane.halignment="CENTER"
             onAction="#processLoginCredentials">
         <GridPane.margin>
-            <Insets top="20" right="0" bottom="20" left="0"></Insets>
+            <Insets top="10" right="0" bottom="20" left="0"></Insets>
         </GridPane.margin>
     </Button>
 </GridPane>
