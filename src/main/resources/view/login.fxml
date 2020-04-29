@@ -8,7 +8,8 @@
 <?import javafx.scene.layout.ColumnConstraints?>
 <?import javafx.scene.layout.GridPane?>
 <?import javafx.scene.text.Font?>
-
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.image.Image?>
 <GridPane
         fx:id="grid"
         fx:controller="at.fhv.teamb.symphoniacus.presentation.LoginController"
@@ -26,9 +27,21 @@
         </ColumnConstraints>
     </columnConstraints>
 
+    <ImageView GridPane.rowIndex="0" GridPane.columnSpan="2"
+               GridPane.rowSpan="1" GridPane.halignment="CENTER"
+               pickOnBounds="true" preserveRatio="true">
+        <image>
+            <Image url="/images/icon.png" backgroundLoading="true" />
+        </image>
+        <fitHeight>150</fitHeight>
+        <GridPane.margin>
+            <Insets top="0" right="0" bottom="0" left="0"></Insets>
+        </GridPane.margin>
+    </ImageView>
+
     <!-- Add Header Label -->
     <Label text="%login.field.title" GridPane.columnIndex="0"
-           GridPane.rowIndex="0" GridPane.columnSpan="2"
+           GridPane.rowIndex="1" GridPane.columnSpan="2"
            GridPane.rowSpan="1" GridPane.halignment="CENTER">
         <font>
             <Font name="Arial" size="24"></Font>
@@ -39,17 +52,17 @@
     </Label>
 
     <!-- Add Name Label -->
-    <Label text="%login.field.usershortcut" GridPane.columnIndex="0" GridPane.rowIndex="1">
+    <Label text="%login.field.usershortcut" GridPane.columnIndex="0" GridPane.rowIndex="2">
     </Label>
     <!-- Add Name Text Field -->
-    <TextField fx:id="userShortcutField" prefHeight="40" GridPane.columnIndex="1" GridPane.rowIndex="1"/>
+    <TextField fx:id="userShortcutField" prefHeight="40" GridPane.columnIndex="1" GridPane.rowIndex="2" promptText="vaubou" />
 
     <!-- Add Password Label -->
     <Label text="%login.field.password" GridPane.columnIndex="0"
            GridPane.rowIndex="3">
     </Label>
     <!-- Add Password Field -->
-    <PasswordField fx:id="passwordField" prefHeight="40" GridPane.columnIndex="1" GridPane.rowIndex="3"/>
+    <PasswordField fx:id="passwordField" prefHeight="40" GridPane.columnIndex="1" GridPane.rowIndex="3" promptText="*******" />
 
     <!-- Add Submit Button -->
     <Button fx:id="submitButton" text="%global.button.submit"
