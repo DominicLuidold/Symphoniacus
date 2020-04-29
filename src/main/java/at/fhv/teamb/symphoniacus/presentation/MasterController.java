@@ -1,8 +1,15 @@
 package at.fhv.teamb.symphoniacus.presentation;
 
+import java.io.IOException;
 import java.util.Map;
+import java.util.ResourceBundle;
+import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
+import javafx.scene.Node;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.scene.control.Label;
+import javafx.stage.Stage;
 import org.apache.commons.collections4.map.HashedMap;
 import org.controlsfx.control.StatusBar;
 
@@ -66,5 +73,15 @@ public class MasterController {
 
     public void showStatusBarLoaded() {
         this.statusTextField.setText("Loaded");
+    }
+    public static void switchSceneTo(String fxmlPath, ResourceBundle bundle, Node currentScene)
+        throws IOException {
+        Scene oldScene = currentScene.getScene();
+        Stage stage = (Stage) oldScene.getWindow();
+
+        FXMLLoader loader = new FXMLLoader(MasterController.class.getResource(fxmlPath), bundle);
+        Parent parent = loader.load();
+        Scene newScene = new Scene(parent, oldScene.getWidth(), oldScene.getHeight());
+        stage.setScene(newScene);
     }
 }
