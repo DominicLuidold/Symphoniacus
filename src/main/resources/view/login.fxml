@@ -49,10 +49,10 @@
     </Label>
 
     <!-- Add Name Text Field -->
-    <TextField fx:id="userShortcutField" prefHeight="40" alignment="CENTER" GridPane.columnIndex="0" GridPane.rowIndex="3" promptText="%login.field.usershortcut.prompt" GridPane.halignment="CENTER" />
+    <TextField fx:id="userShortcutField" style="-fx-font-size: 18;" prefHeight="40" alignment="CENTER" GridPane.columnIndex="0" GridPane.rowIndex="3" promptText="%login.field.usershortcut.prompt" GridPane.halignment="CENTER" />
 
     <!-- Add Password Field -->
-    <PasswordField fx:id="passwordField" prefHeight="40" alignment="CENTER" GridPane.columnIndex="0" GridPane.rowIndex="5" promptText="%login.field.password.prompt" GridPane.halignment="CENTER" />
+    <PasswordField fx:id="passwordField" style="-fx-font-size: 18;" prefHeight="40" alignment="CENTER" GridPane.columnIndex="0" GridPane.rowIndex="5" promptText="%login.field.password.prompt" GridPane.halignment="CENTER" />
 
     <!-- Add Submit Button -->
     <Button fx:id="submitButton" text="%login.field.submit"
@@ -60,7 +60,8 @@
             GridPane.columnIndex="0" GridPane.rowIndex="6"
             GridPane.columnSpan="1" GridPane.rowSpan="1"
             GridPane.halignment="CENTER"
-            onAction="#processLoginCredentials">
+            onAction="#processLoginCredentials"
+            style="-fx-font-size: 18;">
         <GridPane.margin>
             <Insets top="10" right="0" bottom="20" left="0"></Insets>
         </GridPane.margin>
