@@ -23,7 +23,7 @@ import java.util.List;
 import org.junit.jupiter.api.Test;
 import org.mockito.stubbing.Answer;
 
-class CalendarControllerTest {
+class DutySchedulerCalendarControllerTest {
 
     @Test
     void prepareCalendarSource_ShouldPrepareCalendarSource() {
@@ -33,7 +33,7 @@ class CalendarControllerTest {
         section.setSectionShortcut("TS1");
         String name = "Test Source";
 
-        CalendarController controller = spy(CalendarController.class);
+        DutySchedulerCalendarController controller = spy(DutySchedulerCalendarController.class);
         doAnswer((Answer<Void>) invocation -> {
             controller.fillCalendar(
                 invocation.getArgument(0),
@@ -58,7 +58,7 @@ class CalendarControllerTest {
         section.setSectionShortcut("TS1");
 
         // When
-        Calendar calendar = new CalendarController().createCalendar(section);
+        Calendar calendar = new DutySchedulerCalendarController().createCalendar(section);
 
         // Then
         assertEquals(
@@ -78,7 +78,7 @@ class CalendarControllerTest {
     @Test
     void fillCalendar_ShouldFillCalendarWithEntries() {
         // Given
-        CalendarController controller = new CalendarController();
+        DutySchedulerCalendarController controller = new DutySchedulerCalendarController();
         Calendar calendar = new Calendar();
         List<Entry<Duty>> entries = controller.createDutyCalendarEntries(prepareTestDuties());
 
@@ -106,7 +106,7 @@ class CalendarControllerTest {
 
         // When
         List<Entry<Duty>> entries =
-            new CalendarController().createDutyCalendarEntries(duties);
+            new DutySchedulerCalendarController().createDutyCalendarEntries(duties);
 
         // Then
         assertEquals(duties.size(), entries.size(), "Amount of Duties and Entries should be equal");
