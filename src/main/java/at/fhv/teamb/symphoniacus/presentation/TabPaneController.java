@@ -5,6 +5,7 @@ import java.util.ResourceBundle;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Label;
+import javafx.scene.control.TabPane;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.HBox;
 import org.controlsfx.control.StatusBar;
@@ -15,6 +16,9 @@ public class TabPaneController implements Initializable {
 
     @FXML
     private StatusBar statusBar;
+
+    @FXML
+    private TabPane tabPane;
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {

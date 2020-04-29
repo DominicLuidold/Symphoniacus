@@ -1,15 +1,21 @@
 package at.fhv.teamb.symphoniacus.presentation;
 
 import at.fhv.teamb.symphoniacus.presentation.internal.AlertHelper;
+import java.io.IOException;
 import java.net.URL;
+import java.util.Locale;
 import java.util.ResourceBundle;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
+import javafx.stage.Stage;
 import javafx.stage.Window;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -64,7 +70,7 @@ public class LoginController implements Initializable {
 
     public void processLoginCredentials(ActionEvent actionEvent) {
         LOG.debug("Login btn pressed");
-        Window owner = submitButton.getScene().getWindow();
+        Window owner = this.submitButton.getScene().getWindow();
         if (!this.isValid) {
             LOG.info("Login input is not valid (missing required fields)");
             StringBuilder sb = new StringBuilder();
@@ -79,5 +85,29 @@ public class LoginController implements Initializable {
             return;
         }
         LOG.debug("Login credentials filled in, checking credentials now");
+        LOG.error("MISSING credentials check");
+        loadMainScene();
+    }
+
+    private void loadMainScene() {
+        Locale locale = new Locale("en", "UK");
+        ResourceBundle bundle = ResourceBundle.getBundle("bundles.language", locale);
+        try {
+            Parent mainRoot = FXMLLoader.load(getClass().getResource(
+                "/view/mainWindow.fxml"),
+                bundle);
+            Scene scene = new Scene(mainRoot);
+            Stage owner = (Stage) this.submitButton.getScene().getWindow();
+            owner.setScene(scene);
+        } catch (IOException e) {
+            LOG.error(e);
+            Stage owner = (Stage) this.submitButton.getScene().getWindow();
+            AlertHelper.showAlert(Alert.AlertType.ERROR, owner, "Login failed",
+                this.resources.getString(
+                "login.error.login.technical.problems"
+                )
+            );
+            return;
+        }
     }
 }
