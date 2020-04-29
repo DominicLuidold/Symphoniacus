@@ -1,9 +1,12 @@
 package at.fhv.teamb.symphoniacus.presentation;
 
+import at.fhv.teamb.symphoniacus.application.LoginManager;
+import at.fhv.teamb.symphoniacus.domain.User;
 import at.fhv.teamb.symphoniacus.presentation.internal.AlertHelper;
 import java.io.IOException;
 import java.net.URL;
 import java.util.Locale;
+import java.util.Optional;
 import java.util.ResourceBundle;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -84,9 +87,25 @@ public class LoginController implements Initializable {
                 sb.toString());
             return;
         }
+        //Backend validate User
+        LoginManager loginManager = new LoginManager();
+        Optional<User> userOptional =
+            loginManager.login(this.userShortcutField.getText(), this.passwordField.getText());
+        LOG.debug("Login with Username: {} and Password {}", this.userShortcutField.getText(),
+            this.passwordField.getText());
+
+        if (userOptional.isPresent()) {
+            loadMainScene();
+        } else {
+            AlertHelper.showAlert(
+                Alert.AlertType.ERROR, owner,
+                this.resources.getString("login.error.login.failed.title"),
+                this.resources.getString("login.error.login.failed.message"
+                ));
+        }
         LOG.debug("Login credentials filled in, checking credentials now");
         LOG.error("MISSING credentials check");
-        loadMainScene();
+
     }
 
     private void loadMainScene() {
@@ -104,7 +123,7 @@ public class LoginController implements Initializable {
             Stage owner = (Stage) this.submitButton.getScene().getWindow();
             AlertHelper.showAlert(Alert.AlertType.ERROR, owner, "Login failed",
                 this.resources.getString(
-                "login.error.login.technical.problems"
+                    "login.error.login.technical.problems"
                 )
             );
             return;

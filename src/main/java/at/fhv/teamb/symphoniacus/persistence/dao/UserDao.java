@@ -1,6 +1,7 @@
 package at.fhv.teamb.symphoniacus.persistence.dao;
 
 import at.fhv.teamb.symphoniacus.persistence.BaseDao;
+import at.fhv.teamb.symphoniacus.persistence.model.AdministrativeAssistantEntity;
 import at.fhv.teamb.symphoniacus.persistence.model.MusicianEntity;
 import at.fhv.teamb.symphoniacus.persistence.model.UserEntity;
 import java.util.Optional;
@@ -68,6 +69,24 @@ public class UserDao extends BaseDao<UserEntity> {
     public boolean isUserMusician(UserEntity currentUser) {
         TypedQuery<Long> query = entityManager.createQuery(
             "SELECT COUNT(m) FROM MusicianEntity m WHERE m.user = :user",
+            Long.class
+        );
+        query.setParameter("user", currentUser);
+        Long result = query.getSingleResult();
+
+        return result == 1;
+    }
+
+    /**
+     * Checks whether the provided {@link UserEntity} is a {@link AdministrativeAssistantEntity}.
+     *
+     * @param currentUser The user to check
+     * @return True if user is a AdministrativeAssistant, false otherwise
+     */
+    public boolean isUserAdministrativeAssistant(UserEntity currentUser) {
+
+        TypedQuery<Long> query = entityManager.createQuery(
+            "SELECT COUNT(aae) FROM AdministrativeAssistantEntity aae WHERE aae.user = :user",
             Long.class
         );
         query.setParameter("user", currentUser);
