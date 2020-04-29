@@ -1,5 +1,6 @@
 .warning,.error {
     -fx-background-color: #FF000055;
+    -fx-prompt-text-fill: grey;
 }
 
 /* TAB PANE */
