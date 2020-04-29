@@ -19,11 +19,8 @@
         <Insets top="40" right="40" bottom="40" left="40"/>
     </padding>
     <columnConstraints>
-        <ColumnConstraints minWidth="75" prefWidth="75"
-                           maxWidth="75" halignment="RIGHT">
-        </ColumnConstraints>
-        <ColumnConstraints minWidth="200" prefWidth="200"
-                           maxWidth="200" hgrow="ALWAYS">
+        <ColumnConstraints minWidth="300" prefWidth="300"
+                           maxWidth="300" hgrow="ALWAYS">
         </ColumnConstraints>
     </columnConstraints>
 
@@ -41,7 +38,7 @@
 
     <!-- Add Header Label -->
     <Label fx:id="label" text="%login.field.title" GridPane.columnIndex="0"
-           GridPane.rowIndex="1" GridPane.columnSpan="2"
+           GridPane.rowIndex="1" GridPane.columnSpan="1"
            GridPane.rowSpan="1" GridPane.halignment="CENTER">
         <font>
             <Font name="Arial" size="24"></Font>
@@ -51,24 +48,17 @@
         </GridPane.margin>
     </Label>
 
-    <!-- Add Name Label -->
-    <Label text="%login.field.usershortcut" GridPane.columnIndex="0" GridPane.rowIndex="2">
-    </Label>
     <!-- Add Name Text Field -->
-    <TextField fx:id="userShortcutField" prefHeight="40" GridPane.columnIndex="1" GridPane.rowIndex="2" promptText="vaubou" />
+    <TextField fx:id="userShortcutField" prefHeight="40" alignment="CENTER" GridPane.columnIndex="0" GridPane.rowIndex="3" promptText="%login.field.usershortcut.prompt" GridPane.halignment="CENTER" />
 
-    <!-- Add Password Label -->
-    <Label text="%login.field.password" GridPane.columnIndex="0"
-           GridPane.rowIndex="3">
-    </Label>
     <!-- Add Password Field -->
-    <PasswordField fx:id="passwordField" prefHeight="40" GridPane.columnIndex="1" GridPane.rowIndex="3" promptText="*******" />
+    <PasswordField fx:id="passwordField" prefHeight="40" alignment="CENTER" GridPane.columnIndex="0" GridPane.rowIndex="5" promptText="%login.field.password.prompt" GridPane.halignment="CENTER" />
 
     <!-- Add Submit Button -->
-    <Button fx:id="submitButton" text="%global.button.submit"
-            prefWidth="100" prefHeight="40" defaultButton="true"
-            GridPane.columnIndex="0" GridPane.rowIndex="4"
-            GridPane.columnSpan="2" GridPane.rowSpan="1"
+    <Button fx:id="submitButton" text="%login.field.submit"
+            prefWidth="300" prefHeight="40" defaultButton="true"
+            GridPane.columnIndex="0" GridPane.rowIndex="6"
+            GridPane.columnSpan="1" GridPane.rowSpan="1"
             GridPane.halignment="CENTER"
             onAction="#processLoginCredentials">
         <GridPane.margin>

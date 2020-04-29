@@ -5,18 +5,18 @@ import java.io.IOException;
 import java.net.URL;
 import java.util.Locale;
 import java.util.ResourceBundle;
+import javafx.beans.property.BooleanProperty;
+import javafx.beans.property.SimpleBooleanProperty;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
-import javafx.scene.Parent;
-import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
 import javafx.scene.image.ImageView;
+import javafx.scene.layout.GridPane;
 import javafx.stage.Stage;
 import javafx.stage.Window;
 import org.apache.logging.log4j.LogManager;
@@ -30,6 +30,9 @@ import org.controlsfx.validation.decoration.ValidationDecoration;
 public class LoginController implements Initializable {
 
     private static final Logger LOG = LogManager.getLogger(LoginController.class);
+    @FXML
+    private GridPane grid;
+
     @FXML
     private TextField userShortcutField;
 
@@ -74,8 +77,18 @@ public class LoginController implements Initializable {
             LOG.debug("Is Login input valid? {}", this.isValid);
             this.submitButton.setDisable(!this.isValid);
         });
-        this.image.requestFocus();
-        this.label.requestFocus();
+
+        // do not focus user shortcut on first-time load
+        // https://stackoverflow.com/a/29058225
+        final BooleanProperty firstTime = new SimpleBooleanProperty(true);
+        this.userShortcutField.focusedProperty().addListener(
+            (observable, oldValue, newValue)
+                -> {
+                if (newValue && firstTime.get()) {
+                    this.grid.requestFocus();
+                    firstTime.setValue(false);
+                }
+            });
     }
 
     public void processLoginCredentials(ActionEvent actionEvent) {
