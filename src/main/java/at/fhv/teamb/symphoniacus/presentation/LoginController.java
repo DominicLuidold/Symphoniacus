@@ -141,6 +141,7 @@ public class LoginController implements Initializable {
                 bundle,
                 this.submitButton
             );
+            controller.setLoginUser(user);
             LOG.debug("MainController is fully loaded now :-)");
         } catch (IOException e) {
             LOG.error(e);
