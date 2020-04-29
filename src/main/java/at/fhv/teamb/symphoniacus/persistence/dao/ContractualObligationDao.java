@@ -2,7 +2,6 @@ package at.fhv.teamb.symphoniacus.persistence.dao;
 
 import at.fhv.teamb.symphoniacus.persistence.BaseDao;
 import at.fhv.teamb.symphoniacus.persistence.model.ContractualObligationEntity;
-import at.fhv.teamb.symphoniacus.persistence.model.DutyEntity;
 import at.fhv.teamb.symphoniacus.persistence.model.MusicianEntity;
 import java.time.LocalDate;
 import java.util.Optional;
@@ -16,7 +15,7 @@ import javax.persistence.TypedQuery;
 public class ContractualObligationDao extends BaseDao<ContractualObligationEntity> {
 
     /**
-     * Finds a duty by its key.
+     * Finds a {@link ContractualObligationEntity} by its key.
      *
      * @param key The key of the duty
      * @return The duty that is looked for

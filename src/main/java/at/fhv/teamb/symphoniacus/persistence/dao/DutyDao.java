@@ -24,7 +24,7 @@ import javax.persistence.TypedQuery;
 public class DutyDao extends BaseDao<DutyEntity> {
 
     /**
-     * Finds a duty by its key.
+     * Finds a {@link DutyEntity} by its key.
      *
      * @param key The key of the duty
      * @return The duty that is looked for
@@ -113,16 +113,18 @@ public class DutyDao extends BaseDao<DutyEntity> {
         boolean isReadyForOrganisationManager,
         boolean isPublished
     ) {
-        TypedQuery<DutyEntity> query = entityManager.createQuery("SELECT d FROM DutyEntity d "
-            + "INNER JOIN d.sectionMonthlySchedules sms "
-            + "INNER JOIN sms.section s "
-            + "JOIN FETCH d.dutyCategory dc "
-            + "LEFT JOIN FETCH d.seriesOfPerformances sop "
-            + "WHERE d.start >= :start AND d.end <= :end "
-            + "AND s.sectionId = :sectionId "
-            + "AND sms.isReadyForDutyScheduler = :isReadyForDutyScheduler "
-            + "AND sms.isReadyForOrganisationManager = :isReadyForOrganisationManager "
-            + "AND sms.isPublished = :isPublished", DutyEntity.class
+        TypedQuery<DutyEntity> query = entityManager.createQuery(
+            "SELECT d FROM DutyEntity d "
+                + "INNER JOIN d.sectionMonthlySchedules sms "
+                + "INNER JOIN sms.section s "
+                + "JOIN FETCH d.dutyCategory dc "
+                + "LEFT JOIN FETCH d.seriesOfPerformances sop "
+                + "WHERE d.start >= :start AND d.end <= :end "
+                + "AND s.sectionId = :sectionId "
+                + "AND sms.isReadyForDutyScheduler = :isReadyForDutyScheduler "
+                + "AND sms.isReadyForOrganisationManager = :isReadyForOrganisationManager "
+                + "AND sms.isPublished = :isPublished",
+            DutyEntity.class
         );
 
         query.setMaxResults(300);
@@ -248,9 +250,13 @@ public class DutyDao extends BaseDao<DutyEntity> {
     }
 
     /**
-     * TODO JAVADOC.
+     * Returns {@link DutyEntity} objects belonging to a {@link SeriesOfPerformancesEntity}
+     * based on provided data.
      *
-     * @return
+     * @param sop               The series of performance to use
+     * @param dutyStart         The start date of the duty
+     * @param maxNumberOfDuties The amount of duties to return
+     * @return A List of duties
      */
     public List<DutyEntity> getOtherDutiesForSeriesOfPerformances(
         SeriesOfPerformancesEntity sop,
@@ -273,9 +279,13 @@ public class DutyDao extends BaseDao<DutyEntity> {
     }
 
     /**
-     * TODO JAVADOC.
+     * Returns {@link DutyEntity} objects belonging to a {@link SectionEntity} based on
+     * provided data.
      *
-     * @return
+     * @param duty              The duty to use
+     * @param section           The section to use
+     * @param maxNumberOfDuties The amount of duties to return
+     * @return A List of duties
      */
     public List<DutyEntity> getOtherDutiesForSection(
         DutyEntity duty,

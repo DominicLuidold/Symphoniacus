@@ -19,7 +19,7 @@ import javax.persistence.TypedQuery;
 public class MusicianDao extends BaseDao<MusicianEntity> {
 
     /**
-     * Finds a duty by its key.
+     * Finds a {@link MusicianEntity} by its key.
      *
      * @param key The key of the duty
      * @return The duty that is looked for

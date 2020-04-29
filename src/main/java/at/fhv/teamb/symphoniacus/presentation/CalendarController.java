@@ -8,10 +8,8 @@ import at.fhv.teamb.symphoniacus.domain.Duty;
 import at.fhv.teamb.symphoniacus.domain.Section;
 import at.fhv.teamb.symphoniacus.domain.SectionMonthlySchedule;
 import at.fhv.teamb.symphoniacus.persistence.model.DutyEntity;
-import at.fhv.teamb.symphoniacus.persistence.model.MonthlyScheduleEntity;
 import at.fhv.teamb.symphoniacus.persistence.model.MusicianEntity;
 import at.fhv.teamb.symphoniacus.persistence.model.SectionEntity;
-import at.fhv.teamb.symphoniacus.persistence.model.SectionMonthlyScheduleEntity;
 import at.fhv.teamb.symphoniacus.persistence.model.UserEntity;
 import at.fhv.teamb.symphoniacus.presentation.internal.BrutalCalendarSkin;
 import at.fhv.teamb.symphoniacus.presentation.internal.PublishDutyRosterEvent;
@@ -21,9 +19,8 @@ import com.calendarfx.model.Entry;
 import com.calendarfx.model.Interval;
 import com.calendarfx.model.LoadEvent;
 import com.calendarfx.view.CalendarView;
-import com.calendarfx.view.DateControl;
-import impl.com.calendarfx.view.CalendarViewSkin;
 import java.net.URL;
+import java.text.MessageFormat;
 import java.time.LocalDate;
 import java.time.Month;
 import java.time.Year;
@@ -46,7 +43,6 @@ import javafx.scene.control.ListCell;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.text.Font;
 import javafx.stage.Modality;
-import javafx.util.Callback;
 import javafx.util.Duration;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -101,47 +97,48 @@ public class CalendarController implements Initializable, Controllable {
         Optional<UserEntity> user = new LoginManager().login("vaubou", "eItFAJSb");
         Optional<MusicianEntity> musician = new MusicianManager().loadMusician(user.get());
         this.section = new Section(musician.get().getSection());
-        CalendarViewSkin skin = (CalendarViewSkin) this.calendarView.getSkin();
+
+        // Tell CalendarFX to use custom skin
         this.calendarView.setSkin(new BrutalCalendarSkin(this.calendarView));
 
+        // Event handler for clicking the "Forward" button
         this.calendarView.addEventHandler(
             PublishDutyRosterEvent.PUBLISH_DUTY_ROSTER_EVENT_EVENT_TYPE,
             event -> {
                 LOG.debug("Publish duty roster event callback!");
 
-                SectionMonthlyScheduleEntity smse = new SectionMonthlyScheduleEntity();
-                smse.setSectionMonthlyScheduleId(3);
-                SectionMonthlySchedule smss = new SectionMonthlySchedule(smse);
-                MonthlyScheduleEntity ms = new MonthlyScheduleEntity();
-                ms.setMonthlyScheduleId(5);
-                ms.setMonth(6);
-                smss.getEntity().setMonthlySchedule(ms);
-                smss.setPublishState(SectionMonthlySchedule.PublishState.PUBLISHED);
-
+                // Get section monthly schedules from backend
                 SectionMonthlyScheduleManager smsManager = new SectionMonthlyScheduleManager();
-                Set<SectionMonthlySchedule> sectionMonthlyScheduleSet =
+                Set<SectionMonthlySchedule> sectionMonthlySchedules =
                     smsManager.getSectionMonthlySchedules(this.section, Year.now());
 
+                // Create custom icons
                 FontIcon monthIcon = new FontIcon(FontAwesome.CALENDAR_PLUS_O);
                 monthIcon.getStyleClass().addAll("button-icon");
                 FontIcon selectedIcon = new FontIcon(FontAwesome.CHECK_SQUARE_O);
                 selectedIcon.getStyleClass().addAll("button-icon");
 
+                // Fill list selection with content
                 ListSelectionView<SectionMonthlySchedule> listSelectionView =
-                    new ListSelectionView();
+                    new ListSelectionView<>();
+                listSelectionView.getSourceItems().addAll(sectionMonthlySchedules);
 
-                listSelectionView.getSourceItems().addAll(sectionMonthlyScheduleSet);
-
-
+                // Define custom list view labels
                 Font f = new Font(14);
-
-                Label monthLabel = new Label("Month", monthIcon);
+                Label monthLabel = new Label(
+                    resources.getString("tab.duty.schedule.forward.month"),
+                    monthIcon
+                );
                 monthLabel.setStyle("-fx-font-weight: bold");
                 monthLabel.setFont(f);
-                Label selectedLabel = new Label("Selected", selectedIcon);
+                Label selectedLabel = new Label(
+                    resources.getString("tab.duty.schedule.forward.selected"),
+                    selectedIcon
+                );
                 selectedLabel.setStyle("-fx-font-weight: bold");
                 selectedLabel.setFont(f);
 
+                // Prepare selection window
                 listSelectionView.sourceHeaderProperty().set(monthLabel);
                 listSelectionView.targetHeaderProperty().set(selectedLabel);
                 Dialog<ButtonType> dialog = new Dialog<>();
@@ -151,86 +148,119 @@ public class CalendarController implements Initializable, Controllable {
                 dialog.setResizable(true);
                 dialog.getDialogPane().setPrefWidth(600);
                 dialog.initModality(Modality.APPLICATION_MODAL);
-                dialog.setTitle("Make ready for Organisation Manager");
+                dialog.setTitle(resources.getString("tab.duty.schedule.forward.title"));
 
-                Button btn = (Button) dialog.getDialogPane().lookupButton(ButtonType.OK);
-                btn.setText("Forward to Organisation Manager");
+                Button okButton = (Button) dialog.getDialogPane().lookupButton(ButtonType.OK);
+                okButton.setText(resources.getString("tab.duty.schedule.forward.button"));
 
-                btn.setOnAction(event1 -> {
+                // Logic for pressing forward button
+                okButton.setOnAction(event1 -> {
                     ObservableList<SectionMonthlySchedule> list =
                         listSelectionView.getTargetItems();
+
+                    // Prepare notification
+                    Notifications notification = Notifications
+                        .create()
+                        .position(Pos.CENTER)
+                        .hideAfter(new Duration(7000));
+
+                    // Show appropriate message based on sms publish state
                     for (SectionMonthlySchedule sms : list) {
+                        String month = Month.of(sms.getEntity().getMonthlySchedule().getMonth())
+                            .getDisplayName(TextStyle.FULL, Locale.US);
+
                         if (sms.getPublishState()
                             .equals(
                                 SectionMonthlySchedule
-                                    .PublishState.READY_FOR_ORGANISATION_MANAGER)) {
-                            Notifications.create()
+                                    .PublishState.READY_FOR_ORGANISATION_MANAGER
+                            )
+                        ) {
+                            // Section monthly schedule already forwarded - show error
+                            notification
                                 .owner(this.calendarView.getParent().getScene().getWindow())
-                                .title("Already forwarded to Organisation Manager")
-                                .text("Monthly Schedule for "
-                                    + Month.of(sms.getEntity().getMonthlySchedule().getMonth())
-                                        .getDisplayName(TextStyle.FULL, Locale.US)
-                                    + " already forwarded to Organisation Manager")
-                                .position(Pos.CENTER)
-                                .hideAfter(new Duration(7000))
-                                .show();
+                                .title(resources.getString(
+                                    "notification.schedule.forward.already.title")
+                                )
+                                .text(
+                                    MessageFormat.format(
+                                        resources.getString(
+                                            "notification.schedule.forward.already.message"
+                                        ),
+                                        month
+                                    )
+                                )
+                                .showError();
                         } else if (!sms.getPublishState()
                             .equals(
                                 SectionMonthlySchedule
-                                    .PublishState.READY_FOR_ORGANISATION_MANAGER)) {
-
+                                    .PublishState.READY_FOR_ORGANISATION_MANAGER
+                            )
+                        ) {
+                            // Section monthly schedule not yet forwarded
                             LOG.debug(
                                 "Forward to Organisation Manager "
                                     + "SectionMonthlySchedule ID: {}",
                                 sms.getEntity().getSectionMonthlyScheduleId());
+
+                            // Delegate forward to backend
                             smsManager.makeAvailableForOrganisationManager(sms);
 
                             if (!sms.getPublishState()
                                 .equals(
                                     SectionMonthlySchedule
-                                        .PublishState.READY_FOR_ORGANISATION_MANAGER)) {
+                                        .PublishState.READY_FOR_ORGANISATION_MANAGER
+                                )
+                            ) {
+                                // Forward failed - show error
                                 LOG.debug(
                                     "Forward to Organisation Manager "
                                         + "FAILED for SectionMonthlySchedule "
                                         + "ID: {} ",
                                     sms.getEntity().getSectionMonthlyScheduleId());
 
-                                Notifications.create()
+                                notification
                                     .owner(this.calendarView.getParent().getScene().getWindow())
-                                    .title("Forward to Organisation Manager Faild")
-                                    .text("You cant forward this section monthly schedule for "
-                                        + Month.of(sms.getEntity().getMonthlySchedule().getMonth())
-                                        .getDisplayName(TextStyle.FULL, Locale.US) + " yet.\n"
-                                        + " Have all duties been scheduled?")
-                                    .position(Pos.CENTER)
-                                    .hideAfter(new Duration(7000))
+                                    .title(resources.getString(
+                                        "notification.schedule.forward.fail.title")
+                                    )
+                                    .text(
+                                        MessageFormat.format(
+                                            resources.getString(
+                                                "notification.schedule.forward.fail.message"
+                                            ),
+                                            month
+                                        )
+                                    )
                                     .showError();
                             } else if (sms.getPublishState()
                                 .equals(
-                                    SectionMonthlySchedule
-                                        .PublishState.READY_FOR_ORGANISATION_MANAGER)) {
-                                Notifications.create()
+                                    SectionMonthlySchedule.PublishState
+                                        .READY_FOR_ORGANISATION_MANAGER
+                                )
+                            ) {
+                                // Forward successful - show info
+                                notification
                                     .owner(this.calendarView.getParent().getScene().getWindow())
-                                    .title("Forward to Organisation Manager Successful")
-                                    .text("Monthly Schedule for "
-                                        + Month.of(sms.getEntity().getMonthlySchedule().getMonth())
-                                        .getDisplayName(TextStyle.FULL, Locale.US)
-                                        + " has been forwarded successfully")
-                                    .position(Pos.CENTER)
-                                    .hideAfter(new Duration(7000))
+                                    .title(resources.getString(
+                                        "notification.schedule.forward.ok.title")
+                                    )
+                                    .text(
+                                        MessageFormat.format(
+                                            resources.getString(
+                                                "notification.schedule.forward.ok.message"
+                                            ),
+                                            month
+                                        )
+                                    )
                                     .show();
                             }
-
                         }
                     }
                 });
 
-                FontIcon icon = new FontIcon(FontAwesome.ARROW_CIRCLE_UP);
-                icon.getStyleClass().addAll("button-icon",
-                    "add-calendar-button-icon");
-
+                // Handle items of list selection view
                 listSelectionView.setCellFactory(listView -> {
-                    ListCell<SectionMonthlySchedule> cell = new ListCell<SectionMonthlySchedule>() {
+                    ListCell<SectionMonthlySchedule> cell = new ListCell<>() {
                         @Override
                         public void updateItem(SectionMonthlySchedule item, boolean empty) {
                             super.updateItem(item, empty);
@@ -249,8 +279,11 @@ public class CalendarController implements Initializable, Controllable {
                                     item.getEntity().isReadyForOrganisationManager()
                                 );
                                 if (item.getEntity().isReadyForOrganisationManager()) {
-                                    setText(m.getDisplayName(TextStyle.FULL, Locale.US)
-                                        + " (Already Published)");
+                                    setText(
+                                        m.getDisplayName(TextStyle.FULL, Locale.US)
+                                        + " "
+                                        + resources.getString("tab.duty.schedule.forward.forwarded")
+                                    );
                                     setStyle("-fx-text-fill: #3e681f");
                                     setGraphic(null);
                                     setEditable(false);
@@ -270,18 +303,15 @@ public class CalendarController implements Initializable, Controllable {
                     cell.setFont(Font.font(14));
                     return cell;
                 });
-
-
                 dialog.show();
             }
         );
 
-
+        // Prepare calendar
         this.calendarView.getCalendarSources().setAll(
             prepareCalendarSource(
-                resources.getString("sections"),
-                //TODO - Section Entity to Section
-                section.getEntity()
+                resources.getString("domain.section.sections"),
+                this.section.getEntity()
             )
         );
 
@@ -292,36 +322,30 @@ public class CalendarController implements Initializable, Controllable {
 
         // Hide calendarView by clicking on Duty and load new Window for DutyScheduleView.
         this.calendarView.setEntryDetailsCallback(
-            new Callback<DateControl.EntryDetailsParameter, Boolean>() {
-                @Override
-                public Boolean call(DateControl.EntryDetailsParameter param) {
-                    if (param.getEntry() instanceof Entry) {
-                        Entry<Duty> entry = (Entry<Duty>) param.getEntry();
-                        MasterController mc = MasterController.getInstance();
-                        if (mc.get("CalendarController") instanceof CalendarController) {
-                            CalendarController cc =
-                                (CalendarController) mc.get("CalendarController");
-                            cc.hide();
-                        }
-                        if (dutyScheduleController == null) {
-                            if (mc
-                                .get("DutyScheduleController") instanceof DutyScheduleController) {
-                                dutyScheduleController =
-                                    (DutyScheduleController) mc.get("DutyScheduleController");
-                                dutyScheduleController.setDuty(entry.getUserObject());
-                                dutyScheduleController.setSection(section);
-                                dutyScheduleController.show();
-                            }
-                        } else {
-                            dutyScheduleController.setDuty(entry.getUserObject());
-                            dutyScheduleController.setSection(section);
-                            dutyScheduleController.show();
-                        }
-                        return true;
+            param -> {
+                if (param.getEntry() instanceof Entry) {
+                    Entry<Duty> entry = (Entry<Duty>) param.getEntry();
+                    MasterController mc = MasterController.getInstance();
+
+                    if (mc.get("CalendarController") instanceof CalendarController) {
+                        CalendarController cc = (CalendarController) mc.get("CalendarController");
+                        cc.hide();
                     }
-                    LOG.error("Unrecognized Calendar Entry: No Duty found");
-                    return false;
+
+                    if (this.dutyScheduleController == null) {
+                        if (mc.get("DutyScheduleController") instanceof DutyScheduleController) {
+                            this.dutyScheduleController =
+                                (DutyScheduleController) mc.get("DutyScheduleController");
+                        }
+                    }
+
+                    this.dutyScheduleController.setDuty(entry.getUserObject());
+                    this.dutyScheduleController.setSection(this.section);
+                    this.dutyScheduleController.show();
+                    return true;
                 }
+                LOG.error("Unrecognized Calendar Entry: No Duty found");
+                return false;
             }
         );
     }

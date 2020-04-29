@@ -3,6 +3,7 @@ package at.fhv.teamb.symphoniacus.persistence.dao;
 import at.fhv.teamb.symphoniacus.domain.Section;
 import at.fhv.teamb.symphoniacus.domain.SectionMonthlySchedule;
 import at.fhv.teamb.symphoniacus.persistence.BaseDao;
+import at.fhv.teamb.symphoniacus.persistence.model.PositiveWishEntity;
 import at.fhv.teamb.symphoniacus.persistence.model.SectionEntity;
 import at.fhv.teamb.symphoniacus.persistence.model.SectionMonthlyScheduleEntity;
 import java.time.Month;
@@ -19,9 +20,15 @@ import javax.persistence.TypedQuery;
  */
 public class SectionMonthlyScheduleDao extends BaseDao<SectionMonthlyScheduleEntity> {
 
+    /**
+     * Finds a {@link SectionMonthlyScheduleEntity} by its key.
+     *
+     * @param key The key of the duty
+     * @return The duty that is looked for
+     */
     @Override
     public Optional<SectionMonthlyScheduleEntity> find(Integer key) {
-        return Optional.empty();
+        return this.find(SectionMonthlyScheduleEntity.class, key);
     }
 
     /**

@@ -11,7 +11,7 @@ import javax.persistence.TypedQuery;
 public class NegativeDateWishDao extends BaseDao<NegativeDateWishEntity> {
 
     /**
-     * Finds a duty by its key.
+     * Finds a {@link NegativeDateWishEntity} by its key.
      *
      * @param key The key of the duty
      * @return The duty that is looked for
@@ -43,18 +43,20 @@ public class NegativeDateWishDao extends BaseDao<NegativeDateWishEntity> {
      * @return List of (Interface)WishRequestable
      */
     public List<WishRequestable> getAllNegativeDateWishes(DutyEntity duty) {
-        TypedQuery<WishRequestable> query = this.entityManager.createQuery(""
-            + "SELECT nd FROM NegativeDateWishEntity nd "
-            + "JOIN nd.monthlySchedules ms "
-            + "JOIN ms.weeklySchedules ws "
-            + "JOIN ws.duties d "
-            + "WHERE d = :duty "
-            + "AND nd.startDate <= :startDate AND nd.endDate >= :endDate", WishRequestable.class);
+        TypedQuery<WishRequestable> query = entityManager.createQuery(
+            "SELECT nd FROM NegativeDateWishEntity nd "
+                + "JOIN nd.monthlySchedules ms "
+                + "JOIN ms.weeklySchedules ws "
+                + "JOIN ws.duties d "
+                + "WHERE d = :duty "
+                + "AND nd.startDate <= :startDate AND nd.endDate >= :endDate",
+            WishRequestable.class
+        );
+
         query.setParameter("duty", duty);
         query.setParameter("startDate", duty.getStart().toLocalDate());
         query.setParameter("endDate", duty.getEnd().toLocalDate());
 
-        List<WishRequestable> result = query.getResultList();
-        return result;
+        return query.getResultList();
     }
 }
