@@ -74,6 +74,8 @@ public class LoginController implements Initializable {
             LOG.debug("Is Login input valid? {}", this.isValid);
             this.submitButton.setDisable(!this.isValid);
         });
+        this.image.requestFocus();
+        this.label.requestFocus();
     }
 
     public void processLoginCredentials(ActionEvent actionEvent) {
@@ -110,10 +112,10 @@ public class LoginController implements Initializable {
             MainController controller = loader.getController();
             LOG.debug("MainController is fully loaded now :-)");
             // controller.setLoginUser(user) from params
-            Scene scene = new Scene(mainRoot);
+            Scene currentScene = this.submitButton.getScene();
             Stage owner = (Stage) this.submitButton.getScene().getWindow();
-            owner.setScene(scene);
-            owner.show();
+            Scene newScene = new Scene(mainRoot, currentScene.getWidth(), currentScene.getHeight());
+            owner.setScene(newScene);
         } catch (IOException e) {
             LOG.error(e);
             Stage owner = (Stage) this.submitButton.getScene().getWindow();
