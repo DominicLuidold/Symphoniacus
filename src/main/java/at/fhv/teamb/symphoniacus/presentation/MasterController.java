@@ -43,6 +43,21 @@ public class MasterController {
         return INSTANCE;
     }
 
+    public static <T> T switchSceneTo(String fxmlPath, ResourceBundle bundle, Node node)
+        throws IOException {
+        Scene oldScene = node.getScene();
+        Stage stage = (Stage) oldScene.getWindow();
+
+        FXMLLoader loader = new FXMLLoader(MasterController.class.getResource(fxmlPath), bundle);
+        Parent parent = loader.load();
+        T controller = loader.getController();
+        Scene newScene = new Scene(parent, oldScene.getWidth(), oldScene.getHeight());
+        newScene.getStylesheets().add("css/styles.css");
+        stage.setScene(newScene);
+
+        return controller;
+    }
+
     public Initializable get(Object key) {
         return map.get(key);
     }
@@ -73,15 +88,5 @@ public class MasterController {
 
     public void showStatusBarLoaded() {
         this.statusTextField.setText("Loaded");
-    }
-    public static void switchSceneTo(String fxmlPath, ResourceBundle bundle, Node currentScene)
-        throws IOException {
-        Scene oldScene = currentScene.getScene();
-        Stage stage = (Stage) oldScene.getWindow();
-
-        FXMLLoader loader = new FXMLLoader(MasterController.class.getResource(fxmlPath), bundle);
-        Parent parent = loader.load();
-        Scene newScene = new Scene(parent, oldScene.getWidth(), oldScene.getHeight());
-        stage.setScene(newScene);
     }
 }

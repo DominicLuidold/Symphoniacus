@@ -1,26 +1,23 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.scene.control.*?>
-<?import javafx.scene.layout.*?>
-
+<?import com.jfoenix.controls.JFXTabPane?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.Tab?>
+<?import javafx.scene.control.TabPane?>
+<?import javafx.scene.layout.AnchorPane?>
 <?import org.controlsfx.control.StatusBar?>
-<?import javafx.scene.paint.Color?>
-<AnchorPane xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml"
-            fx:controller="at.fhv.teamb.symphoniacus.presentation.TabPaneController" AnchorPane.bottomAnchor="0.0"
-            AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="35.0">
-    <TabPane fx:id="tabPane" layoutY="9.0" tabClosingPolicy="UNAVAILABLE" AnchorPane.bottomAnchor="25" AnchorPane.leftAnchor="0.0"
-             AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+
+<AnchorPane AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="35.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="at.fhv.teamb.symphoniacus.presentation.TabPaneController">
+   <JFXTabPane fx:id="tabPane" tabMinHeight="50" tabMaxHeight="50" tabClosingPolicy="UNAVAILABLE" AnchorPane.bottomAnchor="25" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
         <Tab text="%menu.tab.duty.roster.title">
-            <fx:include fx:id="calendar" source="calendar.fxml"/>
+            <fx:include fx:id="calendar" source="calendar.fxml" />
         </Tab>
         <Tab text="%menu.tab.duty.wish.title">
             <AnchorPane>
-                <Label alignment="CENTER" layoutX="276.0" layoutY="165.0" text="%placeholder"
-                       AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0"
-                       AnchorPane.topAnchor="0.0"/>
+                <Label alignment="CENTER" layoutX="276.0" layoutY="165.0" text="%placeholder" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
             </AnchorPane>
         </Tab>
-    </TabPane>
-    <StatusBar fx:id="statusBar" minHeight="25" maxHeight="25" AnchorPane.bottomAnchor="0" AnchorPane.leftAnchor="0" AnchorPane.rightAnchor="0">
+    </JFXTabPane>
+    <StatusBar fx:id="statusBar" maxHeight="25" minHeight="25" AnchorPane.bottomAnchor="0" AnchorPane.leftAnchor="0" AnchorPane.rightAnchor="0">
     </StatusBar>
 </AnchorPane>
