@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.PasswordField?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.ColumnConstraints?>
+<?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.text.Font?>
+
+<GridPane
+        fx:id="grid"
+        fx:controller="at.fhv.teamb.symphoniacus.presentation.LoginController"
+        xmlns:fx="http://javafx.com/fxml" alignment="center"
+        hgap="10" vgap="10">
+    <padding>
+        <Insets top="40" right="40" bottom="40" left="40"/>
+    </padding>
+    <columnConstraints>
+        <ColumnConstraints minWidth="75" prefWidth="75"
+                           maxWidth="75" halignment="RIGHT">
+        </ColumnConstraints>
+        <ColumnConstraints minWidth="200" prefWidth="200"
+                           maxWidth="200" hgrow="ALWAYS">
+        </ColumnConstraints>
+    </columnConstraints>
+
+    <!-- Add Header Label -->
+    <Label text="%login.field.title" GridPane.columnIndex="0"
+           GridPane.rowIndex="0" GridPane.columnSpan="2"
+           GridPane.rowSpan="1" GridPane.halignment="CENTER">
+        <font>
+            <Font name="Arial" size="24"></Font>
+        </font>
+        <GridPane.margin>
+            <Insets top="20" right="0" bottom="20" left="0"></Insets>
+        </GridPane.margin>
+    </Label>
+
+    <!-- Add Name Label -->
+    <Label text="%login.field.usershortcut" GridPane.columnIndex="0" GridPane.rowIndex="1">
+    </Label>
+    <!-- Add Name Text Field -->
+    <TextField fx:id="userShortcutField" prefHeight="40" GridPane.columnIndex="1" GridPane.rowIndex="1"/>
+
+    <!-- Add Password Label -->
+    <Label text="%login.field.password" GridPane.columnIndex="0"
+           GridPane.rowIndex="3">
+    </Label>
+    <!-- Add Password Field -->
+    <PasswordField fx:id="passwordField" prefHeight="40" GridPane.columnIndex="1" GridPane.rowIndex="3"/>
+
+    <!-- Add Submit Button -->
+    <Button fx:id="submitButton" text="%global.button.submit"
+            prefWidth="100" prefHeight="40" defaultButton="true"
+            GridPane.columnIndex="0" GridPane.rowIndex="4"
+            GridPane.columnSpan="2" GridPane.rowSpan="1"
+            GridPane.halignment="CENTER"
+            onAction="#handleLoginButton">
+        <GridPane.margin>
+            <Insets top="20" right="0" bottom="20" left="0"></Insets>
+        </GridPane.margin>
+    </Button>
+</GridPane>

@@ -26,9 +26,10 @@ public class MainGui extends Application {
             Locale locale = new Locale("en", "UK");
             Locale.setDefault(locale);
             ResourceBundle bundle = ResourceBundle.getBundle("bundles.language", locale);
-            Parent root = FXMLLoader.load(getClass().getResource("/view/mainWindow.fxml"), bundle);
+            Parent root = FXMLLoader.load(getClass().getResource("/view/login.fxml"), bundle);
 
             Scene scene = new Scene(root);
+            scene.getStylesheets().add("css/styles.css");
             stage.setTitle("Symphoniacus");
             stage.setScene(scene);
             stage.setMinHeight(768);
