@@ -1,6 +1,7 @@
 package at.fhv.teamb.symphoniacus.persistence.dao;
 
 import at.fhv.teamb.symphoniacus.persistence.BaseDao;
+import at.fhv.teamb.symphoniacus.persistence.model.AdministrativeAssistantEntity;
 import at.fhv.teamb.symphoniacus.persistence.model.MusicianEntity;
 import at.fhv.teamb.symphoniacus.persistence.model.UserEntity;
 import java.util.Optional;
@@ -48,15 +49,22 @@ public class UserDao extends BaseDao<UserEntity> {
      * @return A user matching provided credentials
      */
     public Optional<UserEntity> login(String userShortCut, String password) {
+        Optional<UserEntity> result = Optional.empty();
         TypedQuery<UserEntity> query = entityManager.createQuery(
             "SELECT u FROM UserEntity u WHERE u.shortcut = :shortc AND u.password = :pwd",
             UserEntity.class
         );
         query.setParameter("shortc", userShortCut);
         query.setParameter("pwd", password);
-        UserEntity result = query.getSingleResult();
 
-        return Optional.of(result);
+        //TODO Error Handling
+        try {
+            result = Optional.of(query.getSingleResult());
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
+
+        return result;
     }
 
     /**
@@ -66,13 +74,48 @@ public class UserDao extends BaseDao<UserEntity> {
      * @return True if user is a musician, false otherwise
      */
     public boolean isUserMusician(UserEntity currentUser) {
+        Optional<Long> result = Optional.empty();
         TypedQuery<Long> query = entityManager.createQuery(
             "SELECT COUNT(m) FROM MusicianEntity m WHERE m.user = :user",
             Long.class
         );
         query.setParameter("user", currentUser);
-        Long result = query.getSingleResult();
+        //TODO Error Handling
+        try {
+            result = Optional.of(query.getSingleResult());
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
 
-        return result == 1;
+        if (result.isPresent()) {
+            return result.get() == 1;
+        }
+        return false;
+    }
+
+    /**
+     * Checks whether the provided {@link UserEntity} is a {@link AdministrativeAssistantEntity}.
+     *
+     * @param currentUser The user to check
+     * @return True if user is a AdministrativeAssistant, false otherwise
+     */
+    public boolean isUserAdministrativeAssistant(UserEntity currentUser) {
+        Optional<Long> result = Optional.empty();
+        TypedQuery<Long> query = entityManager.createQuery(
+            "SELECT COUNT(aae) FROM AdministrativeAssistantEntity aae WHERE aae.user = :user",
+            Long.class
+        );
+        query.setParameter("user", currentUser);
+        //TODO Error Handling
+        try {
+            result = Optional.of(query.getSingleResult());
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
+
+        if (result.isPresent()) {
+            return result.get() == 1;
+        }
+        return false;
     }
 }

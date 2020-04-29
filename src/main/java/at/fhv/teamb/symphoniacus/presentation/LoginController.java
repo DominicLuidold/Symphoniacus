@@ -1,9 +1,12 @@
 package at.fhv.teamb.symphoniacus.presentation;
 
+import at.fhv.teamb.symphoniacus.application.LoginManager;
+import at.fhv.teamb.symphoniacus.domain.User;
 import at.fhv.teamb.symphoniacus.presentation.internal.AlertHelper;
 import java.io.IOException;
 import java.net.URL;
 import java.util.Locale;
+import java.util.Optional;
 import java.util.ResourceBundle;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.SimpleBooleanProperty;
@@ -107,13 +110,29 @@ public class LoginController implements Initializable {
                 sb.toString());
             return;
         }
+        LoginManager loginManager = new LoginManager();
+        Optional<User> userOptional =
+            loginManager.login(this.userShortcutField.getText(), this.passwordField.getText());
+
+        LOG.debug("Login with Username: {} and Password {}", this.userShortcutField.getText(),
+            this.passwordField.getText());
+
+
+        if (userOptional.isPresent()) {
+            loadMainScene(userOptional.get());
+        } else {
+            AlertHelper.showAlert(
+                Alert.AlertType.ERROR, owner,
+                this.resources.getString("login.error.login.failed.title"),
+                this.resources.getString("login.error.login.failed.message"
+                ));
+        }
         LOG.debug("Login credentials filled in, checking credentials now");
         LOG.error("MISSING credentials check");
-        loadMainScene(); // TODO add loginUser here as param
     }
 
     // TODO change to accept login user as param here
-    private void loadMainScene() {
+    private void loadMainScene(User user) {
         Locale locale = new Locale("en", "UK");
         ResourceBundle bundle = ResourceBundle.getBundle("bundles.language", locale);
         try {
@@ -122,6 +141,7 @@ public class LoginController implements Initializable {
                 bundle,
                 this.submitButton
             );
+            controller.setLoginUser(user);
             LOG.debug("MainController is fully loaded now :-)");
         } catch (IOException e) {
             LOG.error(e);
