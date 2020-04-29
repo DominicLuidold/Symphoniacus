@@ -38,6 +38,7 @@ dependencies {
     compile 'org.hibernate:hibernate-core:5.4.13.Final'
     compile 'com.github.jengelman.gradle.plugins:shadow:5.2.0'
 
+    compile 'com.jfoenix:jfoenix:9.0.9'
     implementation 'com.calendarfx:view:11.8.3'
     implementation ('org.controlsfx:controlsfx:11.0.1') {
         exclude group: 'org.controlsfx'
@@ -50,7 +51,11 @@ dependencies {
 
 application {
     mainClassName = 'at.fhv.teamb.symphoniacus.Main'
-    applicationDefaultJvmArgs = ["--add-opens=javafx.graphics/com.sun.javafx.css=ALL-UNNAMED"]
+    applicationDefaultJvmArgs = [
+            "--add-opens=javafx.graphics/com.sun.javafx.css=ALL-UNNAMED",
+            "--add-opens=javafx.controls/com.sun.javafx.scene.control.behavior=ALL-UNNAMED",
+            "--add-opens=javafx.controls/com.sun.javafx.scene.control=ALL-UNNAMED"
+    ]
 }
 
 test {
