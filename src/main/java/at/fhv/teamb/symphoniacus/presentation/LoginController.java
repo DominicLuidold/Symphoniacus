@@ -117,24 +117,18 @@ public class LoginController implements Initializable {
         Locale locale = new Locale("en", "UK");
         ResourceBundle bundle = ResourceBundle.getBundle("bundles.language", locale);
         try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource(
-                "/view/mainWindow.fxml"),
-                bundle);
-
-            Parent mainRoot = loader.load();
-            MainController controller = loader.getController();
+            MainController controller = MasterController.switchSceneTo(
+                "/view/mainWindow.fxml",
+                bundle,
+                this.submitButton
+            );
             LOG.debug("MainController is fully loaded now :-)");
-            // controller.setLoginUser(user) from params
-            Scene currentScene = this.submitButton.getScene();
-            Stage owner = (Stage) this.submitButton.getScene().getWindow();
-            Scene newScene = new Scene(mainRoot, currentScene.getWidth(), currentScene.getHeight());
-            owner.setScene(newScene);
         } catch (IOException e) {
             LOG.error(e);
             Stage owner = (Stage) this.submitButton.getScene().getWindow();
             AlertHelper.showAlert(Alert.AlertType.ERROR, owner, "Login failed",
                 this.resources.getString(
-                "login.error.login.technical.problems"
+                    "login.error.login.technical.problems"
                 )
             );
             return;
