@@ -62,7 +62,7 @@ public class LoginController implements Initializable {
         });
     }
 
-    public void handleLoginButton(ActionEvent actionEvent) {
+    public void processLoginCredentials(ActionEvent actionEvent) {
         LOG.debug("Login btn pressed");
         Window owner = submitButton.getScene().getWindow();
         if (!this.isValid) {
