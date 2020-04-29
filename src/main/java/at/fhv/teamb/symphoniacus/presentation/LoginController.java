@@ -50,6 +50,7 @@ public class LoginController implements Initializable {
 
     @FXML
     private Label label;
+    private LoginManager loginManager;
 
     private boolean isValid = false;
     private ValidationSupport validationSupport = new ValidationSupport();
@@ -58,6 +59,7 @@ public class LoginController implements Initializable {
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         this.resources = resources;
+        this.loginManager = new LoginManager();
         ValidationDecoration cssDecorator = new StyleClassValidationDecoration(
             "error",
             "warning"
@@ -110,13 +112,14 @@ public class LoginController implements Initializable {
                 sb.toString());
             return;
         }
-        LoginManager loginManager = new LoginManager();
         Optional<User> userOptional =
             loginManager.login(this.userShortcutField.getText(), this.passwordField.getText());
 
-        LOG.debug("Login with Username: {} and Password {}", this.userShortcutField.getText(),
-            this.passwordField.getText());
-
+        LOG.debug(
+            "Login with Username: {} and Password {}",
+            this.userShortcutField.getText(),
+            this.passwordField.getText()
+        );
 
         if (userOptional.isPresent()) {
             loadMainScene(userOptional.get());
