@@ -47,6 +47,18 @@ public class SeriesOfPerformancesEntity {
     )
     private List<InstrumentationEntity> instrumentations = new LinkedList<>();
 
+    @ManyToMany
+    @JoinTable(
+        name = "seriesOfPerformances_musicalPiece",
+        joinColumns = {
+            @JoinColumn(name = "seriesOfPerformancesId")
+        },
+        inverseJoinColumns = {
+            @JoinColumn(name = "musicalPieceId")
+        }
+    )
+    private List<MusicalPieceEntity> musicalPieces = new LinkedList<>();
+
     @OneToMany(mappedBy = "seriesOfPerformances", orphanRemoval = false)
     private Set<DutyEntity> dutyEntities;
 
@@ -178,5 +190,24 @@ public class SeriesOfPerformancesEntity {
     public void removeInstrumentation(InstrumentationEntity instrumentationEntity) {
         this.instrumentations.remove(instrumentationEntity);
         instrumentationEntity.removeSeriesOfPerformance(this);
+    }
+
+    public List<MusicalPieceEntity> getMusicalPieces() {
+        return musicalPieces;
+    }
+
+    public void setMusicalPieces(
+        List<MusicalPieceEntity> musicalPieces) {
+        this.musicalPieces = musicalPieces;
+    }
+
+    public void addMusicalPiece(MusicalPieceEntity musicalPiece) {
+        this.musicalPieces.add(musicalPiece);
+        musicalPiece.addSeriesOfPerformance(this);
+    }
+
+    public void removeMusicalPiece(MusicalPieceEntity musicalPiece) {
+        this.musicalPieces.remove(musicalPiece);
+        musicalPiece.removeSeriesOfPerformance(this);
     }
 }

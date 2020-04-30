@@ -7,6 +7,7 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.ManyToMany;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
@@ -30,7 +31,8 @@ public class MusicalPieceEntity {
     @OneToMany(mappedBy = "musicalPiece", orphanRemoval = true)
     private List<InstrumentationEntity> instrumentations = new LinkedList<>();
 
-    // TODO - @ManyToMany zw. MusicalPiece & SeriesOfPerformances fehlt
+    @ManyToMany(mappedBy = "musicalPieces")
+    private List<SeriesOfPerformancesEntity> seriesOfPerformances = new LinkedList<>();
 
     public Integer getMusicalPieceId() {
         return this.musicalPieceId;
@@ -76,5 +78,24 @@ public class MusicalPieceEntity {
     public void removeInstrumentation(InstrumentationEntity instrumentation) {
         this.instrumentations.remove(instrumentation);
         instrumentation.setMusicalPiece(null);
+    }
+
+    public List<SeriesOfPerformancesEntity> getSeriesOfPerformances() {
+        return seriesOfPerformances;
+    }
+
+    public void setSeriesOfPerformances(
+        List<SeriesOfPerformancesEntity> seriesOfPerformances) {
+        this.seriesOfPerformances = seriesOfPerformances;
+    }
+
+    public void addSeriesOfPerformance(SeriesOfPerformancesEntity seriesOfPerformancesEntity) {
+        this.seriesOfPerformances.add(seriesOfPerformancesEntity);
+        seriesOfPerformancesEntity.addMusicalPiece(this);
+    }
+
+    public void removeSeriesOfPerformance(SeriesOfPerformancesEntity seriesOfPerformancesEntity) {
+        this.seriesOfPerformances.remove(seriesOfPerformancesEntity);
+        seriesOfPerformancesEntity.removeMusicalPiece(this);
     }
 }
