@@ -4,6 +4,7 @@ import at.fhv.teamb.symphoniacus.persistence.BaseDao;
 import at.fhv.teamb.symphoniacus.persistence.model.AdministrativeAssistantEntity;
 import at.fhv.teamb.symphoniacus.persistence.model.MusicianEntity;
 import at.fhv.teamb.symphoniacus.persistence.model.UserEntity;
+import java.util.List;
 import java.util.Optional;
 import javax.persistence.TypedQuery;
 
@@ -49,7 +50,7 @@ public class UserDao extends BaseDao<UserEntity> {
      * @return A user matching provided credentials
      */
     public Optional<UserEntity> login(String userShortCut, String password) {
-        Optional<UserEntity> result = Optional.empty();
+        List<UserEntity> result = null;
         TypedQuery<UserEntity> query = entityManager.createQuery(
             "SELECT u FROM UserEntity u WHERE u.shortcut = :shortc AND u.password = :pwd",
             UserEntity.class
@@ -57,13 +58,13 @@ public class UserDao extends BaseDao<UserEntity> {
         query.setParameter("shortc", userShortCut);
         query.setParameter("pwd", password);
 
-        //TODO Error Handling
-        try {
-            result = Optional.of(query.getSingleResult());
-        } catch (Exception ex) {
-            ex.printStackTrace();
+
+        result = query.getResultList();
+
+        if (result.size() > 0) {
+            return Optional.of(result.get(0));
         }
-        return result;
+        return Optional.empty();
     }
 
     /**
