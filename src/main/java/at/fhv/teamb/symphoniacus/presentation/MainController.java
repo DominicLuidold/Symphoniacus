@@ -21,7 +21,6 @@ public class MainController implements Initializable {
 
     private static final Logger LOG = LogManager.getLogger(MainController.class);
 
-public class MainController implements Initializable {
     @FXML
     public AnchorPane userHeaderMenu;
 
@@ -40,7 +39,10 @@ public class MainController implements Initializable {
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-
+        this.userHeaderMenuController.setParentController(this);
+        this.tabPaneController.setParentController(this);
+        LOG.debug("Initialized MainController");
+        LOG.debug(tabPaneController);
     }
 
     /**
@@ -68,13 +70,5 @@ public class MainController implements Initializable {
                     new AdministrativeAssistant(administrativeAssistantEntity.get());
             }
         }
-    }
-
-    @Override
-    public void initialize(URL location, ResourceBundle resources) {
-        this.userHeaderMenuController.setParentController(this);
-        this.tabPaneController.setParentController(this);
-        LOG.debug("Initialized MainController");
-        LOG.debug(tabPaneController);
     }
 }
