@@ -9,6 +9,9 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
+import javax.persistence.ManyToMany;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
@@ -32,8 +35,17 @@ public class SeriesOfPerformancesEntity {
     @Column(name = "isTour")
     private Boolean isTour;
 
-    @Column(name = "instrumentationId")
-    private Integer instrumentationId;
+    @ManyToMany
+    @JoinTable(
+        name = "seriesOfPerformances_instrumentation",
+        joinColumns = {
+            @JoinColumn(name = "seriesOfPerformancesId")
+        },
+        inverseJoinColumns = {
+            @JoinColumn(name = "instrumentationId")
+        }
+    )
+    private List<InstrumentationEntity> instrumentations = new LinkedList<>();
 
     @OneToMany(mappedBy = "seriesOfPerformances", orphanRemoval = false)
     private Set<DutyEntity> dutyEntities;
@@ -130,14 +142,6 @@ public class SeriesOfPerformancesEntity {
         this.isTour = isTour;
     }
 
-    public Integer getInstrumentationId() {
-        return this.instrumentationId;
-    }
-
-    public void setInstrumentationId(Integer instrumentationId) {
-        this.instrumentationId = instrumentationId;
-    }
-
     public void addDuty(DutyEntity dutyEntity) {
         this.dutyEntities.add(dutyEntity);
         dutyEntity.setSeriesOfPerformances(this);
@@ -155,5 +159,24 @@ public class SeriesOfPerformancesEntity {
     public void setNegativeDutyWishes(
         List<NegativeDutyWishEntity> negativeDutyWishes) {
         this.negativeDutyWishes = negativeDutyWishes;
+    }
+
+    public List<InstrumentationEntity> getInstrumentations() {
+        return instrumentations;
+    }
+
+    public void setInstrumentations(
+        List<InstrumentationEntity> instrumentations) {
+        this.instrumentations = instrumentations;
+    }
+
+    public void addInstrumentation(InstrumentationEntity instrumentationEntity) {
+        this.instrumentations.add(instrumentationEntity);
+        instrumentationEntity.addSeriesOfPerformance(this);
+    }
+
+    public void removeInstrumentation(InstrumentationEntity instrumentationEntity) {
+        this.instrumentations.remove(instrumentationEntity);
+        instrumentationEntity.removeSeriesOfPerformance(this);
     }
 }

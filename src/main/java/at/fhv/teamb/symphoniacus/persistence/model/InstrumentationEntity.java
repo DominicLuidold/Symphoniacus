@@ -9,6 +9,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
+import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
@@ -27,6 +28,9 @@ public class InstrumentationEntity {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "musicalPieceId")
     private MusicalPieceEntity musicalPiece;
+
+    @ManyToMany(mappedBy = "instrumentations")
+    private List<SeriesOfPerformancesEntity> seriesOfPerformances = new LinkedList<>();
 
     @OneToMany(mappedBy = "instrumentation", orphanRemoval = true)
     private List<SectionInstrumentationEntity> sectionInstrumentations = new LinkedList<>();
@@ -92,5 +96,24 @@ public class InstrumentationEntity {
     ) {
         this.instrumentationPositions.remove(instrumentationPosition);
         instrumentationPosition.setInstrumentation(null);
+    }
+
+    public List<SeriesOfPerformancesEntity> getSeriesOfPerformances() {
+        return seriesOfPerformances;
+    }
+
+    public void setSeriesOfPerformances(
+        List<SeriesOfPerformancesEntity> seriesOfPerformances) {
+        this.seriesOfPerformances = seriesOfPerformances;
+    }
+
+    public void addSeriesOfPerformance(SeriesOfPerformancesEntity series) {
+        this.seriesOfPerformances.add(series);
+        series.addInstrumentation(this);
+    }
+
+    public void removeSeriesOfPerformance(SeriesOfPerformancesEntity series) {
+        this.seriesOfPerformances.remove(series);
+        series.removeInstrumentation(this);
     }
 }
