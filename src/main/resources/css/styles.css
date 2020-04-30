@@ -1,0 +1,25 @@
+.warning,.error {
+    -fx-background-color: #FF000055;
+    -fx-prompt-text-fill: grey;
+}
+
+/* TAB PANE */
+.jfx-tab-pane .headers-region {
+    -fx-background-color: #064478;
+}
+.jfx-tab-pane .tab-header-background {
+    -fx-background-color: #064478;
+}
+.jfx-tab-pane .tab-selected-line {
+    -fx-background-color: #02182B;
+    -fx-pref-height: 4;
+}
+.jfx-tab-pane .headers-region .tab:selected {
+    -fx-background-color: #2274A5;
+}
+
+/* UNCOMMENT WHEN WE HAVE NUTZERZENTRIERT SEMINAR
+*, root, .root {
+    -fx-font-family: "Comic Sans MS";
+}
+*/

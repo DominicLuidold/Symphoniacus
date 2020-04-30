@@ -244,7 +244,7 @@ public class DutyScheduleController implements Initializable, Controllable {
 
         this.columnSchedule.setCellFactory(
             ScheduleButtonTableCell.<MusicianTableModel>forTableColumn(
-                "Schedule",
+                this.resources.getString("tab.duty.schedule.table.dutyposition.set.btn"),
                 (MusicianTableModel mtm) -> {
                     LOG.debug("Schedule btn with requests has been pressed");
 
@@ -293,7 +293,7 @@ public class DutyScheduleController implements Initializable, Controllable {
 
         this.columnSchedule2.setCellFactory(
             ScheduleButtonTableCell.<MusicianTableModel>forTableColumn(
-                "Schedule",
+                this.resources.getString("tab.duty.schedule.table.dutyposition.set.btn"),
                 (MusicianTableModel mtm) -> {
                     LOG.debug("Schedule btn without requests has been pressed");
                     this.addMusicianToPosition(
@@ -308,7 +308,7 @@ public class DutyScheduleController implements Initializable, Controllable {
 
         this.columnUnsetPosition.setCellFactory(
             ScheduleButtonTableCell.<DutyPositionMusicianTableModel>forTableColumn(
-                "Unset",
+                this.resources.getString("tab.duty.schedule.table.dutyposition.unset.btn"),
                 (DutyPositionMusicianTableModel dpmtm) -> {
                     LOG.debug("Unset musician button has been pressed");
 
