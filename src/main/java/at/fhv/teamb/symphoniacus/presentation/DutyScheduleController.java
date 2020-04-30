@@ -11,6 +11,7 @@ import at.fhv.teamb.symphoniacus.persistence.PersistenceState;
 import at.fhv.teamb.symphoniacus.presentation.internal.DutyPositionMusicianTableModel;
 import at.fhv.teamb.symphoniacus.presentation.internal.MusicianTableModel;
 import at.fhv.teamb.symphoniacus.presentation.internal.OldDutyComboView;
+import at.fhv.teamb.symphoniacus.presentation.internal.Parentable;
 import at.fhv.teamb.symphoniacus.presentation.internal.ScheduleButtonTableCell;
 import at.fhv.teamb.symphoniacus.presentation.internal.tasks.GetMusiciansAvailableForPositionTask;
 import at.fhv.teamb.symphoniacus.presentation.internal.tasks.GetOtherDutiesTask;
@@ -48,7 +49,9 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.controlsfx.control.Notifications;
 
-public class DutyScheduleController implements Initializable, Controllable {
+public class DutyScheduleController implements Initializable,
+    Controllable,
+    Parentable<CalendarController> {
 
     private static final Logger LOG = LogManager.getLogger(DutyScheduleController.class);
     @FXML
@@ -60,6 +63,7 @@ public class DutyScheduleController implements Initializable, Controllable {
     private ActualSectionInstrumentation actualSectionInstrumentation;
     private DutyPosition selectedDutyPosition;
     private ResourceBundle resources;
+    private CalendarController parentController;
 
     @FXML
     private AnchorPane dutySchedule;
@@ -795,5 +799,10 @@ public class DutyScheduleController implements Initializable, Controllable {
 
     public void setSection(Section section) {
         this.section = section;
+    }
+
+    @Override
+    public void setParentController(CalendarController controller) {
+        this.parentController = controller;
     }
 }
