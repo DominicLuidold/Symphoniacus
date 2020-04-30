@@ -8,6 +8,7 @@ import org.apache.logging.log4j.Logger;
 public class OrganizationalOfficerCalendarController extends CalendarController {
     private static final Logger LOG =
         LogManager.getLogger(OrganizationalOfficerCalendarController.class);
+    private TabPaneController parentController;
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
@@ -22,5 +23,10 @@ public class OrganizationalOfficerCalendarController extends CalendarController 
     @Override
     public void setEntryDetailsCallback() {
         throw new UnsupportedOperationException("Not yet implemented");
+    }
+
+    @Override
+    public void setParentController(TabPaneController controller) {
+        this.parentController = controller;
     }
 }

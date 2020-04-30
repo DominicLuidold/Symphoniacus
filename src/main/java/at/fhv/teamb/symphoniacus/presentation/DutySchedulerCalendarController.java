@@ -7,13 +7,15 @@ import at.fhv.teamb.symphoniacus.application.SectionMonthlyScheduleManager;
 import at.fhv.teamb.symphoniacus.domain.Duty;
 import at.fhv.teamb.symphoniacus.domain.Section;
 import at.fhv.teamb.symphoniacus.domain.SectionMonthlySchedule;
+import at.fhv.teamb.symphoniacus.domain.User;
 import at.fhv.teamb.symphoniacus.persistence.model.MusicianEntity;
-import at.fhv.teamb.symphoniacus.persistence.model.UserEntity;
+import at.fhv.teamb.symphoniacus.presentation.internal.AlertHelper;
 import at.fhv.teamb.symphoniacus.presentation.internal.CustomCalendarButtonEvent;
 import at.fhv.teamb.symphoniacus.presentation.internal.skin.DutySchedulerCalendar;
 import com.calendarfx.model.Calendar;
 import com.calendarfx.model.CalendarSource;
 import com.calendarfx.model.Entry;
+import java.io.IOException;
 import java.net.URL;
 import java.text.MessageFormat;
 import java.time.LocalDate;
@@ -28,6 +30,7 @@ import java.util.Set;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.geometry.Pos;
+import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.Dialog;
@@ -53,12 +56,15 @@ import org.kordamp.ikonli.javafx.FontIcon;
  */
 public class DutySchedulerCalendarController extends CalendarController implements Controllable {
     private static final Logger LOG = LogManager.getLogger(DutySchedulerCalendarController.class);
-    private DutyScheduleController dutyScheduleController;
     private ResourceBundle resources;
     private Section section;
+    private TabPaneController parentController;
 
     @FXML
     private AnchorPane dutySchedule;
+
+    @FXML
+    private DutyScheduleController dutyScheduleController;
 
     /**
      * {@inheritDoc}
@@ -67,10 +73,36 @@ public class DutySchedulerCalendarController extends CalendarController implemen
     public void initialize(URL location, ResourceBundle resources) {
         this.resources = resources;
         this.registerController();
+        this.dutyScheduleController.setParentController(this);
 
         // TODO - Temporarily used until proper login is introduced
-        Optional<UserEntity> user = new LoginManager().login("vaubou", "test");
-        Optional<MusicianEntity> musician = new MusicianManager().loadMusician(user.get());
+        Optional<User> user = new LoginManager().login("pain", "rbp");
+        if (user.isEmpty()) {
+            LOG.error("Login did not work - this should be removed");
+            AlertHelper.showAlert(
+                Alert.AlertType.ERROR,
+                this.calendarView.getParent().getScene().getWindow(),
+                "Login failed",
+                resources.getString(
+                    "login.error.login.technical.problems"
+                )
+            );
+            try {
+                MasterController.switchSceneTo(
+                    "/view/login.fxml",
+                    resources,
+                    this.calendarView
+                );
+            } catch (IOException e) {
+                e.printStackTrace();
+                LOG.error(e);
+            }
+            return;
+        } else {
+            LOG.debug("Login worked");
+        }
+        Optional<MusicianEntity> musician =
+            new MusicianManager().loadMusician(user.get().getUserEntity());
         this.section = new Section(musician.get().getSection());
 
         // Tell CalendarFX to use custom skin
@@ -414,5 +446,10 @@ public class DutySchedulerCalendarController extends CalendarController implemen
     @Override
     public void hide() {
         this.calendarView.setVisible(false);
+    }
+
+    @Override
+    public void setParentController(TabPaneController controller) {
+        this.parentController = controller;
     }
 }
