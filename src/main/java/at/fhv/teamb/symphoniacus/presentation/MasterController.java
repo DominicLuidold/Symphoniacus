@@ -43,6 +43,9 @@ public class MasterController {
         return INSTANCE;
     }
 
+    /**
+     * TODO JAVADOC.
+     */
     public static <T> T switchSceneTo(String fxmlPath, ResourceBundle bundle, Node node)
         throws IOException {
         Scene oldScene = node.getScene();

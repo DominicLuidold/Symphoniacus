@@ -5,7 +5,13 @@ import javafx.stage.Window;
 
 public class AlertHelper {
 
-    public static void showAlert(Alert.AlertType alertType, Window owner, String title, String message) {
+    /**
+     * Simple helper class for helping to throw an Alert in the Gui.
+     */
+    public static void showAlert(Alert.AlertType alertType,
+                                 Window owner, String title,
+                                 String message
+    ) {
         Alert alert = new Alert(alertType);
         alert.setTitle(title);
         alert.setHeaderText(null);

@@ -96,7 +96,8 @@ public class CalendarController implements Initializable, Controllable {
 
         // TODO - Temporarily used until proper login is introduced
         Optional<User> user = new LoginManager().login("vaubou", "eItFAJSb");
-        Optional<MusicianEntity> musician = new MusicianManager().loadMusician(user.get().getUserEntity());
+        Optional<MusicianEntity> musician =
+            new MusicianManager().loadMusician(user.get().getUserEntity());
         this.section = new Section(musician.get().getSection());
 
         // Tell CalendarFX to use custom skin
@@ -282,8 +283,9 @@ public class CalendarController implements Initializable, Controllable {
                                 if (item.getEntity().isReadyForOrganisationManager()) {
                                     setText(
                                         m.getDisplayName(TextStyle.FULL, Locale.US)
-                                        + " "
-                                        + resources.getString("tab.duty.schedule.forward.forwarded")
+                                            + " "
+                                            + resources
+                                            .getString("tab.duty.schedule.forward.forwarded")
                                     );
                                     setStyle("-fx-text-fill: #3e681f");
                                     setGraphic(null);

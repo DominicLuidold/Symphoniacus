@@ -94,6 +94,14 @@ public class LoginController implements Initializable {
             });
     }
 
+    /**
+     * this function processes the login data using the {@link LoginManager} and checks if there
+     * is a corresponding user. If this user exists, an attribute is set to which
+     * {@link at.fhv.teamb.symphoniacus.application.type.DomainUserType} he belongs. After that the
+     * function {@link #loadMainScene(User user)} is called. Otherwise the user gets an error
+     * message for the failed login.
+     * @param actionEvent event triggered by login
+     */
     public void processLoginCredentials(ActionEvent actionEvent) {
         LOG.debug("Login btn pressed");
         Window owner = this.submitButton.getScene().getWindow();

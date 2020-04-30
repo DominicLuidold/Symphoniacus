@@ -63,7 +63,6 @@ public class UserDao extends BaseDao<UserEntity> {
         } catch (Exception ex) {
             ex.printStackTrace();
         }
-
         return result;
     }
 
