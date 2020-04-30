@@ -14,6 +14,12 @@ import java.util.ResourceBundle;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.layout.AnchorPane;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
+public class MainController implements Initializable {
+
+    private static final Logger LOG = LogManager.getLogger(MainController.class);
 
 public class MainController implements Initializable {
     @FXML
@@ -21,6 +27,12 @@ public class MainController implements Initializable {
 
     @FXML
     public AnchorPane tabPane;
+
+    @FXML
+    private TabPaneController tabPaneController;
+
+    @FXML
+    private UserController userHeaderMenuController;
 
     private User currentUser;
     private Musician currentMusician;
@@ -56,5 +68,13 @@ public class MainController implements Initializable {
                     new AdministrativeAssistant(administrativeAssistantEntity.get());
             }
         }
+    }
+
+    @Override
+    public void initialize(URL location, ResourceBundle resources) {
+        this.userHeaderMenuController.setParentController(this);
+        this.tabPaneController.setParentController(this);
+        LOG.debug("Initialized MainController");
+        LOG.debug(tabPaneController);
     }
 }
