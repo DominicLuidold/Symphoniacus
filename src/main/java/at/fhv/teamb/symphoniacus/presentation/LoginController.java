@@ -171,7 +171,7 @@ public class LoginController implements Initializable {
         Locale locale = new Locale("en", "UK");
         try {
             ResourceBundle bundle = ResourceBundle.getBundle("bundles.language", locale);
-            MainController controller = MasterController.switchSceneTo(
+            MainController controller = MasterController.<MainController>switchSceneTo(
                 "/view/mainWindow.fxml",
                 bundle,
                 this.submitButton
@@ -179,6 +179,7 @@ public class LoginController implements Initializable {
             controller.setLoginUser(user);
             LOG.debug("MainController is fully loaded now :-)");
         } catch (IOException e) {
+            e.printStackTrace();
             LOG.error(e);
             Stage owner = (Stage) this.submitButton.getScene().getWindow();
             AlertHelper.showAlert(Alert.AlertType.ERROR, owner, "Login failed",

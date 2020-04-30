@@ -1,5 +1,6 @@
 package at.fhv.teamb.symphoniacus.presentation;
 
+import at.fhv.teamb.symphoniacus.presentation.internal.Parentable;
 import java.io.IOException;
 import java.net.URL;
 import java.util.ResourceBundle;
@@ -11,15 +12,16 @@ import javafx.scene.text.TextFlow;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-public class UserController implements Initializable {
+public class UserController implements Initializable, Parentable<MainController> {
+
+    private MainController parentController;
+    private ResourceBundle resourceBundle;
 
     @FXML
     private TextFlow txtFlowSection;
 
     @FXML
     private MenuItem userLogout;
-
-    private ResourceBundle resourceBundle;
 
     private static final Logger LOG = LogManager.getLogger(UserController.class);
 
@@ -37,5 +39,10 @@ public class UserController implements Initializable {
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         this.resourceBundle = resources;
+    }
+
+    @Override
+    public void setParentController(MainController controller) {
+        this.parentController = controller;
     }
 }
