@@ -4,16 +4,11 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.doAnswer;
-import static org.mockito.Mockito.spy;
 
 import at.fhv.teamb.symphoniacus.domain.Duty;
 import at.fhv.teamb.symphoniacus.persistence.model.DutyEntity;
-import at.fhv.teamb.symphoniacus.persistence.model.SectionEntity;
 import com.calendarfx.model.Calendar;
 import com.calendarfx.model.CalendarSource;
-import com.calendarfx.model.Entry;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
@@ -21,55 +16,30 @@ import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
 import org.junit.jupiter.api.Test;
-import org.mockito.stubbing.Answer;
 
 class DutySchedulerCalendarControllerTest {
 
     @Test
-    void prepareCalendarSource_ShouldPrepareCalendarSource() {
-        // Given
-        SectionEntity section = new SectionEntity();
-        section.setDescription("Test Section 1");
-        section.setSectionShortcut("TS1");
-        String name = "Test Source";
-
-        DutySchedulerCalendarController controller = spy(DutySchedulerCalendarController.class);
-        doAnswer((Answer<Void>) invocation -> {
-            controller.fillCalendar(
-                invocation.getArgument(0),
-                prepareTestDuties()
-            );
-            return null;
-        }).when(controller).fillCalendar(any(Calendar.class), any(SectionEntity.class));
-
-        // When
-        CalendarSource source = controller.prepareCalendarSource(name, section);
-
-        // Then
-        assertEquals(name, source.getName(), "Given name and CalendarSource name should be equal");
-        assertEquals(1, source.getCalendars().size(), "CalendarSource should have one calendar");
-    }
-
-    @Test
     void createCalendar_ShouldCreateCalendar() {
         // Given
-        SectionEntity section = new SectionEntity();
-        section.setDescription("Test Section 1");
-        section.setSectionShortcut("TS1");
+        String name = "Test Section 1";
+        String shortName = "TS1";
 
         // When
-        Calendar calendar = new DutySchedulerCalendarController()
-            .createCalendar(section.getDescription(), section.getSectionShortcut(),
-                true);
+        Calendar calendar = new DutySchedulerCalendarController().createCalendar(
+            name,
+            shortName,
+            true
+        );
 
         // Then
         assertEquals(
-            section.getDescription(),
+            name,
             calendar.getName(),
             "Section and Calendar should have same name"
         );
         assertEquals(
-            section.getSectionShortcut(),
+            shortName,
             calendar.getShortName(),
             "Section and Calendar should have same short name"
         );
@@ -82,53 +52,38 @@ class DutySchedulerCalendarControllerTest {
         // Given
         DutySchedulerCalendarController controller = new DutySchedulerCalendarController();
         Calendar calendar = new Calendar();
-        List<Entry<Duty>> entries = controller.createDutyCalendarEntries(prepareTestDuties());
+        List<Duty> testDuties = this.prepareTestDuties();
 
         // When
-        controller.fillCalendar(calendar, entries);
+        controller.fillCalendar(calendar, testDuties);
 
         // Then
-        for (Entry<Duty> entry : entries) {
+        for (Duty duty : testDuties) {
             assertFalse(
-                calendar.findEntries(entry.getTitle()).isEmpty(),
+                calendar.findEntries(duty.getTitle()).isEmpty(),
                 "Calendar should contain Entry"
             );
             assertEquals(
                 1,
-                calendar.findEntries(entry.getTitle()).size(),
+                calendar.findEntries(duty.getTitle()).size(),
                 "Calendar should find exactly one Entry"
             );
         }
     }
 
     @Test
-    void createDutyCalendarEntries_ShouldCreateEntries() {
+    void prepareCalendarSource_ShouldPrepareCalendarSource() {
         // Given
-        List<Duty> duties = prepareTestDuties();
+        Calendar calendar = new Calendar();
+        String name = "Test Source";
 
         // When
-        List<Entry<Duty>> entries =
-            new DutySchedulerCalendarController().createDutyCalendarEntries(duties);
+        CalendarSource source =
+            new DutySchedulerCalendarController().prepareCalendarSource(name, calendar);
 
         // Then
-        assertEquals(duties.size(), entries.size(), "Amount of Duties and Entries should be equal");
-        for (int i = 0; i < duties.size(); i++) {
-            assertEquals(
-                duties.get(i).getTitle(),
-                entries.get(i).getTitle(),
-                "Duty and Entry should have same description"
-            );
-            assertEquals(
-                duties.get(i).getEntity().getStart(),
-                entries.get(i).getStartAsLocalDateTime(),
-                "Duty and Entry should have same start time/day"
-            );
-            assertEquals(
-                duties.get(i).getEntity().getEnd(),
-                entries.get(i).getEndAsLocalDateTime(),
-                "Duty and Entry should have same end time/day"
-            );
-        }
+        assertEquals(name, source.getName(), "Given name and CalendarSource name should be equal");
+        assertEquals(1, source.getCalendars().size(), "CalendarSource should have one calendar");
     }
 
     /**

@@ -3,45 +3,68 @@ package at.fhv.teamb.symphoniacus.presentation;
 import at.fhv.teamb.symphoniacus.application.DutyManager;
 import at.fhv.teamb.symphoniacus.domain.Duty;
 import at.fhv.teamb.symphoniacus.persistence.model.DutyEntity;
-import at.fhv.teamb.symphoniacus.persistence.model.SectionEntity;
 import com.calendarfx.model.Calendar;
+import com.calendarfx.model.CalendarSource;
 import com.calendarfx.model.Entry;
 import com.calendarfx.model.Interval;
+import com.calendarfx.view.CalendarView;
 import java.time.LocalDate;
 import java.util.LinkedList;
 import java.util.List;
+import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
 
-
-public abstract class CalendarController implements Initializable, Controllable {
-
+/**
+ * This controller is responsible for handling CalendarFX related actions such as
+ * creating Calendar {@link Entry} objects, filling a {@link Calendar} and preparing it
+ * for display.
+ *
+ * @author Dominic Luidold
+ */
+public abstract class CalendarController implements Initializable {
     /**
      * Default interval start date represents {@link LocalDate#now()}.
      */
     protected static final LocalDate DEFAULT_INTERVAL_START = LocalDate.now().minusMonths(2);
 
     /**
-     * Default interval end date represents {@link #DEFAULT_INTERVAL_START} plus two months.
+     * Default interval end date represents {@link LocalDate#now()} plus two months.
      */
-    protected static final LocalDate DEFAULT_INTERVAL_END = DEFAULT_INTERVAL_START.plusMonths(2);
+    protected static final LocalDate DEFAULT_INTERVAL_END = LocalDate.now().plusMonths(2);
 
+    @FXML
+    protected CalendarView calendarView;
 
-    public abstract void setCalendarSkin();
+    /**
+     * Sets the calendar skin according to use case specific needs.
+     */
+    protected abstract void setCalendarSkin();
 
-    // Hide calendarView by clicking on Duty and load new Window for DutyScheduleView.
-    public abstract void setEntryDetailsCallback();
+    /**
+     * Sets the entry details callback according to use case specific needs.
+     */
+    protected abstract void setEntryDetailsCallback();
 
+    /**
+     * Returns a list of {@link Duty} objects based on a start and end date.
+     *
+     * <p>This is the default implementation that loads all duties, regardless of any state,
+     * that should be overwritten in subclasses to load appropriate data.
+     *
+     * @return A list of Entries
+     */
+    protected List<Duty> loadDuties(LocalDate start, LocalDate end) {
+        return new DutyManager().findAllInRange(start, end);
+    }
 
     /**
      * Creates a {@link Calendar}.
      *
      * <p>The calendar will have a {@link Calendar.Style} assigned
      *
-     * @param shortName The abbreviation of the section to use
      * @param name      The long name for the section to use
-     * @param readOnly  Calendar can be marked as readOnly
+     * @param shortName The abbreviation of the section to use
+     * @param readOnly  Indicator whether calendar should be read only
      * @return A Calendar
      */
     public Calendar createCalendar(String name, String shortName, boolean readOnly) {
@@ -58,21 +81,24 @@ public abstract class CalendarController implements Initializable, Controllable 
      * @param calendar The calendar to fill
      * @param duties   A List of Duties
      */
-    public void fillCalendar(Calendar calendar, List<Duty> duties) {
+    protected void fillCalendar(Calendar calendar, List<Duty> duties) {
         for (Entry<Duty> entry : this.createDutyCalendarEntries(duties)) {
             entry.setCalendar(calendar);
         }
     }
 
     /**
-     * Returns a list of {@link Duty} objects based on a start and enddate.
+     * Prepares a {@link CalendarSource} by filling it with a {@link Calendar}.
      *
-     * @return A list of Entries
+     * @param name     The name of the CalendarSource
+     * @param calendar The calendar to use
+     * @return A CalendarSource
      */
-    public List<Duty> loadDuties(LocalDate start, LocalDate end) {
-        return new DutyManager().findAllInRange(start, end);
+    protected CalendarSource prepareCalendarSource(String name, Calendar calendar) {
+        CalendarSource calendarSource = new CalendarSource(name);
+        calendarSource.getCalendars().add(calendar);
+        return calendarSource;
     }
-
 
     /**
      * Returns a list of CalendarFX {@link Entry} objects based on {@link DutyEntity} objects.
@@ -80,7 +106,7 @@ public abstract class CalendarController implements Initializable, Controllable 
      * @param duties A List of Duties
      * @return A list of Entries
      */
-    public List<Entry<Duty>> createDutyCalendarEntries(List<Duty> duties) {
+    private List<Entry<Duty>> createDutyCalendarEntries(List<Duty> duties) {
         List<Entry<Duty>> calendarEntries = new LinkedList<>();
         for (Duty duty : duties) {
             Interval interval = new Interval(
@@ -95,5 +121,4 @@ public abstract class CalendarController implements Initializable, Controllable 
         }
         return calendarEntries;
     }
-
 }

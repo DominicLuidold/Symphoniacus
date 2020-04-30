@@ -733,7 +733,8 @@ public class DutyScheduleController implements Initializable, Controllable {
         this.labelCurrentPosition.setText(resources.getString("tab.duty.schedule.currentposition"));
         this.hide();
         MasterController mc = MasterController.getInstance();
-        DutySchedulerCalendarController cc = (DutySchedulerCalendarController) mc.get("CalendarController");
+        DutySchedulerCalendarController cc =
+            (DutySchedulerCalendarController) mc.get("CalendarController");
         cc.show();
     }
 

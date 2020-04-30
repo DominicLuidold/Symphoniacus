@@ -1,4 +1,4 @@
-package at.fhv.teamb.symphoniacus.presentation.internal;
+package at.fhv.teamb.symphoniacus.presentation.internal.skin;
 
 import static com.calendarfx.view.RequestEvent.REQUEST_DATE;
 import static com.calendarfx.view.RequestEvent.REQUEST_DATE_TIME;
@@ -10,6 +10,7 @@ import static com.calendarfx.view.YearMonthView.ClickBehaviour.PERFORM_SELECTION
 import static javafx.geometry.Side.RIGHT;
 import static javafx.scene.control.SelectionMode.SINGLE;
 
+import at.fhv.teamb.symphoniacus.presentation.internal.CustomCalendarButtonEvent;
 import com.calendarfx.model.Calendar;
 import com.calendarfx.model.Entry;
 import com.calendarfx.view.CalendarFXControl;
@@ -67,7 +68,7 @@ import org.controlsfx.control.textfield.CustomTextField;
 import org.kordamp.ikonli.fontawesome.FontAwesome;
 import org.kordamp.ikonli.javafx.FontIcon;
 
-public class BrutalCalendarSkin extends SkinBase<CalendarView> {
+public class OrganizationalOfficerCalendar extends SkinBase<CalendarView> {
 
     private final InvalidationListener entriesVisibilityListener =
         obs -> updateCalendarVisibility();
@@ -96,10 +97,11 @@ public class BrutalCalendarSkin extends SkinBase<CalendarView> {
         obs -> updatePrintVisibility();
 
     /**
-     * This is the Ultimate Brutal Calendar Skin.
-     * @param view a view
+     * This is the custom CalendarFX skin for a organizational officers.
+     *
+     * @param view The view to use
      */
-    public BrutalCalendarSkin(CalendarView view) {
+    public OrganizationalOfficerCalendar(CalendarView view) {
         super(view);
 
         if (Boolean.getBoolean("calendarfx.developer")) { //$NON-NLS-1$
@@ -167,10 +169,10 @@ public class BrutalCalendarSkin extends SkinBase<CalendarView> {
             .addAll("button-icon", "print-button-icon"); //$NON-NLS-1$ //$NON-NLS-2$
         this.printButton.setGraphic(printIcon);
 
+        // Custom publish button
         this.publishButton = new Button();
         this.publishButton.setId("publish");
-        //this.publishButton.setContentDisplay(ContentDisplay.GRAPHIC_ONLY);
-        this.publishButton.setText("Forward");
+        this.publishButton.setText("Publish");
         this.publishButton.setOnAction(evt -> publish());
         FontIcon publishIcon = new FontIcon(FontAwesome.ARROW_CIRCLE_UP);
         publishIcon.getStyleClass().addAll("button-icon"); //$NON-NLS-1$ //$NON-NLS-2$
@@ -401,8 +403,8 @@ public class BrutalCalendarSkin extends SkinBase<CalendarView> {
     private void publish() {
         CalendarView skin = getSkinnable();
         skin.fireEvent(
-            new PublishDutyRosterEvent(
-                PublishDutyRosterEvent.PUBLISH_DUTY_ROSTER_EVENT_EVENT_TYPE
+            new CustomCalendarButtonEvent(
+                CustomCalendarButtonEvent.PUBLISH_DUTY_ROSTER_EVENT
             )
         );
     }
