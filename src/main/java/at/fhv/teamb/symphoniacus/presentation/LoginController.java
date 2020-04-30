@@ -3,6 +3,7 @@ package at.fhv.teamb.symphoniacus.presentation;
 import at.fhv.teamb.symphoniacus.application.LoginManager;
 import at.fhv.teamb.symphoniacus.domain.User;
 import at.fhv.teamb.symphoniacus.presentation.internal.AlertHelper;
+import at.fhv.teamb.symphoniacus.presentation.internal.tasks.LoginTask;
 import java.io.IOException;
 import java.net.URL;
 import java.util.Locale;
@@ -19,6 +20,7 @@ import javafx.scene.control.Label;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
 import javafx.scene.image.ImageView;
+import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.GridPane;
 import javafx.stage.Stage;
 import javafx.stage.Window;
@@ -30,9 +32,19 @@ import org.controlsfx.validation.Validator;
 import org.controlsfx.validation.decoration.StyleClassValidationDecoration;
 import org.controlsfx.validation.decoration.ValidationDecoration;
 
+/**
+ * GUI Controller responsible for processing the Login.
+ *
+ * @author Valentin Goronjic
+ * @author Tobias Moser
+ */
 public class LoginController implements Initializable {
 
     private static final Logger LOG = LogManager.getLogger(LoginController.class);
+
+    @FXML
+    private AnchorPane pane;
+
     @FXML
     private GridPane grid;
 
@@ -102,6 +114,7 @@ public class LoginController implements Initializable {
      * {@link at.fhv.teamb.symphoniacus.application.type.DomainUserType} he belongs. After that the
      * function {@link #loadMainScene(User user)} is called. Otherwise the user gets an error
      * message for the failed login.
+     *
      * @param actionEvent event triggered by login
      */
     public void processLoginCredentials(ActionEvent actionEvent) {
@@ -120,33 +133,44 @@ public class LoginController implements Initializable {
                 sb.toString());
             return;
         }
-        Optional<User> userOptional =
-            loginManager.login(this.userShortcutField.getText(), this.passwordField.getText());
-
-        LOG.debug(
-            "Login with Username: {} and Password {}",
-            this.userShortcutField.getText(),
-            this.passwordField.getText()
+        LoginTask task = new LoginTask(
+            this.loginManager,
+            this.userShortcutField,
+            this.passwordField,
+            this.pane
         );
+        Thread thread = new Thread(task, "Login Task");
+        thread.setDaemon(true);
+        thread.start();
 
-        if (userOptional.isPresent()) {
-            loadMainScene(userOptional.get());
-        } else {
-            AlertHelper.showAlert(
-                Alert.AlertType.ERROR, owner,
-                this.resources.getString("login.error.login.failed.title"),
-                this.resources.getString("login.error.login.failed.message"
-                ));
-        }
-        LOG.debug("Login credentials filled in, checking credentials now");
-        LOG.error("MISSING credentials check");
+        task.setOnSucceeded(event -> {
+            Optional<User> userOptional =
+                task.getValue();
+
+            LOG.debug(
+                "Login with Username: {} and Password {}",
+                this.userShortcutField.getText(),
+                "************"
+            );
+
+            if (userOptional.isPresent()) {
+                loadMainScene(userOptional.get());
+            } else {
+                AlertHelper.showAlert(
+                    Alert.AlertType.ERROR, owner,
+                    this.resources.getString("login.error.login.failed.title"),
+                    this.resources.getString("login.error.login.failed.message"
+                    ));
+            }
+            MasterController.disableSpinner(this.pane);
+        });
+
     }
 
-    // TODO change to accept login user as param here
     private void loadMainScene(User user) {
         Locale locale = new Locale("en", "UK");
-        ResourceBundle bundle = ResourceBundle.getBundle("bundles.language", locale);
         try {
+            ResourceBundle bundle = ResourceBundle.getBundle("bundles.language", locale);
             MainController controller = MasterController.switchSceneTo(
                 "/view/mainWindow.fxml",
                 bundle,
