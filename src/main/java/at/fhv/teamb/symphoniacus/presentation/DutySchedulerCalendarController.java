@@ -1,6 +1,5 @@
 package at.fhv.teamb.symphoniacus.presentation;
 
-import at.fhv.teamb.symphoniacus.application.DutyManager;
 import at.fhv.teamb.symphoniacus.application.LoginManager;
 import at.fhv.teamb.symphoniacus.application.MusicianManager;
 import at.fhv.teamb.symphoniacus.application.SectionMonthlyScheduleManager;
@@ -130,7 +129,7 @@ public class DutySchedulerCalendarController extends CalendarController implemen
         // Make Calendar ready to display
         this.calendarView.getCalendarSources().setAll(
             this.prepareCalendarSource(
-                this.resources.getString("domain.section.sections"),
+                resources.getString("domain.section.sections"),
                 calendar
             )
         );
@@ -401,7 +400,7 @@ public class DutySchedulerCalendarController extends CalendarController implemen
      */
     @Override
     protected List<Duty> loadDuties(LocalDate start, LocalDate end) {
-        return new DutyManager().findAllInRangeWithSection(
+        return this.dutyManager.findAllInRangeWithSection(
             this.section.getEntity(),
             DEFAULT_INTERVAL_START,
             DEFAULT_INTERVAL_END

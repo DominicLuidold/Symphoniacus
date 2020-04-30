@@ -14,6 +14,7 @@ import java.util.LinkedList;
 import java.util.List;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.scene.layout.AnchorPane;
 
 /**
  * This controller is responsible for handling CalendarFX related actions such as
@@ -33,8 +34,17 @@ public abstract class CalendarController implements Initializable, Parentable<Ta
      */
     protected static final LocalDate DEFAULT_INTERVAL_END = LocalDate.now().plusMonths(2);
 
+    protected DutyManager dutyManager;
+
+    @FXML
+    protected AnchorPane calendarPane;
+
     @FXML
     protected CalendarView calendarView;
+
+    public CalendarController() {
+        this.dutyManager = new DutyManager();
+    }
 
     /**
      * Sets the calendar skin according to use case specific needs.
@@ -49,14 +59,9 @@ public abstract class CalendarController implements Initializable, Parentable<Ta
     /**
      * Returns a list of {@link Duty} objects based on a start and end date.
      *
-     * <p>This is the default implementation that loads all duties, regardless of any state,
-     * that should be overwritten in subclasses to load appropriate data.
-     *
      * @return A list of Entries
      */
-    protected List<Duty> loadDuties(LocalDate start, LocalDate end) {
-        return new DutyManager().findAllInRange(start, end);
-    }
+    protected abstract List<Duty> loadDuties(LocalDate start, LocalDate end);
 
     /**
      * Creates a {@link Calendar}.
