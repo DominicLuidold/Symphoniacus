@@ -97,7 +97,7 @@ public class LoginController implements Initializable {
     }
 
     /**
-     * this function processes the login data using the {@link LoginManager} and checks if there
+     * This function processes the login data using the {@link LoginManager} and checks if there
      * is a corresponding user. If this user exists, an attribute is set to which
      * {@link at.fhv.teamb.symphoniacus.application.type.DomainUserType} he belongs. After that the
      * function {@link #loadMainScene(User user)} is called. Otherwise the user gets an error
