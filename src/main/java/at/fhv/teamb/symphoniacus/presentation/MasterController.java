@@ -1,8 +1,17 @@
 package at.fhv.teamb.symphoniacus.presentation;
 
+import com.jfoenix.controls.JFXSpinner;
+import java.io.IOException;
 import java.util.Map;
+import java.util.ResourceBundle;
+import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
+import javafx.scene.Node;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.scene.control.Label;
+import javafx.scene.layout.AnchorPane;
+import javafx.stage.Stage;
 import org.apache.commons.collections4.map.HashedMap;
 import org.controlsfx.control.StatusBar;
 
@@ -15,6 +24,7 @@ import org.controlsfx.control.StatusBar;
 public class MasterController {
 
     private static MasterController INSTANCE;
+    private static JFXSpinner SPINNER;
     private Label statusTextField;
     private Map<String, Initializable> map = new HashedMap<>();
     private StatusBar statusBar;
@@ -34,6 +44,51 @@ public class MasterController {
         }
 
         return INSTANCE;
+    }
+
+    /**
+     * TODO JAVADOC.
+     */
+    public static <T> T switchSceneTo(String fxmlPath, ResourceBundle bundle, Node node)
+        throws IOException {
+        Scene oldScene = node.getScene();
+        Stage stage = (Stage) oldScene.getWindow();
+
+        FXMLLoader loader = new FXMLLoader(MasterController.class.getResource(fxmlPath), bundle);
+        Parent parent = loader.load();
+        T controller = loader.getController();
+        Scene newScene = new Scene(parent, oldScene.getWidth(), oldScene.getHeight());
+        newScene.getStylesheets().add("css/styles.css");
+        stage.setScene(newScene);
+
+        return controller;
+    }
+
+    /**
+     * Adds and shows a Loading Spinner in the given AnchorPane.
+     *
+     * @param pane The AnchorPane which will have the Spinner added at the bottom-center
+     */
+    public static void enableSpinner(AnchorPane pane) {
+        Scene s = pane.getScene();
+        SPINNER = new JFXSpinner();
+        SPINNER.setPrefSize(50, 50);
+
+        pane.setPrefSize(s.getWidth(), s.getHeight());
+        pane.setMinSize(s.getWidth(), s.getHeight());
+        pane.getChildren().add(SPINNER);
+        AnchorPane.setBottomAnchor(SPINNER, Double.valueOf(50));
+        AnchorPane.setLeftAnchor(SPINNER, (pane.getWidth() - SPINNER.getPrefWidth()) / 2);
+    }
+
+    /**
+     * Removes an active Loading Spinner in the given AnchorPane.
+     *
+     * @param pane The AnchorPane which will have the Spinner removed again
+     */
+    public static void disableSpinner(AnchorPane pane) {
+        pane.getChildren().remove(SPINNER);
+        SPINNER = null;
     }
 
     public Initializable get(Object key) {
@@ -62,6 +117,7 @@ public class MasterController {
 
     public void showStatusBarLoading() {
         this.statusTextField.setText("Loading");
+
     }
 
     public void showStatusBarLoaded() {
