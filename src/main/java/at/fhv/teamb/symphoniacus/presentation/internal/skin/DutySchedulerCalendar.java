@@ -286,7 +286,7 @@ public class DutySchedulerCalendar extends SkinBase<CalendarView> {
             Messages.getString("CalendarViewSkin.TOOLTIP_ADD_CALENDAR"))); //$NON-NLS-1$
         printButton.setTooltip(new Tooltip(
             Messages.getString("CalendarViewSkin.TOOLTIP_PRINT"))); //$NON-NLS-1$
-        forwardButton.setTooltip(new Tooltip("Publish Duty Roster")); //$NON-NLS-1$
+        forwardButton.setTooltip(new Tooltip("Forward Duty Roster")); //$NON-NLS-1$
         showDay.setTooltip(new Tooltip(
             Messages.getString("CalendarViewSkin.TOOLTIP_SHOW_DAY"))); //$NON-NLS-1$
         showWeek.setTooltip(new Tooltip(
