@@ -37,7 +37,7 @@ class DutySchedulerCalendarControllerTest {
         doAnswer((Answer<Void>) invocation -> {
             controller.fillCalendar(
                 invocation.getArgument(0),
-                controller.createDutyCalendarEntries(prepareTestDuties())
+                prepareTestDuties()
             );
             return null;
         }).when(controller).fillCalendar(any(Calendar.class), any(SectionEntity.class));
@@ -58,7 +58,9 @@ class DutySchedulerCalendarControllerTest {
         section.setSectionShortcut("TS1");
 
         // When
-        Calendar calendar = new DutySchedulerCalendarController().createCalendar(section);
+        Calendar calendar = new DutySchedulerCalendarController()
+            .createCalendar(section.getDescription(), section.getSectionShortcut(),
+                true);
 
         // Then
         assertEquals(

@@ -35,7 +35,7 @@ public abstract class CalendarController implements Initializable, Controllable 
 
 
     /**
-     * Creates a {@link Calendar} based on specified {@link SectionEntity}.
+     * Creates a {@link Calendar}.
      *
      * <p>The calendar will have a {@link Calendar.Style} assigned
      *
@@ -67,14 +67,11 @@ public abstract class CalendarController implements Initializable, Controllable 
     /**
      * Returns a list of {@link Duty} objects based on a start and enddate.
      *
-     * @param duties A List of Duties
      * @return A list of Entries
      */
-    public List<Duty> loadDuties(LocalDate start, LocalDate end){
+    public List<Duty> loadDuties(LocalDate start, LocalDate end) {
         return new DutyManager().findAllInRange(start, end);
     }
-
-
 
 
     /**
@@ -83,7 +80,7 @@ public abstract class CalendarController implements Initializable, Controllable 
      * @param duties A List of Duties
      * @return A list of Entries
      */
-    private List<Entry<Duty>> createDutyCalendarEntries(List<Duty> duties) {
+    public List<Entry<Duty>> createDutyCalendarEntries(List<Duty> duties) {
         List<Entry<Duty>> calendarEntries = new LinkedList<>();
         for (Duty duty : duties) {
             Interval interval = new Interval(

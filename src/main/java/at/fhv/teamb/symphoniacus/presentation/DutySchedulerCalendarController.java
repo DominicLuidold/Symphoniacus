@@ -64,6 +64,8 @@ public class DutySchedulerCalendarController extends CalendarController {
 
     private static final Logger LOG = LogManager.getLogger(DutySchedulerCalendarController.class);
 
+    private static final LocalDate EXTENDED_INTERVAL_END = DEFAULT_INTERVAL_START.plusMonths(4);
+
     private DutyScheduleController dutyScheduleController;
 
     private Section section;
@@ -324,85 +326,21 @@ public class DutySchedulerCalendarController extends CalendarController {
      */
     public CalendarSource prepareCalendarSource(String name, SectionEntity section) {
         CalendarSource calendarSource = new CalendarSource(name);
-        Calendar calendar = createCalendar(section);
-        fillCalendar(calendar, section);
-        calendarSource.getCalendars().add(calendar);
-        return calendarSource;
-    }
-
-    /**
-     * Creates a {@link Calendar} based on specified {@link SectionEntity}.
-     *
-     * <p>The calendar will have a {@link Calendar.Style} assigned and will be marked as
-     * {@code readOnly}.
-     *
-     * @param section The section to use
-     * @return A Calendar
-     */
-    public Calendar createCalendar(SectionEntity section) {
-        Calendar calendar = new Calendar(section.getDescription());
-        calendar.setShortName(section.getSectionShortcut());
-        calendar.setReadOnly(true);
-        calendar.setStyle(Calendar.Style.STYLE1);
-        return calendar;
-    }
-
-    /**
-     * Fills a {@link Calendar} with {@link Entry} objects.
-     *
-     * @param calendar The calendar to fill
-     * @param entries  A List of Entries
-     */
-    public void fillCalendar(Calendar calendar, List<Entry<Duty>> entries) {
-        for (Entry<Duty> entry : entries) {
-            entry.setCalendar(calendar);
-        }
-    }
-
-    /**
-     * Fills a {@link Calendar} with {@link Entry} objects based on specified {@link SectionEntity}.
-     *
-     * <p>Having no interval defined, the default interval start and end date (13 days from
-     * {@link LocalDate#now()} are getting used.
-     *
-     * @param calendar The calendar to fill
-     * @param section  The section used to determine required {@link DutyEntity} objects
-     * @see #DEFAULT_INTERVAL_START
-     * @see #DEFAULT_INTERVAL_END
-     */
-    public void fillCalendar(Calendar calendar, SectionEntity section) {
-        fillCalendar(calendar, createDutyCalendarEntries(
+        Calendar calendar = createCalendar(
+            section.getDescription(),
+            section.getSectionShortcut(),
+            true);
+        fillCalendar(calendar,
             new DutyManager().findAllInRangeWithSection(
                 section,
                 DEFAULT_INTERVAL_START,
                 EXTENDED_INTERVAL_END // TODO - Temporarily used until lazy loading is introduced
             )
-        ));
+        );
+        calendarSource.getCalendars().add(calendar);
+        return calendarSource;
     }
 
-    /**
-     * Fills a {@link Calendar} with {@link Entry} objects based on supplied {@link SectionEntity}
-     * and dates.
-     *
-     * @param calendar  The calendar to fill
-     * @param section   The section used to determine which {@link DutyEntity} objects
-     * @param startDate Start date of the desired interval
-     * @param endDate   End date of the desired interval
-     */
-    public void fillCalendar(
-        Calendar calendar,
-        SectionEntity section,
-        LocalDate startDate,
-        LocalDate endDate
-    ) {
-        fillCalendar(calendar, createDutyCalendarEntries(
-            new DutyManager().findAllInRangeWithSection(
-                section,
-                startDate,
-                endDate
-            )
-        ));
-    }
 
 
     @Override
@@ -423,7 +361,7 @@ public class DutySchedulerCalendarController extends CalendarController {
 
 
     @Override
-    public void setCalendarSkin(){
+    public void setCalendarSkin() {
         this.calendarView.setSkin(new BrutalCalendarSkin(this.calendarView));
     }
 
@@ -460,11 +398,12 @@ public class DutySchedulerCalendarController extends CalendarController {
     }
 
     //TODO: Section != SectionEntity
-    @Override public List<Duty> loadDuties(LocalDate start, LocalDate end){
+    @Override
+    public List<Duty> loadDuties(LocalDate start, LocalDate end) {
         return new DutyManager().findAllInRangeWithSection(
-            section,
+            section.getEntity(),
             start,
             end
-        )
+        );
     }
 }
