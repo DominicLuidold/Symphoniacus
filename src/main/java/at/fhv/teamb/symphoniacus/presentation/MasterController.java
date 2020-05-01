@@ -1,5 +1,6 @@
 package at.fhv.teamb.symphoniacus.presentation;
 
+import at.fhv.teamb.symphoniacus.presentation.internal.Parentable;
 import com.jfoenix.controls.JFXSpinner;
 import java.io.IOException;
 import java.util.Map;
@@ -37,6 +38,7 @@ public class MasterController {
      * Returns the instance of MasterController (Singleton).
      *
      * @return The one and only wonderful instanceof {@link MasterController}
+     * @deprecated in favor of {@link Parentable} interface methods
      */
     public static MasterController getInstance() {
         if (INSTANCE == null) {
@@ -91,10 +93,23 @@ public class MasterController {
         SPINNER = null;
     }
 
+    /**
+     * Gets an {@link Initializable}.
+     *
+     * @param key The key to identify the Initializable
+     * @deprecated in favor of {@link Parentable} interface methods
+     */
     public Initializable get(Object key) {
         return map.get(key);
     }
 
+    /**
+     * Stores a Initializable with a given String as key.
+     *
+     * @param key   The key to store the Initializable
+     * @param value The value to store
+     * @deprecated in favor of {@link Parentable} interface methods
+     */
     public Initializable put(String key, Initializable value) {
         return map.put(key, value);
     }
