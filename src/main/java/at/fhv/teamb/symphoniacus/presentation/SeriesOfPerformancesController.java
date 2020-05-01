@@ -3,9 +3,12 @@ package at.fhv.teamb.symphoniacus.presentation;
 import at.fhv.teamb.symphoniacus.application.SeriesOfPerformancesManager;
 import at.fhv.teamb.symphoniacus.persistence.model.InstrumentationEntity;
 import at.fhv.teamb.symphoniacus.persistence.model.MusicalPieceEntity;
-import com.mysql.jdbc.log.Log;
 import java.net.URL;
 import java.util.ResourceBundle;
+import java.util.Set;
+import javafx.collections.FXCollections;
+import javafx.collections.ListChangeListener;
+import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
@@ -16,15 +19,14 @@ import javafx.scene.layout.AnchorPane;
 import javafx.scene.text.TextFlow;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.controlsfx.control.CheckListView;
-import org.controlsfx.control.CheckModel;
+import org.controlsfx.control.CheckComboBox;
 import org.controlsfx.validation.ValidationSupport;
 import org.controlsfx.validation.Validator;
 import org.controlsfx.validation.decoration.StyleClassValidationDecoration;
 import org.controlsfx.validation.decoration.ValidationDecoration;
 
 /**
- * GUI Controller responsible for creating a new Series of Performances
+ * GUI Controller responsible for creating a new Series of Performances.
  *
  * @author Danijel Antonijevic
  * @author Nino Heinzle
@@ -42,10 +44,10 @@ public class SeriesOfPerformancesController implements Initializable {
     private TextField nameOfSeries;
 
     @FXML
-    private CheckListView<MusicalPieceEntity> musicalPieceCheckListView;
+    private CheckComboBox<String> musicalPieceCheckComboBox;
 
     @FXML
-    private CheckListView<InstrumentationEntity> instrumentationCheckListView;
+    private CheckComboBox<InstrumentationEntity> instrumentationCheckComboBox;
 
     /*
     This one is and will not be implemented.
@@ -95,11 +97,10 @@ public class SeriesOfPerformancesController implements Initializable {
         this.validationSupport.registerValidator(this.nameOfSeries,
             Validator.createEmptyValidator("A name is required."));
 
-        CheckModel<MusicalPieceEntity> musicalPieces = musicalPieceCheckListView.getCheckModel();
-        this.validationSupport.registerValidator(musicalPieceCheckListView,
+        this.validationSupport.registerValidator(musicalPieceCheckComboBox,
             Validator.createEmptyValidator("You must pick a musical piece."));
 
-        this.validationSupport.registerValidator(this.instrumentationCheckListView,
+        this.validationSupport.registerValidator(this.instrumentationCheckComboBox,
             Validator.createEmptyValidator("You must pick an instrumentation."));
 
         this.validationSupport.registerValidator(this.startingDate,
@@ -115,9 +116,36 @@ public class SeriesOfPerformancesController implements Initializable {
                 this.isValid = newValue.getErrors().isEmpty();
                 this.saveButton.setDisable(!isValid);
             });
+
+        /*
+        final ObservableList<MusicalPieceEntity> musicalPieces =  FXCollections.observableArrayList();
+        Set<MusicalPieceEntity> mp = seriesManager.getAllMusicalPieces();
+        musicalPieces.addAll(mp);
+         */
+
+        final ObservableList<String> musicalPieces =  FXCollections.observableArrayList();
+        Set<MusicalPieceEntity> mp = seriesManager.getAllMusicalPieces();
+        for (MusicalPieceEntity piece : mp) {
+            musicalPieces.add(piece.getName());
+            System.out.println(piece.getName());
+        }
+        musicalPieceCheckComboBox = new CheckComboBox<>();
+        musicalPieceCheckComboBox.getItems().addAll(musicalPieces);
+
+        musicalPieceCheckComboBox.getCheckModel().getCheckedItems().addListener(
+            new ListChangeListener<String>() {
+                @Override
+                public void onChanged(Change<? extends String> c) {
+                    System.out.println(musicalPieceCheckComboBox);
+                }
+            });
+        System.out.println("TESTESTETSETSETESTET");
+
+        System.out.println();
     }
 
     public void initMusicialPiecesCheckListView() {
+
 
     }
 

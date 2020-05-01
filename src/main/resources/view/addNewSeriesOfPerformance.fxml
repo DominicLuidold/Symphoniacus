@@ -16,9 +16,9 @@
 <?import javafx.scene.text.Font?>
 <?import javafx.scene.text.Text?>
 <?import javafx.scene.text.TextFlow?>
-<?import org.controlsfx.control.CheckListView?>
+<?import org.controlsfx.control.CheckComboBox?>
 
-<AnchorPane fx:id="pane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="at.fhv.teamb.symphoniacus.presentation.SeriesOfPerformancesController">
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="at.fhv.teamb.symphoniacus.presentation.SeriesOfPerformancesController">
    <children>
       <VBox alignment="CENTER" prefHeight="200.0" prefWidth="100.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
          <children>
@@ -56,6 +56,14 @@
                         <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
                     </rowConstraints>
                      <children>
+                        <AnchorPane prefHeight="200.0" prefWidth="200.0" GridPane.columnIndex="1" GridPane.rowIndex="1" >
+                           <children>
+                              <CheckComboBox fx:id="musicalPieceCheckComboBox" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
+                           </children>
+                           <GridPane.margin>
+                              <Insets bottom="6.0" left="2.0" right="2.0" top="6.0" />
+                           </GridPane.margin>
+                        </AnchorPane>
                         <TextFlow fx:id="instrumentationPositionsFlow" prefHeight="200.0" prefWidth="200.0" GridPane.columnIndex="1" GridPane.rowIndex="3" />
                         <DatePicker fx:id="endingDate" GridPane.columnIndex="1" GridPane.rowIndex="5" />
                         <DatePicker fx:id="startingDate" GridPane.columnIndex="1" GridPane.rowIndex="4" />
@@ -65,7 +73,7 @@
                                  <children>
                                   <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="160.0" prefWidth="300.0">
                                        <children>
-                                          <CheckListView fx:id="instrumentationCheckListView" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
+                                          <CheckComboBox fx:id="instrumentationCheckComboBox" title="" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
                                        </children>
                                     </AnchorPane>
                                   <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="160.0" prefWidth="100.0">
@@ -80,11 +88,6 @@
                               <Insets bottom="6.0" left="2.0" right="2.0" top="6.0" />
                            </GridPane.margin>
                         </AnchorPane>
-                        <CheckListView fx:id="musicalPieceCheckListView" GridPane.columnIndex="1" GridPane.rowIndex="1">
-                           <GridPane.margin>
-                              <Insets bottom="6.0" left="2.0" right="2.0" top="6.0" />
-                           </GridPane.margin>
-                        </CheckListView>
                         <TextField fx:id="nameOfSeries" GridPane.columnIndex="1">
                            <GridPane.margin>
                               <Insets left="2.0" right="2.0" />
@@ -146,8 +149,8 @@
                <children>
                   <HBox alignment="CENTER" prefHeight="100.0" prefWidth="200.0" spacing="40.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
                      <children>
-                        <Button fx:id="saveButton" defaultButton="true" alignment="CENTER" cancelButton="true" mnemonicParsing="false" prefWidth="150.0" prefHeight="40" scaleX="1.0" scaleY="1.0" text="Save" onAction="#save"/>
-                      <Button fx:id="cancelButton" defaultButton="false"  alignment="CENTER" contentDisplay="CENTER" mnemonicParsing="false" prefWidth="150.0" prefHeight="40" scaleX="1.0" scaleY="1.0" text="Cancel" />
+                        <Button fx:id="saveButton" alignment="CENTER"  defaultButton="true" mnemonicParsing="false" prefWidth="150.0" prefHeight="40" scaleX="1.0" scaleY="1.0" text="Save" />
+                      <Button fx:id="cancelButton" alignment="CENTER" cancelButton="true" contentDisplay="CENTER"  mnemonicParsing="false" prefWidth="150.0" prefHeight="40"  scaleX="1.0" scaleY="1.0" text="Cancel" />
                      </children>
                      <opaqueInsets>
                         <Insets />

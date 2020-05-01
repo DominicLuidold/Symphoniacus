@@ -1,6 +1,7 @@
 package at.fhv.teamb.symphoniacus.persistence.model;
 
 import java.time.LocalDate;
+import java.util.LinkedHashSet;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
@@ -57,7 +58,7 @@ public class SeriesOfPerformancesEntity {
             @JoinColumn(name = "musicalPieceId")
         }
     )
-    private List<MusicalPieceEntity> musicalPieces = new LinkedList<>();
+    private Set<MusicalPieceEntity> musicalPieces = new LinkedHashSet<>();
 
     @OneToMany(mappedBy = "seriesOfPerformances", orphanRemoval = false)
     private Set<DutyEntity> dutyEntities;
@@ -192,12 +193,12 @@ public class SeriesOfPerformancesEntity {
         instrumentationEntity.removeSeriesOfPerformance(this);
     }
 
-    public List<MusicalPieceEntity> getMusicalPieces() {
+    public Set<MusicalPieceEntity> getMusicalPieces() {
         return musicalPieces;
     }
 
     public void setMusicalPieces(
-        List<MusicalPieceEntity> musicalPieces) {
+        Set<MusicalPieceEntity> musicalPieces) {
         this.musicalPieces = musicalPieces;
     }
 
