@@ -11,7 +11,6 @@ import at.fhv.teamb.symphoniacus.persistence.model.MusicianEntity;
 import at.fhv.teamb.symphoniacus.presentation.internal.AlertHelper;
 import at.fhv.teamb.symphoniacus.presentation.internal.CustomCalendarButtonEvent;
 import at.fhv.teamb.symphoniacus.presentation.internal.skin.DutySchedulerCalendarSkin;
-import at.fhv.teamb.symphoniacus.presentation.internal.tasks.FindAllInRangeWithSectionTask;
 import com.calendarfx.model.Calendar;
 import com.calendarfx.model.CalendarSource;
 import com.calendarfx.model.Entry;
@@ -115,29 +114,26 @@ public class DutySchedulerCalendarController extends CalendarController implemen
         this.addForwardButtonHandler();
 
         // Fetch duties from database
-        FindAllInRangeWithSectionTask task =
-            this.loadDuties(DEFAULT_INTERVAL_START, DEFAULT_INTERVAL_END);
-        new Thread(task).start();
+        List<Duty> duties =
+        this.loadDuties(DEFAULT_INTERVAL_START, DEFAULT_INTERVAL_END);
 
-        task.setOnSucceeded(event -> {
-            // Create calendar
-            Calendar calendar = this.createCalendar(
-                this.section.getEntity().getDescription(),
-                this.section.getEntity().getSectionShortcut(),
-                true
-            );
+        // Create calendar
+        Calendar calendar = this.createCalendar(
+            this.section.getEntity().getDescription(),
+            this.section.getEntity().getSectionShortcut(),
+            true
+        );
 
-            // Fill calendar
-            this.fillCalendar(calendar, task.getValue());
+        // Fill calendar
+        this.fillCalendar(calendar, duties);
 
-            // Make Calendar ready to display
-            this.calendarView.getCalendarSources().setAll(
-                this.prepareCalendarSource(
-                    resources.getString("domain.section.sections"),
-                    calendar
-                )
-            );
-        });
+        // Make Calendar ready to display
+        this.calendarView.getCalendarSources().setAll(
+            this.prepareCalendarSource(
+                resources.getString("domain.section.sections"),
+                calendar
+            )
+        );
     }
 
     /**
@@ -404,13 +400,11 @@ public class DutySchedulerCalendarController extends CalendarController implemen
      * {@inheritDoc}
      */
     @Override
-    protected FindAllInRangeWithSectionTask loadDuties(LocalDate start, LocalDate end) {
-        return new FindAllInRangeWithSectionTask(
-            this.dutyManager,
+    protected List<Duty> loadDuties(LocalDate start, LocalDate end) {
+        return this.dutyManager.findAllInRangeWithSection(
             this.section.getEntity(),
-            DEFAULT_INTERVAL_START,
-            DEFAULT_INTERVAL_END,
-            this.calendarPane
+            start,
+            end
         );
     }
 
