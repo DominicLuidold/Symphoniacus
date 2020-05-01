@@ -43,6 +43,7 @@ public class MasterController {
      * @return The one and only wonderful instanceof {@link MasterController}
      * @deprecated in favor of {@link Parentable} interface methods
      */
+    @Deprecated
     public static MasterController getInstance() {
         if (INSTANCE == null) {
             INSTANCE = new MasterController();
@@ -105,6 +106,7 @@ public class MasterController {
      * @param key The key to identify the Initializable
      * @deprecated in favor of {@link Parentable} interface methods
      */
+    @Deprecated
     public Initializable get(Object key) {
         return map.get(key);
     }
@@ -116,6 +118,7 @@ public class MasterController {
      * @param value The value to store
      * @deprecated in favor of {@link Parentable} interface methods
      */
+    @Deprecated
     public Initializable put(String key, Initializable value) {
         return map.put(key, value);
     }

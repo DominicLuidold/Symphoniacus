@@ -7,6 +7,7 @@ import at.fhv.teamb.symphoniacus.presentation.internal.Parentable;
  *
  * @deprecated in favor of {@link Parentable} interface
  */
+@Deprecated
 public interface Controllable {
 
     /**
@@ -14,6 +15,7 @@ public interface Controllable {
      *
      * @deprecated in favor of {@link Parentable} interface methods
      */
+    @Deprecated
     void registerController();
 
     /**
@@ -21,6 +23,7 @@ public interface Controllable {
      *
      * @deprecated in favor of {@link Parentable} interface methods
      */
+    @Deprecated
     void show();
 
     /**
@@ -28,5 +31,6 @@ public interface Controllable {
      *
      * @deprecated in favor of {@link Parentable} interface methods
      */
+    @Deprecated
     void hide();
 }
