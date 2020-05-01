@@ -4,11 +4,14 @@ import at.fhv.teamb.symphoniacus.application.SeriesOfPerformancesManager;
 import at.fhv.teamb.symphoniacus.persistence.model.InstrumentationEntity;
 import at.fhv.teamb.symphoniacus.persistence.model.MusicalPieceEntity;
 import java.net.URL;
+import java.util.LinkedHashSet;
+import java.util.Optional;
 import java.util.ResourceBundle;
 import java.util.Set;
 import javafx.collections.FXCollections;
 import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
+import javafx.collections.ObservableSet;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
@@ -17,8 +20,11 @@ import javafx.scene.control.DatePicker;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.text.TextFlow;
+import javafx.util.StringConverter;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.core.util.JsonUtils;
+import org.checkerframework.checker.nullness.Opt;
 import org.controlsfx.control.CheckComboBox;
 import org.controlsfx.validation.ValidationSupport;
 import org.controlsfx.validation.Validator;
@@ -44,7 +50,7 @@ public class SeriesOfPerformancesController implements Initializable {
     private TextField nameOfSeries;
 
     @FXML
-    private CheckComboBox<String> musicalPieceCheckComboBox;
+    private CheckComboBox<MusicalPieceEntity> musicalPieceCheckComboBox;
 
     @FXML
     private CheckComboBox<InstrumentationEntity> instrumentationCheckComboBox;
@@ -117,36 +123,102 @@ public class SeriesOfPerformancesController implements Initializable {
                 this.saveButton.setDisable(!isValid);
             });
 
-        /*
-        final ObservableList<MusicalPieceEntity> musicalPieces =  FXCollections.observableArrayList();
-        Set<MusicalPieceEntity> mp = seriesManager.getAllMusicalPieces();
-        musicalPieces.addAll(mp);
-         */
+        initMusicialPiecesCheckListView();
 
-        final ObservableList<String> musicalPieces =  FXCollections.observableArrayList();
-        Set<MusicalPieceEntity> mp = seriesManager.getAllMusicalPieces();
-        for (MusicalPieceEntity piece : mp) {
-            musicalPieces.add(piece.getName());
-            System.out.println(piece.getName());
-        }
-        musicalPieceCheckComboBox = new CheckComboBox<>();
-        musicalPieceCheckComboBox.getItems().addAll(musicalPieces);
-
-        musicalPieceCheckComboBox.getCheckModel().getCheckedItems().addListener(
-            new ListChangeListener<String>() {
-                @Override
-                public void onChanged(Change<? extends String> c) {
-                    System.out.println(musicalPieceCheckComboBox);
-                }
-            });
-        System.out.println("TESTESTETSETSETESTET");
-
-        System.out.println();
     }
 
     public void initMusicialPiecesCheckListView() {
+        final ObservableList<MusicalPieceEntity> musicalPieces =
+            FXCollections.observableArrayList();
+        Set<MusicalPieceEntity> mp = seriesManager.getAllMusicalPieces();
+        musicalPieces.addAll(mp);
+
+        StringConverter<MusicalPieceEntity> musicalConverter =
+            new StringConverter<MusicalPieceEntity>() {
+                @Override
+                public String toString(MusicalPieceEntity piece) {
+                    return piece.getName();
+                }
+
+                @Override
+                public MusicalPieceEntity fromString(String nameOfPiece) {
+                    Optional<MusicalPieceEntity> piece =
+                        SeriesOfPerformancesManager.getMusicalPieceFromName(nameOfPiece);
+                    if (piece.isPresent()) {
+                        return piece.get();
+                    } else {
+                        LOG.error(
+                            "Somehow the musicial piece couldn't get found by its name in the SeriesOfPerformancesController");
+                        //Should never be able to get here
+                        return null;
+                    }
+                }
+            };
+        musicalPieceCheckComboBox.setConverter(musicalConverter);
+        /*
+        Der schlimmste Fehler meines Lebens!:
+        https://stackoverflow.com/questions/30643979/checkcombobox-choices-are-empty
+         */
+        musicalPieceCheckComboBox.getItems().addAll(musicalPieces);
+        System.out.println("TESTESTETSETSETESTET");
+
+        System.out.println();
+
+        // Call init Instrumentations, when Musical Pieces have been chosen
+        musicalPieceCheckComboBox.getCheckModel().getCheckedItems().addListener(
+            new ListChangeListener<MusicalPieceEntity>() {
+                @Override
+                public void onChanged(Change<? extends MusicalPieceEntity> c) {
+                    loadInstrumentationsFromChosenMusicalPieces(musicalPieceCheckComboBox.getCheckModel().getCheckedItems());
+
+                }
+            });
+    }
+
+    public void loadInstrumentationsFromChosenMusicalPieces(
+        ObservableList<MusicalPieceEntity> musicalPieces) {
+        System.out.println("aufruf!!!");
+        Set<MusicalPieceEntity> mp = new LinkedHashSet<>();
+        mp.addAll(musicalPieces);
+
+        Set<InstrumentationEntity> inst = this.seriesManager.getInstrumentationsToMusicalPieces(mp);
+        for (InstrumentationEntity i : inst) {
+            System.out.println(i.getName());
+        }
+
+        ObservableSet<InstrumentationEntity> test = FXCollections.observableSet();
+        test.addAll(inst);
 
 
+        StringConverter<InstrumentationEntity> instrumentationConverter =
+            new StringConverter<InstrumentationEntity>() {
+                @Override
+                public String toString(InstrumentationEntity instrumentation) {
+                    return instrumentation.getName();
+                }
+
+                @Override
+                public InstrumentationEntity fromString(String nameOfPiece) {
+                /*
+                Optional<MusicalPieceEntity> piece = SeriesOfPerformancesManager.getMusicalPieceFromName(nameOfPiece);
+                if (piece.isPresent()) {
+                    return piece.get();
+                } else {
+                    LOG.error(
+                        "Somehow the musicial piece couldn't get found by its name in the SeriesOfPerformancesController");
+                    //Should never be able to get here
+                    return null;
+                }
+            }
+
+                 */
+                    return null;
+                }
+            };
+
+        instrumentationCheckComboBox.setConverter(instrumentationConverter);
+        instrumentationCheckComboBox.getItems().clear();
+        instrumentationCheckComboBox.getItems().addAll(test);
     }
 
     public void save() {

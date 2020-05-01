@@ -23,6 +23,16 @@ public class MusicalPieceDao extends BaseDao<MusicalPieceEntity> {
         return musicalPieces;
     }
 
+    public Optional<MusicalPieceEntity> getMusicalPieceFromName(String name) {
+        TypedQuery<MusicalPieceEntity> query = entityManager
+            .createQuery("SELECT mp FROM MusicalPieceEntity mp "
+                + "WHERE mp.name = :nameOfPiece", MusicalPieceEntity.class);
+
+        query.setParameter("nameOfPiece",name);
+        Optional<MusicalPieceEntity> result = Optional.of(query.getSingleResult());
+        return result;
+    }
+
     @Override
     public Optional<MusicalPieceEntity> find(Integer key) {
         return Optional.empty();

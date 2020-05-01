@@ -1,7 +1,9 @@
 package at.fhv.teamb.symphoniacus.persistence.model;
 
+import java.util.LinkedHashSet;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Set;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -29,7 +31,7 @@ public class MusicalPieceEntity {
     private String category;
 
     @OneToMany(mappedBy = "musicalPiece", orphanRemoval = true)
-    private List<InstrumentationEntity> instrumentations = new LinkedList<>();
+    private Set<InstrumentationEntity> instrumentations = new LinkedHashSet<>();
 
     @ManyToMany(mappedBy = "musicalPieces")
     private List<SeriesOfPerformancesEntity> seriesOfPerformances = new LinkedList<>();
@@ -66,8 +68,13 @@ public class MusicalPieceEntity {
         this.category = category;
     }
 
-    public List<InstrumentationEntity> getInstrumentations() {
+    public Set<InstrumentationEntity> getInstrumentations() {
         return this.instrumentations;
+    }
+
+    public void setInstrumentations(
+        Set<InstrumentationEntity> instrumentations) {
+        this.instrumentations = instrumentations;
     }
 
     public void addInstrumentation(InstrumentationEntity instrumentation) {
