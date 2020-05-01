@@ -53,15 +53,15 @@ public class MainController implements Initializable {
     public void setLoginUser(User user) {
         this.currentUser = user;
 
-        if (this.currentUser.getUserEntity().getType().equals(DomainUserType.DOMAIN_MUSICIAN)) {
+        if (this.currentUser.getType().equals(DomainUserType.DOMAIN_MUSICIAN)) {
             MusicianManager mm = new MusicianManager();
             Optional<MusicianEntity> musician = mm.loadMusician(this.currentUser.getUserEntity());
             if (musician.isPresent()) {
                 this.currentMusician = new Musician(musician.get());
             }
         }
-        if (this.currentUser.getUserEntity().getType()
-            .equals(DomainUserType.DOMAIN_ADMINISTRATIVEASSISTANT)) {
+        if (this.currentUser.getType()
+            .equals(DomainUserType.DOMAIN_ADMINISTRATIVE_ASSISTANT)) {
             AdministrativeAssistantDao aad = new AdministrativeAssistantDao();
             Optional<AdministrativeAssistantEntity> administrativeAssistantEntity =
                 aad.find(this.currentUser.getUserEntity().getUserId());

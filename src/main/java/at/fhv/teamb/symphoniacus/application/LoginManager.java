@@ -46,12 +46,11 @@ public class LoginManager {
 
         // Login attempt succeeded
         if (this.userDao.isUserMusician(this.currentLoggedInUser.getUserEntity())) {
-            this.currentLoggedInUser.getUserEntity().setType(DomainUserType.DOMAIN_MUSICIAN);
+            this.currentLoggedInUser.setType(DomainUserType.DOMAIN_MUSICIAN);
         } // TODO - More types
 
         if (this.userDao.isUserAdministrativeAssistant(this.currentLoggedInUser.getUserEntity())) {
-            this.currentLoggedInUser.getUserEntity()
-                .setType(DomainUserType.DOMAIN_ADMINISTRATIVEASSISTANT);
+            this.currentLoggedInUser.setType(DomainUserType.DOMAIN_ADMINISTRATIVE_ASSISTANT);
         }
 
         return Optional.of(this.currentLoggedInUser);
