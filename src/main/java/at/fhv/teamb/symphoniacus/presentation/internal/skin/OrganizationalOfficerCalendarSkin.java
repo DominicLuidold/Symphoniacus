@@ -68,7 +68,7 @@ import org.controlsfx.control.textfield.CustomTextField;
 import org.kordamp.ikonli.fontawesome.FontAwesome;
 import org.kordamp.ikonli.javafx.FontIcon;
 
-public class OrganizationalOfficerCalendar extends SkinBase<CalendarView> {
+public class OrganizationalOfficerCalendarSkin extends SkinBase<CalendarView> {
 
     private final InvalidationListener entriesVisibilityListener =
         obs -> updateCalendarVisibility();
@@ -101,7 +101,7 @@ public class OrganizationalOfficerCalendar extends SkinBase<CalendarView> {
      *
      * @param view The view to use
      */
-    public OrganizationalOfficerCalendar(CalendarView view) {
+    public OrganizationalOfficerCalendarSkin(CalendarView view) {
         super(view);
 
         if (Boolean.getBoolean("calendarfx.developer")) { //$NON-NLS-1$

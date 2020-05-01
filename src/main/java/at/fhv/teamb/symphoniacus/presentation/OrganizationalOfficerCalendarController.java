@@ -1,6 +1,6 @@
 package at.fhv.teamb.symphoniacus.presentation;
 
-import at.fhv.teamb.symphoniacus.presentation.internal.skin.OrganizationalOfficerCalendar;
+import at.fhv.teamb.symphoniacus.presentation.internal.skin.OrganizationalOfficerCalendarSkin;
 import at.fhv.teamb.symphoniacus.presentation.internal.tasks.FindAllInRangeTask;
 import com.calendarfx.model.Calendar;
 import java.net.URL;
@@ -46,7 +46,7 @@ public class OrganizationalOfficerCalendarController extends CalendarController 
 
     @Override
     public void setCalendarSkin() {
-        this.calendarView.setSkin(new OrganizationalOfficerCalendar(this.calendarView));
+        this.calendarView.setSkin(new OrganizationalOfficerCalendarSkin(this.calendarView));
     }
 
     @Override

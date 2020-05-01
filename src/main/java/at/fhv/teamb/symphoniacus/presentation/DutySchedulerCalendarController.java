@@ -10,7 +10,7 @@ import at.fhv.teamb.symphoniacus.domain.User;
 import at.fhv.teamb.symphoniacus.persistence.model.MusicianEntity;
 import at.fhv.teamb.symphoniacus.presentation.internal.AlertHelper;
 import at.fhv.teamb.symphoniacus.presentation.internal.CustomCalendarButtonEvent;
-import at.fhv.teamb.symphoniacus.presentation.internal.skin.DutySchedulerCalendar;
+import at.fhv.teamb.symphoniacus.presentation.internal.skin.DutySchedulerCalendarSkin;
 import at.fhv.teamb.symphoniacus.presentation.internal.tasks.FindAllInRangeWithSectionTask;
 import com.calendarfx.model.Calendar;
 import com.calendarfx.model.CalendarSource;
@@ -362,7 +362,7 @@ public class DutySchedulerCalendarController extends CalendarController implemen
      */
     @Override
     protected void setCalendarSkin() {
-        this.calendarView.setSkin(new DutySchedulerCalendar(this.calendarView));
+        this.calendarView.setSkin(new DutySchedulerCalendarSkin(this.calendarView));
     }
 
     /**
