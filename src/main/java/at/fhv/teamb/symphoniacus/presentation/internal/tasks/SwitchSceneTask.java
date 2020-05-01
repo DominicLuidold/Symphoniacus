@@ -19,12 +19,6 @@ public class SwitchSceneTask extends LoadingAnimationTask<MainController> {
     private AnchorPane root;
     private ResourceBundle bundle;
 
-    /**
-     * Constructs a new SwitchSceneTask.
-     *
-     * @param root AnchorPane to show loading spinner
-     * @param bundle ResourceBundle for scene switching
-     */
     public SwitchSceneTask(
         AnchorPane root,
         ResourceBundle bundle
