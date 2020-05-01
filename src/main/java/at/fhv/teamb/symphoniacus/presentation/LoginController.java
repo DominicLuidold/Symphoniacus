@@ -4,7 +4,6 @@ import at.fhv.teamb.symphoniacus.application.LoginManager;
 import at.fhv.teamb.symphoniacus.domain.User;
 import at.fhv.teamb.symphoniacus.presentation.internal.AlertHelper;
 import at.fhv.teamb.symphoniacus.presentation.internal.tasks.LoginTask;
-import at.fhv.teamb.symphoniacus.presentation.internal.tasks.SwitchSceneTask;
 import java.io.IOException;
 import java.net.URL;
 import java.util.Locale;
@@ -12,7 +11,6 @@ import java.util.Optional;
 import java.util.ResourceBundle;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.SimpleBooleanProperty;
-import javafx.concurrent.Task;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -164,34 +162,32 @@ public class LoginController implements Initializable {
                     this.resources.getString("login.error.login.failed.message"
                     ));
             }
+            MasterController.disableSpinner(this.pane);
         });
 
     }
 
     private void loadMainScene(User user) {
         Locale locale = new Locale("en", "UK");
-
-        ResourceBundle bundle = ResourceBundle.getBundle("bundles.language", locale);
-
-        SwitchSceneTask sst = new SwitchSceneTask(this.pane, bundle);
-        sst.setOnSucceeded(event -> {
-            MainController controller = sst.getValue();
+        try {
+            ResourceBundle bundle = ResourceBundle.getBundle("bundles.language", locale);
+            MainController controller = MasterController.<MainController>switchSceneTo(
+                "/view/mainWindow.fxml",
+                bundle,
+                this.submitButton
+            );
             controller.setLoginUser(user);
-
             LOG.debug("MainController is fully loaded now :-)");
-        });
-        sst.setOnFailed(event -> {
-            LOG.error(event);
-            LOG.error(event.getSource());
-            LOG.error("Cannot load main scene, something is really broken");
+        } catch (IOException e) {
+            e.printStackTrace();
+            LOG.error(e);
             Stage owner = (Stage) this.submitButton.getScene().getWindow();
             AlertHelper.showAlert(Alert.AlertType.ERROR, owner, "Login failed",
                 this.resources.getString(
                     "login.error.login.technical.problems"
                 )
             );
-        });
-
-        new Thread(sst).start();
+            return;
+        }
     }
 }

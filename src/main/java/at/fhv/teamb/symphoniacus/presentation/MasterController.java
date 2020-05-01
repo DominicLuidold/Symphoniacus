@@ -4,7 +4,6 @@ import com.jfoenix.controls.JFXSpinner;
 import java.io.IOException;
 import java.util.Map;
 import java.util.ResourceBundle;
-import javafx.application.Platform;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.Node;
@@ -60,12 +59,7 @@ public class MasterController {
         T controller = loader.getController();
         Scene newScene = new Scene(parent, oldScene.getWidth(), oldScene.getHeight());
         newScene.getStylesheets().add("css/styles.css");
-
-        // prevent error when updating this from non-application thread
-        // -> javafx sucks!
-        Platform.runLater(() -> {
-            stage.setScene(newScene);
-        });
+        stage.setScene(newScene);
 
         return controller;
     }
