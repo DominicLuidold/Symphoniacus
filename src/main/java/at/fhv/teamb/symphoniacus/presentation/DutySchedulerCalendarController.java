@@ -115,7 +115,7 @@ public class DutySchedulerCalendarController extends CalendarController implemen
 
         // Fetch duties from database
         List<Duty> duties =
-        this.loadDuties(DEFAULT_INTERVAL_START, DEFAULT_INTERVAL_END);
+            this.loadDuties(DEFAULT_INTERVAL_START, DEFAULT_INTERVAL_END);
 
         // Create calendar
         Calendar calendar = this.createCalendar(
