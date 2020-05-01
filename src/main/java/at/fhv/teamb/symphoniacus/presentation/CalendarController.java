@@ -94,7 +94,7 @@ public class CalendarController implements Initializable, Controllable {
         this.registerController();
 
         // TODO - Temporarily used until proper login is introduced
-        Optional<UserEntity> user = new LoginManager().login("vaubou", "eItFAJSb");
+        Optional<UserEntity> user = new LoginManager().login("pain", "rbp");
         Optional<MusicianEntity> musician = new MusicianManager().loadMusician(user.get());
         this.section = new Section(musician.get().getSection());
 
