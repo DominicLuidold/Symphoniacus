@@ -30,8 +30,8 @@ public class MainGui extends Application {
             ResourceBundle bundle = ResourceBundle.getBundle("bundles.language", locale);
             Parent root = FXMLLoader.load(getClass().getResource("/view/login.fxml"), bundle);
 
-            double minHeight = 768;
-            double minWidth = 1366;
+            double minHeight = 748;
+            double minWidth = 1244;
             Rectangle2D screenBounds = Screen.getPrimary().getVisualBounds();
             stage.setX((screenBounds.getWidth() - minWidth) / 2);
             stage.setY((screenBounds.getHeight() - minHeight) / 2);
