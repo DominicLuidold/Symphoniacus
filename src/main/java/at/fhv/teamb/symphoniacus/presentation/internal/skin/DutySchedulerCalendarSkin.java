@@ -30,6 +30,8 @@ import com.calendarfx.view.print.PrintablePage;
 import com.calendarfx.view.print.ViewType;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
+import java.util.ResourceBundle;
 import javafx.animation.Animation.Status;
 import javafx.animation.KeyFrame;
 import javafx.animation.KeyValue;
@@ -170,9 +172,14 @@ public class DutySchedulerCalendarSkin extends SkinBase<CalendarView> {
         this.printButton.setGraphic(printIcon);
 
         // Custom forward button
+        ResourceBundle bundle = ResourceBundle.getBundle(
+            "bundles.language",
+            new Locale("en", "UK")
+        );
+
         this.forwardButton = new Button();
         this.forwardButton.setId("forward");
-        this.forwardButton.setText("Forward");
+        this.forwardButton.setText(bundle.getString("skin.btn.forward.title"));
         this.forwardButton.setOnAction(evt -> forward());
         FontIcon forwardIcon = new FontIcon(FontAwesome.ARROW_CIRCLE_UP);
         forwardIcon.getStyleClass().addAll("button-icon"); //$NON-NLS-1$ //$NON-NLS-2$
@@ -286,7 +293,9 @@ public class DutySchedulerCalendarSkin extends SkinBase<CalendarView> {
             Messages.getString("CalendarViewSkin.TOOLTIP_ADD_CALENDAR"))); //$NON-NLS-1$
         printButton.setTooltip(new Tooltip(
             Messages.getString("CalendarViewSkin.TOOLTIP_PRINT"))); //$NON-NLS-1$
-        forwardButton.setTooltip(new Tooltip("Forward Duty Roster")); //$NON-NLS-1$
+        forwardButton.setTooltip(
+            new Tooltip(bundle.getString("skin.btn.forward.tooltip")) //$NON-NLS-1$
+        );
         showDay.setTooltip(new Tooltip(
             Messages.getString("CalendarViewSkin.TOOLTIP_SHOW_DAY"))); //$NON-NLS-1$
         showWeek.setTooltip(new Tooltip(

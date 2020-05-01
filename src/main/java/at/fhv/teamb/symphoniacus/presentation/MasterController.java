@@ -1,7 +1,6 @@
 package at.fhv.teamb.symphoniacus.presentation;
 
 import at.fhv.teamb.symphoniacus.presentation.internal.Parentable;
-import at.fhv.teamb.symphoniacus.presentation.internal.tasks.LoginTask;
 import com.jfoenix.controls.JFXSpinner;
 import java.io.IOException;
 import java.util.Map;

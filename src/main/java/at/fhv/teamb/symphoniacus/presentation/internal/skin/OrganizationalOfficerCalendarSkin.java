@@ -30,6 +30,8 @@ import com.calendarfx.view.print.PrintablePage;
 import com.calendarfx.view.print.ViewType;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
+import java.util.ResourceBundle;
 import javafx.animation.Animation.Status;
 import javafx.animation.KeyFrame;
 import javafx.animation.KeyValue;
@@ -170,9 +172,14 @@ public class OrganizationalOfficerCalendarSkin extends SkinBase<CalendarView> {
         this.printButton.setGraphic(printIcon);
 
         // Custom publish button
+        ResourceBundle bundle = ResourceBundle.getBundle(
+            "bundles.language",
+            new Locale("en", "UK")
+        );
+
         this.publishButton = new Button();
         this.publishButton.setId("publish");
-        this.publishButton.setText("Publish");
+        this.publishButton.setText(bundle.getString("skin.btn.publish.title"));
         this.publishButton.setOnAction(evt -> publish());
         FontIcon publishIcon = new FontIcon(FontAwesome.ARROW_CIRCLE_UP);
         publishIcon.getStyleClass().addAll("button-icon"); //$NON-NLS-1$ //$NON-NLS-2$
@@ -286,7 +293,9 @@ public class OrganizationalOfficerCalendarSkin extends SkinBase<CalendarView> {
             Messages.getString("CalendarViewSkin.TOOLTIP_ADD_CALENDAR"))); //$NON-NLS-1$
         printButton.setTooltip(new Tooltip(
             Messages.getString("CalendarViewSkin.TOOLTIP_PRINT"))); //$NON-NLS-1$
-        publishButton.setTooltip(new Tooltip("Publish Duty Roster")); //$NON-NLS-1$
+        publishButton.setTooltip(
+            new Tooltip(bundle.getString("skin.btn.publish.tooltip")) //$NON-NLS-1$
+        );
         showDay.setTooltip(new Tooltip(
             Messages.getString("CalendarViewSkin.TOOLTIP_SHOW_DAY"))); //$NON-NLS-1$
         showWeek.setTooltip(new Tooltip(
