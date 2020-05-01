@@ -25,7 +25,7 @@ import org.controlsfx.control.StatusBar;
 public class MasterController {
 
     private static MasterController INSTANCE;
-    private static JFXSpinner SPINNER;
+    private static JFXSpinner SPINNER = new JFXSpinner();
     private Label statusTextField;
     private Map<String, Initializable> map = new HashedMap<>();
     private StatusBar statusBar;
@@ -72,12 +72,8 @@ public class MasterController {
      * @param pane The AnchorPane which will have the Spinner added at the bottom-center
      */
     public static void enableSpinner(AnchorPane pane) {
-        Scene s = pane.getScene();
-        SPINNER = new JFXSpinner();
         SPINNER.setPrefSize(50, 50);
 
-        pane.setPrefSize(s.getWidth(), s.getHeight());
-        pane.setMinSize(s.getWidth(), s.getHeight());
         pane.getChildren().add(SPINNER);
         AnchorPane.setBottomAnchor(SPINNER, Double.valueOf(50));
         AnchorPane.setLeftAnchor(SPINNER, (pane.getWidth() - SPINNER.getPrefWidth()) / 2);
@@ -90,7 +86,6 @@ public class MasterController {
      */
     public static void disableSpinner(AnchorPane pane) {
         pane.getChildren().remove(SPINNER);
-        SPINNER = null;
     }
 
     /**
