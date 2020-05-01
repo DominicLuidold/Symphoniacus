@@ -10,6 +10,11 @@ import javax.persistence.TypedQuery;
 
 public class InstrumentationDao extends BaseDao<InstrumentationEntity> {
 
+    /**
+     * search all instrumentations for the given musicalPieces.
+     * @param musicalPieces given musicalPieces
+     * @return a Set of all instrumentations to all given musicalPieces
+     */
     public Set<InstrumentationEntity> getInstrumentationsToMusicalPieces(
         Set<MusicalPieceEntity> musicalPieces) {
         TypedQuery<InstrumentationEntity> query = entityManager

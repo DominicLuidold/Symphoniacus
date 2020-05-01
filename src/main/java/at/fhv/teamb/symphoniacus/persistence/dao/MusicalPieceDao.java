@@ -23,6 +23,11 @@ public class MusicalPieceDao extends BaseDao<MusicalPieceEntity> {
         return musicalPieces;
     }
 
+    /**
+     * searches all musicalPieces for a given name.
+     * @param name given name of a musicalPiece
+     * @return the musical piece with the same name
+     */
     public Optional<MusicalPieceEntity> getMusicalPieceFromName(String name) {
         TypedQuery<MusicalPieceEntity> query = entityManager
             .createQuery("SELECT mp FROM MusicalPieceEntity mp "
