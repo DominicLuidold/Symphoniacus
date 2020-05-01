@@ -146,7 +146,8 @@ public class SeriesOfPerformancesController implements Initializable {
                         return piece.get();
                     } else {
                         LOG.error(
-                            "Somehow the musicial piece couldn't get found by its name in the SeriesOfPerformancesController");
+                            "Somehow the musicial piece couldn't get found by its"
+                                + " name in the SeriesOfPerformancesController");
                         //Should never be able to get here
                         return null;
                     }

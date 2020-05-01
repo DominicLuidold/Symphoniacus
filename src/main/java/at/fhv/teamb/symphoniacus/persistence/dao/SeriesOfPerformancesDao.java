@@ -5,6 +5,7 @@ import at.fhv.teamb.symphoniacus.persistence.model.SeriesOfPerformancesEntity;
 import java.util.Optional;
 
 public class SeriesOfPerformancesDao extends BaseDao<SeriesOfPerformancesEntity> {
+
     @Override
     public Optional<SeriesOfPerformancesEntity> find(Integer key) {
         return Optional.empty();

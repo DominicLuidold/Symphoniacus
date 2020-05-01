@@ -19,7 +19,9 @@ public class SeriesOfPerformancesManager {
     private SectionInstrumentationDao sectionInstrumentationDao;
     private SeriesOfPerformancesDao seriesOfPerformancesDao;
 
-
+    /**
+     * instantiates the attributes.
+     */
     public SeriesOfPerformancesManager() {
         this.musicalPieceDao = new MusicalPieceDao();
         this.instrumentationDao = new InstrumentationDao();
