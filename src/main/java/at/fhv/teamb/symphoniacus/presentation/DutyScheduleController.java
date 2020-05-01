@@ -49,9 +49,8 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.controlsfx.control.Notifications;
 
-public class DutyScheduleController implements Initializable,
-    Controllable,
-    Parentable<CalendarController> {
+public class DutyScheduleController
+    implements Controllable, Initializable, Parentable<DutySchedulerCalendarController> {
 
     private static final Logger LOG = LogManager.getLogger(DutyScheduleController.class);
     @FXML
@@ -63,7 +62,7 @@ public class DutyScheduleController implements Initializable,
     private ActualSectionInstrumentation actualSectionInstrumentation;
     private DutyPosition selectedDutyPosition;
     private ResourceBundle resources;
-    private CalendarController parentController;
+    private DutySchedulerCalendarController parentController;
 
     @FXML
     private AnchorPane dutySchedule;
@@ -737,7 +736,8 @@ public class DutyScheduleController implements Initializable,
         this.labelCurrentPosition.setText(resources.getString("tab.duty.schedule.currentposition"));
         this.hide();
         MasterController mc = MasterController.getInstance();
-        CalendarController cc = (CalendarController) mc.get("CalendarController");
+        DutySchedulerCalendarController cc =
+            (DutySchedulerCalendarController) mc.get("CalendarController");
         cc.show();
     }
 
@@ -802,7 +802,7 @@ public class DutyScheduleController implements Initializable,
     }
 
     @Override
-    public void setParentController(CalendarController controller) {
+    public void setParentController(DutySchedulerCalendarController controller) {
         this.parentController = controller;
     }
 }

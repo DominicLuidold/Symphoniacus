@@ -46,13 +46,18 @@ public class LoginManager {
 
         // Login attempt succeeded
         if (this.userDao.isUserMusician(this.currentLoggedInUser.getUserEntity())) {
-            this.currentLoggedInUser.getUserEntity().setType(DomainUserType.DOMAIN_MUSICIAN);
-        } // TODO - More types
-
-        if (this.userDao.isUserAdministrativeAssistant(this.currentLoggedInUser.getUserEntity())) {
-            this.currentLoggedInUser.getUserEntity()
-                .setType(DomainUserType.DOMAIN_ADMINISTRATIVEASSISTANT);
+            this.currentLoggedInUser.setType(DomainUserType.DOMAIN_MUSICIAN);
+        } else if (
+            this.userDao.isUserAdministrativeAssistant(
+                this.currentLoggedInUser.getUserEntity()
+            )
+        ) {
+            this.currentLoggedInUser.setType(DomainUserType.DOMAIN_ADMINISTRATIVE_ASSISTANT);
         }
+        LOG.debug(
+            "Current Logged In User Type is: '{}'",
+            this.currentLoggedInUser.getType()
+        );
 
         return Optional.of(this.currentLoggedInUser);
     }

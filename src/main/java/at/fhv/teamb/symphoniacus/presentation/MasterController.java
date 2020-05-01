@@ -1,5 +1,6 @@
 package at.fhv.teamb.symphoniacus.presentation;
 
+import at.fhv.teamb.symphoniacus.presentation.internal.Parentable;
 import com.jfoenix.controls.JFXSpinner;
 import java.io.IOException;
 import java.util.Map;
@@ -13,6 +14,8 @@ import javafx.scene.control.Label;
 import javafx.scene.layout.AnchorPane;
 import javafx.stage.Stage;
 import org.apache.commons.collections4.map.HashedMap;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.controlsfx.control.StatusBar;
 
 /**
@@ -23,8 +26,9 @@ import org.controlsfx.control.StatusBar;
  */
 public class MasterController {
 
+    private static final Logger LOG = LogManager.getLogger(MasterController.class);
     private static MasterController INSTANCE;
-    private static JFXSpinner SPINNER;
+    private static JFXSpinner SPINNER = new JFXSpinner();
     private Label statusTextField;
     private Map<String, Initializable> map = new HashedMap<>();
     private StatusBar statusBar;
@@ -37,7 +41,9 @@ public class MasterController {
      * Returns the instance of MasterController (Singleton).
      *
      * @return The one and only wonderful instanceof {@link MasterController}
+     * @deprecated in favor of {@link Parentable} interface methods
      */
+    @Deprecated
     public static MasterController getInstance() {
         if (INSTANCE == null) {
             INSTANCE = new MasterController();
@@ -47,7 +53,13 @@ public class MasterController {
     }
 
     /**
-     * TODO JAVADOC.
+     * Switches the current scene to the given FXML.
+     * @param fxmlPath The path to the FXML file (ex. "/view/login.fxml")
+     * @param bundle Current Resource Bundle
+     * @param node Node that is required to aquire the current scene
+     * @param <T> Type of target Calendar, ex. MainController
+     * @return Controller instance of the loaded FXML
+     * @throws IOException If unable to load FXML file or instantiation of Controller failed
      */
     public static <T> T switchSceneTo(String fxmlPath, ResourceBundle bundle, Node node)
         throws IOException {
@@ -70,14 +82,11 @@ public class MasterController {
      * @param pane The AnchorPane which will have the Spinner added at the bottom-center
      */
     public static void enableSpinner(AnchorPane pane) {
-        Scene s = pane.getScene();
-        SPINNER = new JFXSpinner();
+        LOG.debug("Enabling Spinner");
         SPINNER.setPrefSize(50, 50);
 
-        pane.setPrefSize(s.getWidth(), s.getHeight());
-        pane.setMinSize(s.getWidth(), s.getHeight());
         pane.getChildren().add(SPINNER);
-        AnchorPane.setBottomAnchor(SPINNER, Double.valueOf(50));
+        AnchorPane.setBottomAnchor(SPINNER, 50d);
         AnchorPane.setLeftAnchor(SPINNER, (pane.getWidth() - SPINNER.getPrefWidth()) / 2);
     }
 
@@ -87,14 +96,29 @@ public class MasterController {
      * @param pane The AnchorPane which will have the Spinner removed again
      */
     public static void disableSpinner(AnchorPane pane) {
+        LOG.debug("Disabling Spinner");
         pane.getChildren().remove(SPINNER);
-        SPINNER = null;
     }
 
+    /**
+     * Gets an {@link Initializable}.
+     *
+     * @param key The key to identify the Initializable
+     * @deprecated in favor of {@link Parentable} interface methods
+     */
+    @Deprecated
     public Initializable get(Object key) {
         return map.get(key);
     }
 
+    /**
+     * Stores a Initializable with a given String as key.
+     *
+     * @param key   The key to store the Initializable
+     * @param value The value to store
+     * @deprecated in favor of {@link Parentable} interface methods
+     */
+    @Deprecated
     public Initializable put(String key, Initializable value) {
         return map.put(key, value);
     }
@@ -117,7 +141,6 @@ public class MasterController {
 
     public void showStatusBarLoading() {
         this.statusTextField.setText("Loading");
-
     }
 
     public void showStatusBarLoaded() {

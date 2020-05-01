@@ -140,7 +140,6 @@ public class LoginController implements Initializable {
             this.pane
         );
         Thread thread = new Thread(task, "Login Task");
-        thread.setDaemon(true);
         thread.start();
 
         task.setOnSucceeded(event -> {

@@ -9,7 +9,13 @@
         <Logger name="at.fhv.teamb.symphoniacus" level="debug" additivity="false">
             <AppenderRef ref="LogToConsole"/>
         </Logger>
-        <Root level="error">
+        <Logger name="org.hibernate.type.descriptor.sql.BasicBinder" level="TRACE">
+            <AppenderRef ref="LogToConsole"/>
+        </Logger>
+        <Logger name="org.hibernate" level="ERROR">
+            <AppenderRef ref="LogToConsole"/>
+        </Logger>
+        <Root level="debug">
             <AppenderRef ref="LogToConsole"/>
         </Root>
     </Loggers>

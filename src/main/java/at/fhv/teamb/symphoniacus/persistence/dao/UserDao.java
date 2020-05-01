@@ -1,5 +1,6 @@
 package at.fhv.teamb.symphoniacus.persistence.dao;
 
+import at.fhv.teamb.symphoniacus.domain.Duty;
 import at.fhv.teamb.symphoniacus.persistence.BaseDao;
 import at.fhv.teamb.symphoniacus.persistence.model.AdministrativeAssistantEntity;
 import at.fhv.teamb.symphoniacus.persistence.model.MusicianEntity;
@@ -7,6 +8,8 @@ import at.fhv.teamb.symphoniacus.persistence.model.UserEntity;
 import java.util.List;
 import java.util.Optional;
 import javax.persistence.TypedQuery;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 /**
  * DAO for Users.
@@ -15,6 +18,8 @@ import javax.persistence.TypedQuery;
  * @author Valentin Goronjic
  */
 public class UserDao extends BaseDao<UserEntity> {
+
+    private static final Logger LOG = LogManager.getLogger(UserDao.class);
 
     /**
      * Finds a {@link UserEntity} by its key.
@@ -58,12 +63,12 @@ public class UserDao extends BaseDao<UserEntity> {
         query.setParameter("shortc", userShortCut);
         query.setParameter("pwd", password);
 
-
         result = query.getResultList();
-
         if (result.size() > 0) {
             return Optional.of(result.get(0));
         }
+
+        LOG.debug("No results for query login found");
         return Optional.empty();
     }
 
@@ -80,16 +85,17 @@ public class UserDao extends BaseDao<UserEntity> {
             Long.class
         );
         query.setParameter("user", currentUser);
-        //TODO Error Handling
+
         try {
             result = Optional.of(query.getSingleResult());
-        } catch (Exception ex) {
-            ex.printStackTrace();
+        } catch (Exception e) {
+            LOG.error(e);
         }
 
         if (result.isPresent()) {
             return result.get() == 1;
         }
+        LOG.debug("No results for query isUserMusician found");
         return false;
     }
 
@@ -106,16 +112,17 @@ public class UserDao extends BaseDao<UserEntity> {
             Long.class
         );
         query.setParameter("user", currentUser);
-        //TODO Error Handling
+
         try {
             result = Optional.of(query.getSingleResult());
-        } catch (Exception ex) {
-            ex.printStackTrace();
+        } catch (Exception e) {
+            LOG.error(e);
         }
 
         if (result.isPresent()) {
             return result.get() == 1;
         }
+        LOG.debug("No results for query isUserAdministrativeAssistant found");
         return false;
     }
 }
