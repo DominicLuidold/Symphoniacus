@@ -4,6 +4,7 @@ import at.fhv.teamb.symphoniacus.application.DutyManager;
 import at.fhv.teamb.symphoniacus.domain.Duty;
 import at.fhv.teamb.symphoniacus.persistence.model.DutyEntity;
 import at.fhv.teamb.symphoniacus.presentation.internal.Parentable;
+import at.fhv.teamb.symphoniacus.presentation.internal.tasks.LoadingAnimationTask;
 import com.calendarfx.model.Calendar;
 import com.calendarfx.model.CalendarSource;
 import com.calendarfx.model.Entry;
@@ -57,11 +58,13 @@ public abstract class CalendarController implements Initializable, Parentable<Ta
     protected abstract void setEntryDetailsCallback();
 
     /**
-     * Returns a list of {@link Duty} objects based on a start and end date.
+     * Returns a task containing the requested {@link Duty} objects.
      *
-     * @return A list of Entries
+     * @param start A LocalDate representing the start
+     * @param end   A LocalDate representing the end
+     * @return A subclass of {@link LoadingAnimationTask}
      */
-    protected abstract List<Duty> loadDuties(LocalDate start, LocalDate end);
+    protected abstract LoadingAnimationTask<?> loadDuties(LocalDate start, LocalDate end);
 
     /**
      * Creates a {@link Calendar}.

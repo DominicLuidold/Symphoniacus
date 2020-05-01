@@ -1,11 +1,10 @@
 package at.fhv.teamb.symphoniacus.presentation;
 
-import at.fhv.teamb.symphoniacus.domain.Duty;
 import at.fhv.teamb.symphoniacus.presentation.internal.skin.OrganizationalOfficerCalendar;
+import at.fhv.teamb.symphoniacus.presentation.internal.tasks.FindAllInRangeTask;
 import com.calendarfx.model.Calendar;
 import java.net.URL;
 import java.time.LocalDate;
-import java.util.List;
 import java.util.ResourceBundle;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -21,25 +20,28 @@ public class OrganizationalOfficerCalendarController extends CalendarController 
         this.setCalendarSkin();
 
         // Fetch duties from database
-        List<Duty> duties = this.loadDuties(DEFAULT_INTERVAL_START, DEFAULT_INTERVAL_END);
+        FindAllInRangeTask task = this.loadDuties(DEFAULT_INTERVAL_START, DEFAULT_INTERVAL_END);
+        new Thread(task).start();
 
-        // Create calendar
-        Calendar calendar = this.createCalendar(
-            "All Duties", // TODO - i18n String name convention abklären
-            "D",
-            true // TODO
-        );
+        task.setOnSucceeded(event -> {
+            // Create calendar
+            Calendar calendar = this.createCalendar(
+                resources.getString("oo.calendar.name"),
+                resources.getString("oo.calendar.shortname"),
+                false
+            );
 
-        // Fill calendar
-        this.fillCalendar(calendar, duties);
+            // Fill calendar
+            this.fillCalendar(calendar, task.getValue());
 
-        // Make Calendar ready to display
-        this.calendarView.getCalendarSources().setAll(
-            this.prepareCalendarSource(
-                "Overview", // TODO - i18n String name convention abklären
-                calendar
-            )
-        );
+            // Make Calendar ready to display
+            this.calendarView.getCalendarSources().setAll(
+                this.prepareCalendarSource(
+                    resources.getString("oo.calendar.source"),
+                    calendar
+                )
+            );
+        });
     }
 
     @Override
@@ -53,8 +55,13 @@ public class OrganizationalOfficerCalendarController extends CalendarController 
     }
 
     @Override
-    protected List<Duty> loadDuties(LocalDate start, LocalDate end) {
-        return this.dutyManager.findAllInRange(DEFAULT_INTERVAL_START, DEFAULT_INTERVAL_END);
+    protected FindAllInRangeTask loadDuties(LocalDate start, LocalDate end) {
+        return new FindAllInRangeTask(
+            this.dutyManager,
+            DEFAULT_INTERVAL_START,
+            DEFAULT_INTERVAL_END,
+            this.calendarPane
+        );
     }
 
     @Override
