@@ -1,6 +1,5 @@
 package at.fhv.teamb.symphoniacus.persistence.model;
 
-import at.fhv.teamb.symphoniacus.application.type.DomainUserType;
 import java.util.LinkedList;
 import java.util.List;
 import javax.persistence.Column;
@@ -11,7 +10,6 @@ import javax.persistence.Id;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
-import javax.persistence.Transient;
 
 @Entity
 @Table(name = "user")
@@ -62,9 +60,6 @@ public class UserEntity {
 
     @OneToMany(mappedBy = "user")
     private List<AdministrativeAssistantEntity> administrativeAssistants = new LinkedList<>();
-
-    @Transient
-    protected DomainUserType type; // TODO
 
     public Integer getUserId() {
         return this.userId;
@@ -193,13 +188,5 @@ public class UserEntity {
     ) {
         this.administrativeAssistants.remove(administrativeAssistant);
         administrativeAssistant.setUser(null);
-    }
-
-    public DomainUserType getType() { // TODO
-        return this.type;
-    }
-
-    public void setType(DomainUserType type) { // TODO
-        this.type = type;
     }
 }

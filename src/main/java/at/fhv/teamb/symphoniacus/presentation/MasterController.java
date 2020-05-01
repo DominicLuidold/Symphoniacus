@@ -1,6 +1,7 @@
 package at.fhv.teamb.symphoniacus.presentation;
 
 import at.fhv.teamb.symphoniacus.presentation.internal.Parentable;
+import at.fhv.teamb.symphoniacus.presentation.internal.tasks.LoginTask;
 import com.jfoenix.controls.JFXSpinner;
 import java.io.IOException;
 import java.util.Map;
@@ -14,6 +15,8 @@ import javafx.scene.control.Label;
 import javafx.scene.layout.AnchorPane;
 import javafx.stage.Stage;
 import org.apache.commons.collections4.map.HashedMap;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.controlsfx.control.StatusBar;
 
 /**
@@ -24,6 +27,7 @@ import org.controlsfx.control.StatusBar;
  */
 public class MasterController {
 
+    private static final Logger LOG = LogManager.getLogger(MasterController.class);
     private static MasterController INSTANCE;
     private static JFXSpinner SPINNER = new JFXSpinner();
     private Label statusTextField;
@@ -72,6 +76,7 @@ public class MasterController {
      * @param pane The AnchorPane which will have the Spinner added at the bottom-center
      */
     public static void enableSpinner(AnchorPane pane) {
+        LOG.debug("Enabling Spinner");
         SPINNER.setPrefSize(50, 50);
 
         pane.getChildren().add(SPINNER);
@@ -85,6 +90,7 @@ public class MasterController {
      * @param pane The AnchorPane which will have the Spinner removed again
      */
     public static void disableSpinner(AnchorPane pane) {
+        LOG.debug("Disabling Spinner");
         pane.getChildren().remove(SPINNER);
     }
 
