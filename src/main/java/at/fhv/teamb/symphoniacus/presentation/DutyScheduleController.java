@@ -11,6 +11,7 @@ import at.fhv.teamb.symphoniacus.persistence.PersistenceState;
 import at.fhv.teamb.symphoniacus.presentation.internal.DutyPositionMusicianTableModel;
 import at.fhv.teamb.symphoniacus.presentation.internal.MusicianTableModel;
 import at.fhv.teamb.symphoniacus.presentation.internal.OldDutyComboView;
+import at.fhv.teamb.symphoniacus.presentation.internal.Parentable;
 import at.fhv.teamb.symphoniacus.presentation.internal.ScheduleButtonTableCell;
 import at.fhv.teamb.symphoniacus.presentation.internal.tasks.GetMusiciansAvailableForPositionTask;
 import at.fhv.teamb.symphoniacus.presentation.internal.tasks.GetOtherDutiesTask;
@@ -48,7 +49,8 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.controlsfx.control.Notifications;
 
-public class DutyScheduleController implements Initializable, Controllable {
+public class DutyScheduleController
+    implements Controllable, Initializable, Parentable<DutySchedulerCalendarController> {
 
     private static final Logger LOG = LogManager.getLogger(DutyScheduleController.class);
     @FXML
@@ -60,6 +62,7 @@ public class DutyScheduleController implements Initializable, Controllable {
     private ActualSectionInstrumentation actualSectionInstrumentation;
     private DutyPosition selectedDutyPosition;
     private ResourceBundle resources;
+    private DutySchedulerCalendarController parentController;
 
     @FXML
     private AnchorPane dutySchedule;
@@ -244,7 +247,7 @@ public class DutyScheduleController implements Initializable, Controllable {
 
         this.columnSchedule.setCellFactory(
             ScheduleButtonTableCell.<MusicianTableModel>forTableColumn(
-                "Schedule",
+                this.resources.getString("tab.duty.schedule.table.dutyposition.set.btn"),
                 (MusicianTableModel mtm) -> {
                     LOG.debug("Schedule btn with requests has been pressed");
 
@@ -293,7 +296,7 @@ public class DutyScheduleController implements Initializable, Controllable {
 
         this.columnSchedule2.setCellFactory(
             ScheduleButtonTableCell.<MusicianTableModel>forTableColumn(
-                "Schedule",
+                this.resources.getString("tab.duty.schedule.table.dutyposition.set.btn"),
                 (MusicianTableModel mtm) -> {
                     LOG.debug("Schedule btn without requests has been pressed");
                     this.addMusicianToPosition(
@@ -308,7 +311,7 @@ public class DutyScheduleController implements Initializable, Controllable {
 
         this.columnUnsetPosition.setCellFactory(
             ScheduleButtonTableCell.<DutyPositionMusicianTableModel>forTableColumn(
-                "Unset",
+                this.resources.getString("tab.duty.schedule.table.dutyposition.unset.btn"),
                 (DutyPositionMusicianTableModel dpmtm) -> {
                     LOG.debug("Unset musician button has been pressed");
 
@@ -733,7 +736,8 @@ public class DutyScheduleController implements Initializable, Controllable {
         this.labelCurrentPosition.setText(resources.getString("tab.duty.schedule.currentposition"));
         this.hide();
         MasterController mc = MasterController.getInstance();
-        CalendarController cc = (CalendarController) mc.get("CalendarController");
+        DutySchedulerCalendarController cc =
+            (DutySchedulerCalendarController) mc.get("CalendarController");
         cc.show();
     }
 
@@ -795,5 +799,10 @@ public class DutyScheduleController implements Initializable, Controllable {
 
     public void setSection(Section section) {
         this.section = section;
+    }
+
+    @Override
+    public void setParentController(DutySchedulerCalendarController controller) {
+        this.parentController = controller;
     }
 }

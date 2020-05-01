@@ -15,7 +15,6 @@ public class Main {
         try {
             MainGui.main(args);
         } catch (Exception e) {
-            e.printStackTrace();
             LOG.error(e);
         }
     }
