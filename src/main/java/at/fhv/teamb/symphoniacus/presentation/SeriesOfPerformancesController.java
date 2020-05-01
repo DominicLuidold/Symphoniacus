@@ -23,8 +23,6 @@ import javafx.scene.text.TextFlow;
 import javafx.util.StringConverter;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.apache.logging.log4j.core.util.JsonUtils;
-import org.checkerframework.checker.nullness.Opt;
 import org.controlsfx.control.CheckComboBox;
 import org.controlsfx.validation.ValidationSupport;
 import org.controlsfx.validation.Validator;
@@ -169,7 +167,8 @@ public class SeriesOfPerformancesController implements Initializable {
             new ListChangeListener<MusicalPieceEntity>() {
                 @Override
                 public void onChanged(Change<? extends MusicalPieceEntity> c) {
-                    loadInstrumentationsFromChosenMusicalPieces(musicalPieceCheckComboBox.getCheckModel().getCheckedItems());
+                    loadInstrumentationsFromChosenMusicalPieces(
+                        musicalPieceCheckComboBox.getCheckModel().getCheckedItems());
 
                 }
             });
@@ -194,28 +193,29 @@ public class SeriesOfPerformancesController implements Initializable {
             new StringConverter<InstrumentationEntity>() {
                 @Override
                 public String toString(InstrumentationEntity instrumentation) {
-                    return instrumentation.getName();
+                    return instrumentation.getName() + " - "
+                        + instrumentation.getMusicalPiece().getName();
                 }
 
                 @Override
                 public InstrumentationEntity fromString(String nameOfPiece) {
-                /*
-                Optional<MusicalPieceEntity> piece = SeriesOfPerformancesManager.getMusicalPieceFromName(nameOfPiece);
+                    /*
+                Optional<MusicalPieceEntity> piece =
+                SeriesOfPerformancesManager.getMusicalPieceFromName(nameOfPiece);
                 if (piece.isPresent()) {
                     return piece.get();
                 } else {
                     LOG.error(
-                        "Somehow the musicial piece couldn't get found by its name in the SeriesOfPerformancesController");
+                        "Somehow the musicial piece couldn't get found
+                        by its name in the SeriesOfPerformancesController");
                     //Should never be able to get here
                     return null;
                 }
             }
-
                  */
                     return null;
                 }
             };
-
         instrumentationCheckComboBox.setConverter(instrumentationConverter);
         instrumentationCheckComboBox.getItems().clear();
         instrumentationCheckComboBox.getItems().addAll(test);
