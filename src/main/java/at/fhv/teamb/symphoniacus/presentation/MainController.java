@@ -42,7 +42,6 @@ public class MainController implements Initializable {
         this.userHeaderMenuController.setParentController(this);
         this.tabPaneController.setParentController(this);
         LOG.debug("Initialized MainController");
-        LOG.debug(tabPaneController);
     }
 
     /**

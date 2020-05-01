@@ -51,7 +51,13 @@ public class MasterController {
     }
 
     /**
-     * TODO JAVADOC.
+     * Switches the current scene to the given FXML.
+     * @param fxmlPath The path to the FXML file (ex. "/view/login.fxml")
+     * @param bundle Current Resource Bundle
+     * @param node Node that is required to aquire the current scene
+     * @param <T> Type of target Calendar, ex. MainController
+     * @return Controller instance of the loaded FXML
+     * @throws IOException If unable to load FXML file or instantiation of Controller failed
      */
     public static <T> T switchSceneTo(String fxmlPath, ResourceBundle bundle, Node node)
         throws IOException {
@@ -78,7 +84,7 @@ public class MasterController {
         SPINNER.setPrefSize(50, 50);
 
         pane.getChildren().add(SPINNER);
-        AnchorPane.setBottomAnchor(SPINNER, Double.valueOf(50));
+        AnchorPane.setBottomAnchor(SPINNER, 50d);
         AnchorPane.setLeftAnchor(SPINNER, (pane.getWidth() - SPINNER.getPrefWidth()) / 2);
     }
 
@@ -118,7 +124,6 @@ public class MasterController {
 
     public void showStatusBarLoading() {
         this.statusTextField.setText("Loading");
-
     }
 
     public void showStatusBarLoaded() {
