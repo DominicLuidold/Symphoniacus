@@ -151,6 +151,14 @@ public class SeriesOfPerformancesController implements Initializable {
             }
         });
 
+        // Cancel button method
+        cancelButton.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent event) {
+                cancel();
+            }
+        });
+
     }
 
     public void initMusicialPiecesCheckListView() {
@@ -316,19 +324,25 @@ public class SeriesOfPerformancesController implements Initializable {
     public void save() {
         if (validateInputs()) {
             seriesManager.save(nameOfSeries.getText(),
-                new LinkedHashSet<MusicalPieceEntity>(musicalPieceCheckComboBox.getItems()),
-                new LinkedHashSet<InstrumentationEntity>(instrumentationCheckComboBox.getItems()),
+                new LinkedHashSet<MusicalPieceEntity>(musicalPieceCheckComboBox.getCheckModel().getCheckedItems()),
+                new LinkedHashSet<InstrumentationEntity>(instrumentationCheckComboBox.getCheckModel().getCheckedItems()),
                 startingDate.getValue(), endingDate.getValue(), isTour.isSelected());
         } else {
             System.out.println();
         }
     }
 
-    //TODO
     private boolean validateInputs() {
+        //gibts die series of performance bereits -> wenn ja fehlermeldung
+        if (seriesManager.doesSeriesAlreadyExist(nameOfSeries.getText(),startingDate,endingDate)) {
+            //TODO Danijel
+        }
+        //überprüfe dass name nicht länger als 45 Zeichen
+        //startDate muss vor endingDate sein
         return true;
     }
 
     public void cancel() {
+        //TODO - schnittstelle zur Schließung des Tabs
     }
 }

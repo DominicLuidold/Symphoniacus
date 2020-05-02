@@ -7,11 +7,10 @@ import at.fhv.teamb.symphoniacus.persistence.dao.SeriesOfPerformancesDao;
 import at.fhv.teamb.symphoniacus.persistence.model.InstrumentationEntity;
 import at.fhv.teamb.symphoniacus.persistence.model.MusicalPieceEntity;
 import at.fhv.teamb.symphoniacus.persistence.model.SeriesOfPerformancesEntity;
-import java.sql.SQLException;
 import java.time.LocalDate;
-import java.util.List;
 import java.util.Optional;
 import java.util.Set;
+import javafx.scene.control.DatePicker;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -62,5 +61,10 @@ public class SeriesOfPerformancesManager {
 
         Optional<SeriesOfPerformancesEntity> result = seriesOfPerformancesDao.persist(series);
         return result.isPresent();
+    }
+
+    public boolean doesSeriesAlreadyExist(String text, DatePicker startingDate, DatePicker endingDate) {
+        //TODO Danijel
+        return true;
     }
 }
