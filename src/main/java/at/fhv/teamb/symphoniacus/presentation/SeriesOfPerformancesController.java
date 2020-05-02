@@ -1,10 +1,15 @@
 package at.fhv.teamb.symphoniacus.presentation;
 
 import at.fhv.teamb.symphoniacus.application.SeriesOfPerformancesManager;
+import at.fhv.teamb.symphoniacus.domain.InstrumentationPosition;
 import at.fhv.teamb.symphoniacus.persistence.model.InstrumentationEntity;
 import at.fhv.teamb.symphoniacus.persistence.model.MusicalPieceEntity;
+import at.fhv.teamb.symphoniacus.persistence.model.SectionInstrumentationEntity;
 import java.net.URL;
+import java.util.Iterator;
 import java.util.LinkedHashSet;
+import java.util.LinkedList;
+import java.util.List;
 import java.util.Optional;
 import java.util.ResourceBundle;
 import java.util.Set;
@@ -17,8 +22,11 @@ import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.DatePicker;
+import javafx.scene.control.ListView;
 import javafx.scene.control.TextField;
+import javafx.scene.control.cell.ComboBoxListCell;
 import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.GridPane;
 import javafx.scene.text.TextFlow;
 import javafx.util.StringConverter;
 import org.apache.logging.log4j.LogManager;
@@ -43,6 +51,9 @@ public class SeriesOfPerformancesController implements Initializable {
 
     @FXML
     private AnchorPane pane;
+
+    @FXML
+    private GridPane grid;
 
     @FXML
     private TextField nameOfSeries;
@@ -79,6 +90,9 @@ public class SeriesOfPerformancesController implements Initializable {
 
     private ResourceBundle resources;
 
+    @FXML
+    private ListView<String> listView;
+
     /**
      * Called to initialize a controller after its root element has been
      * completely processed.
@@ -91,6 +105,8 @@ public class SeriesOfPerformancesController implements Initializable {
     public void initialize(URL location, ResourceBundle resources) {
         this.resources = resources;
         this.seriesManager = new SeriesOfPerformancesManager();
+        listView = new ListView<>();
+        grid.add(listView, 1, 3);
 
         ValidationDecoration cssDecorator = new StyleClassValidationDecoration(
             "error",
@@ -121,6 +137,7 @@ public class SeriesOfPerformancesController implements Initializable {
                 this.saveButton.setDisable(!isValid);
             });
 
+        instrumentationCheckComboBox.setTitle("Choose your instrumentations");
         initMusicialPiecesCheckListView();
 
     }
@@ -159,10 +176,6 @@ public class SeriesOfPerformancesController implements Initializable {
         https://stackoverflow.com/questions/30643979/checkcombobox-choices-are-empty
          */
         musicalPieceCheckComboBox.getItems().addAll(musicalPieces);
-        System.out.println("TESTESTETSETSETESTET");
-
-        System.out.println();
-
         // Call init Instrumentations, when Musical Pieces have been chosen
         musicalPieceCheckComboBox.getCheckModel().getCheckedItems().addListener(
             new ListChangeListener<MusicalPieceEntity>() {
@@ -175,7 +188,7 @@ public class SeriesOfPerformancesController implements Initializable {
             });
     }
 
-    public void loadInstrumentationsFromChosenMusicalPieces(
+    private void loadInstrumentationsFromChosenMusicalPieces(
         ObservableList<MusicalPieceEntity> musicalPieces) {
         System.out.println("aufruf!!!");
         Set<MusicalPieceEntity> mp = new LinkedHashSet<>();
@@ -186,8 +199,8 @@ public class SeriesOfPerformancesController implements Initializable {
             System.out.println(i.getName());
         }
 
-        ObservableSet<InstrumentationEntity> test = FXCollections.observableSet();
-        test.addAll(inst);
+        ObservableSet<InstrumentationEntity> instrumentations = FXCollections.observableSet();
+        instrumentations.addAll(inst);
 
 
         StringConverter<InstrumentationEntity> instrumentationConverter =
@@ -217,16 +230,82 @@ public class SeriesOfPerformancesController implements Initializable {
                     return null;
                 }
             };
+
+        ObservableList<InstrumentationEntity> currentItems =
+            instrumentationCheckComboBox.getItems();
+
+
+        // Füge neu dazugekommene Instrumentations in die currentlist
+        for (InstrumentationEntity instrumentation : instrumentations) {
+            if (!(currentItems.contains(instrumentation))) {
+                instrumentationCheckComboBox.getItems().add(instrumentation);
+            }
+        }
+        // Alle Instrumentations die nach dem Hinzufügen nicht in der "neuen" Liste vorhanden sind
+        // werden gelöscht
+
+        instrumentationCheckComboBox.getItems().removeIf(
+            currentInstrumentation -> !(instrumentations.contains(currentInstrumentation)));
+
+        /*
+            Refresh BUG!
+            https://github.com/controlsfx/controlsfx/issues/1004
+         */
+
+        // TODO - wenn ein musical piece removed wird und neues ausgewählt wird
+        //  -> ist die besetzung falls vorhin ausgewählt auch hier ausgewählt
+        if(instrumentations.size() > 0) {
+            ObservableList<Integer> result =
+                instrumentationCheckComboBox.getCheckModel().getCheckedIndices();
+            for (Integer i : result) {
+                System.out.println(i + "test");
+                instrumentationCheckComboBox.getCheckModel().check(i);
+            }
+        } else {
+             // TODO - fix das verdammte broken indicesClearUp von checkcombobox
+        }
+
+
         instrumentationCheckComboBox.setConverter(instrumentationConverter);
-        instrumentationCheckComboBox.getItems().clear();
-        instrumentationCheckComboBox.getItems().addAll(test);
+        instrumentationCheckComboBox.getCheckModel().getCheckedItems().addListener(
+            new ListChangeListener<InstrumentationEntity>() {
+                @Override
+                public void onChanged(Change<? extends InstrumentationEntity> c) {
+                    loadSectionInstrumentationDescriptions(
+                        instrumentationCheckComboBox.getCheckModel().getCheckedItems());
+                }
+            });
     }
+
+    private void loadSectionInstrumentationDescriptions(
+        ObservableList<InstrumentationEntity> inst) {
+        ObservableSet<InstrumentationEntity> instrumentations =
+            FXCollections.observableSet();
+        instrumentations.addAll(inst);
+
+        List<String> desc = new LinkedList<>();
+        StringBuilder sb = new StringBuilder();
+        for (InstrumentationEntity instrumentation : instrumentations) {
+            sb = new StringBuilder();
+            String prefix = "";
+            for (SectionInstrumentationEntity sectionInstrumentation : instrumentation
+                .getSectionInstrumentations()) {
+                sb.append(prefix + sectionInstrumentation.getPredefinedSectionInstrumentation());
+                prefix = "/";
+            }
+            sb.append(" - " + instrumentation.getName());
+            desc.add(sb.toString());
+        }
+
+        ObservableList<String> descriptions = FXCollections.observableArrayList(desc);
+        listView.setItems(descriptions);
+    }
+
 
     public void save() {
         System.out.println("test");
     }
 
     public void cancel() {
-
     }
 }

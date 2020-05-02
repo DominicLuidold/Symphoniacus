@@ -6,7 +6,6 @@ import at.fhv.teamb.symphoniacus.persistence.dao.SectionInstrumentationDao;
 import at.fhv.teamb.symphoniacus.persistence.dao.SeriesOfPerformancesDao;
 import at.fhv.teamb.symphoniacus.persistence.model.InstrumentationEntity;
 import at.fhv.teamb.symphoniacus.persistence.model.MusicalPieceEntity;
-import at.fhv.teamb.symphoniacus.presentation.SeriesOfPerformancesController;
 import java.util.Optional;
 import java.util.Set;
 import org.apache.logging.log4j.LogManager;
