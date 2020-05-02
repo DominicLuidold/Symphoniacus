@@ -3,6 +3,10 @@ package at.fhv.teamb.symphoniacus.presentation.internal;
 import java.util.Objects;
 
 /**
+ * A Tab Pane entry which is mainly needed for
+ * {@link at.fhv.teamb.symphoniacus.presentation.MainController}
+ * to build the Tab Pane Header menu.
+ *
  * @author Valentin
  */
 public class TabPaneEntry {
@@ -10,8 +14,15 @@ public class TabPaneEntry {
     private String title;
     private String fxmlPath;
 
+    /**
+     * Constructs a new TabPaneEntry.
+     *
+     * @param order    The order in which this FXML should be loaded (1 = first)
+     * @param title    Title of Tab
+     * @param fxmlPath Path to FXML file including /view/ as prefix
+     */
     public TabPaneEntry(int order, String title, String fxmlPath) {
-        this.order = 1;
+        this.order = order;
         this.title = title;
         this.fxmlPath = fxmlPath;
     }
@@ -49,9 +60,9 @@ public class TabPaneEntry {
             return false;
         }
         TabPaneEntry that = (TabPaneEntry) o;
-        return order == that.order &&
-            Objects.equals(title, that.title) &&
-            Objects.equals(fxmlPath, that.fxmlPath);
+        return order == that.order
+            && Objects.equals(title, that.title)
+            && Objects.equals(fxmlPath, that.fxmlPath);
     }
 
     @Override

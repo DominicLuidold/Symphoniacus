@@ -13,8 +13,6 @@ import com.google.common.eventbus.EventBus;
 import java.io.IOException;
 import java.net.URL;
 import java.util.Comparator;
-import java.util.LinkedList;
-import java.util.List;
 import java.util.Optional;
 import java.util.PriorityQueue;
 import java.util.Queue;
@@ -171,6 +169,16 @@ public class MainController implements Initializable {
                     1,
                     bundle.getString("menu.tab.duty.roster.title"),
                     "/view/organizationalOfficerCalendarView.fxml"
+                )
+            );
+        }
+
+        if (result.isEmpty()) {
+            result.add(
+                new TabPaneEntry(
+                    1,
+                    bundle.getString("unsupported"),
+                    "/view/unsupportedTab.fxml"
                 )
             );
         }

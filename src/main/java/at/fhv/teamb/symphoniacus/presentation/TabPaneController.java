@@ -73,10 +73,12 @@ public class TabPaneController implements Initializable, Parentable<MainControll
             Parent p = loader.load();
             LOG.debug("loaded");
             Parentable controller = loader.getController();
-            if (controller.getParentController() == null) {
-                controller.setParentController(this);
+            if (controller != null) {
+                if (controller.getParentController() == null) {
+                    controller.setParentController(this);
+                }
+                controller.initializeNew();
             }
-            controller.initializeNew();
 
             Tab tab = new Tab(entry.getTitle());
             tab.setContent(p);
