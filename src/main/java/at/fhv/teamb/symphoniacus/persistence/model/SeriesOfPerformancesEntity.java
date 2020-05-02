@@ -5,6 +5,7 @@ import java.util.LinkedHashSet;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -36,7 +37,7 @@ public class SeriesOfPerformancesEntity {
     @Column(name = "isTour")
     private Boolean isTour;
 
-    @ManyToMany
+    @ManyToMany(cascade = {CascadeType.MERGE})
     @JoinTable(
         name = "seriesOfPerformances_instrumentation",
         joinColumns = {
@@ -48,7 +49,7 @@ public class SeriesOfPerformancesEntity {
     )
     private Set<InstrumentationEntity> instrumentations = new LinkedHashSet<>();
 
-    @ManyToMany
+    @ManyToMany(cascade = {CascadeType.MERGE})
     @JoinTable(
         name = "seriesOfPerformances_musicalPiece",
         joinColumns = {

@@ -3,6 +3,7 @@ package at.fhv.teamb.symphoniacus.persistence;
 import java.util.Optional;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
+import javax.persistence.EntityTransaction;
 import javax.persistence.Persistence;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -38,6 +39,29 @@ public abstract class BaseDao<T> implements Dao<T> {
         T elem = entityManager.find(clazz, key);
         if (elem != null) {
             return Optional.of(elem);
+        }
+        return Optional.empty();
+    }
+
+    /**
+     * Persists an object.
+     *
+     * @param clazz Class of the object
+     * @param elem object
+     * @return Optional.empty if persist not possible
+     */
+    protected Optional<T> persist(Class<T> clazz, T elem) {
+        EntityTransaction transaction = null;
+        try {
+            transaction = entityManager.getTransaction();
+            transaction.begin();
+            entityManager.persist(elem);
+            transaction.commit();
+            return Optional.of(elem);
+        } catch (Exception e) {
+            if (transaction != null && transaction.isActive()) {
+                transaction.rollback();
+            }
         }
         return Optional.empty();
     }

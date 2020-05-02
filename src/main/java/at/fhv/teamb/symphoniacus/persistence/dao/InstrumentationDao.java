@@ -31,7 +31,7 @@ public class InstrumentationDao extends BaseDao<InstrumentationEntity> {
 
     @Override
     public Optional<InstrumentationEntity> find(Integer key) {
-        return Optional.empty();
+        return this.find(InstrumentationEntity.class,key);
     }
 
     @Override

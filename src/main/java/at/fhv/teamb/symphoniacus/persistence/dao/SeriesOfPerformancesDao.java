@@ -8,12 +8,12 @@ public class SeriesOfPerformancesDao extends BaseDao<SeriesOfPerformancesEntity>
 
     @Override
     public Optional<SeriesOfPerformancesEntity> find(Integer key) {
-        return Optional.empty();
+        return this.find(SeriesOfPerformancesEntity.class, key);
     }
 
     @Override
     public Optional<SeriesOfPerformancesEntity> persist(SeriesOfPerformancesEntity elem) {
-        return Optional.empty();
+        return this.persist(SeriesOfPerformancesEntity.class,elem);
     }
 
     @Override
