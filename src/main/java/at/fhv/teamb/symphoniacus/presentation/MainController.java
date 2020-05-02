@@ -129,10 +129,11 @@ public class MainController implements Initializable {
         // Musician
         if (m != null && assistant == null) {
             LOG.debug("Getting permittedTabs for Musician");
-            result.add("dutySchedulerCalendar.fxml");
+            LOG.debug("No default view for Musician atm");
 
             for (MusicianRole role : m.getEntity().getMusicianRoles()) {
                 if (role.getDescription().equals(MusicianRoleType.DUTY_SCHEDULER)) {
+                    result.add("dutySchedulerCalendar.fxml");
                     result.add("dutySchedule.fxml");
                 }
             }

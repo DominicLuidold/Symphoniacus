@@ -47,6 +47,7 @@ public class MainControllerTest {
         MusicianRole role = new MusicianRole();
         role.setMusicianRoleId(2);
         role.setDescription(MusicianRoleType.DUTY_SCHEDULER);
+        entity.addMusicianRole(role);
         Musician m = new Musician(entity);
 
         // When: we call getPermittedTabs from TabPaneController
