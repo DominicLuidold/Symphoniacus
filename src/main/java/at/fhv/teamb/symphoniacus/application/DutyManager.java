@@ -1,13 +1,16 @@
 package at.fhv.teamb.symphoniacus.application;
 
 import at.fhv.teamb.symphoniacus.domain.Duty;
+import at.fhv.teamb.symphoniacus.domain.DutyCategory;
 import at.fhv.teamb.symphoniacus.domain.Section;
+import at.fhv.teamb.symphoniacus.persistence.PersistenceState;
 import at.fhv.teamb.symphoniacus.persistence.dao.DutyDao;
 import at.fhv.teamb.symphoniacus.persistence.model.DutyEntity;
 import at.fhv.teamb.symphoniacus.persistence.model.SectionEntity;
 import at.fhv.teamb.symphoniacus.persistence.model.SeriesOfPerformancesEntity;
 import java.time.DayOfWeek;
 import java.time.LocalDate;
+import java.time.LocalTime;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Optional;
@@ -19,6 +22,7 @@ import org.apache.logging.log4j.Logger;
  * {@link SectionEntity}.
  *
  * @author Nino Heinzle
+ * @author Dominic Luidold
  */
 public class DutyManager {
     private static final Logger LOG = LogManager.getLogger(DutyManager.class);
@@ -200,5 +204,73 @@ public class DutyManager {
                 resultList
             )
         );
+    }
+
+    // TODO
+    public Duty createDuty(
+        DutyCategory dutyCategory,
+        String description,
+        String timeOfDay,
+        LocalDate day,
+        LocalTime start,
+        LocalTime end
+    ) {
+        return null;
+    }
+
+    /**
+     * Persists a new {@link Duty} object to the database.
+     *
+     * <p>The method will subsequently change the {@link PersistenceState} of the object
+     * from {@link PersistenceState#EDITED} to {@link PersistenceState#PERSISTED}, provided
+     * that the database update was successful.
+     *
+     * @param duty The duty to save
+     */
+    public void save(Duty duty) {
+        Optional<DutyEntity> persisted = this.dutyDao.persist(duty.getEntity());
+
+        if (persisted.isPresent()) {
+            duty.setPersistenceState(PersistenceState.PERSISTED);
+            LOG.debug(
+                "Persisted duty {{}, '{}'}",
+                duty.getEntity().getDutyId(),
+                duty.getTitle()
+            );
+        } else {
+            LOG.error(
+                "Could not persist duty {{}, '{}'}",
+                duty.getEntity().getDutyId(),
+                duty.getTitle()
+            );
+        }
+    }
+
+    /**
+     * Persists an existing {@link Duty} object to the database.
+     *
+     * <p>The method will subsequently change the {@link PersistenceState} of the object
+     * from {@link PersistenceState#EDITED} to {@link PersistenceState#PERSISTED}, provided
+     * that the database update was successful.
+     *
+     * @param duty The duty to update
+     */
+    public void update(Duty duty) {
+        Optional<DutyEntity> persisted = this.dutyDao.update(duty.getEntity());
+
+        if (persisted.isPresent()) {
+            duty.setPersistenceState(PersistenceState.PERSISTED);
+            LOG.debug(
+                "Persisted duty {{}, '{}'}",
+                duty.getEntity().getDutyId(),
+                duty.getTitle()
+            );
+        } else {
+            LOG.error(
+                "Could not persist duty {{}, '{}'}",
+                duty.getEntity().getDutyId(),
+                duty.getTitle()
+            );
+        }
     }
 }
