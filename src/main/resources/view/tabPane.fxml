@@ -10,7 +10,7 @@
 <AnchorPane fx:id="pane" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="35.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="at.fhv.teamb.symphoniacus.presentation.TabPaneController">
    <JFXTabPane fx:id="tabPane" tabMinHeight="50" tabMaxHeight="50" tabClosingPolicy="UNAVAILABLE" AnchorPane.bottomAnchor="25" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
         <Tab text="%menu.tab.duty.roster.title">
-            <fx:include fx:id="calendar" source="calendar.fxml" />
+            <fx:include fx:id="calendar" source="dutySchedulerCalendar.fxml"/>
         </Tab>
         <Tab text="%menu.tab.duty.wish.title" >
             <AnchorPane>

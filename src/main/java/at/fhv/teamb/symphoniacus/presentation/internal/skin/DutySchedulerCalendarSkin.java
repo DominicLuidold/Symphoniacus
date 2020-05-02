@@ -1,4 +1,4 @@
-package at.fhv.teamb.symphoniacus.presentation.internal;
+package at.fhv.teamb.symphoniacus.presentation.internal.skin;
 
 import static com.calendarfx.view.RequestEvent.REQUEST_DATE;
 import static com.calendarfx.view.RequestEvent.REQUEST_DATE_TIME;
@@ -10,6 +10,7 @@ import static com.calendarfx.view.YearMonthView.ClickBehaviour.PERFORM_SELECTION
 import static javafx.geometry.Side.RIGHT;
 import static javafx.scene.control.SelectionMode.SINGLE;
 
+import at.fhv.teamb.symphoniacus.presentation.internal.CustomCalendarButtonEvent;
 import com.calendarfx.model.Calendar;
 import com.calendarfx.model.Entry;
 import com.calendarfx.view.CalendarFXControl;
@@ -29,6 +30,8 @@ import com.calendarfx.view.print.PrintablePage;
 import com.calendarfx.view.print.ViewType;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
+import java.util.ResourceBundle;
 import javafx.animation.Animation.Status;
 import javafx.animation.KeyFrame;
 import javafx.animation.KeyValue;
@@ -67,7 +70,7 @@ import org.controlsfx.control.textfield.CustomTextField;
 import org.kordamp.ikonli.fontawesome.FontAwesome;
 import org.kordamp.ikonli.javafx.FontIcon;
 
-public class BrutalCalendarSkin extends SkinBase<CalendarView> {
+public class DutySchedulerCalendarSkin extends SkinBase<CalendarView> {
 
     private final InvalidationListener entriesVisibilityListener =
         obs -> updateCalendarVisibility();
@@ -75,7 +78,7 @@ public class BrutalCalendarSkin extends SkinBase<CalendarView> {
     private ToggleButton trayButton;
     private Button addCalendarButton;
     private Button printButton;
-    private Button publishButton;
+    private Button forwardButton;
     private SearchResultView searchResultView;
     private StackPane stackPane;
     private DayPage dayPage;
@@ -96,10 +99,11 @@ public class BrutalCalendarSkin extends SkinBase<CalendarView> {
         obs -> updatePrintVisibility();
 
     /**
-     * This is the Ultimate Brutal Calendar Skin.
-     * @param view a view
+     * This is the custom CalendarFX skin for duty schedulers.
+     *
+     * @param view The view to use
      */
-    public BrutalCalendarSkin(CalendarView view) {
+    public DutySchedulerCalendarSkin(CalendarView view) {
         super(view);
 
         if (Boolean.getBoolean("calendarfx.developer")) { //$NON-NLS-1$
@@ -167,14 +171,19 @@ public class BrutalCalendarSkin extends SkinBase<CalendarView> {
             .addAll("button-icon", "print-button-icon"); //$NON-NLS-1$ //$NON-NLS-2$
         this.printButton.setGraphic(printIcon);
 
-        this.publishButton = new Button();
-        this.publishButton.setId("publish");
-        //this.publishButton.setContentDisplay(ContentDisplay.GRAPHIC_ONLY);
-        this.publishButton.setText("Forward");
-        this.publishButton.setOnAction(evt -> publish());
-        FontIcon publishIcon = new FontIcon(FontAwesome.ARROW_CIRCLE_UP);
-        publishIcon.getStyleClass().addAll("button-icon"); //$NON-NLS-1$ //$NON-NLS-2$
-        this.publishButton.setGraphic(publishIcon);
+        // Custom forward button
+        ResourceBundle bundle = ResourceBundle.getBundle(
+            "bundles.language",
+            new Locale("en", "UK")
+        );
+
+        this.forwardButton = new Button();
+        this.forwardButton.setId("forward");
+        this.forwardButton.setText(bundle.getString("skin.btn.forward.title"));
+        this.forwardButton.setOnAction(evt -> forward());
+        FontIcon forwardIcon = new FontIcon(FontAwesome.ARROW_CIRCLE_UP);
+        forwardIcon.getStyleClass().addAll("button-icon"); //$NON-NLS-1$ //$NON-NLS-2$
+        this.forwardButton.setGraphic(forwardIcon);
 
         if (view.isShowSourceTray()) {
             openTray();
@@ -284,7 +293,9 @@ public class BrutalCalendarSkin extends SkinBase<CalendarView> {
             Messages.getString("CalendarViewSkin.TOOLTIP_ADD_CALENDAR"))); //$NON-NLS-1$
         printButton.setTooltip(new Tooltip(
             Messages.getString("CalendarViewSkin.TOOLTIP_PRINT"))); //$NON-NLS-1$
-        publishButton.setTooltip(new Tooltip("Publish Duty Roster")); //$NON-NLS-1$
+        forwardButton.setTooltip(
+            new Tooltip(bundle.getString("skin.btn.forward.tooltip")) //$NON-NLS-1$
+        );
         showDay.setTooltip(new Tooltip(
             Messages.getString("CalendarViewSkin.TOOLTIP_SHOW_DAY"))); //$NON-NLS-1$
         showWeek.setTooltip(new Tooltip(
@@ -398,11 +409,11 @@ public class BrutalCalendarSkin extends SkinBase<CalendarView> {
         updateToggleButtons();
     }
 
-    private void publish() {
+    private void forward() {
         CalendarView skin = getSkinnable();
         skin.fireEvent(
-            new PublishDutyRosterEvent(
-                PublishDutyRosterEvent.PUBLISH_DUTY_ROSTER_EVENT_EVENT_TYPE
+            new CustomCalendarButtonEvent(
+                CustomCalendarButtonEvent.FORWARD_DUTY_ROSTER_EVENT
             )
         );
     }
@@ -486,7 +497,7 @@ public class BrutalCalendarSkin extends SkinBase<CalendarView> {
 
         if (getSkinnable().isShowPrintButton()) {
             leftToolBarBox.getChildren().add(printButton);
-            leftToolBarBox.getChildren().add(publishButton);
+            leftToolBarBox.getChildren().add(forwardButton);
         }
 
         if (getSkinnable().isShowPageToolBarControls()) {
