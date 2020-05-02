@@ -9,4 +9,6 @@ public interface Parentable<T> {
     void setParentController(T controller);
 
     T getParentController();
+
+    void initializeNew();
 }

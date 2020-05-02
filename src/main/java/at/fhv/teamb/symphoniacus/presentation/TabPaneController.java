@@ -7,6 +7,7 @@ import java.io.IOException;
 import java.net.URL;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Queue;
 import java.util.ResourceBundle;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -42,11 +43,12 @@ public class TabPaneController implements Initializable, Parentable<MainControll
     protected void initializeTabMenu() throws IOException {
         MainController parent = this.getParentController();
 
-        List<TabPaneEntry> tabs = new LinkedList<>();
+        Queue<TabPaneEntry> tabs = new LinkedList<>();
         if (parent.getLoginUserType().equals(DomainUserType.DOMAIN_MUSICIAN)) {
             tabs = parent.getPermittedTabs(
                 parent.getLoginUserType(),
-                parent.getCurrentMusician()
+                parent.getCurrentMusician(),
+                this.bundle
             );
         } else if (
             parent.getLoginUserType().equals(
@@ -55,20 +57,26 @@ public class TabPaneController implements Initializable, Parentable<MainControll
         ) {
             tabs = parent.getPermittedTabs(
                 parent.getLoginUserType(),
-                parent.getCurrentAssistant()
+                parent.getCurrentAssistant(),
+                this.bundle
             );
         }
 
         LOG.debug("Adding {} tabs to menu", tabs.size());
-        for (TabPaneEntry entry : tabs) {
+        while (!tabs.isEmpty()) {
+            TabPaneEntry entry = tabs.poll();
             LOG.debug("Adding tab {}", entry.getTitle());
             FXMLLoader loader = new FXMLLoader(
                 this.getClass().getResource(entry.getFxmlPath()),
                 this.bundle
             );
             Parent p = loader.load();
+            LOG.debug("loaded");
             Parentable controller = loader.getController();
-            controller.setParentController(this);
+            if (controller.getParentController() == null) {
+                controller.setParentController(this);
+            }
+            controller.initializeNew();
 
             Tab tab = new Tab(entry.getTitle());
             tab.setContent(p);
@@ -94,6 +102,11 @@ public class TabPaneController implements Initializable, Parentable<MainControll
     @Override
     public MainController getParentController() {
         return this.parentController;
+    }
+
+    @Override
+    public void initializeNew() {
+
     }
 
     @Override

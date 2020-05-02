@@ -41,6 +41,7 @@ dependencies {
     compile 'com.github.jengelman.gradle.plugins:shadow:5.2.0'
 
     compile 'com.jfoenix:jfoenix:9.0.9'
+    implementation "com.google.guava:guava:29.0-jre"
     implementation 'com.calendarfx:view:11.8.3'
     implementation ('org.controlsfx:controlsfx:11.0.1') {
         exclude group: 'org.controlsfx'

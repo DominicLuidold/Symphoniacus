@@ -48,6 +48,11 @@ public class UserController implements Initializable, Parentable<MainController>
 
     @Override
     public MainController getParentController() {
-        return this.getParentController();
+        return this.parentController;
+    }
+
+    @Override
+    public void initializeNew() {
+
     }
 }

@@ -67,15 +67,9 @@ public class DutySchedulerCalendarController extends CalendarController implemen
     @FXML
     private DutyScheduleController dutyScheduleController;
 
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public void initialize(URL location, ResourceBundle resources) {
-        this.resources = resources;
-        this.registerController();
-        this.dutyScheduleController.setParentController(this);
+    public void initializeNew() {
         LOG.debug("##########2");
+        this.dutyScheduleController.setParentController(this);
         MainController mainController = this.getParentController().getParentController();
         DomainUserType loginUserType = mainController.getLoginUserType();
         Musician musician = null;
@@ -118,6 +112,15 @@ public class DutySchedulerCalendarController extends CalendarController implemen
                 calendar
             )
         );
+    }
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public void initialize(URL location, ResourceBundle resources) {
+        this.resources = resources;
+        this.registerController();
+        LOG.debug("setting pppp");
     }
 
     /**

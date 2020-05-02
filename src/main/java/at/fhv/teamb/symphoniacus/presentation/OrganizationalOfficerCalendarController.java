@@ -18,9 +18,10 @@ public class OrganizationalOfficerCalendarController extends CalendarController 
         LogManager.getLogger(OrganizationalOfficerCalendarController.class);
     private TabPaneController parentController;
     private AdministrativeAssistant administrativeAssistant;
+    private ResourceBundle bundle;
 
     @Override
-    public void initialize(URL location, ResourceBundle resources) {
+    public void initializeNew() {
         // Tell CalendarFX to use custom skin
         this.setCalendarSkin();
 
@@ -40,8 +41,8 @@ public class OrganizationalOfficerCalendarController extends CalendarController 
 
         // Create calendar
         Calendar calendar = this.createCalendar(
-            resources.getString("oo.calendar.name"),
-            resources.getString("oo.calendar.shortname"),
+            bundle.getString("oo.calendar.name"),
+            bundle.getString("oo.calendar.shortname"),
             false
         );
 
@@ -51,10 +52,15 @@ public class OrganizationalOfficerCalendarController extends CalendarController 
         // Make Calendar ready to display
         this.calendarView.getCalendarSources().setAll(
             this.prepareCalendarSource(
-                resources.getString("oo.calendar.source"),
+                bundle.getString("oo.calendar.source"),
                 calendar
             )
         );
+    }
+
+    @Override
+    public void initialize(URL location, ResourceBundle resources) {
+        this.bundle = resources;
     }
 
     @Override

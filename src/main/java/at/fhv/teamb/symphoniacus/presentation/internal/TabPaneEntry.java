@@ -6,12 +6,22 @@ import java.util.Objects;
  * @author Valentin
  */
 public class TabPaneEntry {
+    private int order;
     private String title;
     private String fxmlPath;
 
-    public TabPaneEntry(String title, String fxmlPath) {
+    public TabPaneEntry(int order, String title, String fxmlPath) {
+        this.order = 1;
         this.title = title;
         this.fxmlPath = fxmlPath;
+    }
+
+    public int getOrder() {
+        return order;
+    }
+
+    public void setOrder(int order) {
+        this.order = order;
     }
 
     public String getTitle() {
@@ -39,12 +49,13 @@ public class TabPaneEntry {
             return false;
         }
         TabPaneEntry that = (TabPaneEntry) o;
-        return Objects.equals(title, that.title) &&
+        return order == that.order &&
+            Objects.equals(title, that.title) &&
             Objects.equals(fxmlPath, that.fxmlPath);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(title, fxmlPath);
+        return Objects.hash(order, title, fxmlPath);
     }
 }
