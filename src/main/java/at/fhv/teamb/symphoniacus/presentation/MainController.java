@@ -98,6 +98,7 @@ public class MainController implements Initializable {
 
         try {
             this.tabPaneController.initializeTabMenu();
+            this.userHeaderMenuController.setUserShortcut(this.currentUser.getFullName());
         } catch (IOException e) {
             LOG.error("Cannot build TabPane", e);
         }

@@ -23,4 +23,13 @@ public class User {
     public void setType(DomainUserType type) {
         this.type = type;
     }
+
+    public String getFullName() {
+        StringBuilder sb = new StringBuilder();
+        sb.append(this.userEntity.getFirstName());
+        sb.append(" ");
+        sb.append(this.userEntity.getLastName());
+
+        return sb.toString();
+    }
 }
