@@ -6,6 +6,7 @@ import at.fhv.teamb.symphoniacus.persistence.model.InstrumentationEntity;
 import at.fhv.teamb.symphoniacus.persistence.model.MusicalPieceEntity;
 import at.fhv.teamb.symphoniacus.persistence.model.SectionInstrumentationEntity;
 import java.net.URL;
+import java.util.Collection;
 import java.util.Iterator;
 import java.util.LinkedHashSet;
 import java.util.LinkedList;
@@ -17,6 +18,8 @@ import javafx.collections.FXCollections;
 import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
 import javafx.collections.ObservableSet;
+import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
@@ -140,6 +143,14 @@ public class SeriesOfPerformancesController implements Initializable {
         instrumentationCheckComboBox.setTitle("Choose your instrumentations");
         initMusicialPiecesCheckListView();
 
+        // Save button method
+        saveButton.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent event) {
+                save();
+            }
+        });
+
     }
 
     public void initMusicialPiecesCheckListView() {
@@ -254,7 +265,7 @@ public class SeriesOfPerformancesController implements Initializable {
 
         // TODO - wenn ein musical piece removed wird und neues ausgewählt wird
         //  -> ist die besetzung falls vorhin ausgewählt auch hier ausgewählt
-        if(instrumentations.size() > 0) {
+        if (instrumentations.size() > 0) {
             ObservableList<Integer> result =
                 instrumentationCheckComboBox.getCheckModel().getCheckedIndices();
             for (Integer i : result) {
@@ -262,7 +273,7 @@ public class SeriesOfPerformancesController implements Initializable {
                 instrumentationCheckComboBox.getCheckModel().check(i);
             }
         } else {
-             // TODO - fix das verdammte broken indicesClearUp von checkcombobox
+            // TODO - fix das verdammte broken indicesClearUp von checkcombobox
         }
 
 
@@ -303,7 +314,19 @@ public class SeriesOfPerformancesController implements Initializable {
 
 
     public void save() {
-        System.out.println("test");
+        if (validateInputs()) {
+            seriesManager.save(nameOfSeries.getText(),
+                new LinkedHashSet<MusicalPieceEntity>(musicalPieceCheckComboBox.getItems()),
+                new LinkedHashSet<InstrumentationEntity>(instrumentationCheckComboBox.getItems()),
+                startingDate.getValue(), endingDate.getValue(), isTour.isSelected());
+        } else {
+            System.out.println();
+        }
+    }
+
+    //TODO
+    private boolean validateInputs() {
+        return true;
     }
 
     public void cancel() {

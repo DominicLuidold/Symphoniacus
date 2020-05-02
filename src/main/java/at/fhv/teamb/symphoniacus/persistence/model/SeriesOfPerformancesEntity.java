@@ -46,7 +46,7 @@ public class SeriesOfPerformancesEntity {
             @JoinColumn(name = "instrumentationId")
         }
     )
-    private List<InstrumentationEntity> instrumentations = new LinkedList<>();
+    private Set<InstrumentationEntity> instrumentations = new LinkedHashSet<>();
 
     @ManyToMany
     @JoinTable(
@@ -174,12 +174,12 @@ public class SeriesOfPerformancesEntity {
         this.negativeDutyWishes = negativeDutyWishes;
     }
 
-    public List<InstrumentationEntity> getInstrumentations() {
+    public Set<InstrumentationEntity> getInstrumentations() {
         return instrumentations;
     }
 
     public void setInstrumentations(
-        List<InstrumentationEntity> instrumentations) {
+        Set<InstrumentationEntity> instrumentations) {
         this.instrumentations = instrumentations;
     }
 
