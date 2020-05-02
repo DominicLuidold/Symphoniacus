@@ -8,6 +8,8 @@ import at.fhv.teamb.symphoniacus.domain.AdministrativeAssistant;
 import at.fhv.teamb.symphoniacus.domain.Musician;
 import at.fhv.teamb.symphoniacus.domain.User;
 import at.fhv.teamb.symphoniacus.persistence.model.MusicianRole;
+import at.fhv.teamb.symphoniacus.presentation.internal.TabPaneEntry;
+import java.io.IOException;
 import java.net.URL;
 import java.util.LinkedList;
 import java.util.List;
@@ -40,11 +42,14 @@ public class MainController implements Initializable {
     private AdministrativeAssistant currentAssistant;
     private MusicianManager musicianManager;
     private AdministrativeAssistantManager administrativeManager;
+    private ResourceBundle bundle;
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
+        LOG.debug("####000");
         this.userHeaderMenuController.setParentController(this);
         this.tabPaneController.setParentController(this);
+        this.bundle = resources;
         LOG.debug("Initialized MainController");
     }
 
@@ -87,6 +92,12 @@ public class MainController implements Initializable {
                 LOG.debug("Cannot load Login AdministrativeAssistant");
             }
         }
+
+        try {
+            this.tabPaneController.initializeTabMenu();
+        } catch (IOException e) {
+            LOG.error("Cannot build TabPane", e);
+        }
     }
 
     public DomainUserType getLoginUserType() {
@@ -101,26 +112,26 @@ public class MainController implements Initializable {
         return currentAssistant;
     }
 
-    protected List<String> getPermittedTabs(
+    protected List<TabPaneEntry> getPermittedTabs(
         DomainUserType type,
         Musician m
     ) {
         return this.getPermittedTabs(type, m, null);
     }
 
-    protected List<String> getPermittedTabs(
+    protected List<TabPaneEntry> getPermittedTabs(
         DomainUserType type,
         AdministrativeAssistant assistant
     ) {
         return this.getPermittedTabs(type, null, assistant);
     }
 
-    private List<String> getPermittedTabs(
+    private List<TabPaneEntry> getPermittedTabs(
         DomainUserType type,
         Musician m,
         AdministrativeAssistant assistant
     ) {
-        List<String> result = new LinkedList<>();
+        List<TabPaneEntry> result = new LinkedList<>();
         if (m == null && assistant == null) {
             LOG.error("Cannot getPermittedTabs for null users");
             return result;
@@ -133,14 +144,29 @@ public class MainController implements Initializable {
 
             for (MusicianRole role : m.getEntity().getMusicianRoles()) {
                 if (role.getDescription().equals(MusicianRoleType.DUTY_SCHEDULER)) {
-                    result.add("dutySchedulerCalendar.fxml");
-                    result.add("dutySchedule.fxml");
+                    result.add(
+                        new TabPaneEntry(
+                            this.bundle.getString("menu.tab.duty.roster.title"),
+                            "/view/dutySchedulerCalendar.fxml"
+                        )
+                    );
+                    result.add(
+                        new TabPaneEntry(
+                            this.bundle.getString("menu.tab.duty.roster.title"),
+                            "/view/dutySchedule.fxml"
+                        )
+                    );
                 }
             }
-        // Organizational Officer
+            // Organizational Officer
         } else if (assistant != null && m == null) {
             LOG.debug("Getting permittedTabs for Administrative Assistant");
-            result.add("organizationalOfficerCalendarView.fxml");
+            result.add(
+                new TabPaneEntry(
+                    this.bundle.getString("menu.tab.duty.roster.title"),
+                    "/view/organizationalOfficerCalendarView.fxml"
+                )
+            );
         }
 
         return result;

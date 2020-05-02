@@ -4,12 +4,14 @@ import at.fhv.teamb.symphoniacus.application.type.DomainUserType;
 import at.fhv.teamb.symphoniacus.application.type.MusicianRoleType;
 import at.fhv.teamb.symphoniacus.domain.AdministrativeAssistant;
 import at.fhv.teamb.symphoniacus.domain.Musician;
-import at.fhv.teamb.symphoniacus.domain.User;
 import at.fhv.teamb.symphoniacus.persistence.model.AdministrativeAssistantEntity;
 import at.fhv.teamb.symphoniacus.persistence.model.MusicianEntity;
 import at.fhv.teamb.symphoniacus.persistence.model.MusicianRole;
 import at.fhv.teamb.symphoniacus.persistence.model.UserEntity;
+import at.fhv.teamb.symphoniacus.presentation.internal.TabPaneEntry;
 import java.util.List;
+import java.util.Locale;
+import java.util.ResourceBundle;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
@@ -19,6 +21,9 @@ import org.junit.jupiter.api.Test;
 public class MainControllerTest {
 
     private MainController mainController = new MainController();
+    Locale locale = new Locale("en", "UK");
+    ResourceBundle bundle = ResourceBundle.getBundle("bundles.language", locale);
+
 
     @Test
     public void testGetPermittedTabs_shouldReturnAListOfPermittedTabsForMusician() {
@@ -27,7 +32,7 @@ public class MainControllerTest {
         user.setFirstName("Max");
         entity.setUser(user);
         Musician m = new Musician(entity);
-        List<String> tabs = mainController.getPermittedTabs(
+        List<TabPaneEntry> tabs = mainController.getPermittedTabs(
             DomainUserType.DOMAIN_MUSICIAN,
             m
         );
@@ -51,19 +56,28 @@ public class MainControllerTest {
         Musician m = new Musician(entity);
 
         // When: we call getPermittedTabs from TabPaneController
-        List<String> tabs = mainController.getPermittedTabs(
+        List<TabPaneEntry> tabs = mainController.getPermittedTabs(
             DomainUserType.DOMAIN_MUSICIAN,
             m
         );
 
         // Then: We should see dutySchedulerCalendar and dutySchedule (last one hidden) - Tabs
         Assertions.assertTrue(
-            tabs.contains("dutySchedulerCalendar.fxml"),
+            tabs.contains(
+                new TabPaneEntry(
+                    this.bundle.getString("menu.tab.duty.roster.title"),
+                    "/view/dutySchedulerCalendar.fxml"
+                )
+            ),
             "Should contain dutySchedulerCalendar"
         );
 
         Assertions.assertTrue(
-            tabs.contains("dutySchedule.fxml"),
+            tabs.contains(
+                new TabPaneEntry(
+                    this.bundle.getString("menu.tab.duty.roster.title"),
+                    "/view/dutySchedule.fxml")
+            ),
             "Should contain duty Schedule view"
         );
     }
@@ -72,12 +86,17 @@ public class MainControllerTest {
     public void testGetPermittedTabs_shouldReturnAListOfPermittedTabsForAssistant() {
         AdministrativeAssistantEntity entity = new AdministrativeAssistantEntity();
         AdministrativeAssistant aa = new AdministrativeAssistant(entity);
-        List<String> tabs = mainController.getPermittedTabs(
+        List<TabPaneEntry> tabs = mainController.getPermittedTabs(
             DomainUserType.DOMAIN_ADMINISTRATIVE_ASSISTANT,
             aa
         );
         Assertions.assertTrue(
-            tabs.contains("organizationalOfficerCalendarView.fxml"),
+            tabs.contains(
+                new TabPaneEntry(
+                    this.bundle.getString("menu.tab.duty.roster.title"),
+                    "/view/organizationalOfficerCalendarView.fxml"
+                )
+            ),
             "Should contain organizational officer view"
         );
     }

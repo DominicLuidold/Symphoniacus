@@ -82,6 +82,6 @@ public class OrganizationalOfficerCalendarController extends CalendarController 
 
     @Override
     public TabPaneController getParentController() {
-        return this.getParentController();
+        return this.parentController;
     }
 }

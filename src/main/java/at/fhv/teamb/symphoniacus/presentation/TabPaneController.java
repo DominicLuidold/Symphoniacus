@@ -1,10 +1,17 @@
 package at.fhv.teamb.symphoniacus.presentation;
 
+import at.fhv.teamb.symphoniacus.application.type.DomainUserType;
 import at.fhv.teamb.symphoniacus.presentation.internal.Parentable;
+import at.fhv.teamb.symphoniacus.presentation.internal.TabPaneEntry;
+import java.io.IOException;
 import java.net.URL;
+import java.util.LinkedList;
+import java.util.List;
 import java.util.ResourceBundle;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
+import javafx.scene.Parent;
 import javafx.scene.control.Tab;
 import javafx.scene.control.TabPane;
 import javafx.scene.layout.AnchorPane;
@@ -17,7 +24,6 @@ public class TabPaneController implements Initializable, Parentable<MainControll
     private static final Logger LOG = LogManager.getLogger(TabPaneController.class);
     @FXML
     public AnchorPane calendar;
-    private MainController parentController;
     @FXML
     private StatusBar statusBar;
 
@@ -30,16 +36,52 @@ public class TabPaneController implements Initializable, Parentable<MainControll
     @FXML
     private OrganizationalOfficerCalendarController organizationalOfficerCalendar;
 
+    private MainController parentController;
+    private ResourceBundle bundle;
+
+    protected void initializeTabMenu() throws IOException {
+        MainController parent = this.getParentController();
+
+        List<TabPaneEntry> tabs = new LinkedList<>();
+        if (parent.getLoginUserType().equals(DomainUserType.DOMAIN_MUSICIAN)) {
+            tabs = parent.getPermittedTabs(
+                parent.getLoginUserType(),
+                parent.getCurrentMusician()
+            );
+        } else if (
+            parent.getLoginUserType().equals(
+                DomainUserType.DOMAIN_ADMINISTRATIVE_ASSISTANT
+            )
+        ) {
+            tabs = parent.getPermittedTabs(
+                parent.getLoginUserType(),
+                parent.getCurrentAssistant()
+            );
+        }
+
+        LOG.debug("Adding {} tabs to menu", tabs.size());
+        for (TabPaneEntry entry : tabs) {
+            LOG.debug("Adding tab {}", entry.getTitle());
+            FXMLLoader loader = new FXMLLoader(
+                this.getClass().getResource(entry.getFxmlPath()),
+                this.bundle
+            );
+            Parent p = loader.load();
+            Parentable controller = loader.getController();
+            controller.setParentController(this);
+
+            Tab tab = new Tab(entry.getTitle());
+            tab.setContent(p);
+            this.tabPane.getTabs().add(tab);
+        }
+    }
+
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         LOG.debug("##########1");
-        //this.dutySchedulerCalendarController.setParentController(this);
-        //this.organizationalOfficerCalendar.setParentController(this);
+        this.bundle = resources;
 
-        this.tabPane.getTabs().add(new Tab("Duty Roster"));
-        this.tabPane.getTabs().add(new Tab("Duty Roster 2"));
         this.tabPane.getSelectionModel().clearSelection();
-
         this.tabPane.getSelectionModel().selectedItemProperty().addListener(
             (observable, oldValue, newValue) -> {
                 LOG.debug("Selected tab: {}", newValue.getText());
@@ -51,7 +93,7 @@ public class TabPaneController implements Initializable, Parentable<MainControll
 
     @Override
     public MainController getParentController() {
-        return this.getParentController();
+        return this.parentController;
     }
 
     @Override
