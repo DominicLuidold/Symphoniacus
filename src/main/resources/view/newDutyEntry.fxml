@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.Separator?>
+<?import javafx.scene.control.SplitPane?>
+<?import javafx.scene.control.ToolBar?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.Pane?>
+<?import javafx.scene.text.Font?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.control.ComboBox?>
+<AnchorPane fx:id="pane" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="at.fhv.teamb.symphoniacus.presentation.NewDutyEntryController">
+    <AnchorPane maxHeight="45.0" minHeight="45.0" prefHeight="45.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+        <children>
+            <ToolBar prefHeight="45.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                <items>
+                    <Button fx:id="scheduleBackBtn" mnemonicParsing="false" text="%global.button.back" />
+                    <Separator />
+                    <Label fx:id="dutyTitle" />
+                    <Pane HBox.hgrow="ALWAYS" />
+                    <!-- Load Duty Button + Load from History Dropdown
+                    <Button fx:id="getOldDuty" mnemonicParsing="false" text="%tab.duty.schedule.table.btn.getolddutyschedule" />
+                    <ComboBox fx:id="oldDutySelect" layoutX="15.0" layoutY="33.0" prefWidth="160.0" promptText="%tab.duty.schedule.table.chooseolddutyschedule" />
+                    -->
+                    <Separator />
+                    <Button fx:id="scheduleSaveBtn" mnemonicParsing="false" text="%global.button.save" />
+                </items>
+            </ToolBar>
+        </children>
+    </AnchorPane>
+    <SplitPane fx:id="horizontalSplitPane" dividerPositions="0.3" orientation="VERTICAL" prefHeight="160.0" prefWidth="200.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="45.0">
+        <padding>
+            <Insets top="5" right="5" bottom="5" left="5" />
+        </padding>
+        <items>
+            <VBox spacing="20"> <!--brauch ich fürs padding außenrum :(  -->
+                <padding>
+                    <Insets top="5" right="5" bottom="5" left="20" />
+                </padding>
+            <Label fx:id="labelCurrentPosition" text="Duty Details CHANGE THIS" textAlignment="LEFT">
+                <font>
+                    <Font size="24" />
+                </font>
+            </Label>
+                <GridPane hgap="10" vgap="20">
+                    <Label fx:id="dutyNameLabel" text="Name"
+                          GridPane.columnIndex="0" GridPane.rowIndex="0"/>
+                    <TextField
+                            GridPane.columnIndex="1" GridPane.rowIndex="0"/>
+                    <Label fx:id="seriesOfPerformancesLabel" text="Series of Performances"
+                           GridPane.columnIndex="0" GridPane.rowIndex="1"/>
+                    <ComboBox fx:id="seriesOfPerformancesSelect" layoutX="15.0" layoutY="33.0" prefWidth="195.0" promptText="Choose from existing ones CHANGE DIS"
+                              GridPane.columnIndex="1" GridPane.rowIndex="1"/>
+                    <Button fx:id="seriesOfPerformancesNewBtn" mnemonicParsing="false" text="create new... CHANGE DIS"
+                            GridPane.columnIndex="3" GridPane.rowIndex="1"/>
+                    <Label fx:id="dutyCategoryLabel" text="Category"
+                           GridPane.columnIndex="0" GridPane.rowIndex="2"/>
+                    <ComboBox fx:id="dutyCategorySelect" layoutX="15.0" layoutY="33.0" prefWidth="195.0" promptText="Choose from existing ones CHANGE DIS"
+                              GridPane.columnIndex="1" GridPane.rowIndex="2"/>
+                    <Label fx:id="dutyPointsLabel" text="Points"
+                           GridPane.columnIndex="0" GridPane.rowIndex="3"/>
+                    <TextField fx:id="dutyPointsInput"
+                               GridPane.columnIndex="1" GridPane.rowIndex="3"/>
+                </GridPane>
+                <Separator orientation="HORIZONTAL"/>
+                <GridPane hgap="100" vgap="20">
+                    <Label fx:id="dutyDateLabel" text="Date"
+                           GridPane.columnIndex="0" GridPane.rowIndex="0"/>
+                    <TextField fx:id="dutyDateInput"
+                               GridPane.columnIndex="1" GridPane.rowIndex="0"/>
+                    <Label fx:id="dutyTimeLabel" text="Time"
+                           GridPane.columnIndex="0" GridPane.rowIndex="1"/>
+                    <TextField fx:id="dutyTimeInput"
+                               GridPane.columnIndex="1" GridPane.rowIndex="1"/>
+                    <Label fx:id="dutyPlaceLabel" text="Place"
+                           GridPane.columnIndex="0" GridPane.rowIndex="2"/>
+                    <TextField fx:id="dutyPlaceInput"
+                               GridPane.columnIndex="1" GridPane.rowIndex="2"/>
+                </GridPane>
+            </VBox>
+        </items>
+    </SplitPane>
+</AnchorPane>

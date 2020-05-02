@@ -17,6 +17,9 @@
                 <Label alignment="CENTER" layoutX="276.0" layoutY="165.0" text="%placeholder" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
             </AnchorPane>
         </Tab>
+       <Tab text="ADD DUTY CHANGE THIS">
+           <fx:include fx:id="addDutyView" source="newDutyEntry.fxml" />
+       </Tab>
     </JFXTabPane>
     <StatusBar fx:id="statusBar" maxHeight="25" minHeight="25" AnchorPane.bottomAnchor="0" AnchorPane.leftAnchor="0" AnchorPane.rightAnchor="0">
     </StatusBar>
