@@ -20,6 +20,7 @@ public class InstrumentationDao extends BaseDao<InstrumentationEntity> {
         TypedQuery<InstrumentationEntity> query = entityManager
             .createQuery(
                 "SELECT inst FROM InstrumentationEntity inst "
+                    + "LEFT JOIN FETCH inst.sectionInstrumentations "
                     + "WHERE inst.musicalPiece IN :musicalPieces",
                 InstrumentationEntity.class);
 
