@@ -1,14 +1,16 @@
 package at.fhv.teamb.symphoniacus.presentation;
 
+import at.fhv.teamb.symphoniacus.application.AdministrativeAssistantManager;
 import at.fhv.teamb.symphoniacus.application.MusicianManager;
 import at.fhv.teamb.symphoniacus.application.type.DomainUserType;
+import at.fhv.teamb.symphoniacus.application.type.MusicianRoleType;
 import at.fhv.teamb.symphoniacus.domain.AdministrativeAssistant;
 import at.fhv.teamb.symphoniacus.domain.Musician;
 import at.fhv.teamb.symphoniacus.domain.User;
-import at.fhv.teamb.symphoniacus.persistence.dao.AdministrativeAssistantDao;
-import at.fhv.teamb.symphoniacus.persistence.model.AdministrativeAssistantEntity;
-import at.fhv.teamb.symphoniacus.persistence.model.MusicianEntity;
+import at.fhv.teamb.symphoniacus.persistence.model.MusicianRole;
 import java.net.URL;
+import java.util.LinkedList;
+import java.util.List;
 import java.util.Optional;
 import java.util.ResourceBundle;
 import javafx.fxml.FXML;
@@ -36,6 +38,8 @@ public class MainController implements Initializable {
     private User currentUser;
     private Musician currentMusician;
     private AdministrativeAssistant currentAssistant;
+    private MusicianManager musicianManager;
+    private AdministrativeAssistantManager administrativeManager;
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
@@ -47,27 +51,98 @@ public class MainController implements Initializable {
     /**
      * Finds out if the currently logged-in user is a {@link Musician} or an
      * {@link AdministrativeAssistant} and sets his Domainobject as attribute in this class.
+     *
      * @param user Current login user
      */
     public void setLoginUser(User user) {
         this.currentUser = user;
 
         if (this.currentUser.getType().equals(DomainUserType.DOMAIN_MUSICIAN)) {
-            MusicianManager mm = new MusicianManager();
-            Optional<MusicianEntity> musician = mm.loadMusician(this.currentUser.getUserEntity());
+            if (musicianManager == null) {
+                musicianManager = new MusicianManager();
+            }
+            Optional<Musician> musician = musicianManager
+                .loadMusician(this.currentUser.getUserEntity());
+
             if (musician.isPresent()) {
-                this.currentMusician = new Musician(musician.get());
+                LOG.debug("Musician successfully loaded");
+                this.currentMusician = musician.get();
+            } else {
+                LOG.error("Cannot load Login Musician");
             }
         }
         if (this.currentUser.getType()
             .equals(DomainUserType.DOMAIN_ADMINISTRATIVE_ASSISTANT)) {
-            AdministrativeAssistantDao aad = new AdministrativeAssistantDao();
-            Optional<AdministrativeAssistantEntity> administrativeAssistantEntity =
-                aad.find(this.currentUser.getUserEntity().getUserId());
-            if (administrativeAssistantEntity.isPresent()) {
-                this.currentAssistant =
-                    new AdministrativeAssistant(administrativeAssistantEntity.get());
+            if (administrativeManager == null) {
+                administrativeManager = new AdministrativeAssistantManager();
+            }
+            Optional<AdministrativeAssistant> administrativeAssistant =
+                administrativeManager.loadAdministrativeAssistant(
+                    this.currentUser.getUserEntity().getUserId()
+                );
+            if (administrativeAssistant.isPresent()) {
+                LOG.debug("AdministrativeAssistant successfully loaded");
+                this.currentAssistant = administrativeAssistant.get();
+            } else {
+                LOG.debug("Cannot load Login AdministrativeAssistant");
             }
         }
     }
+
+    public DomainUserType getLoginUserType() {
+        return currentUser.getType();
+    }
+
+    public Musician getCurrentMusician() {
+        return currentMusician;
+    }
+
+    public AdministrativeAssistant getCurrentAssistant() {
+        return currentAssistant;
+    }
+
+    protected List<String> getPermittedTabs(
+        DomainUserType type,
+        Musician m
+    ) {
+        return this.getPermittedTabs(type, m, null);
+    }
+
+    protected List<String> getPermittedTabs(
+        DomainUserType type,
+        AdministrativeAssistant assistant
+    ) {
+        return this.getPermittedTabs(type, null, assistant);
+    }
+
+    private List<String> getPermittedTabs(
+        DomainUserType type,
+        Musician m,
+        AdministrativeAssistant assistant
+    ) {
+        List<String> result = new LinkedList<>();
+        if (m == null && assistant == null) {
+            LOG.error("Cannot getPermittedTabs for null users");
+            return result;
+        }
+
+        // Musician
+        if (m != null && assistant == null) {
+            LOG.debug("Getting permittedTabs for Musician");
+            result.add("dutySchedulerCalendar.fxml");
+
+            for (MusicianRole role : m.getEntity().getMusicianRoles()) {
+                if (role.getDescription().equals(MusicianRoleType.DUTY_SCHEDULER)) {
+                    result.add("dutySchedule.fxml");
+                }
+            }
+        // Organizational Officer
+        } else if (assistant != null && m == null) {
+            LOG.debug("Getting permittedTabs for Administrative Assistant");
+            result.add("organizationalOfficerCalendarView.fxml");
+        }
+
+        return result;
+    }
+
 }

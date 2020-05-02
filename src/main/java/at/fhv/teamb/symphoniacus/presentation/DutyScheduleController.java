@@ -805,4 +805,9 @@ public class DutyScheduleController
     public void setParentController(DutySchedulerCalendarController controller) {
         this.parentController = controller;
     }
+
+    @Override
+    public DutySchedulerCalendarController getParentController() {
+        return this.getParentController();
+    }
 }

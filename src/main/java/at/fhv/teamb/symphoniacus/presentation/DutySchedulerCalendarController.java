@@ -3,7 +3,9 @@ package at.fhv.teamb.symphoniacus.presentation;
 import at.fhv.teamb.symphoniacus.application.LoginManager;
 import at.fhv.teamb.symphoniacus.application.MusicianManager;
 import at.fhv.teamb.symphoniacus.application.SectionMonthlyScheduleManager;
+import at.fhv.teamb.symphoniacus.application.type.DomainUserType;
 import at.fhv.teamb.symphoniacus.domain.Duty;
+import at.fhv.teamb.symphoniacus.domain.Musician;
 import at.fhv.teamb.symphoniacus.domain.Section;
 import at.fhv.teamb.symphoniacus.domain.SectionMonthlySchedule;
 import at.fhv.teamb.symphoniacus.domain.User;
@@ -73,36 +75,18 @@ public class DutySchedulerCalendarController extends CalendarController implemen
         this.resources = resources;
         this.registerController();
         this.dutyScheduleController.setParentController(this);
-
-        // TODO - Temporarily used until proper login is introduced
-        Optional<User> user = new LoginManager().login("pain", "rbp");
-        if (user.isEmpty()) {
-            LOG.error("Login did not work - this should be removed");
-            AlertHelper.showAlert(
-                Alert.AlertType.ERROR,
-                this.calendarView.getParent().getScene().getWindow(),
-                "Login failed",
-                resources.getString(
-                    "login.error.login.technical.problems"
-                )
-            );
-            try {
-                MasterController.switchSceneTo(
-                    "/view/login.fxml",
-                    resources,
-                    this.calendarView
-                );
-            } catch (IOException e) {
-                e.printStackTrace();
-                LOG.error(e);
-            }
+        LOG.debug("##########2");
+        MainController mainController = this.getParentController().getParentController();
+        DomainUserType loginUserType = mainController.getLoginUserType();
+        Musician musician = null;
+        if (loginUserType.equals(DomainUserType.DOMAIN_MUSICIAN)) {
+            LOG.info("Current user type is Musician");
+            musician = mainController.getCurrentMusician();
+        } else if (loginUserType.equals(DomainUserType.DOMAIN_ADMINISTRATIVE_ASSISTANT)) {
+            LOG.info("Current user type is administrative assistant, unsupported");
             return;
-        } else {
-            LOG.debug("Login worked");
         }
-        Optional<MusicianEntity> musician =
-            new MusicianManager().loadMusician(user.get().getUserEntity());
-        this.section = new Section(musician.get().getSection());
+        this.section = musician.getSection();
 
         // Tell CalendarFX to use custom skin
         this.setCalendarSkin();
@@ -451,5 +435,10 @@ public class DutySchedulerCalendarController extends CalendarController implemen
     @Override
     public void setParentController(TabPaneController controller) {
         this.parentController = controller;
+    }
+
+    @Override
+    public TabPaneController getParentController() {
+        return this.parentController;
     }
 }

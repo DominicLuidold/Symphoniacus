@@ -1,6 +1,9 @@
 package at.fhv.teamb.symphoniacus.presentation;
 
+import at.fhv.teamb.symphoniacus.application.type.DomainUserType;
+import at.fhv.teamb.symphoniacus.domain.AdministrativeAssistant;
 import at.fhv.teamb.symphoniacus.domain.Duty;
+import at.fhv.teamb.symphoniacus.domain.Musician;
 import at.fhv.teamb.symphoniacus.presentation.internal.skin.OrganizationalOfficerCalendarSkin;
 import com.calendarfx.model.Calendar;
 import java.net.URL;
@@ -14,11 +17,23 @@ public class OrganizationalOfficerCalendarController extends CalendarController 
     private static final Logger LOG =
         LogManager.getLogger(OrganizationalOfficerCalendarController.class);
     private TabPaneController parentController;
+    private AdministrativeAssistant administrativeAssistant;
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         // Tell CalendarFX to use custom skin
         this.setCalendarSkin();
+
+        MainController mainController = this.getParentController().getParentController();
+        DomainUserType loginUserType = mainController.getLoginUserType();
+        AdministrativeAssistant aa = null;
+        if (loginUserType.equals(DomainUserType.DOMAIN_MUSICIAN)) {
+            LOG.info("Current user type is administrative assistant, unsupported");
+            return;
+        } else if (loginUserType.equals(DomainUserType.DOMAIN_ADMINISTRATIVE_ASSISTANT)) {
+            LOG.info("Current user type is Administrative Assistant");
+            this.administrativeAssistant = mainController.getCurrentAssistant();
+        }
 
         // Fetch duties from database
         List<Duty> duties = this.loadDuties(DEFAULT_INTERVAL_START, DEFAULT_INTERVAL_END);
@@ -63,5 +78,10 @@ public class OrganizationalOfficerCalendarController extends CalendarController 
     @Override
     public void setParentController(TabPaneController controller) {
         this.parentController = controller;
+    }
+
+    @Override
+    public TabPaneController getParentController() {
+        return this.getParentController();
     }
 }

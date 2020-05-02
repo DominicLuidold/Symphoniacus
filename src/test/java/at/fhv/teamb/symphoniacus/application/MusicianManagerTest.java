@@ -2,6 +2,7 @@ package at.fhv.teamb.symphoniacus.application;
 
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
+import at.fhv.teamb.symphoniacus.domain.Musician;
 import at.fhv.teamb.symphoniacus.persistence.model.MusicianEntity;
 import at.fhv.teamb.symphoniacus.persistence.model.UserEntity;
 import java.util.Optional;
@@ -25,7 +26,7 @@ class MusicianManagerTest {
         u.setUserId(1);
 
         // When
-        Optional<MusicianEntity> m = this.musicianManager.loadMusician(u);
+        Optional<Musician> m = this.musicianManager.loadMusician(u);
 
         // Then
         assertTrue(m.isPresent());

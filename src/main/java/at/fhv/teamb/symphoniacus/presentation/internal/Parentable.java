@@ -7,4 +7,6 @@ package at.fhv.teamb.symphoniacus.presentation.internal;
  */
 public interface Parentable<T> {
     void setParentController(T controller);
+
+    T getParentController();
 }

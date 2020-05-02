@@ -45,4 +45,9 @@ public class UserController implements Initializable, Parentable<MainController>
     public void setParentController(MainController controller) {
         this.parentController = controller;
     }
+
+    @Override
+    public MainController getParentController() {
+        return this.getParentController();
+    }
 }
