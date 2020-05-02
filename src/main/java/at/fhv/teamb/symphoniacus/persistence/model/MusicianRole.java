@@ -30,12 +30,10 @@ public class MusicianRole {
 
     public void addMusician(MusicianEntity m) {
         musicians.add(m);
-        m.addMusicianRole(this);
     }
 
     public void removeMusician(MusicianEntity m) {
         musicians.remove(m);
-        m.removeMusicianRole(this);
     }
 
     public Integer getMusicianRoleId() {
