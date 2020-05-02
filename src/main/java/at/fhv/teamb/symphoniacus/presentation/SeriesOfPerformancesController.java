@@ -22,7 +22,10 @@ import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
+import javafx.scene.control.ButtonBar;
+import javafx.scene.control.ButtonType;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.DatePicker;
 import javafx.scene.control.ListView;
@@ -324,8 +327,10 @@ public class SeriesOfPerformancesController implements Initializable {
     public void save() {
         if (validateInputs()) {
             seriesManager.save(nameOfSeries.getText(),
-                new LinkedHashSet<MusicalPieceEntity>(musicalPieceCheckComboBox.getCheckModel().getCheckedItems()),
-                new LinkedHashSet<InstrumentationEntity>(instrumentationCheckComboBox.getCheckModel().getCheckedItems()),
+                new LinkedHashSet<MusicalPieceEntity>(
+                    musicalPieceCheckComboBox.getCheckModel().getCheckedItems()),
+                new LinkedHashSet<InstrumentationEntity>(
+                    instrumentationCheckComboBox.getCheckModel().getCheckedItems()),
                 startingDate.getValue(), endingDate.getValue(), isTour.isSelected());
         } else {
             System.out.println();
@@ -334,11 +339,57 @@ public class SeriesOfPerformancesController implements Initializable {
 
     private boolean validateInputs() {
         //gibts die series of performance bereits -> wenn ja fehlermeldung
-        if (seriesManager.doesSeriesAlreadyExist(nameOfSeries.getText(),startingDate,endingDate)) {
-            //TODO Danijel
+        Alert alert = new Alert(Alert.AlertType.WARNING);
+        if (seriesManager.doesSeriesAlreadyExist(nameOfSeries.getText(), startingDate.getValue(),
+            endingDate.getValue())) {
+            alert.setTitle(resources
+                .getString("seriesOfPerformances.error.title"));
+            alert.setContentText(resources.getString(
+                "seriesOfPerformances.error.seriesAlreadyExists.message"));
+            ButtonType okButton = new ButtonType(resources.getString("global.button.ok"),
+                ButtonBar.ButtonData.YES);
+
+            alert.getButtonTypes().setAll(okButton);
+            alert.showAndWait().ifPresent(type -> {
+                System.out.println(type);
+                if (type.equals(okButton)) {
+                    alert.close();
+                }
+            });
+            return false;
+        } else if (nameOfSeries.getText().length() > 45) {
+            alert.setTitle(resources
+                .getString("seriesOfPerformances.error.title"));
+            alert.setContentText(resources.getString(
+                "seriesOfPerformances.error.nameOfSeriesOutOfBounds.message"));
+            ButtonType okButton = new ButtonType(resources.getString("global.button.ok"),
+                ButtonBar.ButtonData.YES);
+
+            alert.getButtonTypes().setAll(okButton);
+            alert.showAndWait().ifPresent(type -> {
+                System.out.println(type);
+                if (type.equals(okButton)) {
+                    alert.close();
+                }
+            });
+            return false;
+        } else if (endingDate.getValue().isBefore(startingDate.getValue())) {
+            alert.setTitle(resources
+                .getString("seriesOfPerformances.error.title"));
+            alert.setContentText(resources.getString(
+                "seriesOfPerformances.error.endingDateBeforeStartingDate.message"));
+            ButtonType okButton = new ButtonType(resources.getString("global.button.ok"),
+                ButtonBar.ButtonData.YES);
+
+            alert.getButtonTypes().setAll(okButton);
+            alert.showAndWait().ifPresent(type -> {
+                System.out.println(type);
+                if (type.equals(okButton)) {
+                    alert.close();
+                }
+            });
+            return false;
         }
-        //überprüfe dass name nicht länger als 45 Zeichen
-        //startDate muss vor endingDate sein
         return true;
     }
 

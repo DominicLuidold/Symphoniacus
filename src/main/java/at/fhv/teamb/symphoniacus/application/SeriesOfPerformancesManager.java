@@ -10,7 +10,6 @@ import at.fhv.teamb.symphoniacus.persistence.model.SeriesOfPerformancesEntity;
 import java.time.LocalDate;
 import java.util.Optional;
 import java.util.Set;
-import javafx.scene.control.DatePicker;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -45,12 +44,25 @@ public class SeriesOfPerformancesManager {
         return pieceDao.getMusicalPieceFromName(name);
     }
 
+    /**
+     * Persists a seriesOfPerformances based on the entered data.
+     *
+     * @param name             Given name of the seriesOfPerformances
+     * @param musicalPieces    Given musicalPieces
+     * @param instrumentations Given instrumentations to the musicalPieces
+     * @param startDate        starting Date
+     * @param endDate          ending Date
+     * @param isTour           boolean which represents whether it's a tour or not
+     * @return boolean as a proof that the persistence was successful
+     */
     public boolean save(
         String name,
         Set<MusicalPieceEntity> musicalPieces,
         Set<InstrumentationEntity> instrumentations, LocalDate startDate,
         LocalDate endDate, boolean isTour
     ) {
+
+
         SeriesOfPerformancesEntity series = new SeriesOfPerformancesEntity();
         series.setDescription(name);
         series.setMusicalPieces(musicalPieces);
@@ -61,10 +73,15 @@ public class SeriesOfPerformancesManager {
 
         Optional<SeriesOfPerformancesEntity> result = seriesOfPerformancesDao.persist(series);
         return result.isPresent();
+
     }
 
-    public boolean doesSeriesAlreadyExist(String text, DatePicker startingDate, DatePicker endingDate) {
-        //TODO Danijel
-        return true;
+    public boolean doesSeriesAlreadyExist(
+        String title,
+        LocalDate startingDate,
+        LocalDate endingDate
+    ) {
+
+        return seriesOfPerformancesDao.doesSeriesAlreadyExist(title, startingDate, endingDate);
     }
 }
