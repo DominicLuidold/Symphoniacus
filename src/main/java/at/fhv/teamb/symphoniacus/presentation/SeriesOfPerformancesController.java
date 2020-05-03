@@ -229,7 +229,6 @@ public class SeriesOfPerformancesController implements Initializable {
                     return instrumentation.getName() + " - "
                         + instrumentation.getMusicalPiece().getName();
                 }
-
                 @Override
                 public InstrumentationEntity fromString(String nameOfPiece) {
                     /*
@@ -249,10 +248,8 @@ public class SeriesOfPerformancesController implements Initializable {
                     return null;
                 }
             };
-
         ObservableList<InstrumentationEntity> currentItems =
             instrumentationCheckComboBox.getItems();
-
 
         // Füge neu dazugekommene Instrumentations in die currentlist
         for (InstrumentationEntity instrumentation : instrumentations) {
@@ -262,7 +259,6 @@ public class SeriesOfPerformancesController implements Initializable {
         }
         // Alle Instrumentations die nach dem Hinzufügen nicht in der "neuen" Liste vorhanden sind
         // werden gelöscht
-
         instrumentationCheckComboBox.getItems().removeIf(
             currentInstrumentation -> !(instrumentations.contains(currentInstrumentation)));
 
@@ -283,7 +279,6 @@ public class SeriesOfPerformancesController implements Initializable {
         } else {
             // TODO - fix das verdammte broken indicesClearUp von checkcombobox
         }
-
 
         instrumentationCheckComboBox.setConverter(instrumentationConverter);
         instrumentationCheckComboBox.getCheckModel().getCheckedItems().addListener(
@@ -313,6 +308,7 @@ public class SeriesOfPerformancesController implements Initializable {
                 prefix = "/";
             }
             sb.append(" - " + instrumentation.getName());
+            sb.append(" - " + instrumentation.getMusicalPiece().getName());
             desc.add(sb.toString());
         }
 
@@ -320,8 +316,7 @@ public class SeriesOfPerformancesController implements Initializable {
         listView.setItems(descriptions);
     }
 
-
-    public void save() {
+    private void save() {
         if (validateInputs()) {
             seriesManager.save(nameOfSeries.getText(),
                 new LinkedHashSet<MusicalPieceEntity>(
@@ -407,7 +402,6 @@ public class SeriesOfPerformancesController implements Initializable {
         } else {
             return true;
         }
-
     }
 
     public void cancel() {
