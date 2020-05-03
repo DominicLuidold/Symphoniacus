@@ -54,6 +54,6 @@ public class SeriesOfPerformancesDao extends BaseDao<SeriesOfPerformancesEntity>
         query.setParameter("sDate", startingDate);
         query.setParameter("eDate", endingDate);
 
-        return (query.getSingleResult() == 1);
+        return (query.getSingleResult() >= 1);
     }
 }

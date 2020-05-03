@@ -113,6 +113,8 @@ public class SeriesOfPerformancesController implements Initializable {
         this.seriesManager = new SeriesOfPerformancesManager();
         listView = new ListView<>();
         grid.add(listView, 1, 3);
+        instrumentationCheckComboBox.setTitle("Choose your instrumentations");
+        initMusicialPiecesCheckListView();
 
         ValidationDecoration cssDecorator = new StyleClassValidationDecoration(
             "error",
@@ -143,8 +145,7 @@ public class SeriesOfPerformancesController implements Initializable {
                 this.saveButton.setDisable(!isValid);
             });
 
-        instrumentationCheckComboBox.setTitle("Choose your instrumentations");
-        initMusicialPiecesCheckListView();
+
 
         // Save button method
         saveButton.setOnAction(new EventHandler<ActionEvent>() {

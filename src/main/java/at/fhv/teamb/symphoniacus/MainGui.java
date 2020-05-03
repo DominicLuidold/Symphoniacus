@@ -29,7 +29,7 @@ public class MainGui extends Application {
             Locale.setDefault(locale);
             ResourceBundle bundle = ResourceBundle.getBundle("bundles.language", locale);
             Parent root = FXMLLoader
-                .load(getClass().getResource("/view/addNewSeriesOfPerformance.fxml"), bundle);
+                .load(getClass().getResource("/view/addNewSeriesOfPerformances.fxml"), bundle);
 
             double minHeight = 768;
             double minWidth = 1366;

@@ -18,6 +18,19 @@
     -fx-background-color: #2274A5;
 }
 
+#seriesVbox{
+
+}
+
+#saveButton, #cancelButton {
+    -fx-background-color: #8C93A8;
+    -fx-font-size: 120%;
+}
+#saveButton:hover, #cancelButton:hover {
+    -fx-background-color: #BFC6DB;
+    -fx-border-color: #262D42;
+}
+
 /* UNCOMMENT WHEN WE HAVE NUTZERZENTRIERT SEMINAR
 *, root, .root {
     -fx-font-family: "Comic Sans MS";
