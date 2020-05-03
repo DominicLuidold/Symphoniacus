@@ -2,7 +2,6 @@ package at.fhv.teamb.symphoniacus.persistence.dao;
 
 import at.fhv.teamb.symphoniacus.persistence.BaseDao;
 import at.fhv.teamb.symphoniacus.persistence.model.SeriesOfPerformancesEntity;
-import at.fhv.teamb.symphoniacus.persistence.model.WishRequestable;
 import java.time.LocalDate;
 import java.util.Optional;
 import javax.persistence.TypedQuery;
