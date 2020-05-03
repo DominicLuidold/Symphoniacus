@@ -61,8 +61,6 @@ public class SeriesOfPerformancesManager {
         Set<InstrumentationEntity> instrumentations, LocalDate startDate,
         LocalDate endDate, boolean isTour
     ) {
-
-
         SeriesOfPerformancesEntity series = new SeriesOfPerformancesEntity();
         series.setDescription(name);
         series.setMusicalPieces(musicalPieces);
@@ -73,7 +71,6 @@ public class SeriesOfPerformancesManager {
 
         Optional<SeriesOfPerformancesEntity> result = seriesOfPerformancesDao.persist(series);
         return result.isPresent();
-
     }
 
     public boolean doesSeriesAlreadyExist(
@@ -81,7 +78,6 @@ public class SeriesOfPerformancesManager {
         LocalDate startingDate,
         LocalDate endingDate
     ) {
-
         return seriesOfPerformancesDao.doesSeriesAlreadyExist(title, startingDate, endingDate);
     }
 }

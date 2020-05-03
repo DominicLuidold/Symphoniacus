@@ -27,6 +27,7 @@ import javafx.scene.control.CheckBox;
 import javafx.scene.control.DatePicker;
 import javafx.scene.control.ListView;
 import javafx.scene.control.TextField;
+import javafx.scene.image.ImageView;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.GridPane;
 import javafx.scene.text.TextFlow;
@@ -140,7 +141,6 @@ public class SeriesOfPerformancesController implements Initializable {
                 this.isValid = newValue.getErrors().isEmpty();
                 this.saveButton.setDisable(!isValid);
             });
-
 
 
         // Save button method
@@ -328,9 +328,27 @@ public class SeriesOfPerformancesController implements Initializable {
                     musicalPieceCheckComboBox.getCheckModel().getCheckedItems()),
                 new LinkedHashSet<InstrumentationEntity>(
                     instrumentationCheckComboBox.getCheckModel().getCheckedItems()),
-                startingDate.getValue(), endingDate.getValue(), isTour.isSelected());
+                startingDate.getValue(), endingDate.getValue(), isTour.isSelected()
+            );
+
+            // After saving show success dialog
+            Alert successAlert = new Alert(Alert.AlertType.INFORMATION);
+            successAlert.setTitle(resources.getString("seriesOfPerformances.success.title"));
+            successAlert.setContentText(resources
+                .getString("seriesOfPerformances.success.seriesOfPerformanceSuccessfullySaved")
+            );
+            successAlert.getButtonTypes()
+                .setAll(new ButtonType(resources.getString("global.button.ok")));
+
+            // Get custom success icon
+            ImageView icon = new ImageView("images\\successIcon.png");
+            icon.setFitHeight(48);
+            icon.setFitWidth(48);
+            successAlert.setGraphic(icon);
+            successAlert.setHeaderText(resources.getString("seriesOfPerformances.success.header"));
+            successAlert.show();
         } else {
-            System.out.println();
+            //TODO - warning something went wrong alert
         }
     }
 
@@ -386,8 +404,10 @@ public class SeriesOfPerformancesController implements Initializable {
                 }
             });
             return false;
+        } else {
+            return true;
         }
-        return true;
+
     }
 
     public void cancel() {
