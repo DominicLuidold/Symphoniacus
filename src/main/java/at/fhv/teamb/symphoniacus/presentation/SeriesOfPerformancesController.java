@@ -349,11 +349,14 @@ public class SeriesOfPerformancesController implements Initializable {
             String prefix = "";
             for (SectionInstrumentationEntity sectionInstrumentation : instrumentation
                 .getSectionInstrumentations()) {
-                sb.append(prefix + sectionInstrumentation.getPredefinedSectionInstrumentation());
+                sb.append(prefix);
+                sb.append(sectionInstrumentation.getPredefinedSectionInstrumentation());
                 prefix = "/";
             }
-            sb.append(" - " + instrumentation.getName());
-            sb.append(" - " + instrumentation.getMusicalPiece().getName());
+            sb.append(" - ");
+            sb.append(instrumentation.getName());
+            sb.append(" - ");
+            sb.append(instrumentation.getMusicalPiece().getName());
             desc.add(sb.toString());
         }
 
@@ -454,6 +457,22 @@ public class SeriesOfPerformancesController implements Initializable {
                 }
             });
             return false;
+        } else if (!isInstrumentationForMusicalPieceSelected()) {
+            alert.setTitle(resources.getString("seriesOfPerformances.error.title"));
+            alert.setContentText(resources.getString(
+                "seriesOfPerformances.error"
+                    + ".selectedMusicalPieceWithoutInstrumentation.message"));
+            ButtonType okButton = new ButtonType(resources.getString("global.button.ok"),
+                ButtonBar.ButtonData.YES);
+
+            alert.getButtonTypes().setAll(okButton);
+            alert.showAndWait().ifPresent(type -> {
+                System.out.println(type);
+                if (type.equals(okButton)) {
+                    alert.close();
+                }
+            });
+            return false;
         } else {
             return true;
         }
@@ -467,9 +486,26 @@ public class SeriesOfPerformancesController implements Initializable {
         Alert alert = new Alert(Alert.AlertType.INFORMATION);
         alert.setTitle(resources.getString("global.button.not.implemented.title"));
         alert.setHeaderText(resources.getString("global.button.not.implemented.header"));
-        alert.setContentText("Don't get your hopes up, this one will never be implemented.");
+        alert.setContentText(resources
+            .getString("global.button.not.implemented.seriesOfPerf"));
         alert.getButtonTypes()
             .setAll(new ButtonType(resources.getString("global.button.ok")));
         alert.show();
+    }
+
+    private boolean isInstrumentationForMusicalPieceSelected() {
+
+        for (MusicalPieceEntity m : musicalPieceCheckComboBox.getCheckModel().getCheckedItems()) {
+            boolean isSelected = false;
+            for (InstrumentationEntity i : m.getInstrumentations()) {
+                if (instrumentationCheckComboBox.getCheckModel().getCheckedItems().contains(i)) {
+                    isSelected = true;
+                }
+            }
+            if (!isSelected) {
+                return false;
+            }
+        }
+        return true;
     }
 }

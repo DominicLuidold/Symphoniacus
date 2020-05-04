@@ -18,10 +18,6 @@
     -fx-background-color: #2274A5;
 }
 
-#seriesVbox{
-
-}
-
 #saveButton, #cancelButton {
     -fx-background-color: #8C93A8;
     -fx-font-size: 120%;

@@ -88,7 +88,7 @@ public class MusicalPieceEntity {
     }
 
     public List<SeriesOfPerformancesEntity> getSeriesOfPerformances() {
-        return seriesOfPerformances;
+        return this.seriesOfPerformances;
     }
 
     public void setSeriesOfPerformances(

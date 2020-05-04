@@ -61,6 +61,7 @@ public abstract class BaseDao<T> implements Dao<T> {
         } catch (Exception e) {
             if (transaction != null && transaction.isActive()) {
                 transaction.rollback();
+                LOG.error("the persistence of the object is not possible",e);
             }
         }
         return Optional.empty();

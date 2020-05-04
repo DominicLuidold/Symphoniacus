@@ -32,7 +32,7 @@ public class InstrumentationEntity {
     @ManyToMany(mappedBy = "instrumentations")
     private List<SeriesOfPerformancesEntity> seriesOfPerformances = new LinkedList<>();
 
-    @OneToMany(mappedBy = "instrumentation", fetch = FetchType.EAGER)
+    @OneToMany(mappedBy = "instrumentation", fetch = FetchType.LAZY)
     private List<SectionInstrumentationEntity> sectionInstrumentations = new LinkedList<>();
 
     @OneToMany(mappedBy = "instrumentation", orphanRemoval = true)
@@ -99,7 +99,7 @@ public class InstrumentationEntity {
     }
 
     public List<SeriesOfPerformancesEntity> getSeriesOfPerformances() {
-        return seriesOfPerformances;
+        return this.seriesOfPerformances;
     }
 
     public void setSeriesOfPerformances(

@@ -167,7 +167,7 @@ public class SeriesOfPerformancesEntity {
     }
 
     public List<NegativeDutyWishEntity> getNegativeDutyWishes() {
-        return negativeDutyWishes;
+        return this.negativeDutyWishes;
     }
 
     public void setNegativeDutyWishes(
@@ -176,7 +176,7 @@ public class SeriesOfPerformancesEntity {
     }
 
     public Set<InstrumentationEntity> getInstrumentations() {
-        return instrumentations;
+        return this.instrumentations;
     }
 
     public void setInstrumentations(
@@ -195,7 +195,7 @@ public class SeriesOfPerformancesEntity {
     }
 
     public Set<MusicalPieceEntity> getMusicalPieces() {
-        return musicalPieces;
+        return this.musicalPieces;
     }
 
     public void setMusicalPieces(
