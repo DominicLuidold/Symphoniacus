@@ -28,7 +28,12 @@
 }
 #saveButton:hover, #cancelButton:hover {
     -fx-background-color: #BFC6DB;
-    -fx-border-color: #262D42;
+
+    /*-fx-border-color: #262D42;*/
+}
+
+#cancelButton:pressed, #saveButton:pressed {
+    -fx-background-color: #596075;
 }
 
 /* UNCOMMENT WHEN WE HAVE NUTZERZENTRIERT SEMINAR

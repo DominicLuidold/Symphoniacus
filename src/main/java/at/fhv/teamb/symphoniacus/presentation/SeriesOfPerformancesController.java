@@ -4,6 +4,7 @@ import at.fhv.teamb.symphoniacus.application.SeriesOfPerformancesManager;
 import at.fhv.teamb.symphoniacus.persistence.model.InstrumentationEntity;
 import at.fhv.teamb.symphoniacus.persistence.model.MusicalPieceEntity;
 import at.fhv.teamb.symphoniacus.persistence.model.SectionInstrumentationEntity;
+import at.fhv.teamb.symphoniacus.presentation.internal.AlertHelper;
 import java.net.URL;
 import java.util.Iterator;
 import java.util.LinkedHashSet;
@@ -13,6 +14,7 @@ import java.util.Optional;
 import java.util.ResourceBundle;
 import java.util.Set;
 import javafx.collections.FXCollections;
+import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
 import javafx.collections.ObservableSet;
 import javafx.event.ActionEvent;
@@ -52,6 +54,7 @@ public class SeriesOfPerformancesController implements Initializable {
     private boolean isValid = false;
     private ValidationSupport validationSupport = new ValidationSupport();
     private SeriesOfPerformancesManager seriesManager;
+    private boolean itemChanged;
 
     @FXML
     private AnchorPane pane;
@@ -150,7 +153,6 @@ public class SeriesOfPerformancesController implements Initializable {
                 this.saveButton.setDisable(!isValid);
             });
 
-
         // Save button method
         saveButton.setOnAction(new EventHandler<ActionEvent>() {
             @Override
@@ -167,6 +169,14 @@ public class SeriesOfPerformancesController implements Initializable {
             }
         });
 
+        // Add/Modify button method
+        addModifyButton.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent event) {
+                addModify();
+            }
+        });
+
     }
 
     /**
@@ -180,7 +190,7 @@ public class SeriesOfPerformancesController implements Initializable {
         Set<MusicalPieceEntity> mp = seriesManager.getAllMusicalPieces();
         musicalPieces.addAll(mp);
 
-        StringConverter<MusicalPieceEntity> musicalConverter =
+        final StringConverter<MusicalPieceEntity> musicalConverter =
             new StringConverter<MusicalPieceEntity>() {
                 @Override
                 public String toString(MusicalPieceEntity piece) {
@@ -208,22 +218,23 @@ public class SeriesOfPerformancesController implements Initializable {
         https://stackoverflow.com/questions/30643979/checkcombobox-choices-are-empty
          */
         musicalPieceCheckComboBox.getItems().addAll(musicalPieces);
-        // Call init Instrumentations, when Musical Pieces have been chosen
-        /*
+
+        // Changes boolean to avoid unnecessary select statements
         musicalPieceCheckComboBox.getCheckModel().getCheckedItems().addListener(
             new ListChangeListener<MusicalPieceEntity>() {
                 @Override
-                public void onChanged(Change<? extends MusicalPieceEntity> c) {
-                    loadInstrumentationsFromChosenMusicalPieces(
-                        musicalPieceCheckComboBox.getCheckModel().getCheckedItems());
-
+                public void onChanged(ListChangeListener.Change<? extends MusicalPieceEntity> c) {
+                    itemChanged = true;
                 }
             });
 
-         */
+        // Call init Instrumentations, when Musical Pieces have been chosen
         musicalPieceCheckComboBox.addEventHandler(ComboBox.ON_HIDDEN, event -> {
-            loadInstrumentationsFromChosenMusicalPieces(
-                musicalPieceCheckComboBox.getCheckModel().getCheckedItems());
+            if (itemChanged) {
+                loadInstrumentationsFromChosenMusicalPieces(
+                    musicalPieceCheckComboBox.getCheckModel().getCheckedItems());
+                itemChanged = false;
+            }
         });
     }
 
@@ -245,7 +256,7 @@ public class SeriesOfPerformancesController implements Initializable {
         ObservableSet<InstrumentationEntity> instrumentations = FXCollections.observableSet();
         instrumentations.addAll(inst);
 
-        StringConverter<InstrumentationEntity> instrumentationConverter =
+        final StringConverter<InstrumentationEntity> instrumentationConverter =
             new StringConverter<InstrumentationEntity>() {
                 @Override
                 public String toString(InstrumentationEntity instrumentation) {
@@ -255,22 +266,9 @@ public class SeriesOfPerformancesController implements Initializable {
 
                 @Override
                 public InstrumentationEntity fromString(String nameOfPiece) {
-                    /*
-                Optional<MusicalPieceEntity> piece =
-                SeriesOfPerformancesManager.getMusicalPieceFromName(nameOfPiece);
-                if (piece.isPresent()) {
-                    return piece.get();
-                } else {
                     LOG.error(
-                        "Somehow the musicial piece couldn't get found
-                        by its name in the SeriesOfPerformancesController");
-                    //Should never be able to get here
-                    return null;
-                }
-            }
-                 */
-                    System.out.println(
-                        "------------------------------------------------------------->>DFWEFWF");
+                        "Return NULL: SeriesOfPerformancesController fromString von instrumentation"
+                            + " wurde aufgerufen -> ist aber garnicht implementiert");
                     return null;
                 }
             };
@@ -283,16 +281,18 @@ public class SeriesOfPerformancesController implements Initializable {
                 instrumentationCheckComboBox.getItems().add(instrumentation);
             }
         }
+        System.out.println(instrumentationCheckComboBox.getCheckModel().getCheckedIndices());
+
+
         // Alle Instrumentations die nach dem Hinzufügen nicht in der "neuen" Liste vorhanden sind
-        // werden gelöscht
+        // werden gelöscht und handling der CheckIndeces
         Iterator<InstrumentationEntity> iterator =
             instrumentationCheckComboBox.getItems().iterator();
-
         while (iterator.hasNext()) {
             InstrumentationEntity tempInst = iterator.next();
             if (!(instrumentations.contains(tempInst))) {
                 instrumentationCheckComboBox.getCheckModel().clearCheck(tempInst);
-
+                // Speichere aktuelle checks in zwischenliste
                 List<InstrumentationEntity> tmp = new LinkedList<>(
                     instrumentationCheckComboBox.getCheckModel().getCheckedItems());
                 ObservableList<InstrumentationEntity> tempList =
@@ -304,83 +304,46 @@ public class SeriesOfPerformancesController implements Initializable {
 
                 iterator.remove();
 
+                // Durch remove wurde die size der liste verändert und somit sind alle
+                // checkIndices falsche -> deshalb werden nach dem clearen die checks neu gesetzt
                 for (InstrumentationEntity instrumentation : tempList) {
                     if (instrumentationCheckComboBox.getItems().contains(instrumentation)) {
                         instrumentationCheckComboBox.getCheckModel().check(instrumentation);
                     }
                 }
-                loadSectionInstrumentationDescriptions(
-                    instrumentationCheckComboBox.getCheckModel().getCheckedItems());
+                loadSectionInstrumentationDescriptions();
             }
         }
-        System.out.println(instrumentationCheckComboBox.getCheckModel().getCheckedIndices());
 
         /*
             Refresh BUG!
             https://github.com/controlsfx/controlsfx/issues/1004
+            Hier ein selbstgebauter workaround.
          */
-
-        // TODO - wenn ein musical piece removed wird und neues ausgewählt wird
-        //  -> ist die besetzung falls vorhin ausgewählt auch hier ausgewählt
         if (instrumentations.size() > 0) {
             ObservableList<Integer> result =
                 instrumentationCheckComboBox.getCheckModel().getCheckedIndices();
             for (Integer i : result) {
-                System.out.println(i + "test");
                 instrumentationCheckComboBox.getCheckModel().check(i);
             }
-        } else {
-            // TODO - fix das verdammte broken indicesClearUp von checkcombobox
         }
 
         instrumentationCheckComboBox.setConverter(instrumentationConverter);
-        /*
-        instrumentationCheckComboBox.getCheckModel().getCheckedItems().addListener(
-            new ListChangeListener<InstrumentationEntity>() {
-                @Override
-                public void onChanged(Change<? extends InstrumentationEntity> c) {
-                    loadSectionInstrumentationDescriptions(
-                        instrumentationCheckComboBox.getCheckModel().getCheckedItems());
-                }
-            });
-
-         */
         instrumentationCheckComboBox.addEventHandler(ComboBox.ON_HIDDEN, event -> {
-            loadSectionInstrumentationDescriptions(
-                instrumentationCheckComboBox.getCheckModel().getCheckedItems());
+            loadSectionInstrumentationDescriptions();
         });
     }
 
-
     /**
-     * Loads all sectionInstrumentationDescriptions and displays them in a list view.
-     *
-     * @param inst checked/given instrumentations
+     * Loads all sectionInstrumentationDescriptions out of current Instrumentations of the
+     * InstrumentationCheckComboBox fand displays them in a list view.
      */
-    private void loadSectionInstrumentationDescriptions(
-        ObservableList<InstrumentationEntity> inst
-    ) {
-        System.out.println("Pointer test - ");
-        /*
-        ObservableSet<InstrumentationEntity> instrumentations =
-            FXCollections.observableSet();
-        instrumentations.addAll(inst);
-
-         */
-
+    private void loadSectionInstrumentationDescriptions() {
         ObservableList<InstrumentationEntity> instrumentations =
             instrumentationCheckComboBox.getCheckModel().getCheckedItems();
 
         List<String> desc = new LinkedList<>();
-        StringBuilder sb = new StringBuilder();
-        /*
-        for (InstrumentationEntity i : instrumentations) {
-            System.out.print(instrumentations.size());
-            System.out.println(i.getName() + " | ");
-        }
-
-         */
-
+        StringBuilder sb;
         for (InstrumentationEntity instrumentation : instrumentations) {
             sb = new StringBuilder();
             String prefix = "";
@@ -429,7 +392,8 @@ public class SeriesOfPerformancesController implements Initializable {
                 .getString("seriesOfPerformances.success.header"));
             successAlert.show();
         } else {
-            //TODO - warning something went wrong alert
+            LOG.debug(
+                "Series of Performances could not be saved");
         }
     }
 
@@ -446,14 +410,13 @@ public class SeriesOfPerformancesController implements Initializable {
         Alert alert = new Alert(Alert.AlertType.WARNING);
         if (seriesManager.doesSeriesAlreadyExist(nameOfSeries.getText(), startingDate.getValue(),
             endingDate.getValue())) {
-            alert.setTitle(resources
-                .getString("seriesOfPerformances.error.title"));
+            alert.setTitle(resources.getString("seriesOfPerformances.error.title"));
             alert.setContentText(resources.getString(
                 "seriesOfPerformances.error.seriesAlreadyExists.message"));
             ButtonType okButton = new ButtonType(resources.getString("global.button.ok"),
                 ButtonBar.ButtonData.YES);
 
-            alert.getButtonTypes().setAll(okButton);
+            alert.getButtonTypes().setAll();
             alert.showAndWait().ifPresent(type -> {
                 System.out.println(type);
                 if (type.equals(okButton)) {
@@ -462,8 +425,7 @@ public class SeriesOfPerformancesController implements Initializable {
             });
             return false;
         } else if (nameOfSeries.getText().length() > 45) {
-            alert.setTitle(resources
-                .getString("seriesOfPerformances.error.title"));
+            alert.setTitle(resources.getString("seriesOfPerformances.error.title"));
             alert.setContentText(resources.getString(
                 "seriesOfPerformances.error.nameOfSeriesOutOfBounds.message"));
             ButtonType okButton = new ButtonType(resources.getString("global.button.ok"),
@@ -478,8 +440,7 @@ public class SeriesOfPerformancesController implements Initializable {
             });
             return false;
         } else if (endingDate.getValue().isBefore(startingDate.getValue())) {
-            alert.setTitle(resources
-                .getString("seriesOfPerformances.error.title"));
+            alert.setTitle(resources.getString("seriesOfPerformances.error.title"));
             alert.setContentText(resources.getString(
                 "seriesOfPerformances.error.endingDateBeforeStartingDate.message"));
             ButtonType okButton = new ButtonType(resources.getString("global.button.ok"),
@@ -498,7 +459,17 @@ public class SeriesOfPerformancesController implements Initializable {
         }
     }
 
-    public void cancel() {
+    private void cancel() {
         //TODO - schnittstelle zur Schließung des Tabs
+    }
+
+    private void addModify() {
+        Alert alert = new Alert(Alert.AlertType.INFORMATION);
+        alert.setTitle(resources.getString("global.button.not.implemented.title"));
+        alert.setHeaderText(resources.getString("global.button.not.implemented.header"));
+        alert.setContentText("Don't get your hopes up, this one will never be implemented.");
+        alert.getButtonTypes()
+            .setAll(new ButtonType(resources.getString("global.button.ok")));
+        alert.show();
     }
 }
