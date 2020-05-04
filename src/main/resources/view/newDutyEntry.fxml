@@ -21,6 +21,7 @@
 <?import com.sun.javafx.scene.control.DatePickerContent?>
 <?import com.jfoenix.skins.JFXTimePickerContent?>
 <?import javafx.scene.control.DatePicker?>
+<?import javafx.scene.layout.StackPane?>
 <AnchorPane fx:id="pane" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="at.fhv.teamb.symphoniacus.presentation.NewDutyEntryController">
     <AnchorPane maxHeight="45.0" minHeight="45.0" prefHeight="45.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
         <children>
@@ -73,44 +74,31 @@
                 </GridPane>
                 <Separator orientation="HORIZONTAL"/>
                 <GridPane hgap="100" vgap="20">
+
                     <Label fx:id="dutyStartDateLabel" text="%tab.duty.new.entry.label.start.date"
                            GridPane.columnIndex="0" GridPane.rowIndex="0"/>
-
-
-                    <JFXDatePicker fx:id="dutyStartDateInput"
-                                   GridPane.columnIndex="1" GridPane.rowIndex="0"/>
-
-                    <DatePicker fx:id="dutyStartDateInput3"
-                                GridPane.columnIndex="1" GridPane.rowIndex="1"/>
-
-                    <!--<JFXTimePicker fx:id="bullshit"
-                                   GridPane.columnIndex="1" GridPane.rowIndex="1"/>-->
-
-
-                    <!--
+                    <StackPane GridPane.columnIndex="1" GridPane.rowIndex="0">
+                        <JFXDatePicker fx:id="dutyStartDateInput"/>
+                    </StackPane>
                     <Label fx:id="dutyStartTimeLabel" text="%tab.duty.new.entry.label.start.time"
-                           GridPane.columnIndex="0" GridPane.rowIndex="0"/>
-                    //Time format
-
-
-                    //parallel zu start
-                    <Label fx:id="dutyEndDateLabel" text="%tab.duty.new.entry.label.end.date"
-                           GridPane.columnIndex="0" GridPane.rowIndex="0"/>
-
-                    <Label fx:id="dutyTimeLabel" text="%tab.duty.new.entry.label.time"
                            GridPane.columnIndex="0" GridPane.rowIndex="1"/>
-                    <TextField fx:id="dutyStartTimeInput"
-                               GridPane.columnIndex="1" GridPane.rowIndex="1"/>
+                    <JFXTimePicker fx:id="dutyStartTimeInput" GridPane.columnIndex="1" GridPane.rowIndex="1"/>
 
+                    <Label fx:id="dutyEndDateLabel" text="%tab.duty.new.entry.label.end.date"
+                           GridPane.columnIndex="0" GridPane.rowIndex="2"/>
+                    <StackPane GridPane.columnIndex="1" GridPane.rowIndex="2">
+                        <JFXDatePicker fx:id="dutyEndDateInput"/>
+                    </StackPane>
+                    <Label fx:id="dutyEndTimeLabel" text="%tab.duty.new.entry.label.end.time"
+                           GridPane.columnIndex="0" GridPane.rowIndex="3"/>
+                    <JFXTimePicker fx:id="dutyEndTimeInput" GridPane.columnIndex="1" GridPane.rowIndex="3"/>
 
                     <Label fx:id="dutyPlaceLabel" text="%tab.duty.new.entry.label.place"
-                           GridPane.columnIndex="0" GridPane.rowIndex="2"/>
+                           GridPane.columnIndex="0" GridPane.rowIndex="4"/>
                     <TextField fx:id="dutyPlaceInput"
-                               GridPane.columnIndex="1" GridPane.rowIndex="2"/> -->
+                               GridPane.columnIndex="1" GridPane.rowIndex="4"/>
                 </GridPane>
             </VBox>
         </items>
     </SplitPane>
-    <JFXDatePicker fx:id="dutyStartDateInput2" overLay="true"
-                   GridPane.columnIndex="1" GridPane.rowIndex="0"/>
 </AnchorPane>

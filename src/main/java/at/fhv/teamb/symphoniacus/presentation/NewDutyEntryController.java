@@ -8,6 +8,7 @@ import at.fhv.teamb.symphoniacus.presentation.internal.AlertHelper;
 import at.fhv.teamb.symphoniacus.presentation.internal.Parentable;
 import at.fhv.teamb.symphoniacus.presentation.internal.tasks.LoginTask;
 import com.jfoenix.controls.JFXDatePicker;
+import com.jfoenix.controls.JFXTimePicker;
 import java.io.IOException;
 import java.net.URL;
 import java.util.Locale;
@@ -72,13 +73,13 @@ public class NewDutyEntryController implements Initializable {
     private JFXDatePicker dutyStartDateInput;
 
     @FXML
-    private TextField dutyStartTimeInput;
+    private JFXTimePicker dutyStartTimeInput;
 
     @FXML
-    private DatePicker dutyEndDateInput;
+    private JFXDatePicker dutyEndDateInput;
 
     @FXML
-    private TextField dutyEndTimeInput;
+    private JFXTimePicker dutyEndTimeInput;
 
     @FXML
     private TextField dutyPlaceInput;
