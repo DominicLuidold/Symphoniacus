@@ -28,12 +28,12 @@ public class OrganizationalOfficerCalendarController extends CalendarController 
         MainController mainController = this.getParentController().getParentController();
         DomainUserType loginUserType = mainController.getLoginUserType();
         AdministrativeAssistant aa = null;
-        if (loginUserType.equals(DomainUserType.DOMAIN_MUSICIAN)) {
-            LOG.info("Current user type is administrative assistant, unsupported");
-            return;
-        } else if (loginUserType.equals(DomainUserType.DOMAIN_ADMINISTRATIVE_ASSISTANT)) {
+        if (loginUserType.equals(DomainUserType.DOMAIN_ADMINISTRATIVE_ASSISTANT)) {
             LOG.info("Current user type is Administrative Assistant");
             this.administrativeAssistant = mainController.getCurrentAssistant();
+        } else {
+            LOG.info("Current user type is unsupported for this view");
+            return;
         }
 
         // Fetch duties from database
