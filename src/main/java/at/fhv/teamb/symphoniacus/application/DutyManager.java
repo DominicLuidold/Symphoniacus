@@ -6,11 +6,14 @@ import at.fhv.teamb.symphoniacus.domain.Section;
 import at.fhv.teamb.symphoniacus.persistence.PersistenceState;
 import at.fhv.teamb.symphoniacus.persistence.dao.DutyDao;
 import at.fhv.teamb.symphoniacus.persistence.model.DutyEntity;
+import at.fhv.teamb.symphoniacus.persistence.model.MonthlyScheduleEntity;
 import at.fhv.teamb.symphoniacus.persistence.model.SectionEntity;
 import at.fhv.teamb.symphoniacus.persistence.model.SeriesOfPerformancesEntity;
+import at.fhv.teamb.symphoniacus.persistence.model.WeeklyScheduleEntity;
 import java.time.DayOfWeek;
 import java.time.LocalDate;
-import java.time.LocalTime;
+import java.time.LocalDateTime;
+import java.time.YearMonth;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Optional;
@@ -26,9 +29,16 @@ import org.apache.logging.log4j.Logger;
  */
 public class DutyManager {
     private static final Logger LOG = LogManager.getLogger(DutyManager.class);
+    private final MonthlyScheduleManager monthlyScheduleManager;
+    private final WeeklyScheduleManager weeklyScheduleManager;
     protected DutyDao dutyDao;
 
+    /**
+     * Initialize the DutyManager.
+     */
     public DutyManager() {
+        this.monthlyScheduleManager = new MonthlyScheduleManager();
+        this.weeklyScheduleManager = new WeeklyScheduleManager();
         this.dutyDao = new DutyDao();
     }
 
@@ -162,7 +172,6 @@ public class DutyManager {
      *
      * @return
      */
-
     public Optional<List<Duty>> getOtherDutiesForSopOrSection(
         Duty duty,
         Section section,
@@ -206,16 +215,49 @@ public class DutyManager {
         );
     }
 
-    // TODO
+    /**
+     * Creates a new {@link Duty} domain object based on given data.
+     *
+     * @param dutyCategory The duty category to use
+     * @param description  The description to use
+     * @param timeOfDay    The time of day description
+     * @param start        The start of the duty
+     * @param end          The end of the duty
+     * @return A duty domain object
+     */
     public Duty createDuty(
         DutyCategory dutyCategory,
         String description,
         String timeOfDay,
-        LocalDate day,
-        LocalTime start,
-        LocalTime end
+        LocalDateTime start,
+        LocalDateTime end // TODO - Wait for SeriesOfPerformances PR
     ) {
-        return null;
+        // Get monthly schedule entity
+        MonthlyScheduleEntity monthlyScheduleEntity =
+            this.monthlyScheduleManager.createIfNotExists(YearMonth.from(start.toLocalDate()));
+        // Get weekly schedule entity
+        WeeklyScheduleEntity weeklyScheduleEntity =
+            this.weeklyScheduleManager.createIfNotExists(start.toLocalDate(), start.getYear());
+
+        // Add weekly schedule to monthly schedule and vice versa
+        monthlyScheduleEntity.addWeeklySchedule(weeklyScheduleEntity);
+
+        // Create duty entity
+        DutyEntity dutyEntity = new DutyEntity();
+
+        // Add duty to weekly schedule and vice versa
+        weeklyScheduleEntity.addDuty(dutyEntity);
+
+        // Fill duty entity with data
+        dutyEntity.setDutyCategory(dutyCategory.getEntity());
+        dutyEntity.setDescription(description);
+        dutyEntity.setTimeOfDay(timeOfDay);
+        dutyEntity.setStart(start);
+        dutyEntity.setEnd(end);
+        // TODO - Wait for SeriesOfPerformances PR
+
+        // Return domain object
+        return new Duty(dutyEntity);
     }
 
     /**
