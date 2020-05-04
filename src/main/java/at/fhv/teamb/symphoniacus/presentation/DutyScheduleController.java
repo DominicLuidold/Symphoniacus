@@ -103,7 +103,6 @@ public class DutyScheduleController
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         this.registerController();
-        LOG.debug("asdf");
         this.dutyScheduleManager = null;
         this.dutySchedule.setVisible(false);
         this.resources = resources;
@@ -211,7 +210,6 @@ public class DutyScheduleController
                         this.selectedDutyPosition
                     );
                 }
-
             }
         });
 
@@ -341,6 +339,16 @@ public class DutyScheduleController
                     }
                 }
             );
+
+        LOG.debug("Initialized DutyScheduleController");
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public void initializeWithParent() {
+        LOG.debug("Initialized DutyScheduleController with parent");
     }
 
     @Override
@@ -810,10 +818,5 @@ public class DutyScheduleController
     @Override
     public DutySchedulerCalendarController getParentController() {
         return this.parentController;
-    }
-
-    @Override
-    public void initializeNew() {
-
     }
 }

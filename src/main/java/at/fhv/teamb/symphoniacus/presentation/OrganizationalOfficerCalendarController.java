@@ -21,8 +21,11 @@ public class OrganizationalOfficerCalendarController extends CalendarController 
     private AdministrativeAssistant administrativeAssistant;
     private ResourceBundle bundle;
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
-    public void initializeNew() {
+    public void initializeWithParent() {
         // Tell CalendarFX to use custom skin
         this.setCalendarSkin();
 
@@ -69,11 +72,13 @@ public class OrganizationalOfficerCalendarController extends CalendarController 
                 this.parentController.addTab(TabPaneEntry.ADD_DUTY);
             }
         );
+        LOG.debug("Initialized OrganizationalOfficerCalendarController with parent");
     }
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         this.bundle = resources;
+        LOG.debug("Initialized OrganizationalOfficerCalendarController");
     }
 
     @Override

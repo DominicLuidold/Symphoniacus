@@ -19,7 +19,6 @@ import javafx.scene.control.TabPane;
 import javafx.scene.layout.AnchorPane;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.checkerframework.checker.nullness.Opt;
 import org.controlsfx.control.StatusBar;
 
 public class TabPaneController implements Initializable, Parentable<MainController> {
@@ -72,7 +71,7 @@ public class TabPaneController implements Initializable, Parentable<MainControll
                 if (controller.getParentController() == null) {
                     controller.setParentController(this);
                 }
-                controller.initializeNew();
+                controller.initializeWithParent();
             }
         } catch (IOException e) {
             // cannot load FXML
@@ -131,7 +130,6 @@ public class TabPaneController implements Initializable, Parentable<MainControll
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-        LOG.debug("##########1");
         this.bundle = resources;
 
         this.tabPane.getSelectionModel().clearSelection();
@@ -142,6 +140,7 @@ public class TabPaneController implements Initializable, Parentable<MainControll
         );
         MasterController mc = MasterController.getInstance();
         mc.setStatusBar(this.statusBar);
+        LOG.debug("Initialized TabPaneController");
     }
 
     @Override
@@ -155,8 +154,11 @@ public class TabPaneController implements Initializable, Parentable<MainControll
         this.parentController = controller;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
-    public void initializeNew() {
-
+    public void initializeWithParent() {
+        LOG.debug("Initialized TabPaneController with parent");
     }
 }

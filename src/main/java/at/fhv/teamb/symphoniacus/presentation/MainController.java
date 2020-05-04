@@ -45,11 +45,9 @@ public class MainController implements Initializable {
     private MusicianManager musicianManager;
     private AdministrativeAssistantManager administrativeManager;
     private ResourceBundle bundle;
-    private EventBus eventBus = new EventBus();
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-        LOG.debug("####000");
         this.userHeaderMenuController.setParentController(this);
         this.tabPaneController.setParentController(this);
         this.bundle = resources;

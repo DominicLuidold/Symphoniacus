@@ -25,7 +25,6 @@ public class MainControllerTest {
     Locale locale = new Locale("en", "UK");
     ResourceBundle bundle = ResourceBundle.getBundle("bundles.language", locale);
 
-
     @Test
     public void testGetPermittedTabs_shouldReturnAListOfPermittedTabsForMusician() {
         MusicianEntity entity = new MusicianEntity();
@@ -39,7 +38,9 @@ public class MainControllerTest {
             bundle
         );
         Assertions.assertTrue(
-            tabs.isEmpty(),
+            tabs.contains(
+                TabPaneEntry.UNSUPPORTED
+            ),
             "Should see no view atm"
         );
     }
@@ -67,11 +68,7 @@ public class MainControllerTest {
         // Then: We should see dutySchedulerCalendar and dutySchedule (last one hidden) - Tabs
         Assertions.assertTrue(
             tabs.contains(
-                new TabPaneEntry(
-                    1,
-                    this.bundle.getString("menu.tab.duty.roster.title"),
-                    "/view/dutySchedulerCalendar.fxml"
-                )
+               TabPaneEntry.DUTY_SCHEDULER_CALENDAR_VIEW
             ),
             "Should contain dutySchedulerCalendar"
         );
@@ -88,11 +85,7 @@ public class MainControllerTest {
         );
         Assertions.assertTrue(
             tabs.contains(
-                new TabPaneEntry(
-                    1,
-                    this.bundle.getString("menu.tab.duty.roster.title"),
-                    "/view/organizationalOfficerCalendarView.fxml"
-                )
+                TabPaneEntry.ORG_OFFICER_CALENDAR_VIEW
             ),
             "Should contain organizational officer view"
         );

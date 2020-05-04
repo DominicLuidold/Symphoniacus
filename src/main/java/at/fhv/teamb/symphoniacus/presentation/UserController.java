@@ -43,6 +43,7 @@ public class UserController implements Initializable, Parentable<MainController>
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         this.resourceBundle = resources;
+        LOG.debug("Initialized UserController");
     }
 
     @Override
@@ -55,10 +56,14 @@ public class UserController implements Initializable, Parentable<MainController>
         return this.parentController;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
-    public void initializeNew() {
-
+    public void initializeWithParent() {
+        LOG.debug("Initialized UserController with parent");
     }
+
     public void setUserShortcut(String text) {
         this.userShortcut.setText(text);
     }
