@@ -50,6 +50,8 @@ import javafx.scene.CacheHint;
 import javafx.scene.Node;
 import javafx.scene.control.Button;
 import javafx.scene.control.ContentDisplay;
+import javafx.scene.control.MenuButton;
+import javafx.scene.control.MenuItem;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.control.Separator;
 import javafx.scene.control.SkinBase;
@@ -64,6 +66,8 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.StackPane;
 import javafx.util.Duration;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.controlsfx.control.MasterDetailPane;
 import org.controlsfx.control.SegmentedButton;
 import org.controlsfx.control.textfield.CustomTextField;
@@ -72,6 +76,8 @@ import org.kordamp.ikonli.javafx.FontIcon;
 
 public class OrganizationalOfficerCalendarSkin extends SkinBase<CalendarView> {
 
+    private static final Logger LOG = LogManager.getLogger(OrganizationalOfficerCalendarSkin.class);
+
     private final InvalidationListener entriesVisibilityListener =
         obs -> updateCalendarVisibility();
     private MasterDetailPane leftMasterDetailPane;
@@ -79,6 +85,9 @@ public class OrganizationalOfficerCalendarSkin extends SkinBase<CalendarView> {
     private Button addCalendarButton;
     private Button printButton;
     private Button publishButton;
+    private MenuButton addButton;
+    private MenuItem addSop;
+    private MenuItem addDuty;
     private SearchResultView searchResultView;
     private StackPane stackPane;
     private DayPage dayPage;
@@ -177,6 +186,7 @@ public class OrganizationalOfficerCalendarSkin extends SkinBase<CalendarView> {
             new Locale("en", "UK")
         );
 
+        // Publish btn
         this.publishButton = new Button();
         this.publishButton.setId("publish");
         this.publishButton.setText(bundle.getString("skin.btn.publish.title"));
@@ -184,6 +194,19 @@ public class OrganizationalOfficerCalendarSkin extends SkinBase<CalendarView> {
         FontIcon publishIcon = new FontIcon(FontAwesome.ARROW_CIRCLE_UP);
         publishIcon.getStyleClass().addAll("button-icon"); //$NON-NLS-1$ //$NON-NLS-2$
         this.publishButton.setGraphic(publishIcon);
+
+        //Add SOP btn
+        this.addButton = new MenuButton();
+        this.addButton.setText(bundle.getString("global.button.add"));
+
+        addSop = new MenuItem("Series of Performances");
+        addDuty = new MenuItem("Duty");
+        this.addButton.getItems().addAll(addSop, addDuty);
+        this.addButton.setContentDisplay(ContentDisplay.GRAPHIC_ONLY);
+        this.addButton.setId("btnAdd");
+        this.addButton.setGraphic(addIcon);
+        addSop.setOnAction(evt -> add(addSop));
+        addDuty.setOnAction(evt -> add(addDuty));
 
         if (view.isShowSourceTray()) {
             openTray();
@@ -295,6 +318,11 @@ public class OrganizationalOfficerCalendarSkin extends SkinBase<CalendarView> {
             Messages.getString("CalendarViewSkin.TOOLTIP_PRINT"))); //$NON-NLS-1$
         publishButton.setTooltip(
             new Tooltip(bundle.getString("skin.btn.publish.tooltip")) //$NON-NLS-1$
+        );
+        addButton.setTooltip(
+            new Tooltip(
+                bundle.getString("global.button.add")
+            )
         );
         showDay.setTooltip(new Tooltip(
             Messages.getString("CalendarViewSkin.TOOLTIP_SHOW_DAY"))); //$NON-NLS-1$
@@ -409,6 +437,27 @@ public class OrganizationalOfficerCalendarSkin extends SkinBase<CalendarView> {
         updateToggleButtons();
     }
 
+    private void add(MenuItem item) {
+        System.out.println(item);
+        CalendarView skin = getSkinnable();
+        LOG.debug(item);
+        if (item.equals(this.addDuty)) {
+            LOG.debug("Add Duty btn pressed in calendar");
+            skin.fireEvent(
+                new CustomCalendarButtonEvent(
+                    CustomCalendarButtonEvent.ADD_DUTY
+                )
+            );
+        } else if (item.equals(this.addSop)) {
+            LOG.debug("Add SOP btn pressed in calendar");
+            skin.fireEvent(
+                new CustomCalendarButtonEvent(
+                    CustomCalendarButtonEvent.ADD_SERIES_OF_PERFORMANCES
+                )
+            );
+        }
+    }
+
     private void publish() {
         CalendarView skin = getSkinnable();
         skin.fireEvent(
@@ -497,8 +546,10 @@ public class OrganizationalOfficerCalendarSkin extends SkinBase<CalendarView> {
 
         if (getSkinnable().isShowPrintButton()) {
             leftToolBarBox.getChildren().add(printButton);
-            leftToolBarBox.getChildren().add(publishButton);
         }
+
+        leftToolBarBox.getChildren().add(publishButton);
+        leftToolBarBox.getChildren().add(addButton);
 
         if (getSkinnable().isShowPageToolBarControls()) {
             PageBase page = getSkinnable().getSelectedPage();
