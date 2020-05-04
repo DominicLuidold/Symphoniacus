@@ -6,9 +6,9 @@ import at.fhv.teamb.symphoniacus.presentation.internal.TabPaneEntry;
 import java.io.IOException;
 import java.net.URL;
 import java.util.LinkedList;
-import java.util.List;
 import java.util.Queue;
 import java.util.ResourceBundle;
+import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
@@ -40,6 +40,43 @@ public class TabPaneController implements Initializable, Parentable<MainControll
     private MainController parentController;
     private ResourceBundle bundle;
 
+    private void removeTab(String title) {
+        ObservableList<Tab> tabs = this.tabPane.getTabs();
+        for (Tab t : tabs) {
+            if (t.getText().equals(title)) {
+                this.tabPane.getTabs().remove(t);
+            }
+        }
+    }
+
+    protected void removeTab(TabPaneEntry entry) {
+        removeTab(entry.getTitle());
+    }
+
+    protected void addTab(TabPaneEntry entry) {
+        Tab tab = new Tab(entry.getTitle());
+        FXMLLoader loader = new FXMLLoader(
+            this.getClass().getResource(entry.getFxmlPath()),
+            this.bundle
+        );
+
+        try {
+            Parent p = loader.load();
+            tab.setContent(p);
+            Parentable controller = loader.getController();
+            if (controller != null) {
+                if (controller.getParentController() == null) {
+                    controller.setParentController(this);
+                }
+                controller.initializeNew();
+            }
+        } catch (IOException e) {
+            LOG.error(e);
+        }
+
+        this.tabPane.getTabs().add(tab);
+    }
+
     protected void initializeTabMenu() throws IOException {
         MainController parent = this.getParentController();
 
@@ -66,23 +103,8 @@ public class TabPaneController implements Initializable, Parentable<MainControll
         while (!tabs.isEmpty()) {
             TabPaneEntry entry = tabs.poll();
             LOG.debug("Adding tab {}", entry.getTitle());
-            FXMLLoader loader = new FXMLLoader(
-                this.getClass().getResource(entry.getFxmlPath()),
-                this.bundle
-            );
-            Parent p = loader.load();
-            LOG.debug("loaded");
-            Parentable controller = loader.getController();
-            if (controller != null) {
-                if (controller.getParentController() == null) {
-                    controller.setParentController(this);
-                }
-                controller.initializeNew();
-            }
 
-            Tab tab = new Tab(entry.getTitle());
-            tab.setContent(p);
-            this.tabPane.getTabs().add(tab);
+            addTab(entry);
         }
     }
 

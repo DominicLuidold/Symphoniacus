@@ -154,11 +154,7 @@ public class MainController implements Initializable {
             for (MusicianRole role : m.getEntity().getMusicianRoles()) {
                 if (role.getDescription().equals(MusicianRoleType.DUTY_SCHEDULER)) {
                     result.add(
-                        new TabPaneEntry(
-                            1,
-                            bundle.getString("menu.tab.duty.roster.title"),
-                            "/view/dutySchedulerCalendar.fxml"
-                        )
+                        TabPaneEntry.DUTY_SCHEDULER_CALENDAR_VIEW
                     );
                 }
             }
@@ -166,21 +162,13 @@ public class MainController implements Initializable {
         } else if (assistant != null && m == null) {
             LOG.debug("Getting permittedTabs for Administrative Assistant");
             result.add(
-                new TabPaneEntry(
-                    1,
-                    bundle.getString("menu.tab.duty.roster.title"),
-                    "/view/organizationalOfficerCalendarView.fxml"
-                )
+                TabPaneEntry.ORG_OFFICER_CALENDAR_VIEW
             );
         }
 
         if (result.isEmpty()) {
             result.add(
-                new TabPaneEntry(
-                    1,
-                    bundle.getString("unsupported"),
-                    "/view/unsupportedTab.fxml"
-                )
+                TabPaneEntry.UNSUPPORTED
             );
         }
 

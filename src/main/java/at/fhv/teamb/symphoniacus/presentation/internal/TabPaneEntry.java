@@ -9,7 +9,12 @@ import java.util.Objects;
  *
  * @author Valentin
  */
-public class TabPaneEntry {
+public enum TabPaneEntry {
+    ORG_OFFICER_CALENDAR_VIEW(1,"Duty Roster","/view/organizationalOfficerCalendarView.fxml"),
+    UNSUPPORTED(1,"Unsupported","/view/unsupportedTab.fxml"),
+    DUTY_SCHEDULER_CALENDAR_VIEW(1,"Duty Roster","/view/dutySchedulerCalendar.fxml"),
+    DUTY_SCHEDULER_SCHEDULE_VIEW(2,"Duty Schedule", "/view/dutySchedule.fxml");
+
     private int order;
     private String title;
     private String fxmlPath;
@@ -21,7 +26,7 @@ public class TabPaneEntry {
      * @param title    Title of Tab
      * @param fxmlPath Path to FXML file including /view/ as prefix
      */
-    public TabPaneEntry(int order, String title, String fxmlPath) {
+    TabPaneEntry(int order, String title, String fxmlPath) {
         this.order = order;
         this.title = title;
         this.fxmlPath = fxmlPath;
@@ -51,22 +56,4 @@ public class TabPaneEntry {
         this.fxmlPath = fxmlPath;
     }
 
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) {
-            return true;
-        }
-        if (o == null || getClass() != o.getClass()) {
-            return false;
-        }
-        TabPaneEntry that = (TabPaneEntry) o;
-        return order == that.order
-            && Objects.equals(title, that.title)
-            && Objects.equals(fxmlPath, that.fxmlPath);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(order, title, fxmlPath);
-    }
 }
