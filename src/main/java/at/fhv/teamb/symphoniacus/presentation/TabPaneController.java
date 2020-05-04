@@ -159,6 +159,7 @@ public class TabPaneController implements Initializable, Parentable<MainControll
      */
     @Override
     public void initializeWithParent() {
+        // No implementation needed in this class.
         LOG.debug("Initialized TabPaneController with parent");
     }
 }
