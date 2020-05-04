@@ -30,7 +30,6 @@ dependencies {
     testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.6.0'
 
     /* Project specific dependencies */
-    compile 'com.jfoenix:jfoenix:9.0.8'
     compile 'javax.persistence:javax.persistence-api:2.2'
     compile 'mysql:mysql-connector-java:5.1.13'
     compile 'org.apache.logging.log4j:log4j-api:2.13.1'
@@ -57,7 +56,11 @@ application {
             "--add-opens=javafx.graphics/com.sun.javafx.css=ALL-UNNAMED",
             "--add-opens=javafx.controls/com.sun.javafx.scene.control.behavior=ALL-UNNAMED",
             "--add-opens=javafx.controls/com.sun.javafx.scene.control=ALL-UNNAMED",
-            "--add-opens=javafx.graphics/com.sun.javafx.scene=ALL-UNNAMED"
+            "--add-opens=javafx.graphics/com.sun.javafx.scene=ALL-UNNAMED",
+            "--add-opens=javafx.base/com.sun.javafx.binding=ALL-UNNAMED",
+            "--add-opens=javafx.graphics/com.sun.javafx.stage=ALL-UNNAMED",
+            "--add-opens=javafx.base/com.sun.javafx.event=ALL-UNNAMED"
+            
     ]
 }
 
