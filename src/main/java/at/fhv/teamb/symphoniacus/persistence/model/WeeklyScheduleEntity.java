@@ -3,6 +3,7 @@ package at.fhv.teamb.symphoniacus.persistence.model;
 import java.time.LocalDate;
 import java.util.LinkedList;
 import java.util.List;
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -37,7 +38,7 @@ public class WeeklyScheduleEntity {
     @Column(name = "isConfirmed")
     private Boolean isConfirmed;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.LAZY, cascade = {CascadeType.PERSIST, CascadeType.MERGE})
     @JoinColumn(name = "monthlyScheduleId")
     private MonthlyScheduleEntity monthlySchedule;
 

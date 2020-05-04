@@ -27,7 +27,7 @@ public class DutyEntity {
     @Column(name = "dutyId")
     private Integer dutyId;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.LAZY, cascade = {CascadeType.PERSIST, CascadeType.MERGE})
     @JoinColumn(name = "weeklyScheduleId")
     private WeeklyScheduleEntity weeklySchedule;
 
@@ -51,7 +51,11 @@ public class DutyEntity {
     @JoinColumn(name = "seriesOfPerformancesId")
     private SeriesOfPerformancesEntity seriesOfPerformances;
 
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "duty", orphanRemoval = true)
+    @OneToMany(
+        cascade = {CascadeType.PERSIST, CascadeType.MERGE},
+        mappedBy = "duty",
+        orphanRemoval = true
+    )
     private Set<DutyPositionEntity> dutyPositions = new HashSet<>();
 
     @ManyToMany

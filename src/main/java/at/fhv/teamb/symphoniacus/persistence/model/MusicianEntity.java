@@ -58,7 +58,7 @@ public class MusicianEntity {
     )
     private List<MusicianRole> musicianRoles = new LinkedList<>();
 
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "musician")
+    @OneToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE}, mappedBy = "musician")
     private List<DutyPositionEntity> dutyPositions = new LinkedList<>();
 
     @OneToMany(mappedBy = "musician")
