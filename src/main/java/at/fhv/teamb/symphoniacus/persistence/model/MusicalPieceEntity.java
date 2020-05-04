@@ -30,7 +30,7 @@ public class MusicalPieceEntity {
     @Column(name = "category")
     private String category;
 
-    @OneToMany(mappedBy = "musicalPiece", orphanRemoval = true)
+    @OneToMany(mappedBy = "musicalPiece")
     private Set<InstrumentationEntity> instrumentations = new LinkedHashSet<>();
 
     @ManyToMany(mappedBy = "musicalPieces")

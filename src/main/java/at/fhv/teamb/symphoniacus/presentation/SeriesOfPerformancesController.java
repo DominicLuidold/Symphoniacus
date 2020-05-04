@@ -5,6 +5,7 @@ import at.fhv.teamb.symphoniacus.persistence.model.InstrumentationEntity;
 import at.fhv.teamb.symphoniacus.persistence.model.MusicalPieceEntity;
 import at.fhv.teamb.symphoniacus.persistence.model.SectionInstrumentationEntity;
 import java.net.URL;
+import java.util.Iterator;
 import java.util.LinkedHashSet;
 import java.util.LinkedList;
 import java.util.List;
@@ -12,7 +13,6 @@ import java.util.Optional;
 import java.util.ResourceBundle;
 import java.util.Set;
 import javafx.collections.FXCollections;
-import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
 import javafx.collections.ObservableSet;
 import javafx.event.ActionEvent;
@@ -24,6 +24,7 @@ import javafx.scene.control.Button;
 import javafx.scene.control.ButtonBar;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.CheckBox;
+import javafx.scene.control.ComboBox;
 import javafx.scene.control.DatePicker;
 import javafx.scene.control.ListView;
 import javafx.scene.control.TextField;
@@ -196,6 +197,7 @@ public class SeriesOfPerformancesController implements Initializable {
          */
         musicalPieceCheckComboBox.getItems().addAll(musicalPieces);
         // Call init Instrumentations, when Musical Pieces have been chosen
+        /*
         musicalPieceCheckComboBox.getCheckModel().getCheckedItems().addListener(
             new ListChangeListener<MusicalPieceEntity>() {
                 @Override
@@ -205,22 +207,25 @@ public class SeriesOfPerformancesController implements Initializable {
 
                 }
             });
+
+         */
+        musicalPieceCheckComboBox.addEventHandler(ComboBox.ON_HIDDEN, event -> {
+            loadInstrumentationsFromChosenMusicalPieces(
+                musicalPieceCheckComboBox.getCheckModel().getCheckedItems());
+        });
     }
 
     private void loadInstrumentationsFromChosenMusicalPieces(
-        ObservableList<MusicalPieceEntity> musicalPieces) {
-        System.out.println("aufruf!!!");
+        ObservableList<MusicalPieceEntity> musicalPieces
+    ) {
         Set<MusicalPieceEntity> mp = new LinkedHashSet<>();
         mp.addAll(musicalPieces);
 
         Set<InstrumentationEntity> inst = this.seriesManager.getInstrumentationsToMusicalPieces(mp);
-        for (InstrumentationEntity i : inst) {
-            System.out.println(i.getName());
-        }
 
+        // All Intrumentations of the checked musical pieces
         ObservableSet<InstrumentationEntity> instrumentations = FXCollections.observableSet();
         instrumentations.addAll(inst);
-
 
         StringConverter<InstrumentationEntity> instrumentationConverter =
             new StringConverter<InstrumentationEntity>() {
@@ -229,6 +234,7 @@ public class SeriesOfPerformancesController implements Initializable {
                     return instrumentation.getName() + " - "
                         + instrumentation.getMusicalPiece().getName();
                 }
+
                 @Override
                 public InstrumentationEntity fromString(String nameOfPiece) {
                     /*
@@ -245,6 +251,8 @@ public class SeriesOfPerformancesController implements Initializable {
                 }
             }
                  */
+                    System.out.println(
+                        "------------------------------------------------------------->>DFWEFWF");
                     return null;
                 }
             };
@@ -259,8 +267,35 @@ public class SeriesOfPerformancesController implements Initializable {
         }
         // Alle Instrumentations die nach dem Hinzufügen nicht in der "neuen" Liste vorhanden sind
         // werden gelöscht
-        instrumentationCheckComboBox.getItems().removeIf(
-            currentInstrumentation -> !(instrumentations.contains(currentInstrumentation)));
+        Iterator<InstrumentationEntity> iterator =
+            instrumentationCheckComboBox.getItems().iterator();
+
+        while (iterator.hasNext()) {
+            InstrumentationEntity tempInst = iterator.next();
+            if (!(instrumentations.contains(tempInst))) {
+                instrumentationCheckComboBox.getCheckModel().clearCheck(tempInst);
+
+                List<InstrumentationEntity> tmp = new LinkedList<>(
+                    instrumentationCheckComboBox.getCheckModel().getCheckedItems());
+                ObservableList<InstrumentationEntity> tempList =
+                    FXCollections.observableArrayList(tmp);
+                for (InstrumentationEntity test : tempList) {
+                    System.out.println(test.getName());
+                }
+                instrumentationCheckComboBox.getCheckModel().clearChecks();
+
+                iterator.remove();
+
+                for (InstrumentationEntity instrumentation : tempList) {
+                    if (instrumentationCheckComboBox.getItems().contains(instrumentation)) {
+                        instrumentationCheckComboBox.getCheckModel().check(instrumentation);
+                    }
+                }
+                loadSectionInstrumentationDescriptions(
+                    instrumentationCheckComboBox.getCheckModel().getCheckedItems());
+            }
+        }
+        System.out.println(instrumentationCheckComboBox.getCheckModel().getCheckedIndices());
 
         /*
             Refresh BUG!
@@ -281,6 +316,7 @@ public class SeriesOfPerformancesController implements Initializable {
         }
 
         instrumentationCheckComboBox.setConverter(instrumentationConverter);
+        /*
         instrumentationCheckComboBox.getCheckModel().getCheckedItems().addListener(
             new ListChangeListener<InstrumentationEntity>() {
                 @Override
@@ -289,16 +325,39 @@ public class SeriesOfPerformancesController implements Initializable {
                         instrumentationCheckComboBox.getCheckModel().getCheckedItems());
                 }
             });
+
+         */
+        instrumentationCheckComboBox.addEventHandler(ComboBox.ON_HIDDEN, event -> {
+            loadSectionInstrumentationDescriptions(
+                instrumentationCheckComboBox.getCheckModel().getCheckedItems());
+        });
     }
 
+
     private void loadSectionInstrumentationDescriptions(
-        ObservableList<InstrumentationEntity> inst) {
+        ObservableList<InstrumentationEntity> inst
+    ) {
+        System.out.println("Pointer test - ");
+        /*
         ObservableSet<InstrumentationEntity> instrumentations =
             FXCollections.observableSet();
         instrumentations.addAll(inst);
 
+         */
+
+        ObservableList<InstrumentationEntity> instrumentations =
+            instrumentationCheckComboBox.getCheckModel().getCheckedItems();
+
         List<String> desc = new LinkedList<>();
         StringBuilder sb = new StringBuilder();
+        /*
+        for (InstrumentationEntity i : instrumentations) {
+            System.out.print(instrumentations.size());
+            System.out.println(i.getName() + " | ");
+        }
+
+         */
+
         for (InstrumentationEntity instrumentation : instrumentations) {
             sb = new StringBuilder();
             String prefix = "";
@@ -336,7 +395,7 @@ public class SeriesOfPerformancesController implements Initializable {
                 .setAll(new ButtonType(resources.getString("global.button.ok")));
 
             // Get custom success icon
-            ImageView icon = new ImageView("images\\successIcon.png");
+            ImageView icon = new ImageView("images/successIcon.png");
             icon.setFitHeight(48);
             icon.setFitWidth(48);
             successAlert.setGraphic(icon);

@@ -32,7 +32,7 @@ public class InstrumentationEntity {
     @ManyToMany(mappedBy = "instrumentations")
     private List<SeriesOfPerformancesEntity> seriesOfPerformances = new LinkedList<>();
 
-    @OneToMany(mappedBy = "instrumentation", orphanRemoval = true)
+    @OneToMany(mappedBy = "instrumentation", fetch = FetchType.EAGER)
     private List<SectionInstrumentationEntity> sectionInstrumentations = new LinkedList<>();
 
     @OneToMany(mappedBy = "instrumentation", orphanRemoval = true)
