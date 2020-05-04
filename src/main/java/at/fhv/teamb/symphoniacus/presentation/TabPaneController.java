@@ -74,7 +74,16 @@ public class TabPaneController implements Initializable, Parentable<MainControll
             LOG.error(e);
         }
 
+        if (entry.isTemporary()) {
+            tab.setStyle(
+                "-fx-background-color: #7fc9f5; "
+                    + "-fx-text-fill: #093753; "
+                    + "-fx-prompt-text-fill: #093753;"
+            );
+        }
+
         this.tabPane.getTabs().add(tab);
+        this.tabPane.getSelectionModel().select(tab);
     }
 
     protected void initializeTabMenu() throws IOException {
@@ -129,13 +138,13 @@ public class TabPaneController implements Initializable, Parentable<MainControll
     }
 
     @Override
-    public void initializeNew() {
-
-    }
-
-    @Override
     public void setParentController(MainController controller) {
         LOG.debug("Initialized TabPaneParentController");
         this.parentController = controller;
+    }
+
+    @Override
+    public void initializeNew() {
+
     }
 }

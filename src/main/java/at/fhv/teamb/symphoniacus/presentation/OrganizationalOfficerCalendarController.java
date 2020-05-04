@@ -63,6 +63,12 @@ public class OrganizationalOfficerCalendarController extends CalendarController 
                 this.parentController.addTab(TabPaneEntry.ADD_SOP);
             }
         );
+        this.calendarView.addEventHandler(
+            CustomCalendarButtonEvent.ADD_DUTY,
+            event -> {
+                this.parentController.addTab(TabPaneEntry.ADD_DUTY);
+            }
+        );
     }
 
     @Override

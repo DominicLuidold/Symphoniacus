@@ -10,15 +10,17 @@ import java.util.Objects;
  * @author Valentin
  */
 public enum TabPaneEntry {
-    ADD_SOP(1,"Add SOP","/view/unsupportedTab.fxml"),
-    ORG_OFFICER_CALENDAR_VIEW(1,"Duty Roster","/view/organizationalOfficerCalendarView.fxml"),
-    UNSUPPORTED(1,"Unsupported","/view/unsupportedTab.fxml"),
-    DUTY_SCHEDULER_CALENDAR_VIEW(1,"Duty Roster","/view/dutySchedulerCalendar.fxml"),
-    DUTY_SCHEDULER_SCHEDULE_VIEW(2,"Duty Schedule", "/view/dutySchedule.fxml");
+    ADD_SOP(1,"Add SOP","/view/unsupportedTab.fxml", true),
+    ADD_DUTY(1,"Add Duty","/view/unsupportedTab.fxml", true),
+    ORG_OFFICER_CALENDAR_VIEW(1,"Duty Roster","/view/organizationalOfficerCalendarView.fxml", false),
+    UNSUPPORTED(1,"Unsupported","/view/unsupportedTab.fxml", false),
+    DUTY_SCHEDULER_CALENDAR_VIEW(1,"Duty Roster","/view/dutySchedulerCalendar.fxml", false),
+    DUTY_SCHEDULER_SCHEDULE_VIEW(2,"Duty Schedule", "/view/dutySchedule.fxml", true);
 
     private int order;
     private String title;
     private String fxmlPath;
+    private boolean isTemporary;
 
     /**
      * Constructs a new TabPaneEntry.
@@ -26,11 +28,13 @@ public enum TabPaneEntry {
      * @param order    The order in which this FXML should be loaded (1 = first)
      * @param title    Title of Tab
      * @param fxmlPath Path to FXML file including /view/ as prefix
+     * @param isTemporary Whether this tab is just temporary (different color)
      */
-    TabPaneEntry(int order, String title, String fxmlPath) {
+    TabPaneEntry(int order, String title, String fxmlPath, boolean isTemporary) {
         this.order = order;
         this.title = title;
         this.fxmlPath = fxmlPath;
+        this.isTemporary = isTemporary;
     }
 
     public int getOrder() {
@@ -57,4 +61,11 @@ public enum TabPaneEntry {
         this.fxmlPath = fxmlPath;
     }
 
+    public boolean isTemporary() {
+        return isTemporary;
+    }
+
+    public void setTemporary(boolean temporary) {
+        isTemporary = temporary;
+    }
 }
