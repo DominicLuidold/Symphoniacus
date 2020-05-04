@@ -416,7 +416,7 @@ public class SeriesOfPerformancesController implements Initializable {
             ButtonType okButton = new ButtonType(resources.getString("global.button.ok"),
                 ButtonBar.ButtonData.YES);
 
-            alert.getButtonTypes().setAll();
+            alert.getButtonTypes().setAll(okButton);
             alert.showAndWait().ifPresent(type -> {
                 System.out.println(type);
                 if (type.equals(okButton)) {
