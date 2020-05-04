@@ -36,7 +36,7 @@ public class InstrumentationDao extends BaseDao<InstrumentationEntity> {
 
     @Override
     public Optional<InstrumentationEntity> persist(InstrumentationEntity elem) {
-        return Optional.empty();
+        return this.persist(InstrumentationEntity.class,elem);
     }
 
     @Override

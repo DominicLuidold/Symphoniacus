@@ -27,7 +27,7 @@ public class ContractualObligationDao extends BaseDao<ContractualObligationEntit
 
     @Override
     public Optional<ContractualObligationEntity> persist(ContractualObligationEntity elem) {
-        return Optional.empty();
+        return this.persist(ContractualObligationEntity.class,elem);
     }
 
     @Override

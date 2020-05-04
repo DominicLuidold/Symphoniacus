@@ -33,7 +33,7 @@ public class SectionInstrumentationDao extends BaseDao<SectionInstrumentationEnt
 
     @Override
     public Optional<SectionInstrumentationEntity> persist(SectionInstrumentationEntity elem) {
-        return Optional.empty();
+        return this.persist(SectionInstrumentationEntity.class,elem);
     }
 
     @Override

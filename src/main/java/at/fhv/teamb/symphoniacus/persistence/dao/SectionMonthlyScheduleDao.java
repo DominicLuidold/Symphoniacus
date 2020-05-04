@@ -83,7 +83,7 @@ public class SectionMonthlyScheduleDao extends BaseDao<SectionMonthlyScheduleEnt
 
     @Override
     public Optional<SectionMonthlyScheduleEntity> persist(SectionMonthlyScheduleEntity elem) {
-        return Optional.empty();
+        return this.persist(SectionMonthlyScheduleEntity.class,elem);
     }
 
     @Override

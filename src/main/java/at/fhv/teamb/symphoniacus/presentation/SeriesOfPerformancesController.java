@@ -162,6 +162,11 @@ public class SeriesOfPerformancesController implements Initializable {
 
     }
 
+    /**
+     *loads all musicalPieces from the database to display them in a drop-down window.
+     * When selecting one or more musicalPieces, the method
+     * loadInstrumentationsFromChosenMusicalPieces is called.
+     */
     public void initMusicialPiecesCheckListView() {
         final ObservableList<MusicalPieceEntity> musicalPieces =
             FXCollections.observableArrayList();
@@ -215,6 +220,11 @@ public class SeriesOfPerformancesController implements Initializable {
         });
     }
 
+    /**
+     * Loads all instrumentations for the given musicalPieces that were checked from the
+     * initMusicialPiecesCheckListView method and displays them in a drop-down.
+     * @param musicalPieces checked musicialPieces
+     */
     private void loadInstrumentationsFromChosenMusicalPieces(
         ObservableList<MusicalPieceEntity> musicalPieces
     ) {
@@ -334,6 +344,10 @@ public class SeriesOfPerformancesController implements Initializable {
     }
 
 
+    /**
+     * Loads all sectionInstrumentationDescriptions and displays them in a list view.
+     * @param inst checked/given instrumentations
+     */
     private void loadSectionInstrumentationDescriptions(
         ObservableList<InstrumentationEntity> inst
     ) {
@@ -375,6 +389,9 @@ public class SeriesOfPerformancesController implements Initializable {
         listView.setItems(descriptions);
     }
 
+    /**
+     * persists after validated input the new seriesOfPerformances in the database.
+     */
     private void save() {
         if (validateInputs()) {
             seriesManager.save(nameOfSeries.getText(),
@@ -406,6 +423,13 @@ public class SeriesOfPerformancesController implements Initializable {
         }
     }
 
+    /**
+     * validates whether or not:
+     * -The title has no more than 45 characters.
+     * -The end date is after the start date.
+     * -whether the seriesOfPerformance already exists with the same name and time specification.
+     * @return a boolean whether the validation is successful or not
+     */
     private boolean validateInputs() {
         //gibts die series of performance bereits -> wenn ja fehlermeldung
         Alert alert = new Alert(Alert.AlertType.WARNING);

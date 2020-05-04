@@ -2,7 +2,6 @@ package at.fhv.teamb.symphoniacus.application;
 
 import at.fhv.teamb.symphoniacus.persistence.dao.InstrumentationDao;
 import at.fhv.teamb.symphoniacus.persistence.dao.MusicalPieceDao;
-import at.fhv.teamb.symphoniacus.persistence.dao.SectionInstrumentationDao;
 import at.fhv.teamb.symphoniacus.persistence.dao.SeriesOfPerformancesDao;
 import at.fhv.teamb.symphoniacus.persistence.model.InstrumentationEntity;
 import at.fhv.teamb.symphoniacus.persistence.model.MusicalPieceEntity;
@@ -17,7 +16,6 @@ public class SeriesOfPerformancesManager {
     private static final Logger LOG = LogManager.getLogger(SeriesOfPerformancesManager.class);
     private MusicalPieceDao musicalPieceDao;
     private InstrumentationDao instrumentationDao;
-    private SectionInstrumentationDao sectionInstrumentationDao;
     private SeriesOfPerformancesDao seriesOfPerformancesDao;
 
     /**
@@ -26,7 +24,6 @@ public class SeriesOfPerformancesManager {
     public SeriesOfPerformancesManager() {
         this.musicalPieceDao = new MusicalPieceDao();
         this.instrumentationDao = new InstrumentationDao();
-        this.sectionInstrumentationDao = new SectionInstrumentationDao();
         this.seriesOfPerformancesDao = new SeriesOfPerformancesDao();
     }
 
@@ -73,6 +70,13 @@ public class SeriesOfPerformancesManager {
         return result.isPresent();
     }
 
+    /**
+     *checks if the seriesOfPerformances exists with the given parameters or not.
+     * @param title given Title of the seriesOfPerformances
+     * @param startingDate given starting Date
+     * @param endingDate given ending Date
+     * @return a boolean whether the seriesOfPerformances exists with the given parameters or not.
+     */
     public boolean doesSeriesAlreadyExist(
         String title,
         LocalDate startingDate,

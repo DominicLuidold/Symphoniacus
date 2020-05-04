@@ -212,7 +212,7 @@ public class DutyDao extends BaseDao<DutyEntity> {
      */
     @Override
     public Optional<DutyEntity> persist(DutyEntity elem) {
-        return Optional.empty();
+        return this.persist(DutyEntity.class,elem);
     }
 
     /**
