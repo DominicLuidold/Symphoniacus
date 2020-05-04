@@ -3,7 +3,8 @@ package at.fhv.teamb.symphoniacus.presentation;
 import at.fhv.teamb.symphoniacus.application.type.DomainUserType;
 import at.fhv.teamb.symphoniacus.domain.AdministrativeAssistant;
 import at.fhv.teamb.symphoniacus.domain.Duty;
-import at.fhv.teamb.symphoniacus.domain.Musician;
+import at.fhv.teamb.symphoniacus.presentation.internal.CustomCalendarButtonEvent;
+import at.fhv.teamb.symphoniacus.presentation.internal.TabPaneEntry;
 import at.fhv.teamb.symphoniacus.presentation.internal.skin.OrganizationalOfficerCalendarSkin;
 import com.calendarfx.model.Calendar;
 import java.net.URL;
@@ -56,6 +57,12 @@ public class OrganizationalOfficerCalendarController extends CalendarController 
                 calendar
             )
         );
+        this.calendarView.addEventHandler(
+            CustomCalendarButtonEvent.ADD_SERIES_OF_PERFORMANCES,
+            event -> {
+                this.parentController.addTab(TabPaneEntry.ADD_SOP);
+            }
+        );
     }
 
     @Override
@@ -82,12 +89,12 @@ public class OrganizationalOfficerCalendarController extends CalendarController 
     }
 
     @Override
-    public void setParentController(TabPaneController controller) {
-        this.parentController = controller;
+    public TabPaneController getParentController() {
+        return this.parentController;
     }
 
     @Override
-    public TabPaneController getParentController() {
-        return this.parentController;
+    public void setParentController(TabPaneController controller) {
+        this.parentController = controller;
     }
 }

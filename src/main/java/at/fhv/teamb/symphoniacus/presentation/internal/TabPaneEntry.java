@@ -10,6 +10,7 @@ import java.util.Objects;
  * @author Valentin
  */
 public enum TabPaneEntry {
+    ADD_SOP(1,"Add SOP","/view/unsupportedTab.fxml"),
     ORG_OFFICER_CALENDAR_VIEW(1,"Duty Roster","/view/organizationalOfficerCalendarView.fxml"),
     UNSUPPORTED(1,"Unsupported","/view/unsupportedTab.fxml"),
     DUTY_SCHEDULER_CALENDAR_VIEW(1,"Duty Roster","/view/dutySchedulerCalendar.fxml"),
