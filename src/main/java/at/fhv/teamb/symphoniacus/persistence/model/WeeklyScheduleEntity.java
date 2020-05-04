@@ -84,20 +84,19 @@ public class WeeklyScheduleEntity {
         this.publishDate = publishDate;
     }
 
-    public Boolean getIsConfirmed() {
-        return this.isConfirmed;
+    public boolean getConfirmed() {
+        return isConfirmed;
     }
 
-    public void setIsConfirmed(Boolean isConfirmed) {
-        this.isConfirmed = isConfirmed;
+    public void setConfirmed(boolean confirmed) {
+        this.isConfirmed = confirmed;
     }
 
     public MonthlyScheduleEntity getMonthlySchedule() {
-        return this.monthlySchedule;
+        return monthlySchedule;
     }
 
-    public void setMonthlySchedule(
-        MonthlyScheduleEntity monthlySchedule) {
+    public void setMonthlySchedule(MonthlyScheduleEntity monthlySchedule) {
         this.monthlySchedule = monthlySchedule;
     }
 
@@ -113,17 +112,5 @@ public class WeeklyScheduleEntity {
     public void removeDuty(DutyEntity duty) {
         this.duties.remove(duty);
         duty.setWeeklySchedule(null);
-    }
-
-    public Boolean getConfirmed() {
-        return isConfirmed;
-    }
-
-    public void setConfirmed(Boolean confirmed) {
-        isConfirmed = confirmed;
-    }
-
-    public void setDuties(List<DutyEntity> duties) {
-        this.duties = duties;
     }
 }
