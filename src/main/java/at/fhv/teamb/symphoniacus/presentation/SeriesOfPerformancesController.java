@@ -111,7 +111,9 @@ public class SeriesOfPerformancesController implements Initializable {
         this.seriesManager = new SeriesOfPerformancesManager();
         listView = new ListView<>();
         grid.add(listView, 1, 3);
-        instrumentationCheckComboBox.setTitle("Choose your instrumentations");
+        instrumentationCheckComboBox
+            .setTitle(resources
+                .getString("seriesOfPerformances.instrumentations.placeholder"));
         initMusicialPiecesCheckListView();
 
         ValidationDecoration cssDecorator = new StyleClassValidationDecoration(
@@ -121,19 +123,24 @@ public class SeriesOfPerformancesController implements Initializable {
         this.validationSupport.setValidationDecorator(cssDecorator);
 
         this.validationSupport.registerValidator(this.nameOfSeries,
-            Validator.createEmptyValidator("A name is required."));
+            Validator.createEmptyValidator(resources
+                .getString("seriesOfPerformances.validation.name")));
 
         this.validationSupport.registerValidator(musicalPieceCheckComboBox,
-            Validator.createEmptyValidator("You must pick a musical piece."));
+            Validator.createEmptyValidator(resources
+                .getString("seriesOfPerformances.validation.musicialPiece")));
 
         this.validationSupport.registerValidator(this.instrumentationCheckComboBox,
-            Validator.createEmptyValidator("You must pick an instrumentation."));
+            Validator.createEmptyValidator(resources
+                .getString("seriesOfPerformances.validation.instrumentation")));
 
         this.validationSupport.registerValidator(this.startingDate,
-            Validator.createEmptyValidator("A starting date is required."));
+            Validator.createEmptyValidator(resources
+                .getString("seriesOfPerformances.validation.startingDate")));
 
         this.validationSupport.registerValidator(this.endingDate,
-            Validator.createEmptyValidator("An ending date is required."));
+            Validator.createEmptyValidator(resources
+                .getString("seriesOfPerformances.validation.endingDate")));
 
 
         //Sets Save button disabled if form is not valid
@@ -163,7 +170,7 @@ public class SeriesOfPerformancesController implements Initializable {
     }
 
     /**
-     *loads all musicalPieces from the database to display them in a drop-down window.
+     * loads all musicalPieces from the database to display them in a drop-down window.
      * When selecting one or more musicalPieces, the method
      * loadInstrumentationsFromChosenMusicalPieces is called.
      */
@@ -223,6 +230,7 @@ public class SeriesOfPerformancesController implements Initializable {
     /**
      * Loads all instrumentations for the given musicalPieces that were checked from the
      * initMusicialPiecesCheckListView method and displays them in a drop-down.
+     *
      * @param musicalPieces checked musicialPieces
      */
     private void loadInstrumentationsFromChosenMusicalPieces(
@@ -346,6 +354,7 @@ public class SeriesOfPerformancesController implements Initializable {
 
     /**
      * Loads all sectionInstrumentationDescriptions and displays them in a list view.
+     *
      * @param inst checked/given instrumentations
      */
     private void loadSectionInstrumentationDescriptions(
@@ -416,7 +425,8 @@ public class SeriesOfPerformancesController implements Initializable {
             icon.setFitHeight(48);
             icon.setFitWidth(48);
             successAlert.setGraphic(icon);
-            successAlert.setHeaderText(resources.getString("seriesOfPerformances.success.header"));
+            successAlert.setHeaderText(resources
+                .getString("seriesOfPerformances.success.header"));
             successAlert.show();
         } else {
             //TODO - warning something went wrong alert
@@ -428,6 +438,7 @@ public class SeriesOfPerformancesController implements Initializable {
      * -The title has no more than 45 characters.
      * -The end date is after the start date.
      * -whether the seriesOfPerformance already exists with the same name and time specification.
+     *
      * @return a boolean whether the validation is successful or not
      */
     private boolean validateInputs() {
