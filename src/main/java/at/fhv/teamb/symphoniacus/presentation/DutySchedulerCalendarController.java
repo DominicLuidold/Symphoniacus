@@ -118,6 +118,7 @@ public class DutySchedulerCalendarController extends CalendarController implemen
 
         LOG.debug("Initialized DutySchedulerCalendarController with parent");
     }
+
     /**
      * {@inheritDoc}
      */

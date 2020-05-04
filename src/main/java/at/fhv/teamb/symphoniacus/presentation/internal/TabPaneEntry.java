@@ -1,7 +1,5 @@
 package at.fhv.teamb.symphoniacus.presentation.internal;
 
-import java.util.Objects;
-
 /**
  * A Tab Pane entry which is mainly needed for
  * {@link at.fhv.teamb.symphoniacus.presentation.MainController}
@@ -10,12 +8,16 @@ import java.util.Objects;
  * @author Valentin
  */
 public enum TabPaneEntry {
-    ADD_SOP(1,"Add SOP","/view/unsupportedTab.fxml", true),
-    ADD_DUTY(1,"Add Duty","/view/unsupportedTab.fxml", true),
-    ORG_OFFICER_CALENDAR_VIEW(1,"Duty Roster","/view/organizationalOfficerCalendarView.fxml", false),
-    UNSUPPORTED(1,"Unsupported","/view/unsupportedTab.fxml", false),
-    DUTY_SCHEDULER_CALENDAR_VIEW(1,"Duty Roster","/view/dutySchedulerCalendar.fxml", false),
-    DUTY_SCHEDULER_SCHEDULE_VIEW(2,"Duty Schedule", "/view/dutySchedule.fxml", true);
+    ADD_SOP(1, "Add SOP", "/view/unsupportedTab.fxml", true),
+    ADD_DUTY(1, "Add Duty", "/view/unsupportedTab.fxml", true),
+    ORG_OFFICER_CALENDAR_VIEW(
+        1, "Duty Roster",
+        "/view/organizationalOfficerCalendarView.fxml",
+        false
+    ),
+    UNSUPPORTED(1, "Unsupported", "/view/unsupportedTab.fxml", false),
+    DUTY_SCHEDULER_CALENDAR_VIEW(1, "Duty Roster", "/view/dutySchedulerCalendar.fxml", false),
+    DUTY_SCHEDULER_SCHEDULE_VIEW(2, "Duty Schedule", "/view/dutySchedule.fxml", true);
 
     private int order;
     private String title;
@@ -25,9 +27,9 @@ public enum TabPaneEntry {
     /**
      * Constructs a new TabPaneEntry.
      *
-     * @param order    The order in which this FXML should be loaded (1 = first)
-     * @param title    Title of Tab
-     * @param fxmlPath Path to FXML file including /view/ as prefix
+     * @param order       The order in which this FXML should be loaded (1 = first)
+     * @param title       Title of Tab
+     * @param fxmlPath    Path to FXML file including /view/ as prefix
      * @param isTemporary Whether this tab is just temporary (different color)
      */
     TabPaneEntry(int order, String title, String fxmlPath, boolean isTemporary) {

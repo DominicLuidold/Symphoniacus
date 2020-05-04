@@ -36,7 +36,7 @@ public class OrganizationalOfficerCalendarController extends CalendarController 
             LOG.info("Current user type is Administrative Assistant");
             this.administrativeAssistant = mainController.getCurrentAssistant();
         } else {
-            LOG.info("Current user type is unsupported for this view");
+            LOG.error("Current user type is unsupported for this view");
             return;
         }
 

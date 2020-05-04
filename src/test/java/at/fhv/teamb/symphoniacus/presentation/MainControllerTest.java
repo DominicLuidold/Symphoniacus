@@ -17,7 +17,9 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
 /**
- * @author Valentin
+ * Tests for the MainController.
+ *
+ * @author Valentin Goronjic
  */
 public class MainControllerTest {
 
