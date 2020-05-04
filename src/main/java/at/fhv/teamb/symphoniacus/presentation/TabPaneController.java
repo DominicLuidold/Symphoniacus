@@ -6,6 +6,7 @@ import at.fhv.teamb.symphoniacus.presentation.internal.TabPaneEntry;
 import java.io.IOException;
 import java.net.URL;
 import java.util.LinkedList;
+import java.util.Optional;
 import java.util.Queue;
 import java.util.ResourceBundle;
 import javafx.collections.ObservableList;
@@ -18,6 +19,7 @@ import javafx.scene.control.TabPane;
 import javafx.scene.layout.AnchorPane;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.checkerframework.checker.nullness.Opt;
 import org.controlsfx.control.StatusBar;
 
 public class TabPaneController implements Initializable, Parentable<MainController> {
@@ -53,17 +55,19 @@ public class TabPaneController implements Initializable, Parentable<MainControll
         removeTab(entry.getTitle());
     }
 
-    protected void addTab(TabPaneEntry entry) {
+    protected Optional<Parentable<TabPaneController>> addTab(TabPaneEntry entry) {
         Tab tab = new Tab(entry.getTitle());
         FXMLLoader loader = new FXMLLoader(
             this.getClass().getResource(entry.getFxmlPath()),
             this.bundle
         );
 
+        Parentable<TabPaneController> controller = null;
         try {
             Parent p = loader.load();
             tab.setContent(p);
-            Parentable controller = loader.getController();
+            controller = loader.getController();
+            // Set parent controller
             if (controller != null) {
                 if (controller.getParentController() == null) {
                     controller.setParentController(this);
@@ -71,7 +75,9 @@ public class TabPaneController implements Initializable, Parentable<MainControll
                 controller.initializeNew();
             }
         } catch (IOException e) {
+            // cannot load FXML
             LOG.error(e);
+            return Optional.empty();
         }
 
         if (entry.isTemporary()) {
@@ -84,6 +90,12 @@ public class TabPaneController implements Initializable, Parentable<MainControll
 
         this.tabPane.getTabs().add(tab);
         this.tabPane.getSelectionModel().select(tab);
+
+        if (controller == null) {
+            // FXML has no controller defined
+            return Optional.empty();
+        }
+        return Optional.of(controller);
     }
 
     protected void initializeTabMenu() throws IOException {
