@@ -1,6 +1,5 @@
 package at.fhv.teamb.symphoniacus.persistence.model;
 
-import at.fhv.teamb.symphoniacus.domain.SectionMonthlySchedule;
 import java.time.LocalDate;
 import java.util.HashSet;
 import java.util.LinkedList;
@@ -8,11 +7,9 @@ import java.util.List;
 import java.util.Set;
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.JoinColumn;
 import javax.persistence.ManyToMany;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
@@ -43,36 +40,14 @@ public class MonthlyScheduleEntity {
     @Column(name = "endWish")
     private LocalDate endWish;
 
-    //One-To-Many Part for SECTIONMONTHLYSCHEDULE Table
     @OneToMany(mappedBy = "monthlySchedule", orphanRemoval = true)
-    private Set<SectionMonthlyScheduleEntity> sectionMonthlyScheduleSet = new HashSet<>();
+    private Set<SectionMonthlyScheduleEntity> sectionMonthlySchedules = new HashSet<>();
 
-    //monthlySchedules -> attribute bei many to many
     @ManyToMany(mappedBy = "monthlySchedules")
     private List<NegativeDateWishEntity> negativeDateWishes = new LinkedList<>();
 
     @OneToMany(mappedBy = "monthlySchedule")
     private List<WeeklyScheduleEntity> weeklySchedules = new LinkedList<>();
-
-    public void addNegativeDateWish(NegativeDateWishEntity negativeDateWishEntity) {
-        this.negativeDateWishes.add(negativeDateWishEntity);
-        negativeDateWishEntity.getMonthlySchedules().add(this);
-    }
-
-    public void removeNegativeDateWish(NegativeDateWishEntity negativeDateWishEntity) {
-        this.negativeDateWishes.remove(negativeDateWishEntity);
-        negativeDateWishEntity.getMonthlySchedules().remove(this);
-    }
-
-    public void addWeeklySchedules(WeeklyScheduleEntity weeklyScheduleEntity) {
-        this.weeklySchedules.add(weeklyScheduleEntity);
-        weeklyScheduleEntity.setMonthlySchedule(this);
-    }
-
-    public void removeWeeklySchedules(WeeklyScheduleEntity weeklyScheduleEntity) {
-        this.weeklySchedules.remove(weeklyScheduleEntity);
-        weeklyScheduleEntity.setMonthlySchedule(null);
-    }
 
     public Integer getMonthlyScheduleId() {
         return this.monthlyScheduleId;
@@ -114,12 +89,12 @@ public class MonthlyScheduleEntity {
         this.endDateClassification = endDateClassification;
     }
 
-    public Boolean getIsPublished() {
+    public boolean getPublished() {
         return this.isPublished;
     }
 
-    public void setIsPublished(Boolean isPublished) {
-        this.isPublished = isPublished;
+    public void setPublished(boolean published) {
+        this.isPublished = published;
     }
 
     public LocalDate getEndWish() {
@@ -130,41 +105,45 @@ public class MonthlyScheduleEntity {
         this.endWish = endWish;
     }
 
-    public Boolean getPublished() {
-        return isPublished;
+    public Set<SectionMonthlyScheduleEntity> getSectionMonthlySchedule() {
+        return this.sectionMonthlySchedules;
     }
 
-    public void setPublished(Boolean published) {
-        isPublished = published;
+    public void addSectionMonthlySchedule(SectionMonthlyScheduleEntity sectionMonthlySchedule) {
+        this.sectionMonthlySchedules.add(sectionMonthlySchedule);
+        sectionMonthlySchedule.setMonthlySchedule(this);
+    }
+
+    public void removeSectionMonthlySchedule(SectionMonthlyScheduleEntity sectionMonthlySchedule) {
+        this.sectionMonthlySchedules.remove(sectionMonthlySchedule);
+        sectionMonthlySchedule.setMonthlySchedule(null);
     }
 
     public List<NegativeDateWishEntity> getNegativeDateWishes() {
-        return negativeDateWishes;
+        return this.negativeDateWishes;
     }
 
-    public void setNegativeDateWishes(
-        List<NegativeDateWishEntity> negativeDateWishes) {
-        this.negativeDateWishes = negativeDateWishes;
+    public void addNegativeDateWish(NegativeDateWishEntity negativeDateWishEntity) {
+        this.negativeDateWishes.add(negativeDateWishEntity);
+        negativeDateWishEntity.addMonthlySchedule(this);
+    }
+
+    public void removeNegativeDateWish(NegativeDateWishEntity negativeDateWishEntity) {
+        this.negativeDateWishes.add(negativeDateWishEntity);
+        negativeDateWishEntity.removeMonthlySchedule(this);
     }
 
     public List<WeeklyScheduleEntity> getWeeklySchedules() {
-        return weeklySchedules;
+        return this.weeklySchedules;
     }
 
-    public void setWeeklySchedules(
-        List<WeeklyScheduleEntity> weeklySchedules) {
-        this.weeklySchedules = weeklySchedules;
+    public void addWeeklySchedule(WeeklyScheduleEntity weeklySchedule) {
+        this.weeklySchedules.add(weeklySchedule);
+        weeklySchedule.setMonthlySchedule(this);
     }
 
-    public Set<SectionMonthlyScheduleEntity> getSectionMonthlyScheduleSet() {
-        return this.sectionMonthlyScheduleSet;
-    }
-
-    public void setMonthlyScheduleSet(Set<SectionMonthlyScheduleEntity> scheduleSet) {
-        this.sectionMonthlyScheduleSet = scheduleSet;
-    }
-
-    public void addMonthlySchedule(SectionMonthlyScheduleEntity schedule) {
-        this.sectionMonthlyScheduleSet.add(schedule);
+    public void removeWeeklySchedule(WeeklyScheduleEntity weeklySchedule) {
+        this.weeklySchedules.add(weeklySchedule);
+        weeklySchedule.setMonthlySchedule(null);
     }
 }
