@@ -18,6 +18,22 @@
     -fx-background-color: #2274A5;
 }
 
+.split-pane *.split-pane-divider {
+    -fx-padding: 0 1 0 1;
+}
+
+#topAnchor {
+    -fx-background-color: rgba(139, 146, 167, 0.66);
+}
+#buttonHbox > #scheduleSaveBtn, #scheduleBackBtn{
+    -fx-background-color:  rgba(139, 146, 167, 0.66);
+}
+#buttonHbox > #scheduleSaveBtn:hover, #scheduleBackBtn:hover{
+    -fx-background-color:  #BFC6DB;
+}
+#buttonHbox > #scheduleSaveBtn:pressed, #scheduleBackBtn:pressed{
+    -fx-background-color:  #596075;
+}
 
 /* UNCOMMENT WHEN WE HAVE NUTZERZENTRIERT SEMINAR
 *, root, .root {
