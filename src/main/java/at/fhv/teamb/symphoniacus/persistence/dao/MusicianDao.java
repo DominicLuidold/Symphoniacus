@@ -79,7 +79,7 @@ public class MusicianDao extends BaseDao<MusicianEntity> {
 
     @Override
     public Optional<MusicianEntity> persist(MusicianEntity elem) {
-        return Optional.empty();
+        return this.persist(MusicianEntity.class,elem);
     }
 
     @Override

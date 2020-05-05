@@ -1,14 +1,19 @@
 package at.fhv.teamb.symphoniacus.persistence.model;
 
 import java.time.LocalDate;
+import java.util.LinkedHashSet;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
+import javax.persistence.ManyToMany;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
@@ -32,8 +37,29 @@ public class SeriesOfPerformancesEntity {
     @Column(name = "isTour")
     private Boolean isTour;
 
-    @Column(name = "instrumentationId")
-    private Integer instrumentationId;
+    @ManyToMany(cascade = {CascadeType.MERGE})
+    @JoinTable(
+        name = "seriesOfPerformances_instrumentation",
+        joinColumns = {
+            @JoinColumn(name = "seriesOfPerformancesId")
+        },
+        inverseJoinColumns = {
+            @JoinColumn(name = "instrumentationId")
+        }
+    )
+    private Set<InstrumentationEntity> instrumentations = new LinkedHashSet<>();
+
+    @ManyToMany(cascade = {CascadeType.MERGE})
+    @JoinTable(
+        name = "seriesOfPerformances_musicalPiece",
+        joinColumns = {
+            @JoinColumn(name = "seriesOfPerformancesId")
+        },
+        inverseJoinColumns = {
+            @JoinColumn(name = "musicalPieceId")
+        }
+    )
+    private Set<MusicalPieceEntity> musicalPieces = new LinkedHashSet<>();
 
     @OneToMany(mappedBy = "seriesOfPerformances", orphanRemoval = false)
     private Set<DutyEntity> dutyEntities;
@@ -130,14 +156,6 @@ public class SeriesOfPerformancesEntity {
         this.isTour = isTour;
     }
 
-    public Integer getInstrumentationId() {
-        return this.instrumentationId;
-    }
-
-    public void setInstrumentationId(Integer instrumentationId) {
-        this.instrumentationId = instrumentationId;
-    }
-
     public void addDuty(DutyEntity dutyEntity) {
         this.dutyEntities.add(dutyEntity);
         dutyEntity.setSeriesOfPerformances(this);
@@ -149,11 +167,49 @@ public class SeriesOfPerformancesEntity {
     }
 
     public List<NegativeDutyWishEntity> getNegativeDutyWishes() {
-        return negativeDutyWishes;
+        return this.negativeDutyWishes;
     }
 
     public void setNegativeDutyWishes(
         List<NegativeDutyWishEntity> negativeDutyWishes) {
         this.negativeDutyWishes = negativeDutyWishes;
+    }
+
+    public Set<InstrumentationEntity> getInstrumentations() {
+        return this.instrumentations;
+    }
+
+    public void setInstrumentations(
+        Set<InstrumentationEntity> instrumentations) {
+        this.instrumentations = instrumentations;
+    }
+
+    public void addInstrumentation(InstrumentationEntity instrumentationEntity) {
+        this.instrumentations.add(instrumentationEntity);
+        instrumentationEntity.addSeriesOfPerformance(this);
+    }
+
+    public void removeInstrumentation(InstrumentationEntity instrumentationEntity) {
+        this.instrumentations.remove(instrumentationEntity);
+        instrumentationEntity.removeSeriesOfPerformance(this);
+    }
+
+    public Set<MusicalPieceEntity> getMusicalPieces() {
+        return this.musicalPieces;
+    }
+
+    public void setMusicalPieces(
+        Set<MusicalPieceEntity> musicalPieces) {
+        this.musicalPieces = musicalPieces;
+    }
+
+    public void addMusicalPiece(MusicalPieceEntity musicalPiece) {
+        this.musicalPieces.add(musicalPiece);
+        musicalPiece.addSeriesOfPerformance(this);
+    }
+
+    public void removeMusicalPiece(MusicalPieceEntity musicalPiece) {
+        this.musicalPieces.remove(musicalPiece);
+        musicalPiece.removeSeriesOfPerformance(this);
     }
 }
