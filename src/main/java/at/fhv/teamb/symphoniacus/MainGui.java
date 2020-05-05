@@ -28,7 +28,8 @@ public class MainGui extends Application {
             Locale locale = new Locale("en", "UK");
             Locale.setDefault(locale);
             ResourceBundle bundle = ResourceBundle.getBundle("bundles.language", locale);
-            Parent root = FXMLLoader.load(getClass().getResource("/view/login.fxml"), bundle);
+            Parent root = FXMLLoader
+                .load(getClass().getResource("/view/login.fxml"), bundle);
 
             double minHeight = 748;
             double minWidth = 1244;

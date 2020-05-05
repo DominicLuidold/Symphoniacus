@@ -27,7 +27,7 @@ public class DutyCategoryChangeLogDao extends BaseDao<DutyCategoryChangelogEntit
 
     @Override
     public Optional<DutyCategoryChangelogEntity> persist(DutyCategoryChangelogEntity elem) {
-        return Optional.empty();
+        return this.persist(DutyCategoryChangelogEntity.class,elem);
     }
 
     @Override

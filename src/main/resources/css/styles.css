@@ -18,6 +18,20 @@
     -fx-background-color: #2274A5;
 }
 
+#saveButton, #cancelButton {
+    -fx-background-color: #8C93A8;
+    -fx-font-size: 120%;
+}
+#saveButton:hover, #cancelButton:hover {
+    -fx-background-color: #BFC6DB;
+
+    /*-fx-border-color: #262D42;*/
+}
+
+#cancelButton:pressed, #saveButton:pressed {
+    -fx-background-color: #596075;
+}
+
 /* UNCOMMENT WHEN WE HAVE NUTZERZENTRIERT SEMINAR
 *, root, .root {
     -fx-font-family: "Comic Sans MS";

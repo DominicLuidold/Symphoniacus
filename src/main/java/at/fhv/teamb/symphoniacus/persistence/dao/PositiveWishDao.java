@@ -23,7 +23,7 @@ public class PositiveWishDao extends BaseDao<PositiveWishEntity> {
 
     @Override
     public Optional<PositiveWishEntity> persist(PositiveWishEntity elem) {
-        return Optional.empty();
+        return this.persist(PositiveWishEntity.class,elem);
     }
 
     @Override

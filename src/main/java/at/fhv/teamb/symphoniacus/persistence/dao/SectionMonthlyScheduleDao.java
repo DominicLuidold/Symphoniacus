@@ -3,7 +3,6 @@ package at.fhv.teamb.symphoniacus.persistence.dao;
 import at.fhv.teamb.symphoniacus.domain.Section;
 import at.fhv.teamb.symphoniacus.domain.SectionMonthlySchedule;
 import at.fhv.teamb.symphoniacus.persistence.BaseDao;
-import at.fhv.teamb.symphoniacus.persistence.model.PositiveWishEntity;
 import at.fhv.teamb.symphoniacus.persistence.model.SectionEntity;
 import at.fhv.teamb.symphoniacus.persistence.model.SectionMonthlyScheduleEntity;
 import java.time.Month;
@@ -84,7 +83,7 @@ public class SectionMonthlyScheduleDao extends BaseDao<SectionMonthlyScheduleEnt
 
     @Override
     public Optional<SectionMonthlyScheduleEntity> persist(SectionMonthlyScheduleEntity elem) {
-        return Optional.empty();
+        return this.persist(SectionMonthlyScheduleEntity.class,elem);
     }
 
     @Override

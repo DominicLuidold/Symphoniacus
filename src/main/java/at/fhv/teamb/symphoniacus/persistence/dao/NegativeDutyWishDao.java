@@ -23,7 +23,7 @@ public class NegativeDutyWishDao extends BaseDao<NegativeDutyWishEntity> {
 
     @Override
     public Optional<NegativeDutyWishEntity> persist(NegativeDutyWishEntity elem) {
-        return Optional.empty();
+        return this.persist(NegativeDutyWishEntity.class,elem);
     }
 
     @Override
