@@ -1,8 +1,6 @@
 package at.fhv.teamb.symphoniacus.presentation.internal;
 
-import at.fhv.teamb.symphoniacus.domain.ActualSectionInstrumentation;
 import at.fhv.teamb.symphoniacus.domain.Duty;
-import at.fhv.teamb.symphoniacus.persistence.model.DutyEntity;
 
 /**
  * This class is for Displaying the old Dutys in the Dutyscheduleview Dropdown.

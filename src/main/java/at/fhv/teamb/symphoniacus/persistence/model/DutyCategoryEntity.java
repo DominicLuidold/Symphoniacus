@@ -22,7 +22,7 @@ public class DutyCategoryEntity {
     private String type;
 
     @Column(name = "isRehearsal")
-    private Boolean isRehearsal;
+    private boolean isRehearsal;
 
     @Column(name = "points")
     private Integer points;
@@ -49,11 +49,11 @@ public class DutyCategoryEntity {
         this.type = type;
     }
 
-    public Boolean getIsRehearsal() {
+    public boolean getIsRehearsal() {
         return this.isRehearsal;
     }
 
-    public void setIsRehearsal(Boolean isRehearsal) {
+    public void setIsRehearsal(boolean isRehearsal) {
         this.isRehearsal = isRehearsal;
     }
 

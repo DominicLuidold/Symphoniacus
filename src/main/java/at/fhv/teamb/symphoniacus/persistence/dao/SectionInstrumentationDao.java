@@ -42,7 +42,7 @@ public class SectionInstrumentationDao extends BaseDao<SectionInstrumentationEnt
     }
 
     @Override
-    public Boolean remove(SectionInstrumentationEntity elem) {
-        return null;
+    public boolean remove(SectionInstrumentationEntity elem) {
+        return false;
     }
 }

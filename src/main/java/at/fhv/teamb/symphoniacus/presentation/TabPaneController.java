@@ -111,7 +111,7 @@ public class TabPaneController implements Initializable, Parentable<MainControll
         return Optional.of(controller);
     }
 
-    protected void initializeTabMenu() throws IOException {
+    protected void initializeTabMenu() {
         MainController parent = this.getParentController();
 
         Queue<TabPaneEntry> tabs = new LinkedList<>();
@@ -148,9 +148,8 @@ public class TabPaneController implements Initializable, Parentable<MainControll
 
         this.tabPane.getSelectionModel().clearSelection();
         this.tabPane.getSelectionModel().selectedItemProperty().addListener(
-            (observable, oldValue, newValue) -> {
-                LOG.debug("Selected tab: {}", newValue.getText());
-            }
+            (observable, oldValue, newValue) ->
+                LOG.debug("Selected tab: {}", newValue.getText())
         );
         MasterController mc = MasterController.getInstance();
         mc.setStatusBar(this.statusBar);

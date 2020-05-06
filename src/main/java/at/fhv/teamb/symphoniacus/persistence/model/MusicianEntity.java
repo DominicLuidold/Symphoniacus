@@ -73,16 +73,6 @@ public class MusicianEntity {
     @OneToMany(mappedBy = "musician")
     private List<NegativeDateWishEntity> negativeDateWishes = new LinkedList<>();
 
-    public void addPosition(DutyPositionEntity position) {
-        this.dutyPositions.add(position);
-        position.setMusician(this);
-    }
-
-    public void removePosition(DutyPositionEntity position) {
-        this.dutyPositions.remove(position);
-        position.setMusician(null);
-    }
-
     public void addPositiveWish(PositiveWishEntity positiveWish) {
         this.positiveWishes.add(positiveWish);
         positiveWish.setMusician(this);

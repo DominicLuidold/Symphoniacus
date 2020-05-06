@@ -35,7 +35,7 @@ public class MonthlyScheduleEntity {
     private LocalDate endDateClassification;
 
     @Column(name = "isPublished")
-    private Boolean isPublished;
+    private boolean isPublished;
 
     @Column(name = "endWish")
     private LocalDate endWish;

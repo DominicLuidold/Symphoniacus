@@ -28,9 +28,7 @@ public abstract class LoadingAnimationTask<T> extends Task<T> {
         LOG.debug("Task called: {}", this.getClass().getName());
         LOG.debug("Enabling Spinner");
         Platform.runLater(
-            () -> {
-                MasterController.enableSpinner(this.pane);
-            }
+            () -> MasterController.enableSpinner(this.pane)
         );
         return null;
     }
@@ -40,9 +38,7 @@ public abstract class LoadingAnimationTask<T> extends Task<T> {
         LOG.debug("Task suceeded: {}", this.getClass().getName());
         // Avoid throwing IllegalStateException by running from a non-JavaFX thread.
         Platform.runLater(
-            () -> {
-                MasterController.disableSpinner(this.pane);
-            }
+            () -> MasterController.disableSpinner(this.pane)
         );
         super.succeeded();
     }
@@ -51,9 +47,7 @@ public abstract class LoadingAnimationTask<T> extends Task<T> {
     protected void failed() {
         LOG.error("Task failed: {}", this.getClass().getName());
         Platform.runLater(
-            () -> {
-                MasterController.disableSpinner(this.pane);
-            }
+            () -> MasterController.disableSpinner(this.pane)
         );
         super.failed();
     }

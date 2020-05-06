@@ -38,10 +38,9 @@ public class GetMusiciansAvailableForPositionTask extends Task<Set<Musician>> {
 
     @Override
     protected Set<Musician> call() throws Exception {
-        Set<Musician> set = this.dutyScheduleManager.getMusiciansAvailableForPosition(
+        return this.dutyScheduleManager.getMusiciansAvailableForPosition(
             this.duty,
             this.dutyPosition
         );
-        return set;
     }
 }

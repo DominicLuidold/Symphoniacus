@@ -32,8 +32,8 @@ public class AdministrativeAssistantDao extends BaseDao<AdministrativeAssistantE
     }
 
     @Override
-    public Boolean remove(AdministrativeAssistantEntity elem) {
-        return null;
+    public boolean remove(AdministrativeAssistantEntity elem) {
+        return false;
     }
 
 }

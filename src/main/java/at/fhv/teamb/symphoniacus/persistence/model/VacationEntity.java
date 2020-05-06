@@ -30,7 +30,7 @@ public class VacationEntity {
     private LocalDate endDate;
 
     @Column(name = "isConfirmed")
-    private Boolean isConfirmed;
+    private boolean isConfirmed;
 
     public Integer getVacationId() {
         return this.vacationId;
@@ -64,11 +64,11 @@ public class VacationEntity {
         this.endDate = endDate;
     }
 
-    public Boolean getIsConfirmed() {
+    public boolean getIsConfirmed() {
         return this.isConfirmed;
     }
 
-    public void setIsConfirmed(Boolean isConfirmed) {
+    public void setIsConfirmed(boolean isConfirmed) {
         this.isConfirmed = isConfirmed;
     }
 }

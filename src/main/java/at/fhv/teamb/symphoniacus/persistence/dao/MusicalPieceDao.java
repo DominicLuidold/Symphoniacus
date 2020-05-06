@@ -34,8 +34,7 @@ public class MusicalPieceDao extends BaseDao<MusicalPieceEntity> {
                 + "WHERE mp.name = :nameOfPiece", MusicalPieceEntity.class);
 
         query.setParameter("nameOfPiece",name);
-        Optional<MusicalPieceEntity> result = Optional.of(query.getSingleResult());
-        return result;
+        return Optional.of(query.getSingleResult());
     }
 
     @Override
@@ -54,7 +53,7 @@ public class MusicalPieceDao extends BaseDao<MusicalPieceEntity> {
     }
 
     @Override
-    public Boolean remove(MusicalPieceEntity elem) {
-        return null;
+    public boolean remove(MusicalPieceEntity elem) {
+        return false;
     }
 }

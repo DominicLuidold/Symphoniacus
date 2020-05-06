@@ -183,4 +183,9 @@ public class Duty {
         // Compare data members and return accordingly
         return this.entity.getDutyId().equals(d.getEntity().getDutyId());
     }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(this.entity.getDutyId());
+    }
 }

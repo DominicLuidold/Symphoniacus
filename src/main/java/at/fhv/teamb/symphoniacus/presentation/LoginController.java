@@ -101,7 +101,7 @@ public class LoginController implements Initializable {
         this.userShortcutField.focusedProperty().addListener(
             (observable, oldValue, newValue)
                 -> {
-                if (newValue && firstTime.get()) {
+                if (Boolean.TRUE.equals(newValue) && firstTime.get()) {
                     this.grid.requestFocus();
                     firstTime.setValue(false);
                 }
@@ -177,15 +177,13 @@ public class LoginController implements Initializable {
             controller.setLoginUser(user);
             LOG.debug("MainController is fully loaded now :-)");
         } catch (IOException e) {
-            e.printStackTrace();
-            LOG.error(e);
+            LOG.error("Cannot load main scene", e);
             Stage owner = (Stage) this.submitButton.getScene().getWindow();
             AlertHelper.showAlert(Alert.AlertType.ERROR, owner, "Login failed",
                 this.resources.getString(
                     "login.error.login.technical.problems"
                 )
             );
-            return;
         }
     }
 }
