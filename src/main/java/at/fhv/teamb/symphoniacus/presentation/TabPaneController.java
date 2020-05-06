@@ -44,10 +44,12 @@ public class TabPaneController implements Initializable, Parentable<MainControll
 
     private void removeTab(String title) {
         ObservableList<Tab> tabs = this.tabPane.getTabs();
-        ObservableList<Tab> newTabs = FXCollections.observableList(tabs);
-        for (Tab t : newTabs) {
-            if (t.getText().equals(title)) {
-                newTabs.remove(t);
+        ObservableList<Tab> newTabs = FXCollections.observableArrayList();
+
+        // avoid concurrentModification
+        for (Tab t : tabs) {
+            if (!t.getText().equals(title)) {
+                newTabs.add(t);
             }
         }
         this.tabPane.getTabs().setAll(newTabs);
