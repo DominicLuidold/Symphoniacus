@@ -587,8 +587,9 @@ public class DutyScheduleController
                         for (DutyPosition odp : oldDutyPositions) {
                             if (odp.getEntity().getInstrumentationPosition()
                                 .getInstrumentationPositionId()
-                                == dp.getEntity().getInstrumentationPosition()
-                                .getInstrumentationPositionId()) {
+                                .equals(dp.getEntity().getInstrumentationPosition()
+                                    .getInstrumentationPositionId())
+                            ) {
                                 if (odp.getAssignedMusician().isPresent()) {
                                     oldMusician = odp.getAssignedMusician();
                                 }
@@ -599,7 +600,8 @@ public class DutyScheduleController
                         if (oldMusician.isPresent()) {
                             for (Musician m : avMusicians) {
                                 if (m.getEntity().getMusicianId()
-                                    == oldMusician.get().getEntity().getMusicianId()) {
+                                    .equals(oldMusician.get().getEntity().getMusicianId())
+                                ) {
                                     this.addMusicianToPosition(this.actualSectionInstrumentation, m,
                                         dp);
                                 }
