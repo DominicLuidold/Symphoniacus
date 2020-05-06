@@ -1,39 +1,20 @@
 package at.fhv.teamb.symphoniacus.presentation;
 
-import at.fhv.teamb.symphoniacus.application.LoginManager;
-import at.fhv.teamb.symphoniacus.domain.User;
 import at.fhv.teamb.symphoniacus.persistence.model.DutyCategoryEntity;
 import at.fhv.teamb.symphoniacus.persistence.model.SeriesOfPerformancesEntity;
-import at.fhv.teamb.symphoniacus.presentation.internal.AlertHelper;
 import at.fhv.teamb.symphoniacus.presentation.internal.Parentable;
-import at.fhv.teamb.symphoniacus.presentation.internal.tasks.LoginTask;
 import com.jfoenix.controls.JFXDatePicker;
 import com.jfoenix.controls.JFXTimePicker;
-import java.io.IOException;
 import java.net.URL;
-import java.util.Locale;
-import java.util.Optional;
 import java.util.ResourceBundle;
-import javafx.beans.property.BooleanProperty;
-import javafx.beans.property.SimpleBooleanProperty;
-import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
-import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
-import javafx.scene.control.DatePicker;
-import javafx.scene.control.Label;
-import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
-import javafx.scene.image.ImageView;
 import javafx.scene.layout.AnchorPane;
-import javafx.scene.layout.GridPane;
-import javafx.stage.Stage;
-import javafx.stage.Window;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.controlsfx.validation.ValidationMessage;
 import org.controlsfx.validation.ValidationSupport;
 import org.controlsfx.validation.Validator;
 import org.controlsfx.validation.decoration.StyleClassValidationDecoration;
@@ -44,10 +25,9 @@ import org.controlsfx.validation.decoration.ValidationDecoration;
  *
  * @author Theresa Gierer
  */
-
-public class NewDutyEntryController implements Initializable {
-
+public class NewDutyEntryController implements Initializable, Parentable<TabPaneController> {
     private static final Logger LOG = LogManager.getLogger(NewDutyEntryController.class);
+    private TabPaneController parentController;
 
     @FXML
     private AnchorPane pane;
@@ -117,9 +97,20 @@ public class NewDutyEntryController implements Initializable {
          */
 
 
-
-
     }
 
+    @Override
+    public void setParentController(TabPaneController controller) {
+        this.parentController = controller;
+    }
 
+    @Override
+    public TabPaneController getParentController() {
+        return this.parentController;
+    }
+
+    @Override
+    public void initializeWithParent() {
+        // Intentionally empty - currently not needed
+    }
 }
