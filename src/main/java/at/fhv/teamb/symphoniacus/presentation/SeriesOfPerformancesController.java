@@ -5,6 +5,8 @@ import at.fhv.teamb.symphoniacus.persistence.model.InstrumentationEntity;
 import at.fhv.teamb.symphoniacus.persistence.model.MusicalPieceEntity;
 import at.fhv.teamb.symphoniacus.persistence.model.SectionInstrumentationEntity;
 import at.fhv.teamb.symphoniacus.presentation.internal.AlertHelper;
+import at.fhv.teamb.symphoniacus.presentation.internal.Parentable;
+import at.fhv.teamb.symphoniacus.presentation.internal.TabPaneEntry;
 import java.net.URL;
 import java.util.Iterator;
 import java.util.LinkedHashSet;
@@ -49,12 +51,13 @@ import org.controlsfx.validation.decoration.ValidationDecoration;
  * @author Danijel Antonijevic
  * @author Nino Heinzle
  */
-public class SeriesOfPerformancesController implements Initializable {
+public class SeriesOfPerformancesController implements Initializable, Parentable<TabPaneController> {
     private static final Logger LOG = LogManager.getLogger(SeriesOfPerformancesController.class);
     private boolean isValid = false;
     private ValidationSupport validationSupport = new ValidationSupport();
     private SeriesOfPerformancesManager seriesManager;
     private boolean itemChanged;
+    private TabPaneController parentController;
 
     @FXML
     private AnchorPane pane;
@@ -479,7 +482,8 @@ public class SeriesOfPerformancesController implements Initializable {
     }
 
     private void cancel() {
-        //TODO - schnittstelle zur Schließung des Tabs
+        LOG.debug("Closing Add SOP");
+        this.parentController.removeTab(TabPaneEntry.ADD_SOP);
     }
 
     private void addModify() {
@@ -507,5 +511,21 @@ public class SeriesOfPerformancesController implements Initializable {
             }
         }
         return true;
+    }
+
+    @Override
+    public void setParentController(TabPaneController controller) {
+        this.parentController = controller;
+    }
+
+    @Override
+    public TabPaneController getParentController() {
+        return this.parentController;
+    }
+
+    @Override
+    public void initializeWithParent() {
+        // not needed here.
+        LOG.debug("Initialized with parent");
     }
 }

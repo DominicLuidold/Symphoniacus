@@ -8,7 +8,7 @@ package at.fhv.teamb.symphoniacus.presentation.internal;
  * @author Valentin
  */
 public enum TabPaneEntry {
-    ADD_SOP(1, "Add SOP", "/view/unsupportedTab.fxml", true),
+    ADD_SOP(1, "Add SOP", "/view/addNewSeriesOfPerformances.fxml", true),
     ADD_DUTY(1, "Add Duty", "/view/unsupportedTab.fxml", true),
     ORG_OFFICER_CALENDAR_VIEW(
         1, "Duty Roster",
