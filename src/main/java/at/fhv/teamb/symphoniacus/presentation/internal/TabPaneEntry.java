@@ -40,7 +40,7 @@ public enum TabPaneEntry {
     }
 
     public int getOrder() {
-        return order;
+        return this.order;
     }
 
     public void setOrder(int order) {
@@ -48,7 +48,7 @@ public enum TabPaneEntry {
     }
 
     public String getTitle() {
-        return title;
+        return this.title;
     }
 
     public void setTitle(String title) {
@@ -56,7 +56,7 @@ public enum TabPaneEntry {
     }
 
     public String getFxmlPath() {
-        return fxmlPath;
+        return this.fxmlPath;
     }
 
     public void setFxmlPath(String fxmlPath) {
@@ -64,10 +64,10 @@ public enum TabPaneEntry {
     }
 
     public boolean isTemporary() {
-        return isTemporary;
+        return this.isTemporary;
     }
 
     public void setTemporary(boolean temporary) {
-        isTemporary = temporary;
+        this.isTemporary = temporary;
     }
 }

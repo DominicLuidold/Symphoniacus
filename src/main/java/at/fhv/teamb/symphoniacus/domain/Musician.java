@@ -101,10 +101,6 @@ public class Musician {
         return section;
     }
 
-    public void setSection(Section section) {
-        this.section = section;
-    }
-
     @Override
     public boolean equals(Object obj) {
         // Return true if object is compared with itself
