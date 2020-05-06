@@ -37,8 +37,7 @@ public class Points {
      * @return Points
      */
     public static Optional<Points> calcDebitPoints(ContractualObligationEntity obligationEntity) {
-        Optional<Points> debit = Optional.of(new Points(obligationEntity.getPointsPerMonth()));
-        return debit;
+        return Optional.of(new Points(obligationEntity.getPointsPerMonth()));
     }
 
     /**

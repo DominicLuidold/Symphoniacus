@@ -32,8 +32,8 @@ public class NegativeDateWishDao extends BaseDao<NegativeDateWishEntity> {
     }
 
     @Override
-    public Boolean remove(NegativeDateWishEntity elem) {
-        return null;
+    public boolean remove(NegativeDateWishEntity elem) {
+        return false;
     }
 
     /**

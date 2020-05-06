@@ -32,8 +32,8 @@ public class PositiveWishDao extends BaseDao<PositiveWishEntity> {
     }
 
     @Override
-    public Boolean remove(PositiveWishEntity elem) {
-        return null;
+    public boolean remove(PositiveWishEntity elem) {
+        return false;
     }
 
     /**

@@ -35,7 +35,7 @@ public class WeeklyScheduleEntity {
     private LocalDate publishDate;
 
     @Column(name = "isConfirmed")
-    private Boolean isConfirmed;
+    private boolean isConfirmed;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "monthlyScheduleId")
@@ -84,11 +84,11 @@ public class WeeklyScheduleEntity {
         this.publishDate = publishDate;
     }
 
-    public Boolean getIsConfirmed() {
+    public boolean getIsConfirmed() {
         return this.isConfirmed;
     }
 
-    public void setIsConfirmed(Boolean isConfirmed) {
+    public void setIsConfirmed(boolean isConfirmed) {
         this.isConfirmed = isConfirmed;
     }
 
@@ -115,11 +115,11 @@ public class WeeklyScheduleEntity {
         duty.setWeeklySchedule(null);
     }
 
-    public Boolean getConfirmed() {
+    public boolean getConfirmed() {
         return isConfirmed;
     }
 
-    public void setConfirmed(Boolean confirmed) {
+    public void setConfirmed(boolean confirmed) {
         isConfirmed = confirmed;
     }
 

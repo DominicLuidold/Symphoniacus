@@ -36,8 +36,8 @@ public class DutyCategoryChangeLogDao extends BaseDao<DutyCategoryChangelogEntit
     }
 
     @Override
-    public Boolean remove(DutyCategoryChangelogEntity elem) {
-        return null;
+    public boolean remove(DutyCategoryChangelogEntity elem) {
+        return false;
     }
 
     /**

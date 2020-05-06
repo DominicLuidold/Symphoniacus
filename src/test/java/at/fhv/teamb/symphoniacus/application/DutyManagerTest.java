@@ -67,8 +67,8 @@ class DutyManagerTest {
         LocalDate tuesday = LocalDate.of(2020, 4, 7);
 
         // When & Then
-        assertEquals(DutyManager.getLastMondayDate(monday).getDayOfWeek(), DayOfWeek.MONDAY);
-        assertEquals(DutyManager.getLastMondayDate(tuesday).getDayOfWeek(), DayOfWeek.MONDAY);
+        assertEquals(DayOfWeek.MONDAY, DutyManager.getLastMondayDate(monday).getDayOfWeek());
+        assertEquals(DayOfWeek.MONDAY, DutyManager.getLastMondayDate(tuesday).getDayOfWeek());
     }
 
     @Test

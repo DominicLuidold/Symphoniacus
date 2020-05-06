@@ -20,9 +20,4 @@ class PointsManagerTest {
         this.pointsManager = new PointsManager();
         this.contractualObligationDao = new ContractualObligationDao();
     }
-
-    @Test
-    void getDebitPointsFromMusician_ShouldReturnDebitPoints() {
-        //TODO - if you find something to implement here, do it
-    }
 }

@@ -26,13 +26,13 @@ public class SectionMonthlyScheduleEntity {
     private MonthlyScheduleEntity monthlySchedule;
 
     @Column(name = "isReadyForDutyScheduler")
-    private Boolean isReadyForDutyScheduler;
+    private boolean isReadyForDutyScheduler;
 
     @Column(name = "isReadyForOrganisationManager")
-    private Boolean isReadyForOrganisationManager;
+    private boolean isReadyForOrganisationManager;
 
     @Column(name = "isPublished")
-    private Boolean isPublished;
+    private boolean isPublished;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "sectionId")
@@ -57,27 +57,27 @@ public class SectionMonthlyScheduleEntity {
         this.monthlySchedule = monthlySchedule;
     }
 
-    public Boolean isReadyForDutyScheduler() {
+    public boolean isReadyForDutyScheduler() {
         return this.isReadyForDutyScheduler;
     }
 
-    public void setReadyForDutyScheduler(Boolean readyForDutyScheduler) {
+    public void setReadyForDutyScheduler(boolean readyForDutyScheduler) {
         this.isReadyForDutyScheduler = readyForDutyScheduler;
     }
 
-    public Boolean isReadyForOrganisationManager() {
+    public boolean isReadyForOrganisationManager() {
         return this.isReadyForOrganisationManager;
     }
 
-    public void setReadyForOrganisationManager(Boolean readyForOrganisationManager) {
+    public void setReadyForOrganisationManager(boolean readyForOrganisationManager) {
         this.isReadyForOrganisationManager = readyForOrganisationManager;
     }
 
-    public Boolean isPublished() {
+    public boolean isPublished() {
         return this.isPublished;
     }
 
-    public void setPublished(Boolean published) {
+    public void setPublished(boolean published) {
         this.isPublished = published;
     }
 

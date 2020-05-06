@@ -1,22 +1,16 @@
 package at.fhv.teamb.symphoniacus.presentation;
 
-import at.fhv.teamb.symphoniacus.application.LoginManager;
-import at.fhv.teamb.symphoniacus.application.MusicianManager;
 import at.fhv.teamb.symphoniacus.application.SectionMonthlyScheduleManager;
 import at.fhv.teamb.symphoniacus.application.type.DomainUserType;
 import at.fhv.teamb.symphoniacus.domain.Duty;
 import at.fhv.teamb.symphoniacus.domain.Musician;
 import at.fhv.teamb.symphoniacus.domain.Section;
 import at.fhv.teamb.symphoniacus.domain.SectionMonthlySchedule;
-import at.fhv.teamb.symphoniacus.domain.User;
-import at.fhv.teamb.symphoniacus.persistence.model.MusicianEntity;
-import at.fhv.teamb.symphoniacus.presentation.internal.AlertHelper;
 import at.fhv.teamb.symphoniacus.presentation.internal.CustomCalendarButtonEvent;
 import at.fhv.teamb.symphoniacus.presentation.internal.skin.DutySchedulerCalendarSkin;
 import com.calendarfx.model.Calendar;
 import com.calendarfx.model.CalendarSource;
 import com.calendarfx.model.Entry;
-import java.io.IOException;
 import java.net.URL;
 import java.text.MessageFormat;
 import java.time.LocalDate;
@@ -25,13 +19,11 @@ import java.time.Year;
 import java.time.format.TextStyle;
 import java.util.List;
 import java.util.Locale;
-import java.util.Optional;
 import java.util.ResourceBundle;
 import java.util.Set;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.geometry.Pos;
-import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.Dialog;
@@ -401,30 +393,6 @@ public class DutySchedulerCalendarController extends CalendarController implemen
         );
     }
 
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public Calendar createCalendar(String name, String shortName, boolean readOnly) {
-        return super.createCalendar(name, shortName, readOnly);
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    protected void fillCalendar(Calendar calendar, List<Duty> duties) {
-        super.fillCalendar(calendar, duties);
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    protected CalendarSource prepareCalendarSource(String name, Calendar calendar) {
-        return super.prepareCalendarSource(name, calendar);
-    }
-
     @Override
     public void registerController() {
         MasterController mc = MasterController.getInstance();
@@ -442,12 +410,12 @@ public class DutySchedulerCalendarController extends CalendarController implemen
     }
 
     @Override
-    public void setParentController(TabPaneController controller) {
-        this.parentController = controller;
+    public TabPaneController getParentController() {
+        return this.parentController;
     }
 
     @Override
-    public TabPaneController getParentController() {
-        return this.parentController;
+    public void setParentController(TabPaneController controller) {
+        this.parentController = controller;
     }
 }
