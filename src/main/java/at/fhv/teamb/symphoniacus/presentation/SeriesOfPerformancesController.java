@@ -4,7 +4,6 @@ import at.fhv.teamb.symphoniacus.application.SeriesOfPerformancesManager;
 import at.fhv.teamb.symphoniacus.persistence.model.InstrumentationEntity;
 import at.fhv.teamb.symphoniacus.persistence.model.MusicalPieceEntity;
 import at.fhv.teamb.symphoniacus.persistence.model.SectionInstrumentationEntity;
-import at.fhv.teamb.symphoniacus.presentation.internal.AlertHelper;
 import at.fhv.teamb.symphoniacus.presentation.internal.Parentable;
 import at.fhv.teamb.symphoniacus.presentation.internal.TabPaneEntry;
 import java.net.URL;
@@ -51,7 +50,9 @@ import org.controlsfx.validation.decoration.ValidationDecoration;
  * @author Danijel Antonijevic
  * @author Nino Heinzle
  */
-public class SeriesOfPerformancesController implements Initializable, Parentable<TabPaneController> {
+public class SeriesOfPerformancesController
+    implements Initializable, Parentable<TabPaneController> {
+
     private static final Logger LOG = LogManager.getLogger(SeriesOfPerformancesController.class);
     private boolean isValid = false;
     private ValidationSupport validationSupport = new ValidationSupport();
@@ -514,13 +515,13 @@ public class SeriesOfPerformancesController implements Initializable, Parentable
     }
 
     @Override
-    public void setParentController(TabPaneController controller) {
-        this.parentController = controller;
+    public TabPaneController getParentController() {
+        return this.parentController;
     }
 
     @Override
-    public TabPaneController getParentController() {
-        return this.parentController;
+    public void setParentController(TabPaneController controller) {
+        this.parentController = controller;
     }
 
     @Override
