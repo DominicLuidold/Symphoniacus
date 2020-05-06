@@ -88,7 +88,7 @@ public class MusicianDao extends BaseDao<MusicianEntity> {
     }
 
     @Override
-    public Boolean remove(MusicianEntity elem) {
-        return Boolean.FALSE;
+    public boolean remove(MusicianEntity elem) {
+        return false;
     }
 }

@@ -53,7 +53,7 @@ public class MusicalPieceDao extends BaseDao<MusicalPieceEntity> {
     }
 
     @Override
-    public Boolean remove(MusicalPieceEntity elem) {
-        return Boolean.FALSE;
+    public boolean remove(MusicalPieceEntity elem) {
+        return false;
     }
 }

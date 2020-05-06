@@ -307,10 +307,7 @@ public class DutySchedulerCalendarController extends CalendarController implemen
                                     m.getDisplayName(TextStyle.FULL, Locale.US),
                                     item.getEntity().isReadyForOrganisationManager()
                                 );
-                                if (
-                                    Boolean.TRUE.equals(
-                                        item.getEntity().isReadyForOrganisationManager())
-                                ) {
+                                if (item.getEntity().isReadyForOrganisationManager()) {
                                     setText(
                                         m.getDisplayName(TextStyle.FULL, Locale.US)
                                             + " "

@@ -127,11 +127,11 @@ public class SectionMonthlyScheduleManager {
         SectionMonthlyScheduleEntity entity = sms.getEntity();
 
         // Set appropriate PublishState
-        if (Boolean.TRUE.equals(entity.isReadyForDutyScheduler())) {
+        if (entity.isReadyForDutyScheduler()) {
             sms.setPublishState(SectionMonthlySchedule.PublishState.READY_FOR_DUTY_SCHEDULER);
-        } else if (Boolean.TRUE.equals(entity.isReadyForOrganisationManager())) {
+        } else if (entity.isReadyForOrganisationManager()) {
             sms.setPublishState(SectionMonthlySchedule.PublishState.READY_FOR_ORGANISATION_MANAGER);
-        } else if (Boolean.TRUE.equals(entity.isPublished())) {
+        } else if (entity.isPublished()) {
             sms.setPublishState(SectionMonthlySchedule.PublishState.PUBLISHED);
         }
     }

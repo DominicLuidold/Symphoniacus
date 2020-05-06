@@ -43,8 +43,8 @@ public class UserDao extends BaseDao<UserEntity> {
     }
 
     @Override
-    public Boolean remove(UserEntity elem) {
-        return Boolean.FALSE;
+    public boolean remove(UserEntity elem) {
+        return false;
     }
 
     /**

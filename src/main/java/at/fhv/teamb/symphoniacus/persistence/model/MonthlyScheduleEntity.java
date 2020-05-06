@@ -35,7 +35,7 @@ public class MonthlyScheduleEntity {
     private LocalDate endDateClassification;
 
     @Column(name = "isPublished")
-    private Boolean isPublished;
+    private boolean isPublished;
 
     @Column(name = "endWish")
     private LocalDate endWish;
@@ -111,11 +111,11 @@ public class MonthlyScheduleEntity {
         this.endDateClassification = endDateClassification;
     }
 
-    public Boolean getIsPublished() {
+    public boolean getIsPublished() {
         return this.isPublished;
     }
 
-    public void setIsPublished(Boolean isPublished) {
+    public void setIsPublished(boolean isPublished) {
         this.isPublished = isPublished;
     }
 
@@ -127,11 +127,11 @@ public class MonthlyScheduleEntity {
         this.endWish = endWish;
     }
 
-    public Boolean getPublished() {
+    public boolean getPublished() {
         return isPublished;
     }
 
-    public void setPublished(Boolean published) {
+    public void setPublished(boolean published) {
         isPublished = published;
     }
 

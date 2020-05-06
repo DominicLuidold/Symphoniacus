@@ -24,8 +24,8 @@ public class SeriesOfPerformancesDao extends BaseDao<SeriesOfPerformancesEntity>
     }
 
     @Override
-    public Boolean remove(SeriesOfPerformancesEntity elem) {
-        return Boolean.FALSE;
+    public boolean remove(SeriesOfPerformancesEntity elem) {
+        return false;
     }
 
     /**

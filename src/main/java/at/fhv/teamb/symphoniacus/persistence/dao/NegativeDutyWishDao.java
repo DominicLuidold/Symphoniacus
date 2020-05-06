@@ -32,8 +32,8 @@ public class NegativeDutyWishDao extends BaseDao<NegativeDutyWishEntity> {
     }
 
     @Override
-    public Boolean remove(NegativeDutyWishEntity elem) {
-        return Boolean.FALSE;
+    public boolean remove(NegativeDutyWishEntity elem) {
+        return false;
     }
 
     /**

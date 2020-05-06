@@ -40,7 +40,7 @@ public class MusicianTableModel {
         }
     }
 
-    public Boolean getSchedule() {
+    public boolean getSchedule() {
         return this.schedule;
     }
 
