@@ -46,6 +46,6 @@ public class InstrumentationDao extends BaseDao<InstrumentationEntity> {
 
     @Override
     public Boolean remove(InstrumentationEntity elem) {
-        return null;
+        return Boolean.FALSE;
     }
 }

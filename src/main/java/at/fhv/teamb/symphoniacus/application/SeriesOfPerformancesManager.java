@@ -13,7 +13,6 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 public class SeriesOfPerformancesManager {
-    private static final Logger LOG = LogManager.getLogger(SeriesOfPerformancesManager.class);
     private MusicalPieceDao musicalPieceDao;
     private InstrumentationDao instrumentationDao;
     private SeriesOfPerformancesDao seriesOfPerformancesDao;

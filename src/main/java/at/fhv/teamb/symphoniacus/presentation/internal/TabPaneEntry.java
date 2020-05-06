@@ -16,13 +16,12 @@ public enum TabPaneEntry {
         false
     ),
     UNSUPPORTED(1, "Unsupported", "/view/unsupportedTab.fxml", false),
-    DUTY_SCHEDULER_CALENDAR_VIEW(1, "Duty Roster", "/view/dutySchedulerCalendar.fxml", false),
-    DUTY_SCHEDULER_SCHEDULE_VIEW(2, "Duty Schedule", "/view/dutySchedule.fxml", true);
+    DUTY_SCHEDULER_CALENDAR_VIEW(1, "Duty Roster", "/view/dutySchedulerCalendar.fxml", false);
 
-    private int order;
-    private String title;
-    private String fxmlPath;
-    private boolean isTemporary;
+    private final int order;
+    private final String title;
+    private final String fxmlPath;
+    private final boolean isTemporary;
 
     /**
      * Constructs a new TabPaneEntry.
@@ -43,31 +42,16 @@ public enum TabPaneEntry {
         return this.order;
     }
 
-    public void setOrder(int order) {
-        this.order = order;
-    }
-
     public String getTitle() {
         return this.title;
-    }
-
-    public void setTitle(String title) {
-        this.title = title;
     }
 
     public String getFxmlPath() {
         return this.fxmlPath;
     }
 
-    public void setFxmlPath(String fxmlPath) {
-        this.fxmlPath = fxmlPath;
-    }
-
     public boolean isTemporary() {
         return this.isTemporary;
     }
 
-    public void setTemporary(boolean temporary) {
-        this.isTemporary = temporary;
-    }
 }

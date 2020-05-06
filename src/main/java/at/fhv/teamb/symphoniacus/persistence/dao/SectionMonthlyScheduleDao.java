@@ -105,6 +105,6 @@ public class SectionMonthlyScheduleDao extends BaseDao<SectionMonthlyScheduleEnt
 
     @Override
     public Boolean remove(SectionMonthlyScheduleEntity elem) {
-        return false;
+        return Boolean.FALSE;
     }
 }

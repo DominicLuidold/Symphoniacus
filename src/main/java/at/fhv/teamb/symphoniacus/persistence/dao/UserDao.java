@@ -44,7 +44,7 @@ public class UserDao extends BaseDao<UserEntity> {
 
     @Override
     public Boolean remove(UserEntity elem) {
-        return false;
+        return Boolean.FALSE;
     }
 
     /**
@@ -64,7 +64,7 @@ public class UserDao extends BaseDao<UserEntity> {
         query.setParameter("pwd", password);
 
         result = query.getResultList();
-        if (result.size() > 0) {
+        if (!result.isEmpty()) {
             return Optional.of(result.get(0));
         }
 

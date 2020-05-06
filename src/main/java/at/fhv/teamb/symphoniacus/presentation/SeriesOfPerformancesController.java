@@ -285,8 +285,6 @@ public class SeriesOfPerformancesController
                 instrumentationCheckComboBox.getItems().add(instrumentation);
             }
         }
-        System.out.println(instrumentationCheckComboBox.getCheckModel().getCheckedIndices());
-
 
         // Alle Instrumentations die nach dem Hinzufügen nicht in der "neuen" Liste vorhanden sind
         // werden gelöscht und handling der CheckIndeces
@@ -301,9 +299,7 @@ public class SeriesOfPerformancesController
                     instrumentationCheckComboBox.getCheckModel().getCheckedItems());
                 ObservableList<InstrumentationEntity> tempList =
                     FXCollections.observableArrayList(tmp);
-                for (InstrumentationEntity test : tempList) {
-                    System.out.println(test.getName());
-                }
+
                 instrumentationCheckComboBox.getCheckModel().clearChecks();
 
                 iterator.remove();
@@ -425,7 +421,6 @@ public class SeriesOfPerformancesController
 
             alert.getButtonTypes().setAll(okButton);
             alert.showAndWait().ifPresent(type -> {
-                System.out.println(type);
                 if (type.equals(okButton)) {
                     alert.close();
                 }
@@ -440,7 +435,6 @@ public class SeriesOfPerformancesController
 
             alert.getButtonTypes().setAll(okButton);
             alert.showAndWait().ifPresent(type -> {
-                System.out.println(type);
                 if (type.equals(okButton)) {
                     alert.close();
                 }
@@ -455,7 +449,6 @@ public class SeriesOfPerformancesController
 
             alert.getButtonTypes().setAll(okButton);
             alert.showAndWait().ifPresent(type -> {
-                System.out.println(type);
                 if (type.equals(okButton)) {
                     alert.close();
                 }
@@ -471,7 +464,6 @@ public class SeriesOfPerformancesController
 
             alert.getButtonTypes().setAll(okButton);
             alert.showAndWait().ifPresent(type -> {
-                System.out.println(type);
                 if (type.equals(okButton)) {
                     alert.close();
                 }

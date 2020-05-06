@@ -164,9 +164,7 @@ public class DutyScheduleController
             }
         });
 
-        this.scheduleBackBtn.setOnAction(e -> {
-            closeDutySchedule();
-        });
+        this.scheduleBackBtn.setOnAction(e -> closeDutySchedule());
 
         this.getOldDuty.setOnAction(e -> {
             LOG.debug("Load old Duty pressed");
@@ -191,7 +189,6 @@ public class DutyScheduleController
 
                     alert.getButtonTypes().setAll(okButton, noButton);
                     alert.showAndWait().ifPresent(type -> {
-                        System.out.println(type);
                         if (type.equals(okButton)) {
                             this.addMusicianToPosition(
                                 this.actualSectionInstrumentation,
@@ -267,7 +264,6 @@ public class DutyScheduleController
                         alert.getButtonTypes().setAll(okButton, noButton);
 
                         alert.showAndWait().ifPresent(type -> {
-                            System.out.println(type);
                             if (type.equals(okButton)) {
                                 this.addMusicianToPosition(
                                     this.actualSectionInstrumentation,
@@ -686,10 +682,13 @@ public class DutyScheduleController
     }
 
     private void setActualPosition(DutyPosition dutyPosition) {
-        LOG.debug("Current DutyPosition: " + dutyPosition
-            .getEntity()
-            .getInstrumentationPosition()
-            .getPositionDescription() + "  Current Object: " + this
+        LOG.debug(
+            "Current DutyPosition: {} Current Object: {}",
+            dutyPosition
+                .getEntity()
+                .getInstrumentationPosition()
+                .getPositionDescription(),
+            this
         );
 
         this.selectedDutyPosition = dutyPosition;
@@ -791,7 +790,7 @@ public class DutyScheduleController
         }
         this.duty = d.get();
 
-        LOG.debug("Binding duty title to: " + this.duty.getTitle());
+        LOG.debug("Binding duty title to: {}", this.duty.getTitle());
         this.dutyTitle.textProperty().bind(
             new SimpleStringProperty(
                 this.duty
@@ -811,12 +810,12 @@ public class DutyScheduleController
     }
 
     @Override
-    public void setParentController(DutySchedulerCalendarController controller) {
-        this.parentController = controller;
+    public DutySchedulerCalendarController getParentController() {
+        return this.parentController;
     }
 
     @Override
-    public DutySchedulerCalendarController getParentController() {
-        return this.parentController;
+    public void setParentController(DutySchedulerCalendarController controller) {
+        this.parentController = controller;
     }
 }
