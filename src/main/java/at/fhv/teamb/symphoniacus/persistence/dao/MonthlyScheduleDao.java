@@ -54,7 +54,7 @@ public class MonthlyScheduleDao extends BaseDao<MonthlyScheduleEntity> {
     }
 
     @Override
-    public Boolean remove(MonthlyScheduleEntity elem) {
+    public boolean remove(MonthlyScheduleEntity elem) {
         return false;
     }
 }
