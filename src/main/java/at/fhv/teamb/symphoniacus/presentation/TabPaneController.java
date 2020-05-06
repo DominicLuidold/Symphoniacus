@@ -9,6 +9,7 @@ import java.util.LinkedList;
 import java.util.Optional;
 import java.util.Queue;
 import java.util.ResourceBundle;
+import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -43,11 +44,13 @@ public class TabPaneController implements Initializable, Parentable<MainControll
 
     private void removeTab(String title) {
         ObservableList<Tab> tabs = this.tabPane.getTabs();
-        for (Tab t : tabs) {
+        ObservableList<Tab> newTabs = FXCollections.observableList(tabs);
+        for (Tab t : newTabs) {
             if (t.getText().equals(title)) {
-                this.tabPane.getTabs().remove(t);
+                newTabs.remove(t);
             }
         }
+        this.tabPane.getTabs().setAll(newTabs);
     }
 
     protected void removeTab(TabPaneEntry entry) {
