@@ -60,6 +60,15 @@ public class TabPaneController implements Initializable, Parentable<MainControll
     }
 
     protected Optional<Parentable<TabPaneController>> addTab(TabPaneEntry entry) {
+        LOG.debug("Adding tab");
+        // Make sure we add dynamic tabs only once
+        for (Tab t : this.tabPane.getTabs()) {
+            if (t.getText().equals(entry.getTitle())) {
+                LOG.debug("Duplicate tab found");
+                this.tabPane.getSelectionModel().select(t);
+                return Optional.empty();
+            }
+        }
         Tab tab = new Tab(entry.getTitle());
         FXMLLoader loader = new FXMLLoader(
             this.getClass().getResource(entry.getFxmlPath()),
