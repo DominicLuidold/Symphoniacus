@@ -101,7 +101,7 @@ public class LoginController implements Initializable {
         this.userShortcutField.focusedProperty().addListener(
             (observable, oldValue, newValue)
                 -> {
-                if (newValue && firstTime.get()) {
+                if (Boolean.TRUE.equals(newValue) && firstTime.get()) {
                     this.grid.requestFocus();
                     firstTime.setValue(false);
                 }

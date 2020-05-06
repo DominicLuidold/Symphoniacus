@@ -9,8 +9,6 @@ import at.fhv.teamb.symphoniacus.domain.Musician;
 import at.fhv.teamb.symphoniacus.domain.User;
 import at.fhv.teamb.symphoniacus.persistence.model.MusicianRole;
 import at.fhv.teamb.symphoniacus.presentation.internal.TabPaneEntry;
-import com.google.common.eventbus.EventBus;
-import java.io.IOException;
 import java.net.URL;
 import java.util.Comparator;
 import java.util.Optional;
@@ -44,13 +42,11 @@ public class MainController implements Initializable {
     private AdministrativeAssistant currentAssistant;
     private MusicianManager musicianManager;
     private AdministrativeAssistantManager administrativeManager;
-    private ResourceBundle bundle;
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         this.userHeaderMenuController.setParentController(this);
         this.tabPaneController.setParentController(this);
-        this.bundle = resources;
         LOG.debug("Initialized MainController");
     }
 
@@ -115,7 +111,7 @@ public class MainController implements Initializable {
         Musician m,
         ResourceBundle bundle
     ) {
-        return this.getPermittedTabs(type, m, null, bundle);
+        return this.getPermittedTabs(m, null);
     }
 
     protected Queue<TabPaneEntry> getPermittedTabs(
@@ -123,14 +119,12 @@ public class MainController implements Initializable {
         AdministrativeAssistant assistant,
         ResourceBundle bundle
     ) {
-        return this.getPermittedTabs(type, null, assistant, bundle);
+        return this.getPermittedTabs(null, assistant);
     }
 
     private Queue<TabPaneEntry> getPermittedTabs(
-        DomainUserType type,
         Musician m,
-        AdministrativeAssistant assistant,
-        ResourceBundle bundle
+        AdministrativeAssistant assistant
     ) {
         Queue<TabPaneEntry> result = new PriorityQueue<>(
             Comparator.comparingInt(TabPaneEntry::getOrder)
@@ -153,7 +147,7 @@ public class MainController implements Initializable {
                 }
             }
             // Organizational Officer
-        } else if (assistant != null && m == null) {
+        } else if (m == null) {
             LOG.debug("Getting permittedTabs for Administrative Assistant");
             result.add(
                 TabPaneEntry.ORG_OFFICER_CALENDAR_VIEW

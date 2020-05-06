@@ -470,18 +470,18 @@ public class DutyScheduleController
         MasterController mc = MasterController.getInstance();
         mc.showStatusBarLoading();
 
-        if (actualSectionInstrumentation == null) {
-            Optional<ActualSectionInstrumentation> actualSectionInstrumentation = this
+        if (this.actualSectionInstrumentation == null) {
+            Optional<ActualSectionInstrumentation> currentAsi = this
                 .dutyScheduleManager
                 .getInstrumentationDetails(
                     this.duty,
-                    section
+                    this.section
                 );
-            if (actualSectionInstrumentation.isEmpty()) {
+            if (currentAsi.isEmpty()) {
                 LOG.error("Found no asi for duty");
                 return;
             } else {
-                this.actualSectionInstrumentation = actualSectionInstrumentation.get();
+                this.actualSectionInstrumentation = currentAsi.get();
             }
         }
 
@@ -494,7 +494,6 @@ public class DutyScheduleController
             this.actualSectionInstrumentation.getDuty().getDutyPositions();
 
         for (DutyPosition dp : positionList) {
-            // TODO
             observablePositionList.add(
                 new DutyPositionMusicianTableModel(dp)
             );
@@ -539,7 +538,7 @@ public class DutyScheduleController
                                 item -> item
                                     .getType()
                                     .equals(
-                                        title.substring(0, title.lastIndexOf("|") - 1)
+                                        title.substring(0, title.lastIndexOf('|') - 1)
                                     )
                             )
                             .collect(Collectors.toList()).get(0);
@@ -759,10 +758,10 @@ public class DutyScheduleController
         alert.setTitle(resources.getString("dialog.save.closewithoutsaving.title"));
         alert.setHeaderText(resources.getString("dialog.save.closewithoutsaving.message"));
 
-        // option != null.
         Optional<ButtonType> option = alert.showAndWait();
 
-        if (option.get() == null) {
+        // this should be rewritten
+        if (option.isEmpty()) {
             buttonType = ButtonType.CLOSE;
         } else if (option.get() == ButtonType.OK) {
             buttonType = ButtonType.OK;
@@ -789,6 +788,7 @@ public class DutyScheduleController
             Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
             alert.setTitle("Cannot load duty");
             alert.setHeaderText("Something went wrong. Please try again.");
+            return;
         }
         this.duty = d.get();
 
