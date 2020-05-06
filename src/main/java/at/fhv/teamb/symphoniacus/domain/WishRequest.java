@@ -46,13 +46,11 @@ public class WishRequest {
      *
      * @param musician     musician
      * @param wishRequests Set of wishRequests
-     * @param duty         duty of relating wishRequests
      * @return WishRequest or optional.empty if no wish was found
      */
     public static Optional<WishRequest> getWishRequestToMusician(
         MusicianEntity musician,
-        Set<WishRequestable> wishRequests,
-        DutyEntity duty
+        Set<WishRequestable> wishRequests
     ) {
         for (WishRequestable wish : wishRequests) {
             if (wish.getMusician().getMusicianId().equals(musician.getMusicianId())) {

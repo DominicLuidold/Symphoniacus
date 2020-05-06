@@ -9,7 +9,6 @@ import at.fhv.teamb.symphoniacus.domain.SectionMonthlySchedule;
 import at.fhv.teamb.symphoniacus.presentation.internal.CustomCalendarButtonEvent;
 import at.fhv.teamb.symphoniacus.presentation.internal.skin.DutySchedulerCalendarSkin;
 import com.calendarfx.model.Calendar;
-import com.calendarfx.model.CalendarSource;
 import com.calendarfx.model.Entry;
 import java.net.URL;
 import java.text.MessageFormat;
@@ -71,8 +70,8 @@ public class DutySchedulerCalendarController extends CalendarController implemen
         if (loginUserType.equals(DomainUserType.DOMAIN_MUSICIAN)) {
             LOG.info("Current user type is Musician");
             musician = mainController.getCurrentMusician();
-        } else if (loginUserType.equals(DomainUserType.DOMAIN_ADMINISTRATIVE_ASSISTANT)) {
-            LOG.info("Current user type is administrative assistant, unsupported");
+        } else {
+            LOG.error("Current user type is unsupported for this view");
             return;
         }
         this.section = musician.getSection();

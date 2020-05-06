@@ -66,11 +66,12 @@ public class MusicianTableModel {
     }
 
     /**
-     * TODO JAVADOC.
-     * @return
+     * Returns whether this wish is positive or not.
+     *
+     * @return true when wish is positive
      */
     public boolean isWishPositive() {
-        if (!this.musician.getWishRequest().isPresent()) {
+        if (this.musician.getWishRequest().isEmpty()) {
             return false;
         } else {
             return this.musician.getWishRequest().get().isWishPositive();

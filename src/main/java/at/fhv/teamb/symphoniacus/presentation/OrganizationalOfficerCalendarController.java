@@ -31,7 +31,7 @@ public class OrganizationalOfficerCalendarController extends CalendarController 
 
         MainController mainController = this.getParentController().getParentController();
         DomainUserType loginUserType = mainController.getLoginUserType();
-        AdministrativeAssistant aa = null;
+
         if (loginUserType.equals(DomainUserType.DOMAIN_ADMINISTRATIVE_ASSISTANT)) {
             LOG.info("Current user type is Administrative Assistant");
             this.administrativeAssistant = mainController.getCurrentAssistant();
@@ -62,15 +62,11 @@ public class OrganizationalOfficerCalendarController extends CalendarController 
         );
         this.calendarView.addEventHandler(
             CustomCalendarButtonEvent.ADD_SERIES_OF_PERFORMANCES,
-            event -> {
-                this.parentController.addTab(TabPaneEntry.ADD_SOP);
-            }
+            event -> this.parentController.addTab(TabPaneEntry.ADD_SOP)
         );
         this.calendarView.addEventHandler(
             CustomCalendarButtonEvent.ADD_DUTY,
-            event -> {
-                this.parentController.addTab(TabPaneEntry.ADD_DUTY);
-            }
+            event -> this.parentController.addTab(TabPaneEntry.ADD_DUTY)
         );
         LOG.debug("Initialized OrganizationalOfficerCalendarController with parent");
     }

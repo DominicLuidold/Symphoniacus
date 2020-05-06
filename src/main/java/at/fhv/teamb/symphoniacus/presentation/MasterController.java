@@ -31,7 +31,6 @@ public class MasterController {
     private static JFXSpinner SPINNER = new JFXSpinner();
     private Label statusTextField;
     private Map<String, Initializable> map = new HashedMap<>();
-    private StatusBar statusBar;
 
     private MasterController() {
         this.statusTextField = new Label();
@@ -43,7 +42,7 @@ public class MasterController {
      * @return The one and only wonderful instanceof {@link MasterController}
      * @deprecated in favor of {@link Parentable} interface methods
      */
-    @Deprecated
+    @Deprecated(forRemoval = false, since = "01.05.2020")
     public static MasterController getInstance() {
         if (INSTANCE == null) {
             INSTANCE = new MasterController();
@@ -106,7 +105,7 @@ public class MasterController {
      * @param key The key to identify the Initializable
      * @deprecated in favor of {@link Parentable} interface methods
      */
-    @Deprecated
+    @Deprecated(forRemoval = false, since = "01.05.2020")
     public Initializable get(Object key) {
         return map.get(key);
     }
@@ -118,7 +117,7 @@ public class MasterController {
      * @param value The value to store
      * @deprecated in favor of {@link Parentable} interface methods
      */
-    @Deprecated
+    @Deprecated(forRemoval = false, since = "01.05.2020")
     public Initializable put(String key, Initializable value) {
         return map.put(key, value);
     }
@@ -129,11 +128,11 @@ public class MasterController {
      * @param statusBar The StatusBar which is defined in {@link TabPaneController} FXML
      */
     public void setStatusBar(StatusBar statusBar) {
-        this.statusBar = statusBar;
+        StatusBar sb = statusBar;
         this.statusTextField.textProperty().addListener(
             it -> {
-                System.out.println("set to " + this.statusTextField.getText());
-                this.statusBar.setText(this.statusTextField.getText());
+                LOG.debug("set to {}", this.statusTextField.getText());
+                sb.setText(this.statusTextField.getText());
             }
         );
         this.statusTextField.setText("Loaded");
