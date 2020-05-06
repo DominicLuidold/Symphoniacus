@@ -20,7 +20,6 @@ import org.apache.logging.log4j.Logger;
  */
 public class WishRequest {
     private static final Logger LOG = LogManager.getLogger(WishRequest.class);
-    private final DutyEntity duty;
     private final boolean isPositive;
     private final WishRequestable wishRequestEntity;
     private final WishRequestType wishRequestType;
@@ -28,18 +27,15 @@ public class WishRequest {
     /**
      * Private constructor -> factory pattern.
      *
-     * @param duty        the wish relating duty
      * @param isPositive  boolean if request is a positive
      * @param wishRequest request itself
      * @param wishType    type of the wish
      */
     private WishRequest(
-        DutyEntity duty,
         boolean isPositive,
         WishRequestType wishType,
         WishRequestable wishRequest
     ) {
-        this.duty = duty;
         this.isPositive = isPositive;
         this.wishRequestEntity = wishRequest;
         this.wishRequestType = wishType;
@@ -64,7 +60,6 @@ public class WishRequest {
                 boolean isPositive = true;
                 if (wish instanceof PositiveWishEntity) {
                     tempType = WishRequestType.POSITIVE_WISH;
-                    isPositive = true;
                 } else if (wish instanceof NegativeDutyWishEntity) {
                     tempType = WishRequestType.NEGATIVE_DUTY_WISH;
                     isPositive = false;
@@ -74,7 +69,7 @@ public class WishRequest {
                 }
                 // Validation für zukünfigte Erweiterbarkeit der Wunscharten
                 if (tempType != null) {
-                    return Optional.of(new WishRequest(duty, isPositive, tempType, wish));
+                    return Optional.of(new WishRequest(isPositive, tempType, wish));
                 } else {
                     LOG.error("A WishRequestType wasn't checked in getWishRequestToMusician");
                     return Optional.empty();
