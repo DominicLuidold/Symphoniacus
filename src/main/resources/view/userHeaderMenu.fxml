@@ -19,7 +19,7 @@
             <HBox.margin>
                 <Insets/>
             </HBox.margin>
-            <Menu mnemonicParsing="false" text="%placeholder">
+            <Menu fx:id="userShortcut" mnemonicParsing="false" text="%placeholder">
                 <graphic>
                     <ImageView fitHeight="26.0" fitWidth="44.0" pickOnBounds="true" preserveRatio="true">
                         <Image url="@../images/avatar_roster_responsible.png"/>

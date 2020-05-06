@@ -23,4 +23,17 @@ public class User {
     public void setType(DomainUserType type) {
         this.type = type;
     }
+
+    /**
+     * Returns the full name of the user which is "FirstName LastName" (separated by Whitespace).
+     * @return String that has the Format "FirstName LastName"
+     */
+    public String getFullName() {
+        StringBuilder sb = new StringBuilder();
+        sb.append(this.userEntity.getFirstName());
+        sb.append(" ");
+        sb.append(this.userEntity.getLastName());
+
+        return sb.toString();
+    }
 }

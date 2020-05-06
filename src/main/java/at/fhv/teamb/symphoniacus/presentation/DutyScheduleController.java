@@ -210,7 +210,6 @@ public class DutyScheduleController
                         this.selectedDutyPosition
                     );
                 }
-
             }
         });
 
@@ -340,6 +339,16 @@ public class DutyScheduleController
                     }
                 }
             );
+
+        LOG.debug("Initialized DutyScheduleController");
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public void initializeWithParent() {
+        LOG.debug("Initialized DutyScheduleController with parent");
     }
 
     @Override
@@ -804,5 +813,10 @@ public class DutyScheduleController
     @Override
     public void setParentController(DutySchedulerCalendarController controller) {
         this.parentController = controller;
+    }
+
+    @Override
+    public DutySchedulerCalendarController getParentController() {
+        return this.parentController;
     }
 }

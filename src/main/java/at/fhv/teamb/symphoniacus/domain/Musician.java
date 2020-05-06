@@ -19,6 +19,7 @@ public class Musician {
     private final UserEntity userEntity;
     private final Points points;
     private WishRequest wishRequest;
+    private Section section;
 
     public Musician(MusicianEntity entity) {
         this(entity, null);
@@ -36,6 +37,7 @@ public class Musician {
         this.userEntity = entity.getUser();
         this.points = points;
         this.isExternal = userEntity.getFirstName().equals("Extern");
+        this.section = new Section(entity.getSection());
     }
 
     /**
@@ -93,6 +95,10 @@ public class Musician {
 
     public MusicianEntity getEntity() {
         return this.entity;
+    }
+
+    public Section getSection() {
+        return section;
     }
 
     @Override

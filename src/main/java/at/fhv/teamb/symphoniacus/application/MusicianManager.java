@@ -1,5 +1,6 @@
 package at.fhv.teamb.symphoniacus.application;
 
+import at.fhv.teamb.symphoniacus.domain.Musician;
 import at.fhv.teamb.symphoniacus.persistence.dao.MusicianDao;
 import at.fhv.teamb.symphoniacus.persistence.model.MusicianEntity;
 import at.fhv.teamb.symphoniacus.persistence.model.UserEntity;
@@ -13,7 +14,7 @@ import org.apache.logging.log4j.Logger;
  * @author Valentin Goronjic
  * @author Dominic Luidold
  */
-public class MusicianManager extends LoginManager {
+public class MusicianManager {
     private static final Logger LOG = LogManager.getLogger(MusicianManager.class);
     private MusicianDao musicianDao;
 
@@ -22,27 +23,43 @@ public class MusicianManager extends LoginManager {
     }
 
     /**
-     * Returns a {@link MusicianEntity} based on provided {@link UserEntity}.
+     * Returns a {@link Musician} based on provided {@link UserEntity}.
      *
      * <p>In case of the user not being a musician, an empty {@link Optional} will be returned.
      *
      * @param user The user to use
      * @return A Musician object representing the provided User
      */
-    public Optional<MusicianEntity> loadMusician(UserEntity user) {
+    public Optional<Musician> loadMusician(UserEntity user) {
         if (user == null) {
             LOG.error("Cannot load musician with null user.");
             return Optional.empty();
         }
-        Optional<MusicianEntity> musician = this.musicianDao.find(user.getUserId());
+        return loadMusician(user.getUserId());
+    }
+
+    /**
+     * Loads a {@link Musician} by its identifier.
+     *
+     * @param userId The userId of this Musician (NOT musicianId!)
+     * @return Optional which is filled when loading worked, else empty
+     */
+    public Optional<Musician> loadMusician(int userId) {
+        Optional<MusicianEntity> musicianEntity = this.musicianDao.find(userId);
 
         // Load attempt failed
-        if (musician.isEmpty()) {
-            LOG.error("Could not load musician with userId {}", user.getUserId());
+        if (musicianEntity.isEmpty()) {
+            LOG.error("Could not load musician with userId {}", userId);
             return Optional.empty();
         }
 
         // Load attempt succeeded
-        return musician;
+        LOG.debug(
+            "Loaded musician with musicianId {}",
+            musicianEntity.get().getMusicianId()
+        );
+        Musician m = new Musician(musicianEntity.get());
+        return Optional.of(m);
     }
+
 }
