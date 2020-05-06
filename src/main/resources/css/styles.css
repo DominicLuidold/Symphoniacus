@@ -34,6 +34,19 @@
 #buttonHbox > #scheduleSaveBtn:pressed, #scheduleBackBtn:pressed{
     -fx-background-color:  #596075;
 }
+#saveButton, #cancelButton {
+    -fx-background-color: #8C93A8;
+    -fx-font-size: 120%;
+}
+#saveButton:hover, #cancelButton:hover {
+    -fx-background-color: #BFC6DB;
+
+    /*-fx-border-color: #262D42;*/
+}
+
+#cancelButton:pressed, #saveButton:pressed {
+    -fx-background-color: #596075;
+}
 
 /* UNCOMMENT WHEN WE HAVE NUTZERZENTRIERT SEMINAR
 *, root, .root {

@@ -1,6 +1,10 @@
 package at.fhv.teamb.symphoniacus.presentation;
 
+import at.fhv.teamb.symphoniacus.application.type.DomainUserType;
+import at.fhv.teamb.symphoniacus.domain.AdministrativeAssistant;
 import at.fhv.teamb.symphoniacus.domain.Duty;
+import at.fhv.teamb.symphoniacus.presentation.internal.CustomCalendarButtonEvent;
+import at.fhv.teamb.symphoniacus.presentation.internal.TabPaneEntry;
 import at.fhv.teamb.symphoniacus.presentation.internal.skin.OrganizationalOfficerCalendarSkin;
 import com.calendarfx.model.Calendar;
 import java.net.URL;
@@ -14,19 +18,35 @@ public class OrganizationalOfficerCalendarController extends CalendarController 
     private static final Logger LOG =
         LogManager.getLogger(OrganizationalOfficerCalendarController.class);
     private TabPaneController parentController;
+    private AdministrativeAssistant administrativeAssistant;
+    private ResourceBundle bundle;
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
-    public void initialize(URL location, ResourceBundle resources) {
+    public void initializeWithParent() {
         // Tell CalendarFX to use custom skin
         this.setCalendarSkin();
+
+        MainController mainController = this.getParentController().getParentController();
+        DomainUserType loginUserType = mainController.getLoginUserType();
+        AdministrativeAssistant aa = null;
+        if (loginUserType.equals(DomainUserType.DOMAIN_ADMINISTRATIVE_ASSISTANT)) {
+            LOG.info("Current user type is Administrative Assistant");
+            this.administrativeAssistant = mainController.getCurrentAssistant();
+        } else {
+            LOG.error("Current user type is unsupported for this view");
+            return;
+        }
 
         // Fetch duties from database
         List<Duty> duties = this.loadDuties(DEFAULT_INTERVAL_START, DEFAULT_INTERVAL_END);
 
         // Create calendar
         Calendar calendar = this.createCalendar(
-            resources.getString("oo.calendar.name"),
-            resources.getString("oo.calendar.shortname"),
+            bundle.getString("oo.calendar.name"),
+            bundle.getString("oo.calendar.shortname"),
             false
         );
 
@@ -36,10 +56,29 @@ public class OrganizationalOfficerCalendarController extends CalendarController 
         // Make Calendar ready to display
         this.calendarView.getCalendarSources().setAll(
             this.prepareCalendarSource(
-                resources.getString("oo.calendar.source"),
+                bundle.getString("oo.calendar.source"),
                 calendar
             )
         );
+        this.calendarView.addEventHandler(
+            CustomCalendarButtonEvent.ADD_SERIES_OF_PERFORMANCES,
+            event -> {
+                this.parentController.addTab(TabPaneEntry.ADD_SOP);
+            }
+        );
+        this.calendarView.addEventHandler(
+            CustomCalendarButtonEvent.ADD_DUTY,
+            event -> {
+                this.parentController.addTab(TabPaneEntry.ADD_DUTY);
+            }
+        );
+        LOG.debug("Initialized OrganizationalOfficerCalendarController with parent");
+    }
+
+    @Override
+    public void initialize(URL location, ResourceBundle resources) {
+        this.bundle = resources;
+        LOG.debug("Initialized OrganizationalOfficerCalendarController");
     }
 
     @Override
@@ -58,6 +97,11 @@ public class OrganizationalOfficerCalendarController extends CalendarController 
             start,
             end
         );
+    }
+
+    @Override
+    public TabPaneController getParentController() {
+        return this.parentController;
     }
 
     @Override

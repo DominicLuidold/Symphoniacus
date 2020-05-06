@@ -161,7 +161,6 @@ public class LoginController implements Initializable {
                     this.resources.getString("login.error.login.failed.message"
                     ));
             }
-            MasterController.disableSpinner(this.pane);
         });
 
     }

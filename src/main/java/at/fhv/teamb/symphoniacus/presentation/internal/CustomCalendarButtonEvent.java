@@ -22,6 +22,18 @@ public class CustomCalendarButtonEvent extends Event {
     public static final EventType<CustomCalendarButtonEvent> PUBLISH_DUTY_ROSTER_EVENT
         = new EventType<>("PublishDutyRoster");
 
+    /**
+     * This event is thrown when the "Add Series of Performances" button is pressed.
+     */
+    public static final EventType<CustomCalendarButtonEvent> ADD_SERIES_OF_PERFORMANCES
+        = new EventType<>("AddSeriesOfPerformances");
+
+    /**
+     * This event is thrown when the "Add Duty" button is pressed.
+     */
+    public static final EventType<CustomCalendarButtonEvent> ADD_DUTY
+        = new EventType<>("AddDuty");
+
     public CustomCalendarButtonEvent(EventType<? extends Event> eventType) {
         super(eventType);
     }

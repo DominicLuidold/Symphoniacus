@@ -7,6 +7,7 @@ import java.util.ResourceBundle;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.scene.control.Menu;
 import javafx.scene.control.MenuItem;
 import javafx.scene.text.TextFlow;
 import org.apache.logging.log4j.LogManager;
@@ -22,6 +23,9 @@ public class UserController implements Initializable, Parentable<MainController>
 
     @FXML
     private MenuItem userLogout;
+
+    @FXML
+    private Menu userShortcut;
 
     private static final Logger LOG = LogManager.getLogger(UserController.class);
 
@@ -39,10 +43,28 @@ public class UserController implements Initializable, Parentable<MainController>
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         this.resourceBundle = resources;
+        LOG.debug("Initialized UserController");
     }
 
     @Override
     public void setParentController(MainController controller) {
         this.parentController = controller;
+    }
+
+    @Override
+    public MainController getParentController() {
+        return this.parentController;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public void initializeWithParent() {
+        LOG.debug("Initialized UserController with parent");
+    }
+
+    public void setUserShortcut(String text) {
+        this.userShortcut.setText(text);
     }
 }

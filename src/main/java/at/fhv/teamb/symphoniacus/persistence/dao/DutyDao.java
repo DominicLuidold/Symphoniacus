@@ -212,19 +212,7 @@ public class DutyDao extends BaseDao<DutyEntity> {
      */
     @Override
     public Optional<DutyEntity> persist(DutyEntity elem) {
-        EntityTransaction transaction = null;
-        try {
-            transaction = entityManager.getTransaction();
-            transaction.begin();
-            entityManager.persist(elem);
-            transaction.commit();
-            return Optional.of(elem);
-        } catch (Exception e) {
-            if (transaction != null && transaction.isActive()) {
-                transaction.rollback();
-            }
-        }
-        return Optional.empty();
+        return this.persist(DutyEntity.class,elem);
     }
 
     /**
