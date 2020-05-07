@@ -121,7 +121,7 @@ public class UserEntity {
 
     /**
      * Generates a SHA-512 hash of the password and then sets it.
-     * 
+     *
      * @param password Password in Plaintext.
      * @throws Exception When hash cannot be generated
      */
