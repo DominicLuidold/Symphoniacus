@@ -67,7 +67,7 @@ public class UserDao extends BaseDao<UserEntity> {
             return Optional.of(result.get(0));
         }
 
-        LOG.debug("No results for query login found");
+        LOG.debug("No results for query loadUser found");
         return Optional.empty();
     }
 
