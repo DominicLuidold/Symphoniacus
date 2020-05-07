@@ -1,19 +1,11 @@
 package at.fhv.teamb.symphoniacus.presentation;
 
-import at.fhv.teamb.symphoniacus.persistence.model.DutyCategoryEntity;
-import at.fhv.teamb.symphoniacus.persistence.model.SeriesOfPerformancesEntity;
-import at.fhv.teamb.symphoniacus.presentation.internal.Parentable;
-import com.jfoenix.controls.JFXDatePicker;
-import com.jfoenix.controls.JFXTimePicker;
-import java.net.URL;
-import java.util.ResourceBundle;
-import javafx.fxml.FXML;
-import javafx.fxml.Initializable;
 import at.fhv.teamb.symphoniacus.application.DutyManager;
 import at.fhv.teamb.symphoniacus.domain.Duty;
 import at.fhv.teamb.symphoniacus.persistence.PersistenceState;
 import at.fhv.teamb.symphoniacus.persistence.model.DutyCategoryEntity;
 import at.fhv.teamb.symphoniacus.persistence.model.SeriesOfPerformancesEntity;
+import at.fhv.teamb.symphoniacus.presentation.internal.Parentable;
 import com.jfoenix.controls.JFXDatePicker;
 import com.jfoenix.controls.JFXTimePicker;
 import java.net.URL;
@@ -21,22 +13,15 @@ import java.util.Optional;
 import java.util.ResourceBundle;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
-import javafx.geometry.Pos;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.ComboBox;
-import javafx.scene.control.TextField;
-import javafx.scene.layout.AnchorPane;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.AnchorPane;
-import javafx.util.Duration;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.controlsfx.control.Notifications;
 import org.controlsfx.validation.ValidationSupport;
 import org.controlsfx.validation.Validator;
 import org.controlsfx.validation.decoration.StyleClassValidationDecoration;
@@ -65,7 +50,6 @@ public class NewDutyEntryController implements Initializable, Parentable<TabPane
 
     @FXML
     private TextField dutyNameInput;
-
 
     @FXML
     private ComboBox<SeriesOfPerformancesEntity> seriesOfPerformancesSelect;
@@ -96,7 +80,6 @@ public class NewDutyEntryController implements Initializable, Parentable<TabPane
 
     private ValidationSupport validationSupport = new ValidationSupport();
 
-
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         this.resources = resources;
@@ -107,7 +90,7 @@ public class NewDutyEntryController implements Initializable, Parentable<TabPane
 
         //Todo: den schoaß anpassen
 
-     /*   this.scheduleSaveBtn.setOnAction(e -> {
+        /* this.scheduleSaveBtn.setOnAction(e -> {
             if (this.actualSectionInstrumentation
                 .getPersistenceState()
                 .equals(PersistenceState.EDITED)
@@ -145,7 +128,6 @@ public class NewDutyEntryController implements Initializable, Parentable<TabPane
                     .showError();
             }
         });*/
-
 
         ValidationDecoration cssDecorator = new StyleClassValidationDecoration(
             "error",
