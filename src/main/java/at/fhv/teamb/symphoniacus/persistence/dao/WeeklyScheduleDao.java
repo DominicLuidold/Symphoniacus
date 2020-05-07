@@ -41,14 +41,20 @@ public class WeeklyScheduleDao extends BaseDao<WeeklyScheduleEntity> {
         }
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public Optional<WeeklyScheduleEntity> persist(WeeklyScheduleEntity elem) {
-        return Optional.empty();
+        return this.persist(WeeklyScheduleEntity.class, elem);
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public Optional<WeeklyScheduleEntity> update(WeeklyScheduleEntity elem) {
-        return Optional.empty();
+        return this.update(WeeklyScheduleEntity.class, elem);
     }
 
     @Override

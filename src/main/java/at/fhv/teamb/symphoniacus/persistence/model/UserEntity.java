@@ -1,7 +1,12 @@
 package at.fhv.teamb.symphoniacus.persistence.model;
 
+import java.math.BigInteger;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
+import java.security.SecureRandom;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Optional;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -10,10 +15,15 @@ import javax.persistence.Id;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 @Entity
 @Table(name = "user")
 public class UserEntity {
+
+    private static final Logger LOG = LogManager.getLogger(UserEntity.class);
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "userId")
@@ -109,12 +119,23 @@ public class UserEntity {
         this.phone = phone;
     }
 
-    public String getPassword() {
-        return this.password;
-    }
-
-    public void setPassword(String password) {
-        this.password = password;
+    /**
+     * Generates a SHA-512 hash of the password and then sets it.
+     *
+     * @param password Password in Plaintext.
+     * @throws Exception When hash cannot be generated
+     */
+    public void setPassword(String password) throws Exception {
+        if (this.passwordSalt == null) {
+            LOG.debug("Generating salt");
+            this.passwordSalt = generateSalt();
+        }
+        Optional<String> hash = getHashFromPlaintext(password);
+        if (hash.isPresent()) {
+            this.password = hash.get();
+        } else {
+            LOG.error("Could not generate hash");
+        }
     }
 
     public String getCity() {
@@ -188,5 +209,56 @@ public class UserEntity {
     ) {
         this.administrativeAssistants.remove(administrativeAssistant);
         administrativeAssistant.setUser(null);
+    }
+
+    /**
+     * Generates a SHA-512 hash from a given password.
+     *
+     * @param password Password as plaintext
+     * @return Optional, which if is present contains the hashed password
+     * @throws NoSuchAlgorithmException When SHA-512 is lost
+     */
+    public Optional<String> getHashFromPlaintext(String password)
+        throws NoSuchAlgorithmException {
+        // https://www.geeksforgeeks.org/sha-512-hash-in-java/
+        if (this.passwordSalt == null) {
+            LOG.error("No salt present, cannot generate hash");
+            return Optional.empty();
+        }
+        MessageDigest md = MessageDigest.getInstance("SHA-512");
+        md.update(this.passwordSalt.getBytes());
+
+        // Convert byte array into signum representation
+        BigInteger no = new BigInteger(1, md.digest(password.getBytes()));
+
+        // Convert message digest into hex value
+        String hashtext = no.toString(16);
+
+        // Add preceding 0s to make it 32 bit
+        while (hashtext.length() < 32) {
+            hashtext = "0" + hashtext;
+        }
+
+        // return the HashText
+        return Optional.of(hashtext);
+    }
+
+    /**
+     * Generates a salt.
+     *
+     * @return Salt
+     */
+    public String generateSalt() {
+        SecureRandom random = new SecureRandom();
+        byte[] salt = new byte[16];
+        random.nextBytes(salt);
+
+        BigInteger no = new BigInteger(1, salt);
+        String saltAsText = no.toString(16);
+        while (saltAsText.length() < 32) {
+            saltAsText = "0" + saltAsText;
+        }
+
+        return saltAsText;
     }
 }

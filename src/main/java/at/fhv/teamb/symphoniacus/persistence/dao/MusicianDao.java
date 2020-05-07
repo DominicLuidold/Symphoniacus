@@ -19,10 +19,7 @@ import javax.persistence.TypedQuery;
 public class MusicianDao extends BaseDao<MusicianEntity> {
 
     /**
-     * Finds a {@link MusicianEntity} by its key.
-     *
-     * @param key The key of the duty
-     * @return The duty that is looked for
+     * {@inheritDoc}
      */
     @Override
     public Optional<MusicianEntity> find(Integer key) {
@@ -77,14 +74,20 @@ public class MusicianDao extends BaseDao<MusicianEntity> {
         return query.getResultList();
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public Optional<MusicianEntity> persist(MusicianEntity elem) {
-        return this.persist(MusicianEntity.class,elem);
+        return this.persist(MusicianEntity.class, elem);
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public Optional<MusicianEntity> update(MusicianEntity elem) {
-        return Optional.empty();
+        return this.update(MusicianEntity.class, elem);
     }
 
     @Override

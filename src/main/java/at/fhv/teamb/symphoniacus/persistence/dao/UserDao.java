@@ -17,28 +17,30 @@ import org.apache.logging.log4j.Logger;
  * @author Valentin Goronjic
  */
 public class UserDao extends BaseDao<UserEntity> {
-
     private static final Logger LOG = LogManager.getLogger(UserDao.class);
 
     /**
-     * Finds a {@link UserEntity} by its key.
-     *
-     * @param key The key of the duty
-     * @return The duty that is looked for
+     * {@inheritDoc}
      */
     @Override
     public Optional<UserEntity> find(Integer key) {
         return this.find(UserEntity.class, key);
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public Optional<UserEntity> persist(UserEntity elem) {
-        return Optional.empty();
+        return this.persist(UserEntity.class, elem);
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public Optional<UserEntity> update(UserEntity elem) {
-        return Optional.empty();
+        return this.update(UserEntity.class, elem);
     }
 
     @Override
@@ -50,25 +52,48 @@ public class UserDao extends BaseDao<UserEntity> {
      * Returns a {@link UserEntity} if provided shortcut and password match a database entry.
      *
      * @param userShortCut The shortcut to identify the user
-     * @param password     The password to authenticate the user
      * @return A user matching provided credentials
      */
-    public Optional<UserEntity> login(String userShortCut, String password) {
+    public Optional<UserEntity> loadUser(String userShortCut) {
         List<UserEntity> result = null;
         TypedQuery<UserEntity> query = entityManager.createQuery(
-            "SELECT u FROM UserEntity u WHERE u.shortcut = :shortc AND u.password = :pwd",
+            "SELECT u FROM UserEntity u WHERE u.shortcut = :shortc",
             UserEntity.class
         );
         query.setParameter("shortc", userShortCut);
-        query.setParameter("pwd", password);
 
         result = query.getResultList();
         if (!result.isEmpty()) {
             return Optional.of(result.get(0));
         }
 
-        LOG.debug("No results for query login found");
+        LOG.debug("No results for query loadUser found");
         return Optional.empty();
+    }
+
+    /**
+     * Checks whether the given userShortcut + password hash are valid.
+     * @param userShortCut current user's shortcut
+     * @param inputPasswordHash current user's password hash
+     * @return true if credentials are correct
+     */
+    public boolean isLoginCorrect(String userShortCut, String inputPasswordHash) {
+        TypedQuery<Long> query = entityManager.createQuery(
+            "SELECT COUNT(u) FROM UserEntity u "
+                + "WHERE u.shortcut = :userShortCut "
+                + "AND u.password = :inputPasswordHash",
+            Long.class
+        );
+        query.setParameter("userShortCut", userShortCut);
+        query.setParameter("inputPasswordHash", inputPasswordHash);
+
+        Long result = query.getSingleResult();
+        if (result == 1) {
+            return true;
+        }
+
+        LOG.debug("Credentials incorrect");
+        return false;
     }
 
     /**

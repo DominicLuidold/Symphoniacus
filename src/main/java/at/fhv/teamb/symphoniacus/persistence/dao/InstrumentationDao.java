@@ -12,6 +12,7 @@ public class InstrumentationDao extends BaseDao<InstrumentationEntity> {
 
     /**
      * search all instrumentations for the given musicalPieces.
+     *
      * @param musicalPieces given musicalPieces
      * @return a Set of all instrumentations to all given musicalPieces
      */
@@ -29,19 +30,28 @@ public class InstrumentationDao extends BaseDao<InstrumentationEntity> {
         return new LinkedHashSet<>(query.getResultList());
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public Optional<InstrumentationEntity> find(Integer key) {
-        return this.find(InstrumentationEntity.class,key);
+        return this.find(InstrumentationEntity.class, key);
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public Optional<InstrumentationEntity> persist(InstrumentationEntity elem) {
-        return this.persist(InstrumentationEntity.class,elem);
+        return this.persist(InstrumentationEntity.class, elem);
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public Optional<InstrumentationEntity> update(InstrumentationEntity elem) {
-        return Optional.empty();
+        return this.update(InstrumentationEntity.class, elem);
     }
 
     @Override

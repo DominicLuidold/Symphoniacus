@@ -46,6 +46,11 @@ public abstract class LoadingAnimationTask<T> extends Task<T> {
     @Override
     protected void failed() {
         LOG.error("Task failed: {}", this.getClass().getName());
+        Throwable t = this.getException();
+        if (t != null) {
+            LOG.error(t);
+        }
+        
         Platform.runLater(
             () -> MasterController.disableSpinner(this.pane)
         );

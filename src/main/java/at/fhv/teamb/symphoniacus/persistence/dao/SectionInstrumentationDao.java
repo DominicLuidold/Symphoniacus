@@ -11,6 +11,7 @@ public class SectionInstrumentationDao extends BaseDao<SectionInstrumentationEnt
 
     /**
      * Finds all SectionInstrumentations matching the given Instrumentation.
+     *
      * @param instrumentation given Instrumentation
      * @return a List of all SectionInstrumentations with the same InstrumentationId
      */
@@ -26,19 +27,28 @@ public class SectionInstrumentationDao extends BaseDao<SectionInstrumentationEnt
         return Optional.of(query.getResultList());
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public Optional<SectionInstrumentationEntity> find(Integer key) {
-        return Optional.empty();
+        return this.find(SectionInstrumentationEntity.class, key);
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public Optional<SectionInstrumentationEntity> persist(SectionInstrumentationEntity elem) {
-        return this.persist(SectionInstrumentationEntity.class,elem);
+        return this.persist(SectionInstrumentationEntity.class, elem);
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public Optional<SectionInstrumentationEntity> update(SectionInstrumentationEntity elem) {
-        return Optional.empty();
+        return this.update(SectionInstrumentationEntity.class, elem);
     }
 
     @Override

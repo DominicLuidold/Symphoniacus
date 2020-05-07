@@ -47,8 +47,8 @@ public abstract class BaseDao<T> implements Dao<T> {
      * Persists an object.
      *
      * @param clazz Class of the object
-     * @param elem object
-     * @return Optional.empty if persist not possible
+     * @param elem  The object to persist
+     * @return Optional.empty if persisting not possible
      */
     protected Optional<T> persist(Class<T> clazz, T elem) {
         EntityTransaction transaction = null;
@@ -61,7 +61,31 @@ public abstract class BaseDao<T> implements Dao<T> {
         } catch (Exception e) {
             if (transaction != null && transaction.isActive()) {
                 transaction.rollback();
-                LOG.error("the persistence of the object is not possible",e);
+                LOG.error("Could not persist element", e);
+            }
+        }
+        return Optional.empty();
+    }
+
+    /**
+     * Updates an existing object.
+     *
+     * @param clazz Class of the object
+     * @param elem  The object to update
+     * @return Optional.empty if updating not possible
+     */
+    protected Optional<T> update(Class<T> clazz, T elem) {
+        EntityTransaction transaction = null;
+        try {
+            transaction = entityManager.getTransaction();
+            transaction.begin();
+            entityManager.merge(elem);
+            transaction.commit();
+            return Optional.of(elem);
+        } catch (Exception e) {
+            if (transaction != null && transaction.isActive()) {
+                transaction.rollback();
+                LOG.error("Could not update element", e);
             }
         }
         return Optional.empty();

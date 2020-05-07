@@ -43,14 +43,20 @@ public class MonthlyScheduleDao extends BaseDao<MonthlyScheduleEntity> {
         }
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public Optional<MonthlyScheduleEntity> persist(MonthlyScheduleEntity elem) {
-        return Optional.empty();
+        return this.persist(MonthlyScheduleEntity.class, elem);
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public Optional<MonthlyScheduleEntity> update(MonthlyScheduleEntity elem) {
-        return Optional.empty();
+        return this.update(MonthlyScheduleEntity.class, elem);
     }
 
     @Override

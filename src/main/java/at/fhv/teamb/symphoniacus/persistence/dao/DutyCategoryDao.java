@@ -9,6 +9,9 @@ import javax.persistence.TypedQuery;
 
 public class DutyCategoryDao extends BaseDao<DutyCategoryEntity> {
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public Optional<DutyCategoryEntity> find(Integer key) {
         return this.find(DutyCategoryEntity.class, key);
@@ -29,26 +32,20 @@ public class DutyCategoryDao extends BaseDao<DutyCategoryEntity> {
         return query.getResultList();
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public Optional<DutyCategoryEntity> persist(DutyCategoryEntity elem) {
-        return Optional.empty();
+        return this.persist(DutyCategoryEntity.class, elem);
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public Optional<DutyCategoryEntity> update(DutyCategoryEntity elem) {
-        EntityTransaction transaction = null;
-        try {
-            transaction = entityManager.getTransaction();
-            transaction.begin();
-            entityManager.merge(elem);
-            transaction.commit();
-            return Optional.of(elem);
-        } catch (Exception e) {
-            if (transaction != null && transaction.isActive()) {
-                transaction.rollback();
-            }
-        }
-        return Optional.empty();
+        return this.update(DutyCategoryEntity.class, elem);
     }
 
     @Override

@@ -11,24 +11,27 @@ import javax.persistence.TypedQuery;
 public class PositiveWishDao extends BaseDao<PositiveWishEntity> {
 
     /**
-     * Finds a {@link PositiveWishEntity} by its key.
-     *
-     * @param key The key of the duty
-     * @return The duty that is looked for
+     * {@inheritDoc}
      */
     @Override
     public Optional<PositiveWishEntity> find(Integer key) {
         return this.find(PositiveWishEntity.class, key);
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public Optional<PositiveWishEntity> persist(PositiveWishEntity elem) {
-        return this.persist(PositiveWishEntity.class,elem);
+        return this.persist(PositiveWishEntity.class, elem);
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public Optional<PositiveWishEntity> update(PositiveWishEntity elem) {
-        return Optional.empty();
+        return this.update(PositiveWishEntity.class, elem);
     }
 
     @Override
