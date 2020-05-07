@@ -98,36 +98,42 @@ public class NewDutyEntryController implements Initializable, Parentable<TabPane
                 this.dutyScheduleManager.persist(this.actualSectionInstrumentation);
                 if (this.actualSectionInstrumentation
                     .getPersistenceState()
-                    .equals(PersistenceState.PERSISTED)
+                    .equals(PersistenceState.EDITED)
                 ) {
+                    this.dutyScheduleManager.persist(this.actualSectionInstrumentation);
+                    if (this.actualSectionInstrumentation
+                        .getPersistenceState()
+                        .equals(PersistenceState.PERSISTED)
+                    ) {
+                        Notifications.create()
+                            .title(resources.getString("notification.save.successful.title"))
+                            .text(resources.getString("notification.save.successful.message"))
+                            .position(Pos.CENTER)
+                            .hideAfter(new Duration(4000))
+                            .show();
+                    }
+
+                } else {
                     Notifications.create()
-                        .title(resources.getString("notification.save.successful.title"))
-                        .text(resources.getString("notification.save.successful.message"))
+                        .title(resources.getString("notification.save.nochange.title"))
+                        .text(resources.getString("notification.save.nochange.message"))
                         .position(Pos.CENTER)
                         .hideAfter(new Duration(4000))
-                        .show();
+                        .showError();
                 }
-
-            } else {
-                Notifications.create()
-                    .title(resources.getString("notification.save.nochange.title"))
-                    .text(resources.getString("notification.save.nochange.message"))
-                    .position(Pos.CENTER)
-                    .hideAfter(new Duration(4000))
-                    .showError();
-            }
-            if (this.actualSectionInstrumentation
-                .getPersistenceState()
-                .equals(PersistenceState.EDITED)
-            ) {
-                Notifications.create()
-                    .title(resources.getString("notification.save.failed.title"))
-                    .text(resources.getString("notification.save.failed.message"))
-                    .position(Pos.CENTER)
-                    .hideAfter(new Duration(4000))
-                    .showError();
-            }
-        });*/
+                if (this.actualSectionInstrumentation
+                    .getPersistenceState()
+                    .equals(PersistenceState.EDITED)
+                ) {
+                    Notifications.create()
+                        .title(resources.getString("notification.save.failed.title"))
+                        .text(resources.getString("notification.save.failed.message"))
+                        .position(Pos.CENTER)
+                        .hideAfter(new Duration(4000))
+                        .showError();
+                }
+            });
+        */
 
         ValidationDecoration cssDecorator = new StyleClassValidationDecoration(
             "error",
