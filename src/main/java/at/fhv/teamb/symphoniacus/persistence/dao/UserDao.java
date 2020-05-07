@@ -71,6 +71,12 @@ public class UserDao extends BaseDao<UserEntity> {
         return Optional.empty();
     }
 
+    /**
+     * Checks whether the given userShortcut + password hash are valid.
+     * @param userShortCut current user's shortcut
+     * @param inputPasswordHash current user's password hash
+     * @return true if credentials are correct
+     */
     public boolean isLoginCorrect(String userShortCut, String inputPasswordHash) {
         TypedQuery<Long> query = entityManager.createQuery(
             "SELECT COUNT(u) FROM UserEntity u "
