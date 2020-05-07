@@ -656,6 +656,7 @@ public class DutyScheduleController
         }
 
         Notifications.create()
+            .owner(this.getParentController().calendarView)
             .title(resources
                 .getString("notification.duty.schedule.addMusicianToPosition.musicianset.title"))
             .text(resources
