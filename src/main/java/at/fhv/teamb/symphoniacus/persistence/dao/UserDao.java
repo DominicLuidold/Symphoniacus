@@ -50,17 +50,15 @@ public class UserDao extends BaseDao<UserEntity> {
      * Returns a {@link UserEntity} if provided shortcut and password match a database entry.
      *
      * @param userShortCut The shortcut to identify the user
-     * @param password     The password to authenticate the user
      * @return A user matching provided credentials
      */
-    public Optional<UserEntity> login(String userShortCut, String password) {
+    public Optional<UserEntity> loadUser(String userShortCut) {
         List<UserEntity> result = null;
         TypedQuery<UserEntity> query = entityManager.createQuery(
-            "SELECT u FROM UserEntity u WHERE u.shortcut = :shortc AND u.password = :pwd",
+            "SELECT u FROM UserEntity u WHERE u.shortcut = :shortc",
             UserEntity.class
         );
         query.setParameter("shortc", userShortCut);
-        query.setParameter("pwd", password);
 
         result = query.getResultList();
         if (!result.isEmpty()) {
@@ -69,6 +67,25 @@ public class UserDao extends BaseDao<UserEntity> {
 
         LOG.debug("No results for query login found");
         return Optional.empty();
+    }
+
+    public boolean isLoginCorrect(String userShortCut, String inputPasswordHash) {
+        TypedQuery<Long> query = entityManager.createQuery(
+            "SELECT COUNT(u) FROM UserEntity u "
+            + "WHERE u.shortcut = :userShortCut "
+            + "AND u.password = :inputPasswordHash",
+            Long.class
+        );
+        query.setParameter("userShortCut", userShortCut);
+        query.setParameter("inputPasswordHash", inputPasswordHash);
+
+        Long result = query.getSingleResult();
+        if (result == 1) {
+            return true;
+        }
+
+        LOG.debug("Credentials incorrect");
+        return false;
     }
 
     /**
