@@ -36,7 +36,7 @@ public class WeeklyScheduleEntity {
     private LocalDate publishDate;
 
     @Column(name = "isConfirmed")
-    private Boolean isConfirmed;
+    private boolean isConfirmed;
 
     @ManyToOne(fetch = FetchType.LAZY, cascade = {CascadeType.PERSIST, CascadeType.MERGE})
     @JoinColumn(name = "monthlyScheduleId")

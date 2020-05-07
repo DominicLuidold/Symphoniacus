@@ -35,7 +35,7 @@ public class SeriesOfPerformancesEntity {
     private LocalDate endDate;
 
     @Column(name = "isTour")
-    private Boolean isTour;
+    private boolean isTour;
 
     @ManyToMany(cascade = {CascadeType.MERGE})
     @JoinTable(
@@ -90,11 +90,11 @@ public class SeriesOfPerformancesEntity {
         negativeDutyWishEntity.setSeriesOfPerformances(null);
     }
 
-    public Boolean getTour() {
+    public boolean getTour() {
         return isTour;
     }
 
-    public void setTour(Boolean tour) {
+    public void setTour(boolean tour) {
         isTour = tour;
     }
 
@@ -148,11 +148,11 @@ public class SeriesOfPerformancesEntity {
         this.endDate = endDate;
     }
 
-    public Boolean getIsTour() {
+    public boolean getIsTour() {
         return this.isTour;
     }
 
-    public void setIsTour(Boolean isTour) {
+    public void setIsTour(boolean isTour) {
         this.isTour = isTour;
     }
 

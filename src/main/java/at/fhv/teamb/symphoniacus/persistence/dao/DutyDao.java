@@ -245,7 +245,7 @@ public class DutyDao extends BaseDao<DutyEntity> {
      * @return True if the duty was removed
      */
     @Override
-    public Boolean remove(DutyEntity elem) {
+    public boolean remove(DutyEntity elem) {
         return false;
     }
 

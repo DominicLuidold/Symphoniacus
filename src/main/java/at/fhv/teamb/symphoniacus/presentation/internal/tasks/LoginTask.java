@@ -46,8 +46,6 @@ public class LoginTask extends LoadingAnimationTask<Optional<User>> {
     protected Optional<User> call() throws Exception {
         super.call();
         LOG.debug("Processing login");
-        Optional<User> userOptional =
-            loginManager.login(this.userShortcut.getText(), this.pw.getText());
-        return userOptional;
+        return loginManager.login(this.userShortcut.getText(), this.pw.getText());
     }
 }

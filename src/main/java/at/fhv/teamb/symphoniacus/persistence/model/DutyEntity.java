@@ -2,8 +2,6 @@ package at.fhv.teamb.symphoniacus.persistence.model;
 
 import java.time.LocalDateTime;
 import java.util.HashSet;
-import java.util.LinkedList;
-import java.util.List;
 import java.util.Set;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
@@ -69,16 +67,6 @@ public class DutyEntity {
         }
     )
     private Set<SectionMonthlyScheduleEntity> sectionMonthlySchedules = new HashSet<>();
-
-    public void addDuty(DutyPositionEntity dutyPositionEntity) {
-        this.dutyPositions.add(dutyPositionEntity);
-        dutyPositionEntity.setDuty(this);
-    }
-
-    public void removeDuty(DutyPositionEntity dutyPositionEntity) {
-        this.dutyPositions.remove(dutyPositionEntity);
-        dutyPositionEntity.setDuty(null);
-    }
 
     public Integer getDutyId() {
         return this.dutyId;

@@ -1,8 +1,6 @@
 package at.fhv.teamb.symphoniacus.presentation.internal;
 
 import at.fhv.teamb.symphoniacus.domain.DutyPosition;
-import at.fhv.teamb.symphoniacus.domain.Musician;
-import java.util.Optional;
 
 public class DutyPositionMusicianTableModel {
     private DutyPosition dutyPosition;

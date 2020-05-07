@@ -7,7 +7,7 @@ import at.fhv.teamb.symphoniacus.presentation.internal.Parentable;
  *
  * @deprecated in favor of {@link Parentable} interface
  */
-@Deprecated
+@Deprecated(forRemoval = false, since = "01.05.2020")
 public interface Controllable {
 
     /**

@@ -9,8 +9,6 @@ public class Section {
         this.entity = entity;
     }
 
-    // TODO - Domain logic
-
     public SectionEntity getEntity() {
         return this.entity;
     }

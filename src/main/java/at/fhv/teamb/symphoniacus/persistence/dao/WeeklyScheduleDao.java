@@ -52,7 +52,7 @@ public class WeeklyScheduleDao extends BaseDao<WeeklyScheduleEntity> {
     }
 
     @Override
-    public Boolean remove(WeeklyScheduleEntity elem) {
+    public boolean remove(WeeklyScheduleEntity elem) {
         return false;
     }
 }

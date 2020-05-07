@@ -36,8 +36,8 @@ public class ContractualObligationDao extends BaseDao<ContractualObligationEntit
     }
 
     @Override
-    public Boolean remove(ContractualObligationEntity elem) {
-        return null;
+    public boolean remove(ContractualObligationEntity elem) {
+        return false;
     }
 
     /**

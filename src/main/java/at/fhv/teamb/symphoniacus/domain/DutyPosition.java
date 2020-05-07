@@ -9,7 +9,6 @@ import java.util.Optional;
  * @author Dominic Luidold
  */
 public class DutyPosition {
-    private final InstrumentationPosition instrumentationPosition;
     private DutyPositionEntity entity;
 
     /**
@@ -19,8 +18,6 @@ public class DutyPosition {
      */
     public DutyPosition(DutyPositionEntity entity) {
         this.entity = entity;
-        this.instrumentationPosition =
-            new InstrumentationPosition(entity.getInstrumentationPosition());
     }
 
     /**

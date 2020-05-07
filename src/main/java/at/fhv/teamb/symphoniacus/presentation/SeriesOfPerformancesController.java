@@ -18,8 +18,6 @@ import javafx.collections.FXCollections;
 import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
 import javafx.collections.ObservableSet;
-import javafx.event.ActionEvent;
-import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Alert;
@@ -27,14 +25,12 @@ import javafx.scene.control.Button;
 import javafx.scene.control.ButtonBar;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.CheckBox;
-import javafx.scene.control.ComboBox;
+import javafx.scene.control.ComboBoxBase;
 import javafx.scene.control.DatePicker;
 import javafx.scene.control.ListView;
 import javafx.scene.control.TextField;
 import javafx.scene.image.ImageView;
-import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.GridPane;
-import javafx.scene.text.TextFlow;
 import javafx.util.StringConverter;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -55,13 +51,10 @@ public class SeriesOfPerformancesController
 
     private static final Logger LOG = LogManager.getLogger(SeriesOfPerformancesController.class);
     private boolean isValid = false;
-    private ValidationSupport validationSupport = new ValidationSupport();
+    private final ValidationSupport validationSupport = new ValidationSupport();
     private SeriesOfPerformancesManager seriesManager;
     private boolean itemChanged;
     private TabPaneController parentController;
-
-    @FXML
-    private AnchorPane pane;
 
     @FXML
     private GridPane grid;
@@ -80,9 +73,6 @@ public class SeriesOfPerformancesController
      */
     @FXML
     private Button addModifyButton;
-
-    @FXML
-    private TextFlow instrumentationPositionsFlow;
 
     @FXML
     private DatePicker startingDate;
@@ -158,28 +148,13 @@ public class SeriesOfPerformancesController
             });
 
         // Save button method
-        saveButton.setOnAction(new EventHandler<ActionEvent>() {
-            @Override
-            public void handle(ActionEvent event) {
-                save();
-            }
-        });
+        saveButton.setOnAction(event -> save());
 
         // Cancel button method
-        cancelButton.setOnAction(new EventHandler<ActionEvent>() {
-            @Override
-            public void handle(ActionEvent event) {
-                cancel();
-            }
-        });
+        cancelButton.setOnAction(event -> cancel());
 
         // Add/Modify button method
-        addModifyButton.setOnAction(new EventHandler<ActionEvent>() {
-            @Override
-            public void handle(ActionEvent event) {
-                addModify();
-            }
-        });
+        addModifyButton.setOnAction(event -> addModify());
 
     }
 
@@ -195,7 +170,7 @@ public class SeriesOfPerformancesController
         musicalPieces.addAll(mp);
 
         final StringConverter<MusicalPieceEntity> musicalConverter =
-            new StringConverter<MusicalPieceEntity>() {
+            new StringConverter<>() {
                 @Override
                 public String toString(MusicalPieceEntity piece) {
                     return piece.getName();
@@ -225,15 +200,10 @@ public class SeriesOfPerformancesController
 
         // Changes boolean to avoid unnecessary select statements
         musicalPieceCheckComboBox.getCheckModel().getCheckedItems().addListener(
-            new ListChangeListener<MusicalPieceEntity>() {
-                @Override
-                public void onChanged(ListChangeListener.Change<? extends MusicalPieceEntity> c) {
-                    itemChanged = true;
-                }
-            });
+            (ListChangeListener<MusicalPieceEntity>) c -> itemChanged = true);
 
         // Call init Instrumentations, when Musical Pieces have been chosen
-        musicalPieceCheckComboBox.addEventHandler(ComboBox.ON_HIDDEN, event -> {
+        musicalPieceCheckComboBox.addEventHandler(ComboBoxBase.ON_HIDDEN, event -> {
             if (itemChanged) {
                 loadInstrumentationsFromChosenMusicalPieces(
                     musicalPieceCheckComboBox.getCheckModel().getCheckedItems());
@@ -251,8 +221,7 @@ public class SeriesOfPerformancesController
     private void loadInstrumentationsFromChosenMusicalPieces(
         ObservableList<MusicalPieceEntity> musicalPieces
     ) {
-        Set<MusicalPieceEntity> mp = new LinkedHashSet<>();
-        mp.addAll(musicalPieces);
+        Set<MusicalPieceEntity> mp = new LinkedHashSet<>(musicalPieces);
 
         Set<InstrumentationEntity> inst = this.seriesManager.getInstrumentationsToMusicalPieces(mp);
 
@@ -261,7 +230,7 @@ public class SeriesOfPerformancesController
         instrumentations.addAll(inst);
 
         final StringConverter<InstrumentationEntity> instrumentationConverter =
-            new StringConverter<InstrumentationEntity>() {
+            new StringConverter<>() {
                 @Override
                 public String toString(InstrumentationEntity instrumentation) {
                     return instrumentation.getName() + " - "
@@ -285,8 +254,6 @@ public class SeriesOfPerformancesController
                 instrumentationCheckComboBox.getItems().add(instrumentation);
             }
         }
-        System.out.println(instrumentationCheckComboBox.getCheckModel().getCheckedIndices());
-
 
         // Alle Instrumentations die nach dem Hinzufügen nicht in der "neuen" Liste vorhanden sind
         // werden gelöscht und handling der CheckIndeces
@@ -301,9 +268,7 @@ public class SeriesOfPerformancesController
                     instrumentationCheckComboBox.getCheckModel().getCheckedItems());
                 ObservableList<InstrumentationEntity> tempList =
                     FXCollections.observableArrayList(tmp);
-                for (InstrumentationEntity test : tempList) {
-                    System.out.println(test.getName());
-                }
+
                 instrumentationCheckComboBox.getCheckModel().clearChecks();
 
                 iterator.remove();
@@ -324,7 +289,7 @@ public class SeriesOfPerformancesController
             https://github.com/controlsfx/controlsfx/issues/1004
             Hier ein selbstgebauter workaround.
          */
-        if (instrumentations.size() > 0) {
+        if (!instrumentations.isEmpty()) {
             ObservableList<Integer> result =
                 instrumentationCheckComboBox.getCheckModel().getCheckedIndices();
             for (Integer i : result) {
@@ -333,9 +298,10 @@ public class SeriesOfPerformancesController
         }
 
         instrumentationCheckComboBox.setConverter(instrumentationConverter);
-        instrumentationCheckComboBox.addEventHandler(ComboBox.ON_HIDDEN, event -> {
-            loadSectionInstrumentationDescriptions();
-        });
+        instrumentationCheckComboBox.addEventHandler(
+            ComboBoxBase.ON_HIDDEN,
+            event -> loadSectionInstrumentationDescriptions()
+        );
     }
 
     /**
@@ -374,9 +340,9 @@ public class SeriesOfPerformancesController
     private void save() {
         if (validateInputs()) {
             seriesManager.save(nameOfSeries.getText(),
-                new LinkedHashSet<MusicalPieceEntity>(
+                new LinkedHashSet<>(
                     musicalPieceCheckComboBox.getCheckModel().getCheckedItems()),
-                new LinkedHashSet<InstrumentationEntity>(
+                new LinkedHashSet<>(
                     instrumentationCheckComboBox.getCheckModel().getCheckedItems()),
                 startingDate.getValue(), endingDate.getValue(), isTour.isSelected()
             );
@@ -425,7 +391,6 @@ public class SeriesOfPerformancesController
 
             alert.getButtonTypes().setAll(okButton);
             alert.showAndWait().ifPresent(type -> {
-                System.out.println(type);
                 if (type.equals(okButton)) {
                     alert.close();
                 }
@@ -440,7 +405,6 @@ public class SeriesOfPerformancesController
 
             alert.getButtonTypes().setAll(okButton);
             alert.showAndWait().ifPresent(type -> {
-                System.out.println(type);
                 if (type.equals(okButton)) {
                     alert.close();
                 }
@@ -455,7 +419,6 @@ public class SeriesOfPerformancesController
 
             alert.getButtonTypes().setAll(okButton);
             alert.showAndWait().ifPresent(type -> {
-                System.out.println(type);
                 if (type.equals(okButton)) {
                     alert.close();
                 }
@@ -471,7 +434,6 @@ public class SeriesOfPerformancesController
 
             alert.getButtonTypes().setAll(okButton);
             alert.showAndWait().ifPresent(type -> {
-                System.out.println(type);
                 if (type.equals(okButton)) {
                     alert.close();
                 }

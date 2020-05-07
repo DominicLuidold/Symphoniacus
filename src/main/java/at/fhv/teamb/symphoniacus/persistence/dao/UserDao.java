@@ -1,6 +1,5 @@
 package at.fhv.teamb.symphoniacus.persistence.dao;
 
-import at.fhv.teamb.symphoniacus.domain.Duty;
 import at.fhv.teamb.symphoniacus.persistence.BaseDao;
 import at.fhv.teamb.symphoniacus.persistence.model.AdministrativeAssistantEntity;
 import at.fhv.teamb.symphoniacus.persistence.model.MusicianEntity;
@@ -43,7 +42,7 @@ public class UserDao extends BaseDao<UserEntity> {
     }
 
     @Override
-    public Boolean remove(UserEntity elem) {
+    public boolean remove(UserEntity elem) {
         return false;
     }
 
@@ -64,7 +63,7 @@ public class UserDao extends BaseDao<UserEntity> {
         query.setParameter("pwd", password);
 
         result = query.getResultList();
-        if (result.size() > 0) {
+        if (!result.isEmpty()) {
             return Optional.of(result.get(0));
         }
 

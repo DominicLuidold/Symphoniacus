@@ -52,7 +52,7 @@ public class DutyCategoryDao extends BaseDao<DutyCategoryEntity> {
     }
 
     @Override
-    public Boolean remove(DutyCategoryEntity elem) {
+    public boolean remove(DutyCategoryEntity elem) {
         return false;
     }
 }

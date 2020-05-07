@@ -9,5 +9,5 @@ public interface Dao<T> {
 
     Optional<T> update(T elem);
 
-    Boolean remove(T elem);
+    boolean remove(T elem);
 }

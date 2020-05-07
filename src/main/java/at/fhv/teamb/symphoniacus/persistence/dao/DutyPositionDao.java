@@ -91,7 +91,7 @@ public class DutyPositionDao extends BaseDao<DutyPositionEntity> {
     }
 
     @Override
-    public Boolean remove(DutyPositionEntity elem) {
+    public boolean remove(DutyPositionEntity elem) {
         return false;
     }
 }

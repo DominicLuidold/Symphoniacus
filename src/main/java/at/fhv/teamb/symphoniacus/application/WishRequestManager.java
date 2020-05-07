@@ -59,7 +59,7 @@ public class WishRequestManager {
         } else {
             Optional<WishRequest> wishRequest =
                 WishRequest
-                    .getWishRequestToMusician(musician.getEntity(), this.allWishRequests, duty);
+                    .getWishRequestToMusician(musician.getEntity(), this.allWishRequests);
             if (wishRequest.isPresent()) {
                 musician.setWishRequest(wishRequest.get());
             } else {

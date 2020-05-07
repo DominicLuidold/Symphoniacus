@@ -5,6 +5,8 @@ import javafx.stage.Window;
 
 public class AlertHelper {
 
+    private AlertHelper() {}
+
     /**
      * Simple helper class for helping to throw an Alert in the GUI.
      *
