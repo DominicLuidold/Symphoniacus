@@ -15,24 +15,27 @@ import javax.persistence.TypedQuery;
 public class DutyCategoryChangeLogDao extends BaseDao<DutyCategoryChangelogEntity> {
 
     /**
-     * Finds a {@link DutyCategoryChangelogEntity} by its key.
-     *
-     * @param key The key of the duty
-     * @return The duty that is looked for
+     * {@inheritDoc}
      */
     @Override
     public Optional<DutyCategoryChangelogEntity> find(Integer key) {
         return this.find(DutyCategoryChangelogEntity.class, key);
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public Optional<DutyCategoryChangelogEntity> persist(DutyCategoryChangelogEntity elem) {
-        return this.persist(DutyCategoryChangelogEntity.class,elem);
+        return this.persist(DutyCategoryChangelogEntity.class, elem);
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public Optional<DutyCategoryChangelogEntity> update(DutyCategoryChangelogEntity elem) {
-        return Optional.empty();
+        return this.update(DutyCategoryChangelogEntity.class, elem);
     }
 
     @Override

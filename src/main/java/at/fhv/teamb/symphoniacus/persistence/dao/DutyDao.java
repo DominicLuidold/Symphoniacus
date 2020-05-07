@@ -24,10 +24,7 @@ import javax.persistence.TypedQuery;
 public class DutyDao extends BaseDao<DutyEntity> {
 
     /**
-     * Finds a {@link DutyEntity} by its key.
-     *
-     * @param key The key of the duty
-     * @return The duty that is looked for
+     * {@inheritDoc}
      */
     @Override
     public Optional<DutyEntity> find(Integer key) {
@@ -205,37 +202,19 @@ public class DutyDao extends BaseDao<DutyEntity> {
     }
 
     /**
-     * Persists a new duty.
-     *
-     * @param elem The duty to persist
-     * @return The persisted duty filled with its Identifier
+     * {@inheritDoc}
      */
     @Override
     public Optional<DutyEntity> persist(DutyEntity elem) {
-        return this.persist(DutyEntity.class,elem);
+        return this.persist(DutyEntity.class, elem);
     }
 
     /**
-     * Updates an existing duty.
-     *
-     * @param elem The duty to be updated
-     * @return The updated duty
+     * {@inheritDoc}
      */
     @Override
     public Optional<DutyEntity> update(DutyEntity elem) {
-        EntityTransaction transaction = null;
-        try {
-            transaction = entityManager.getTransaction();
-            transaction.begin();
-            entityManager.merge(elem);
-            transaction.commit();
-            return Optional.of(elem);
-        } catch (Exception e) {
-            if (transaction != null && transaction.isActive()) {
-                transaction.rollback();
-            }
-        }
-        return Optional.empty();
+        return this.update(DutyEntity.class, elem);
     }
 
     /**

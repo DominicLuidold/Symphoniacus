@@ -15,24 +15,24 @@ import javax.persistence.TypedQuery;
 public class ContractualObligationDao extends BaseDao<ContractualObligationEntity> {
 
     /**
-     * Finds a {@link ContractualObligationEntity} by its key.
-     *
-     * @param key The key of the duty
-     * @return The duty that is looked for
+     * {@inheritDoc}
      */
     @Override
     public Optional<ContractualObligationEntity> find(Integer key) {
         return this.find(ContractualObligationEntity.class, key);
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public Optional<ContractualObligationEntity> persist(ContractualObligationEntity elem) {
-        return this.persist(ContractualObligationEntity.class,elem);
+        return this.persist(ContractualObligationEntity.class, elem);
     }
 
     @Override
     public Optional<ContractualObligationEntity> update(ContractualObligationEntity elem) {
-        return Optional.empty();
+        return this.update(ContractualObligationEntity.class, elem);
     }
 
     @Override
