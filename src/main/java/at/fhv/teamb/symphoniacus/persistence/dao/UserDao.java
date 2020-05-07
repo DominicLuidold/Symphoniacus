@@ -17,28 +17,30 @@ import org.apache.logging.log4j.Logger;
  * @author Valentin Goronjic
  */
 public class UserDao extends BaseDao<UserEntity> {
-
     private static final Logger LOG = LogManager.getLogger(UserDao.class);
 
     /**
-     * Finds a {@link UserEntity} by its key.
-     *
-     * @param key The key of the duty
-     * @return The duty that is looked for
+     * {@inheritDoc}
      */
     @Override
     public Optional<UserEntity> find(Integer key) {
         return this.find(UserEntity.class, key);
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public Optional<UserEntity> persist(UserEntity elem) {
-        return Optional.empty();
+        return this.persist(UserEntity.class, elem);
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public Optional<UserEntity> update(UserEntity elem) {
-        return Optional.empty();
+        return this.update(UserEntity.class, elem);
     }
 
     @Override
@@ -72,8 +74,8 @@ public class UserDao extends BaseDao<UserEntity> {
     public boolean isLoginCorrect(String userShortCut, String inputPasswordHash) {
         TypedQuery<Long> query = entityManager.createQuery(
             "SELECT COUNT(u) FROM UserEntity u "
-            + "WHERE u.shortcut = :userShortCut "
-            + "AND u.password = :inputPasswordHash",
+                + "WHERE u.shortcut = :userShortCut "
+                + "AND u.password = :inputPasswordHash",
             Long.class
         );
         query.setParameter("userShortCut", userShortCut);

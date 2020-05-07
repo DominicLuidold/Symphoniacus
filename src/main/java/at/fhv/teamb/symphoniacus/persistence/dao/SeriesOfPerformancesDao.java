@@ -8,19 +8,28 @@ import javax.persistence.TypedQuery;
 
 public class SeriesOfPerformancesDao extends BaseDao<SeriesOfPerformancesEntity> {
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public Optional<SeriesOfPerformancesEntity> find(Integer key) {
         return this.find(SeriesOfPerformancesEntity.class, key);
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public Optional<SeriesOfPerformancesEntity> persist(SeriesOfPerformancesEntity elem) {
-        return this.persist(SeriesOfPerformancesEntity.class,elem);
+        return this.persist(SeriesOfPerformancesEntity.class, elem);
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public Optional<SeriesOfPerformancesEntity> update(SeriesOfPerformancesEntity elem) {
-        return Optional.empty();
+        return this.update(SeriesOfPerformancesEntity.class, elem);
     }
 
     @Override
@@ -29,11 +38,11 @@ public class SeriesOfPerformancesDao extends BaseDao<SeriesOfPerformancesEntity>
     }
 
     /**
-     *Checks if a searched seriesOfPerformances already exists.
+     * Checks if a searched seriesOfPerformances already exists.
      *
-     * @param title The tile of the given seriesOfPerformance
+     * @param title        The tile of the given seriesOfPerformance
      * @param startingDate The starting Date of the given seriesOfPerformance
-     * @param endingDate The ending Date of the given seriesOfPerformance
+     * @param endingDate   The ending Date of the given seriesOfPerformance
      * @return returns true if a seriesOfPerformance is found with the given inputs
      */
     public boolean doesSeriesAlreadyExist(

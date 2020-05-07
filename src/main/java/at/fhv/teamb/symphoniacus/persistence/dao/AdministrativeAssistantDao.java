@@ -10,30 +10,33 @@ import java.util.Optional;
  * @author Tobias Moser
  */
 public class AdministrativeAssistantDao extends BaseDao<AdministrativeAssistantEntity> {
+
     /**
-     * Finds a {@link AdministrativeAssistantEntity} by its key.
-     *
-     * @param key The key of the AdministrativeAssistant
-     * @return The AdministrativeAssistant that is looked for
+     * {@inheritDoc}
      */
     @Override
     public Optional<AdministrativeAssistantEntity> find(Integer key) {
         return this.find(AdministrativeAssistantEntity.class, key);
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public Optional<AdministrativeAssistantEntity> persist(AdministrativeAssistantEntity elem) {
-        return Optional.empty();
+        return this.persist(AdministrativeAssistantEntity.class, elem);
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public Optional<AdministrativeAssistantEntity> update(AdministrativeAssistantEntity elem) {
-        return Optional.empty();
+        return this.update(AdministrativeAssistantEntity.class, elem);
     }
 
     @Override
     public boolean remove(AdministrativeAssistantEntity elem) {
         return false;
     }
-
 }

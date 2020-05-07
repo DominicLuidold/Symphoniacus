@@ -25,6 +25,7 @@ public class MusicalPieceDao extends BaseDao<MusicalPieceEntity> {
 
     /**
      * searches all musicalPieces for a given name.
+     *
      * @param name given name of a musicalPiece
      * @return the musical piece with the same name
      */
@@ -33,23 +34,32 @@ public class MusicalPieceDao extends BaseDao<MusicalPieceEntity> {
             .createQuery("SELECT mp FROM MusicalPieceEntity mp "
                 + "WHERE mp.name = :nameOfPiece", MusicalPieceEntity.class);
 
-        query.setParameter("nameOfPiece",name);
+        query.setParameter("nameOfPiece", name);
         return Optional.of(query.getSingleResult());
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public Optional<MusicalPieceEntity> find(Integer key) {
-        return this.find(MusicalPieceEntity.class,key);
+        return this.find(MusicalPieceEntity.class, key);
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public Optional<MusicalPieceEntity> persist(MusicalPieceEntity elem) {
-        return this.persist(MusicalPieceEntity.class,elem);
+        return this.persist(MusicalPieceEntity.class, elem);
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public Optional<MusicalPieceEntity> update(MusicalPieceEntity elem) {
-        return Optional.empty();
+        return this.update(MusicalPieceEntity.class, elem);
     }
 
     @Override

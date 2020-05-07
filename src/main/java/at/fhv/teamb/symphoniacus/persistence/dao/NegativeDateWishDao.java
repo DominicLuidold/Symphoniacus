@@ -11,24 +11,27 @@ import javax.persistence.TypedQuery;
 public class NegativeDateWishDao extends BaseDao<NegativeDateWishEntity> {
 
     /**
-     * Finds a {@link NegativeDateWishEntity} by its key.
-     *
-     * @param key The key of the duty
-     * @return The duty that is looked for
+     * {@inheritDoc}
      */
     @Override
     public Optional<NegativeDateWishEntity> find(Integer key) {
         return this.find(NegativeDateWishEntity.class, key);
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public Optional<NegativeDateWishEntity> persist(NegativeDateWishEntity elem) {
-        return this.persist(NegativeDateWishEntity.class,elem);
+        return this.persist(NegativeDateWishEntity.class, elem);
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public Optional<NegativeDateWishEntity> update(NegativeDateWishEntity elem) {
-        return Optional.empty();
+        return this.update(NegativeDateWishEntity.class, elem);
     }
 
     @Override

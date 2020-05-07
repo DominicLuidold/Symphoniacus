@@ -20,10 +20,7 @@ import javax.persistence.TypedQuery;
 public class SectionMonthlyScheduleDao extends BaseDao<SectionMonthlyScheduleEntity> {
 
     /**
-     * Finds a {@link SectionMonthlyScheduleEntity} by its key.
-     *
-     * @param key The key of the duty
-     * @return The duty that is looked for
+     * {@inheritDoc}
      */
     @Override
     public Optional<SectionMonthlyScheduleEntity> find(Integer key) {
@@ -81,26 +78,20 @@ public class SectionMonthlyScheduleDao extends BaseDao<SectionMonthlyScheduleEnt
         return query.getSingleResult();
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public Optional<SectionMonthlyScheduleEntity> persist(SectionMonthlyScheduleEntity elem) {
-        return this.persist(SectionMonthlyScheduleEntity.class,elem);
+        return this.persist(SectionMonthlyScheduleEntity.class, elem);
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public Optional<SectionMonthlyScheduleEntity> update(SectionMonthlyScheduleEntity elem) {
-        EntityTransaction transaction = null;
-        try {
-            transaction = entityManager.getTransaction();
-            transaction.begin();
-            entityManager.merge(elem);
-            transaction.commit();
-            return Optional.of(elem);
-        } catch (Exception e) {
-            if (transaction != null && transaction.isActive()) {
-                transaction.rollback();
-            }
-        }
-        return Optional.empty();
+        return this.update(SectionMonthlyScheduleEntity.class, elem);
     }
 
     @Override
