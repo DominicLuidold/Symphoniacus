@@ -55,37 +55,6 @@ public class MainGui extends Application {
     }
 
     public static void main() {
-        /*
-        UserDao userDao = new UserDao();
-        LoginManager loginManager = new LoginManager();
-        List<UserEntity> list = userDao.findAll();
-        LOG.debug("List size? " + list);
-        for (UserEntity u : list) {
-            System.out.println(u.getUserId() + " | Shortcut: " +u.getShortcut());
-            String oldPass = u.getPassword();
-            try {
-                u.setPassword(u.getPassword());
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-            System.out.println("Old? " + oldPass + " | new: " + u.getPassword() + "| salt: "+ u.getPasswordSalt());
-            System.out.println("-------");
-
-            try {
-                Optional<String> genHash = u.getHashFromPlaintext(oldPass);
-                boolean eq = genHash.get().equals(u.getPassword());
-
-                if (eq) {
-                    System.out.println("great");
-                    userDao.update(u);
-                } else {
-                    System.err.println("Not so great");
-                }
-            } catch (NoSuchAlgorithmException e) {
-                e.printStackTrace();
-            }
-
-        } */
         launch();
     }
 }
