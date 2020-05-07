@@ -119,6 +119,12 @@ public class UserEntity {
         this.phone = phone;
     }
 
+    /**
+     * Generates a SHA-512 hash of the password and then sets it.
+     * 
+     * @param password Password in Plaintext.
+     * @throws Exception When hash cannot be generated
+     */
     public void setPassword(String password) throws Exception {
         if (this.passwordSalt == null) {
             LOG.debug("Generating salt");
@@ -205,6 +211,13 @@ public class UserEntity {
         administrativeAssistant.setUser(null);
     }
 
+    /**
+     * Generates a SHA-512 hash from a given password.
+     *
+     * @param password Password as plaintext
+     * @return Optional, which if is present contains the hashed password
+     * @throws NoSuchAlgorithmException When SHA-512 is lost
+     */
     public Optional<String> getHashFromPlaintext(String password)
         throws NoSuchAlgorithmException {
         // https://www.geeksforgeeks.org/sha-512-hash-in-java/
@@ -230,6 +243,11 @@ public class UserEntity {
         return Optional.of(hashtext);
     }
 
+    /**
+     * Generates a salt.
+     *
+     * @return Salt
+     */
     public String generateSalt() {
         SecureRandom random = new SecureRandom();
         byte[] salt = new byte[16];
