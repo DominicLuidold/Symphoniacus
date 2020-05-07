@@ -121,11 +121,12 @@ public class UserEntity {
 
     public void setPassword(String password) throws Exception {
         if (this.passwordSalt == null) {
+            LOG.debug("Generating salt");
             this.passwordSalt = generateSalt();
         }
         Optional<String> hash = getHashFromPlaintext(password);
-        if (hash.isEmpty()) {
-            this.passwordSalt = hash.get();
+        if (hash.isPresent()) {
+            this.password = hash.get();
         } else {
             LOG.error("Could not generate hash");
         }
