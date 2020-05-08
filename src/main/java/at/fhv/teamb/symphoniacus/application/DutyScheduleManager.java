@@ -1,5 +1,6 @@
 package at.fhv.teamb.symphoniacus.application;
 
+import at.fhv.teamb.symphoniacus.application.exception.PointsNotCalculableException;
 import at.fhv.teamb.symphoniacus.domain.ActualSectionInstrumentation;
 import at.fhv.teamb.symphoniacus.domain.Duty;
 import at.fhv.teamb.symphoniacus.domain.DutyPosition;
@@ -99,12 +100,12 @@ public class DutyScheduleManager {
      * @param duty     The currently edited duty
      * @param position The position to determine musicians for
      * @return A Set of available musicians for the given duty position
-     * @throws IllegalStateException if a Musician or Points object has an illegal state
+     * @throws PointsNotCalculableException if the points of a Musician cannot be calculated
      */
     public Set<Musician> getMusiciansAvailableForPosition(
         Duty duty,
         DutyPosition position
-    ) throws IllegalStateException {
+    ) throws PointsNotCalculableException {
         if (position == null) {
             LOG.error("Fetching available musicians not possible - duty position is null");
             return new HashSet<>();
@@ -268,7 +269,8 @@ public class DutyScheduleManager {
      *
      * @param duty The duty to use
      */
-    private void convertMusicianEntitiesToDomainObjects(Duty duty) {
+    private void convertMusicianEntitiesToDomainObjects(Duty duty)
+        throws PointsNotCalculableException {
         for (MusicianEntity entity : this.sectionMusicianEntities) {
             // Get points for musician
             Optional<Points> points = this.pointsManager.getBalanceFromMusician(
@@ -278,7 +280,7 @@ public class DutyScheduleManager {
 
             // Throw exception if points are missing
             if (points.isEmpty()) {
-                throw new IllegalStateException("Points for musician cannot be calculated");
+                throw new PointsNotCalculableException("Points for musician cannot be calculated");
             }
 
             // Create domain object

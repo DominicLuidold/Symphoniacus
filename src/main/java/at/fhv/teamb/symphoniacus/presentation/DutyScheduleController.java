@@ -2,6 +2,7 @@ package at.fhv.teamb.symphoniacus.presentation;
 
 import at.fhv.teamb.symphoniacus.application.DutyManager;
 import at.fhv.teamb.symphoniacus.application.DutyScheduleManager;
+import at.fhv.teamb.symphoniacus.application.exception.PointsNotCalculableException;
 import at.fhv.teamb.symphoniacus.domain.ActualSectionInstrumentation;
 import at.fhv.teamb.symphoniacus.domain.Duty;
 import at.fhv.teamb.symphoniacus.domain.DutyPosition;
@@ -242,7 +243,7 @@ public class DutyScheduleController
         });
 
         this.columnSchedule.setCellFactory(
-            ScheduleButtonTableCell.<MusicianTableModel>forTableColumn(
+            ScheduleButtonTableCell.forTableColumn(
                 this.resources.getString("tab.duty.schedule.table.dutyposition.set.btn"),
                 (MusicianTableModel mtm) -> {
                     LOG.debug("Schedule btn with requests has been pressed");
@@ -290,7 +291,7 @@ public class DutyScheduleController
         );
 
         this.columnSchedule2.setCellFactory(
-            ScheduleButtonTableCell.<MusicianTableModel>forTableColumn(
+            ScheduleButtonTableCell.forTableColumn(
                 this.resources.getString("tab.duty.schedule.table.dutyposition.set.btn"),
                 (MusicianTableModel mtm) -> {
                     LOG.debug("Schedule btn without requests has been pressed");
@@ -305,7 +306,7 @@ public class DutyScheduleController
         );
 
         this.columnUnsetPosition.setCellFactory(
-            ScheduleButtonTableCell.<DutyPositionMusicianTableModel>forTableColumn(
+            ScheduleButtonTableCell.forTableColumn(
                 this.resources.getString("tab.duty.schedule.table.dutyposition.unset.btn"),
                 (DutyPositionMusicianTableModel dpmtm) -> {
                     LOG.debug("Unset musician button has been pressed");
@@ -315,9 +316,7 @@ public class DutyScheduleController
 
                     this.selectedDutyPosition = dpmtm.getDutyPosition();
 
-                    if (assignedMusician.isPresent()) {
-                        this.removeMusicianFromPosition(assignedMusician.get());
-                    }
+                    assignedMusician.ifPresent(this::removeMusicianFromPosition);
                     return dpmtm;
                 }
             )
@@ -557,47 +556,56 @@ public class DutyScheduleController
                 .hideAfter(new Duration(2000))
                 .show();
         } else {
-            LOG.debug("Load old Duty {}",
-                this.oldDutySelect.getSelectionModel().getSelectedItem().getTitle());
+            LOG.debug(
+                "Load old Duty {}",
+                this.oldDutySelect.getSelectionModel().getSelectedItem().getTitle()
+            );
             if (this.actualSectionInstrumentation != null) {
                 Optional<ActualSectionInstrumentation> oldasi = new DutyScheduleManager()
                     .getInstrumentationDetails(
                         this.oldDutySelect.getSelectionModel().getSelectedItem().getOldDuty(),
-                        this.section);
+                        this.section
+                    );
 
-                if (oldasi.isPresent()) {
-                    for (DutyPosition dp : this.actualSectionInstrumentation.getDuty()
-                        .getDutyPositions()) {
-                        Set<Musician> avMusicians = this.dutyScheduleManager
-                            .getMusiciansAvailableForPosition(this.duty, dp);
-                        Optional<Musician> oldMusician = Optional.empty();
-                        List<DutyPosition> oldDutyPositions =
-                            oldasi.get().getDuty().getDutyPositions();
+                try {
+                    if (oldasi.isPresent()) {
+                        for (DutyPosition dp : this.actualSectionInstrumentation.getDuty()
+                            .getDutyPositions()) {
+                            Set<Musician> avMusicians = this.dutyScheduleManager
+                                .getMusiciansAvailableForPosition(this.duty, dp);
+                            Optional<Musician> oldMusician = Optional.empty();
+                            List<DutyPosition> oldDutyPositions =
+                                oldasi.get().getDuty().getDutyPositions();
 
-                        for (DutyPosition odp : oldDutyPositions) {
-                            if (odp.getEntity().getInstrumentationPosition()
-                                .getInstrumentationPositionId()
-                                .equals(dp.getEntity().getInstrumentationPosition()
-                                    .getInstrumentationPositionId())
-                            ) {
-                                if (odp.getAssignedMusician().isPresent()) {
-                                    oldMusician = odp.getAssignedMusician();
+                            for (DutyPosition odp : oldDutyPositions) {
+                                if (odp.getEntity().getInstrumentationPosition()
+                                    .getInstrumentationPositionId()
+                                    .equals(dp.getEntity().getInstrumentationPosition()
+                                        .getInstrumentationPositionId())
+                                ) {
+                                    if (odp.getAssignedMusician().isPresent()) {
+                                        oldMusician = odp.getAssignedMusician();
+                                    }
                                 }
                             }
-                        }
 
-
-                        if (oldMusician.isPresent()) {
-                            for (Musician m : avMusicians) {
-                                if (m.getEntity().getMusicianId()
-                                    .equals(oldMusician.get().getEntity().getMusicianId())
-                                ) {
-                                    this.addMusicianToPosition(this.actualSectionInstrumentation, m,
-                                        dp);
+                            if (oldMusician.isPresent()) {
+                                for (Musician m : avMusicians) {
+                                    if (m.getEntity().getMusicianId()
+                                        .equals(oldMusician.get().getEntity().getMusicianId())
+                                    ) {
+                                        this.addMusicianToPosition(
+                                            this.actualSectionInstrumentation,
+                                            m,
+                                            dp
+                                        );
+                                    }
                                 }
                             }
                         }
                     }
+                } catch (PointsNotCalculableException e) {
+                    LOG.error("The points of at least one musician could not be calculated", e);
                 }
             }
         }
@@ -661,10 +669,14 @@ public class DutyScheduleController
     }
 
     private void removeMusicianFromPosition(Musician musician) {
-        this.dutyScheduleManager.getMusiciansAvailableForPosition(
-            this.duty,
-            this.selectedDutyPosition
-        );
+        try {
+            this.dutyScheduleManager.getMusiciansAvailableForPosition(
+                this.duty,
+                this.selectedDutyPosition
+            );
+        } catch (PointsNotCalculableException e) {
+            LOG.error("The points of at least one musician could not be calculated", e);
+        }
         this.dutyScheduleManager.removeMusicianFromPosition(
             this.actualSectionInstrumentation,
             musician,
@@ -764,7 +776,6 @@ public class DutyScheduleController
         }
         return buttonType;
     }
-
 
     /**
      * Set the actual Duty for Controller.
