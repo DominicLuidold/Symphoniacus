@@ -61,13 +61,7 @@ public class DutyManager {
      */
     public Optional<Duty> loadDutyDetails(Integer dutyId) {
         Optional<DutyEntity> dutyEntity = this.dutyDao.find(dutyId);
-
-        if (dutyEntity.isPresent()) {
-            Duty d = new Duty(dutyEntity.get());
-            return Optional.of(d);
-        } else {
-            return Optional.empty();
-        }
+        return dutyEntity.map(Duty::new);
     }
 
     /**

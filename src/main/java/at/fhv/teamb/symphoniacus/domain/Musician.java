@@ -82,11 +82,7 @@ public class Musician {
      * @return Optional of WishRequest, if the musician has a wish request
      */
     public Optional<WishRequest> getWishRequest() {
-        if (this.wishRequest == null) {
-            return Optional.empty();
-        } else {
-            return Optional.of(this.wishRequest);
-        }
+        return Optional.ofNullable(this.wishRequest);
     }
 
     public void setWishRequest(WishRequest wishRequest) {
