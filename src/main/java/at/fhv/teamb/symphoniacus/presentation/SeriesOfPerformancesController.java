@@ -8,6 +8,8 @@ import at.fhv.teamb.symphoniacus.presentation.internal.Parentable;
 import at.fhv.teamb.symphoniacus.presentation.internal.TabPaneEntry;
 import com.jfoenix.controls.JFXDatePicker;
 import java.net.URL;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.Iterator;
 import java.util.LinkedHashSet;
 import java.util.LinkedList;
@@ -157,6 +159,7 @@ public class SeriesOfPerformancesController
         // Add/Modify button method
         addModifyButton.setOnAction(event -> addModify());
 
+        setUkTimeFormat();
     }
 
     /**
@@ -491,5 +494,29 @@ public class SeriesOfPerformancesController
     public void initializeWithParent() {
         // not needed here.
         LOG.debug("Initialized with parent");
+    }
+
+    private void setUkTimeFormat() {
+        StringConverter converter = (new StringConverter<LocalDate>() {
+            private DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+
+            @Override
+            public String toString(LocalDate localDate) {
+                if (localDate == null) {
+                    return "";
+                }
+                return dateTimeFormatter.format(localDate);
+            }
+
+            @Override
+            public LocalDate fromString(String dateString) {
+                if (dateString == null || dateString.trim().isEmpty()) {
+                    return null;
+                }
+                return LocalDate.parse(dateString, dateTimeFormatter);
+            }
+        });
+        startingDate.setConverter(converter);
+        endingDate.setConverter(converter);
     }
 }
