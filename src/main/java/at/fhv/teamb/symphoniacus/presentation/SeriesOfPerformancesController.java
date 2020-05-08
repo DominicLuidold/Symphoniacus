@@ -6,6 +6,7 @@ import at.fhv.teamb.symphoniacus.persistence.model.MusicalPieceEntity;
 import at.fhv.teamb.symphoniacus.persistence.model.SectionInstrumentationEntity;
 import at.fhv.teamb.symphoniacus.presentation.internal.Parentable;
 import at.fhv.teamb.symphoniacus.presentation.internal.TabPaneEntry;
+import com.jfoenix.controls.JFXDatePicker;
 import java.net.URL;
 import java.util.Iterator;
 import java.util.LinkedHashSet;
@@ -75,10 +76,10 @@ public class SeriesOfPerformancesController
     private Button addModifyButton;
 
     @FXML
-    private DatePicker startingDate;
+    private JFXDatePicker startingDate;
 
     @FXML
-    private DatePicker endingDate;
+    private JFXDatePicker endingDate;
 
     @FXML
     private CheckBox isTour;
@@ -131,13 +132,13 @@ public class SeriesOfPerformancesController
             Validator.createEmptyValidator(resources
                 .getString("seriesOfPerformances.validation.instrumentation")));
 
-        this.validationSupport.registerValidator(this.startingDate,
+      /*  this.validationSupport.registerValidator(this.startingDate,
             Validator.createEmptyValidator(resources
                 .getString("seriesOfPerformances.validation.startingDate")));
 
         this.validationSupport.registerValidator(this.endingDate,
             Validator.createEmptyValidator(resources
-                .getString("seriesOfPerformances.validation.endingDate")));
+                .getString("seriesOfPerformances.validation.endingDate")));*/
 
 
         //Sets Save button disabled if form is not valid

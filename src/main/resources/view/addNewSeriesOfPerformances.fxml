@@ -55,8 +55,8 @@
                            </GridPane.margin>
                         </AnchorPane>
                         <TextFlow fx:id="instrumentationPositionsFlow" minHeight="50.0" GridPane.columnIndex="1" GridPane.rowIndex="3" />
-                        <DatePicker fx:id="endingDate" GridPane.columnIndex="1" GridPane.rowIndex="5" />
-                        <DatePicker fx:id="startingDate" GridPane.columnIndex="1" GridPane.rowIndex="4" />
+                        <JFXDatePicker fx:id="endingDate" GridPane.columnIndex="1" GridPane.rowIndex="5" />
+                        <JFXDatePicker fx:id="startingDate" GridPane.columnIndex="1" GridPane.rowIndex="4" />
                         <AnchorPane GridPane.columnIndex="1" GridPane.rowIndex="2">
                            <children>
                               <HBox alignment="CENTER" spacing="5.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
