@@ -512,42 +512,33 @@ public class DutyScheduleController
         this.oldDutySelect.setPlaceholder(new Label(resources.getString(
             "tab.duty.schedule.oldduty.select.default")));
         task.setOnSucceeded(event -> {
-            Optional<List<Duty>> list = task.getValue();
-            if (list.isPresent()) {
-                List<Duty> dutyList = list.get();
-                ObservableList<OldDutyComboView> observableList
-                    = FXCollections.observableArrayList();
-                LOG.debug("Found {} other duties", dutyList.size());
-                for (Duty d : dutyList) {
-                    LOG.debug("Found duty: {}, {}", d.getTitle(), d.getEntity().getStart());
-                    observableList.add(
-                        new OldDutyComboView(d)
-                    );
-                }
-                this.oldDutySelect.getItems().setAll(observableList);
-                this.oldDutySelect.setConverter(new StringConverter<OldDutyComboView>() {
-                    @Override
-                    public String toString(OldDutyComboView duty) {
-                        return duty.getType() + " | " + duty.getStart();
-                    }
-
-                    @Override
-                    public OldDutyComboView fromString(String title) {
-                        return observableList.stream()
-                            .filter(
-                                item -> item
-                                    .getType()
-                                    .equals(
-                                        title.substring(0, title.lastIndexOf('|') - 1)
-                                    )
-                            )
-                            .collect(Collectors.toList()).get(0);
-                    }
-                });
-
-            } else {
-                LOG.error("Cannot load other duties in GUI");
+            List<Duty> dutyList = task.getValue();
+            ObservableList<OldDutyComboView> observableList = FXCollections.observableArrayList();
+            LOG.debug("Found {} other duties", dutyList.size());
+            for (Duty d : dutyList) {
+                LOG.debug("Found duty: {}, {}", d.getTitle(), d.getEntity().getStart());
+                observableList.add(new OldDutyComboView(d));
             }
+            this.oldDutySelect.getItems().setAll(observableList);
+            this.oldDutySelect.setConverter(new StringConverter<>() {
+                @Override
+                public String toString(OldDutyComboView duty) {
+                    return duty.getType() + " | " + duty.getStart();
+                }
+
+                @Override
+                public OldDutyComboView fromString(String title) {
+                    return observableList.stream()
+                        .filter(
+                            item -> item
+                                .getType()
+                                .equals(
+                                    title.substring(0, title.lastIndexOf('|') - 1)
+                                )
+                        )
+                        .collect(Collectors.toList()).get(0);
+                }
+            });
         });
         new Thread(task).start();
     }

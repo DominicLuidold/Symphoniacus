@@ -4,7 +4,6 @@ import at.fhv.teamb.symphoniacus.application.DutyManager;
 import at.fhv.teamb.symphoniacus.domain.Duty;
 import at.fhv.teamb.symphoniacus.domain.Section;
 import java.util.List;
-import java.util.Optional;
 import javafx.concurrent.Task;
 
 /**
@@ -13,17 +12,18 @@ import javafx.concurrent.Task;
  *
  * @author Valentin Goronjic
  */
-public class GetOtherDutiesTask extends Task<Optional<List<Duty>>> {
-    private DutyManager dutyManager;
-    private Duty duty;
-    private Section section;
-    private Integer numberOfMaxDuties;
+public class GetOtherDutiesTask extends Task<List<Duty>> {
+    private final DutyManager dutyManager;
+    private final Duty duty;
+    private final Section section;
+    private final Integer numberOfMaxDuties;
 
     /**
-     * Constructs a new GetOtherDuteisTask.
-     * @param dutyManager DutyManager currently used
-     * @param duty For which duty other duties should be loaded
-     * @param section Current section
+     * Constructs a new GetOtherDutiesTask.
+     *
+     * @param dutyManager       DutyManager currently used
+     * @param duty              For which duty other duties should be loaded
+     * @param section           Current section
      * @param numberOfMaxDuties How many old duties should be loaded
      */
     public GetOtherDutiesTask(
@@ -39,7 +39,7 @@ public class GetOtherDutiesTask extends Task<Optional<List<Duty>>> {
     }
 
     @Override
-    protected Optional<List<Duty>> call() throws Exception {
+    protected List<Duty> call() {
         return this.dutyManager.getOtherDutiesForSopOrSection(
             this.duty,
             this.section,
