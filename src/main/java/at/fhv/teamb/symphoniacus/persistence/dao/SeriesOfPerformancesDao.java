@@ -1,8 +1,10 @@
 package at.fhv.teamb.symphoniacus.persistence.dao;
 
 import at.fhv.teamb.symphoniacus.persistence.BaseDao;
+import at.fhv.teamb.symphoniacus.persistence.model.DutyCategoryEntity;
 import at.fhv.teamb.symphoniacus.persistence.model.SeriesOfPerformancesEntity;
 import java.time.LocalDate;
+import java.util.List;
 import java.util.Optional;
 import javax.persistence.TypedQuery;
 
@@ -63,5 +65,18 @@ public class SeriesOfPerformancesDao extends BaseDao<SeriesOfPerformancesEntity>
         query.setParameter("eDate", endingDate);
 
         return (query.getSingleResult() >= 1);
+    }
+
+    /**
+     * Returns all duty categories.
+     *
+     * @return A List of duty categories
+     */
+    public List<SeriesOfPerformancesEntity> getAll(){
+        TypedQuery<SeriesOfPerformancesEntity> query = entityManager.createQuery(
+            "SELECT sop FROM SeriesOfPerformancesEntity sop",
+            SeriesOfPerformancesEntity.class
+        );
+        return query.getResultList();
     }
 }

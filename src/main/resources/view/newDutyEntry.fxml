@@ -78,9 +78,6 @@
                     </StackPane>
                     <Label fx:id="dutyEndTimeLabel" text="%tab.duty.new.entry.label.end.time" GridPane.columnIndex="0" GridPane.rowIndex="3" />
                     <JFXTimePicker fx:id="dutyEndTimeInput" defaultColor="#16a5d6" GridPane.columnIndex="1" GridPane.rowIndex="3" />
-      
-                                <Label fx:id="dutyPlaceLabel" text="%tab.duty.new.entry.label.place" GridPane.columnIndex="0" GridPane.rowIndex="4" />
-                    <TextField fx:id="dutyPlaceInput" GridPane.columnIndex="1" GridPane.rowIndex="4" />
                <columnConstraints>
                   <ColumnConstraints hgrow="NEVER" prefWidth="250.0" />
                   <ColumnConstraints hgrow="NEVER" prefWidth="250.0" />
