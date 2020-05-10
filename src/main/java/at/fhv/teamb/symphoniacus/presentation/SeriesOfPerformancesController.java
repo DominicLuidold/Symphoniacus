@@ -139,34 +139,33 @@ public class SeriesOfPerformancesController
         this.startingDate.getValidators().add(validator);
         this.endingDate.getValidators().addAll(validator);
 
-        this.startingDate.focusedProperty().addListener((
-            ObservableValue<? extends Boolean> observable,
-            Boolean oldValue,
-            Boolean newValue)
+        this.startingDate.valueProperty().addListener((
+            observable,
+            oldValue,
+            newValue)
             -> {
-            if (!newValue) {
-                if (this.startingDate.validate()) {
-                    this.start.set(true);
-                } else {
-                    this.start.set(false);
-                }
-                checkButtonVisibility();
+            if (this.startingDate.validate()) {
+                this.start.set(true);
+            } else {
+                this.start.set(false);
             }
+            checkButtonVisibility();
+
         });
 
-        this.endingDate.focusedProperty().addListener((
-            ObservableValue<? extends Boolean> observable,
-            Boolean oldValue,
-            Boolean newValue) -> {
-            if (!newValue) {
+        this.endingDate.valueProperty().addListener((
+            observable,
+            oldValue,
+            newValue) -> {
 
-                if (this.endingDate.validate()) {
-                    this.end.set(true);
-                } else {
-                    this.end.set(false);
-                }
-                checkButtonVisibility();
+
+            if (this.endingDate.validate()) {
+                this.end.set(true);
+            } else {
+                this.end.set(false);
             }
+            checkButtonVisibility();
+
         });
 
         // Save button method
@@ -407,7 +406,7 @@ public class SeriesOfPerformancesController
         Alert alert = new Alert(Alert.AlertType.WARNING);
         if (this.seriesManager
             .doesSeriesAlreadyExist(this.nameOfSeries.getText(), this.startingDate.getValue(),
-            endingDate.getValue())) {
+                endingDate.getValue())) {
             alert.setTitle(resources.getString("seriesOfPerformances.error.title"));
             alert.setContentText(resources.getString(
                 "seriesOfPerformances.error.seriesAlreadyExists.message"));

@@ -2,56 +2,53 @@ package at.fhv.teamb.symphoniacus.presentation;
 
 import at.fhv.teamb.symphoniacus.application.DutyCategoryManager;
 import at.fhv.teamb.symphoniacus.application.DutyManager;
-import at.fhv.teamb.symphoniacus.application.SeriesOfPerformancesManager;
 import at.fhv.teamb.symphoniacus.domain.Duty;
 import at.fhv.teamb.symphoniacus.domain.DutyCategory;
 import at.fhv.teamb.symphoniacus.persistence.PersistenceState;
-import at.fhv.teamb.symphoniacus.persistence.dao.DutyCategoryDao;
-import at.fhv.teamb.symphoniacus.persistence.dao.MusicalPieceDao;
 import at.fhv.teamb.symphoniacus.persistence.dao.SeriesOfPerformancesDao;
-import at.fhv.teamb.symphoniacus.persistence.model.DutyCategoryEntity;
-import at.fhv.teamb.symphoniacus.persistence.model.MusicalPieceEntity;
 import at.fhv.teamb.symphoniacus.persistence.model.SeriesOfPerformancesEntity;
-import at.fhv.teamb.symphoniacus.presentation.internal.CustomCalendarButtonEvent;
-import at.fhv.teamb.symphoniacus.presentation.internal.OldDutyComboView;
 import at.fhv.teamb.symphoniacus.presentation.internal.Parentable;
 import at.fhv.teamb.symphoniacus.presentation.internal.TabPaneEntry;
-import com.calendarfx.model.Entry;
-import com.calendarfx.model.Interval;
 import com.jfoenix.controls.JFXDatePicker;
 import com.jfoenix.controls.JFXTextField;
 import com.jfoenix.controls.JFXTimePicker;
+import com.jfoenix.validation.RequiredFieldValidator;
+import java.awt.Color;
 import java.net.URL;
-import java.time.LocalDateTime;
 import java.time.LocalTime;
-import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Optional;
 import java.util.ResourceBundle;
-import java.util.Set;
+import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.stream.Collectors;
+import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
-import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.scene.Node;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.ButtonBar;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.ComboBox;
-import javafx.scene.control.ComboBoxBase;
 import javafx.scene.control.Label;
-import javafx.scene.control.TextField;
-import javafx.scene.image.ImageView;
+import javafx.scene.control.Tooltip;
 import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.Background;
+import javafx.scene.layout.BackgroundFill;
+import javafx.scene.layout.Border;
+import javafx.scene.layout.BorderStroke;
+import javafx.scene.layout.BorderStrokeStyle;
+import javafx.scene.layout.BorderWidths;
+import javafx.scene.layout.CornerRadii;
+import javafx.scene.paint.Paint;
 import javafx.util.StringConverter;
+import javax.swing.BorderFactory;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.controlsfx.validation.ValidationSupport;
 import org.controlsfx.validation.Validator;
-import org.controlsfx.validation.decoration.StyleClassValidationDecoration;
-import org.controlsfx.validation.decoration.ValidationDecoration;
 
 /**
  * GUI Controller responsible for creating a new Duty Entry.
@@ -66,6 +63,12 @@ public class NewDutyEntryController implements Initializable, Parentable<TabPane
     private Duty duty;
     private DutyManager dutyManager;
     private DutyCategoryManager dutyCategoryManager;
+    private AtomicBoolean validName = new AtomicBoolean(false);
+    private AtomicBoolean validStartDate = new AtomicBoolean(false);
+    private AtomicBoolean validEndDate = new AtomicBoolean(false);
+    private AtomicBoolean validCategory = new AtomicBoolean(false);
+    private AtomicBoolean validStartTime = new AtomicBoolean(false);
+    private AtomicBoolean validEndTime = new AtomicBoolean(false);
 
     @FXML
     private AnchorPane newDutyEntryPane;
@@ -113,80 +116,107 @@ public class NewDutyEntryController implements Initializable, Parentable<TabPane
         initCategoryComboBox();
         initSeriesOfPerformancesComboBox();
 
-        /*
-        ValidationDecoration cssDecorator = new StyleClassValidationDecoration(
-            "error",
-            "warning"
-        );
-        this.validationSupport.setValidationDecorator(cssDecorator);
+        this.scheduleSaveBtn.setDisable(true);
 
-        this.validationSupport.registerValidator(this.dutyNameInput,
-            Validator.createEmptyValidator(resources.getString(
-                "tab.duty.new.entry.error.namemissing"
-                )
-            )
-        );
+        RequiredFieldValidator nameValidator = new RequiredFieldValidator();
+        nameValidator.setMessage("name----");
+        this.dutyNameInput.getValidators().add(nameValidator);
 
-/*        this.validationSupport.registerValidator(this.seriesOfPerformancesSelect,
-            Validator.createEmptyValidator(resources.getString(
-                "tab.duty.new.entry.error.seriesofperformancesmissing"
-                )
-            )
-        );
+        this.dutyNameInput.focusedProperty().addListener((
+            ObservableValue<? extends Boolean> observable,
+            Boolean oldValue,
+            Boolean newValue) -> {
+            if (!newValue) {
+                if (this.dutyNameInput.validate()) {
+                    this.validName.set(true);
+                } else {
+                    this.validName.set(false);
+                }
+                checkButtonVisibility();
+            }
+        });
 
+        this.dutyCategorySelect.valueProperty().addListener((
+            observable,
+            oldValue,
+            newValue) -> {
 
+            if (!this.dutyCategorySelect.getSelectionModel().isEmpty()) {
+                this.validCategory.set(true);
+            } else {
+                this.validCategory.set(false);
+            }
+            checkButtonVisibility();
 
-        this.validationSupport.registerValidator(this.dutyCategorySelect,
-            Validator.createEmptyValidator(resources.getString(
-                "tab.duty.new.entry.error.categorymissing"
-                )
-            )
-        );
+        });
 
-        this.validationSupport.registerValidator(this.dutyPointsInput,
-            Validator.createEmptyValidator(resources.getString(
-                "tab.duty.new.entry.error.pointsmissing"
-                )
-            )
-        );
+        RequiredFieldValidator dateValidator = new RequiredFieldValidator();
+        dateValidator.setMessage("date-----");
+        this.dutyStartDateInput.getValidators().add(dateValidator);
 
-        this.validationSupport.registerValidator(this.dutyStartDateInput,
-            Validator.createEmptyValidator(resources.getString(
-                "tab.duty.new.entry.error.startdatemissing"
-                )
-            )
-        );
+        this.dutyStartDateInput.valueProperty().addListener((
+            observable,
+            oldValue,
+            newValue) -> {
 
-        this.validationSupport.registerValidator(this.dutyStartTimeInput,   //Todo: own Validator
-            Validator.createEmptyValidator(resources.getString(
-                "tab.duty.new.entry.error.starttimemissing"
-                )
-            )
-        );
+            if (this.dutyStartDateInput.validate()) {
+                this.validStartDate.set(true);
+            } else {
+                this.validStartDate.set(false);
+            }
+            checkButtonVisibility();
 
-        this.validationSupport.registerValidator(this.dutyEndDateInput,
-            Validator.createEmptyValidator(resources.getString(
-                "tab.duty.new.entry.error.enddatemissing"
-                )
-            )
-        );
+        });
 
-        this.validationSupport.registerValidator(this.dutyEndTimeInput,     //Todo: own Validator
-            Validator.createEmptyValidator(resources.getString(
-                "tab.duty.new.entry.error.endtimemissing"
-                )
-            )
-        );
+        this.dutyEndDateInput.getValidators().add(dateValidator);
 
-        //Sets Save button disabled if form is not valid
-        this.validationSupport.validationResultProperty()
-            .addListener((observable, oldValue, newValue) -> {
-                this.isValid = newValue.getErrors().isEmpty();
-                this.scheduleSaveBtn.setDisable(!isValid);
-            });
-          */
+        this.dutyEndDateInput.valueProperty().addListener((
+            observable,
+            oldValue,
+            newValue) -> {
+            if (this.dutyEndDateInput.validate()) {
+                this.validEndDate.set(true);
+            } else {
+                this.validEndDate.set(false);
+            }
+            checkButtonVisibility();
 
+        });
 
+        RequiredFieldValidator timeValidator = new RequiredFieldValidator();
+        timeValidator.setMessage("time----");
+
+        this.dutyStartTimeInput.getValidators().add(timeValidator);
+
+        this.dutyStartTimeInput.valueProperty().addListener((
+            observable,
+            oldValue,
+            newValue) -> {
+
+            if (this.dutyStartTimeInput.validate()) {
+                this.validStartTime.set(true);
+            } else {
+                this.validStartTime.set(false);
+            }
+            checkButtonVisibility();
+
+        });
+
+        this.dutyEndTimeInput.getValidators().add(timeValidator);
+
+        this.dutyEndTimeInput.valueProperty().addListener((
+            observable,
+            oldValue,
+            newValue) -> {
+
+            if (this.dutyEndTimeInput.validate()) {
+                this.validEndTime.set(true);
+            } else {
+                this.validEndTime.set(false);
+            }
+            checkButtonVisibility();
+
+        });
 
         // Save button method
         scheduleSaveBtn.setOnAction(event -> saveNewDutyEntry());
@@ -201,9 +231,29 @@ public class NewDutyEntryController implements Initializable, Parentable<TabPane
 
     }
 
+    private void checkButtonVisibility() {
+
+        if (!this.dutyCategorySelect.getSelectionModel().isEmpty()) {
+            this.dutyCategorySelect.setBorder(null);
+            if (this.validName.get() && this.validCategory.get() && this.validStartDate.get()
+                && this.validEndDate.get() && this.validStartTime.get() &&
+                this.validEndTime.get()) {
+                this.scheduleSaveBtn.setDisable(false);
+            } else {
+                this.scheduleSaveBtn.setDisable(true);
+            }
+        } else {
+            this.validCategory.set(false);
+            this.dutyCategorySelect.setBorder(new Border(new BorderStroke(Paint.valueOf("red"),
+                BorderStrokeStyle.SOLID, CornerRadii.EMPTY, BorderWidths.DEFAULT)));
+            this.scheduleSaveBtn.setDisable(true);
+        }
+
+    }
+
     /**
-        Actions to be executed after clicking the 'Back' Button:
-        -> check if persisted state is latest
+     * Actions to be executed after clicking the 'Back' Button:
+     * -> check if persisted state is latest
      */
     private void closeNewDutyEntry() {
         if (this.duty != null) {
@@ -308,7 +358,6 @@ public class NewDutyEntryController implements Initializable, Parentable<TabPane
     }
 
 
-
     /**
      * validates whether or not:
      * -The name has no more than 45 characters.
@@ -349,7 +398,10 @@ public class NewDutyEntryController implements Initializable, Parentable<TabPane
                 }
             });
             return false;
-        } else if (dutyStartDateInput.getValue().isBefore(seriesOfPerformancesSelect.getValue().getStartDate()) || dutyEndDateInput.getValue().isAfter(seriesOfPerformancesSelect.getValue().getEndDate())){
+        } else if (dutyStartDateInput.getValue()
+            .isBefore(seriesOfPerformancesSelect.getValue().getStartDate()) ||
+            dutyEndDateInput.getValue()
+                .isAfter(seriesOfPerformancesSelect.getValue().getEndDate())) {
             alert.setTitle(resources.getString("tab.duty.new.entry.error.title"));
             alert.setContentText(resources.getString(
                 "tab.duty.new.entry.error.DutyOutOfSOPTimeframe"));
@@ -397,8 +449,9 @@ public class NewDutyEntryController implements Initializable, Parentable<TabPane
 
     public void initSeriesOfPerformancesComboBox() {
 
-        List<SeriesOfPerformancesEntity> seriesOfPerformancesList = new SeriesOfPerformancesDao().getAll();
-            this.dutyCategoryManager.getDutyCategories();
+        List<SeriesOfPerformancesEntity> seriesOfPerformancesList =
+            new SeriesOfPerformancesDao().getAll();
+        this.dutyCategoryManager.getDutyCategories();
 
         final ObservableList<SeriesOfPerformancesEntity> observableList =
             FXCollections.observableArrayList();
@@ -438,11 +491,11 @@ public class NewDutyEntryController implements Initializable, Parentable<TabPane
     }
 
 
-
     public String calculateTimeOfDay(LocalTime starttime) {
         if (starttime.isBefore(LocalTime.of(10, 01))) {
             return "MORNING";
-        } if (starttime.isBefore(LocalTime.of(17, 01))) {
+        }
+        if (starttime.isBefore(LocalTime.of(17, 01))) {
             return "AFTERNOON";
         }
         return "EVENING";
