@@ -19,6 +19,7 @@
 <?import org.controlsfx.control.CheckComboBox?>
 
 <?import com.jfoenix.controls.JFXDatePicker?>
+<?import com.jfoenix.controls.JFXTextField?>
 <AnchorPane xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="at.fhv.teamb.symphoniacus.presentation.SeriesOfPerformancesController">
    <children>
       <VBox fx:id="seriesVbox" alignment="CENTER" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
@@ -78,11 +79,11 @@
                               <Insets bottom="6.0" top="6.0" />
                            </GridPane.margin>
                         </AnchorPane>
-                        <TextField fx:id="nameOfSeries" GridPane.columnIndex="1">
+                        <JFXTextField fx:id="nameOfSeries" GridPane.columnIndex="1">
                            <GridPane.margin>
                               <Insets />
                            </GridPane.margin>
-                        </TextField>
+                        </JFXTextField>
                         <Text strokeType="OUTSIDE" strokeWidth="0.0" text="%seriesOfPerformances.gui.name" GridPane.halignment="RIGHT" GridPane.valignment="CENTER">
                            <GridPane.margin>
                               <Insets />
