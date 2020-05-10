@@ -115,6 +115,7 @@ public class NewDutyEntryController implements Initializable, Parentable<TabPane
         initSeriesOfPerformancesComboBox();
 
         this.scheduleSaveBtn.setDisable(true);
+        this.dutyPointsInput.setDisable(true);
 
         // Validate Name Input
         RequiredFieldValidator nameValidator = new RequiredFieldValidator();
@@ -214,13 +215,9 @@ public class NewDutyEntryController implements Initializable, Parentable<TabPane
 
         //Button to open new tab for new series of performances
         this.seriesOfPerformancesNewBtn.setOnAction(e -> openNewSOP());
-
-        this.dutyCategorySelect.setOnAction(e -> setPointsInTextfield());
-
     }
 
     private void checkButtonVisibility() {
-
         if (!this.dutyCategorySelect.getSelectionModel().isEmpty()) {
             this.dutyCategorySelect.setBorder(null);
             if (this.validName.get() && this.validCategory.get() && this.validStartDate.get()
@@ -237,6 +234,14 @@ public class NewDutyEntryController implements Initializable, Parentable<TabPane
             this.scheduleSaveBtn.setDisable(true);
         }
 
+        // Check if Dates for duty are selected -> to calculate the correct points
+        if (this.validStartDate.get() && validCategory.get()) {
+            this.dutyPointsInput.setDisable(false);
+            setPointsInTextfield();
+        } else {
+            this.dutyPointsInput.clear();
+            this.dutyPointsInput.setDisable(true);
+        }
     }
 
     /**
@@ -301,7 +306,7 @@ public class NewDutyEntryController implements Initializable, Parentable<TabPane
             new Label(resources
                 .getString("tab.duty.new.entry.dropdown.load.seriesofperformances.default"))
         );
-        this.dutyCategorySelect.getItems().clear();
+        //this.dutyCategorySelect.getItems().clear();
         LOG.debug("Closing Add Duty");
         this.parentController.removeTab(TabPaneEntry.ADD_DUTY);
     }
