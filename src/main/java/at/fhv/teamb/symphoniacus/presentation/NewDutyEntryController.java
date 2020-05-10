@@ -106,8 +106,6 @@ public class NewDutyEntryController implements Initializable, Parentable<TabPane
     @FXML
     private JFXTimePicker dutyEndTimeInput;
 
-    private ValidationSupport validationSupport = new ValidationSupport();
-
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         this.resources = resources;
@@ -118,10 +116,10 @@ public class NewDutyEntryController implements Initializable, Parentable<TabPane
 
         this.scheduleSaveBtn.setDisable(true);
 
+        // Validate Name Input
         RequiredFieldValidator nameValidator = new RequiredFieldValidator();
-        nameValidator.setMessage("name----");
+        nameValidator.setMessage(this.resources.getString("tab.duty.new.entry.error.namemissing"));
         this.dutyNameInput.getValidators().add(nameValidator);
-
         this.dutyNameInput.focusedProperty().addListener((
             ObservableValue<? extends Boolean> observable,
             Boolean oldValue,
@@ -136,40 +134,37 @@ public class NewDutyEntryController implements Initializable, Parentable<TabPane
             }
         });
 
+        // Validate Combobox dutyCategory
         this.dutyCategorySelect.valueProperty().addListener((
             observable,
             oldValue,
             newValue) -> {
-
             if (!this.dutyCategorySelect.getSelectionModel().isEmpty()) {
                 this.validCategory.set(true);
             } else {
                 this.validCategory.set(false);
             }
             checkButtonVisibility();
-
         });
 
+        // Validate Date Input
         RequiredFieldValidator dateValidator = new RequiredFieldValidator();
-        dateValidator.setMessage("date-----");
+        dateValidator
+            .setMessage(this.resources.getString("tab.duty.new.entry.error.datemissing"));
         this.dutyStartDateInput.getValidators().add(dateValidator);
-
         this.dutyStartDateInput.valueProperty().addListener((
             observable,
             oldValue,
             newValue) -> {
-
             if (this.dutyStartDateInput.validate()) {
                 this.validStartDate.set(true);
             } else {
                 this.validStartDate.set(false);
             }
             checkButtonVisibility();
-
         });
 
         this.dutyEndDateInput.getValidators().add(dateValidator);
-
         this.dutyEndDateInput.valueProperty().addListener((
             observable,
             oldValue,
@@ -180,42 +175,35 @@ public class NewDutyEntryController implements Initializable, Parentable<TabPane
                 this.validEndDate.set(false);
             }
             checkButtonVisibility();
-
         });
 
         RequiredFieldValidator timeValidator = new RequiredFieldValidator();
-        timeValidator.setMessage("time----");
-
+        timeValidator.setMessage(this.resources
+            .getString("tab.duty.new.entry.error.timemissing"));
         this.dutyStartTimeInput.getValidators().add(timeValidator);
-
         this.dutyStartTimeInput.valueProperty().addListener((
             observable,
             oldValue,
             newValue) -> {
-
             if (this.dutyStartTimeInput.validate()) {
                 this.validStartTime.set(true);
             } else {
                 this.validStartTime.set(false);
             }
             checkButtonVisibility();
-
         });
 
         this.dutyEndTimeInput.getValidators().add(timeValidator);
-
         this.dutyEndTimeInput.valueProperty().addListener((
             observable,
             oldValue,
             newValue) -> {
-
             if (this.dutyEndTimeInput.validate()) {
                 this.validEndTime.set(true);
             } else {
                 this.validEndTime.set(false);
             }
             checkButtonVisibility();
-
         });
 
         // Save button method
