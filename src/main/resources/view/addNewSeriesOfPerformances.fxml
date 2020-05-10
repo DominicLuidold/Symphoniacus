@@ -19,6 +19,7 @@
 <?import org.controlsfx.control.CheckComboBox?>
 
 <?import com.jfoenix.controls.JFXDatePicker?>
+<?import com.jfoenix.controls.JFXTextField?>
 <AnchorPane xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="at.fhv.teamb.symphoniacus.presentation.SeriesOfPerformancesController">
    <children>
       <VBox fx:id="seriesVbox" alignment="CENTER" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
@@ -28,7 +29,7 @@
                <children>
                   <BorderPane minHeight="75.0" style="-fx-background-color: #8C93A8;" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
                      <center>
-                        <Text fill="#323232" text="Create a new Series of Performance" textAlignment="CENTER" BorderPane.alignment="CENTER">
+                        <Text fill="#323232" text="%seriesOfPerformances.gui.title" textAlignment="CENTER" BorderPane.alignment="CENTER">
                            <font>
                               <Font name="Calibri Bold" size="24.0" />
                            </font>
@@ -55,8 +56,8 @@
                            </GridPane.margin>
                         </AnchorPane>
                         <TextFlow fx:id="instrumentationPositionsFlow" minHeight="50.0" GridPane.columnIndex="1" GridPane.rowIndex="3" />
-                        <DatePicker fx:id="endingDate" GridPane.columnIndex="1" GridPane.rowIndex="5" />
-                        <DatePicker fx:id="startingDate" GridPane.columnIndex="1" GridPane.rowIndex="4" />
+                        <JFXDatePicker fx:id="endingDate" defaultColor="#16a5d6" GridPane.columnIndex="1" GridPane.rowIndex="5" />
+                        <JFXDatePicker fx:id="startingDate" defaultColor="#16a5d6" GridPane.columnIndex="1" GridPane.rowIndex="4" />
                         <AnchorPane GridPane.columnIndex="1" GridPane.rowIndex="2">
                            <children>
                               <HBox alignment="CENTER" spacing="5.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
@@ -68,7 +69,7 @@
                                     </AnchorPane>
                                   <AnchorPane>
                                        <children>
-                                          <Button fx:id="addModifyButton" contentDisplay="CENTER" mnemonicParsing="false" text="Add/Modify" textAlignment="CENTER" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
+                                          <Button fx:id="addModifyButton" contentDisplay="CENTER" mnemonicParsing="false" text="%seriesOfPerformances.gui.button.modify" textAlignment="CENTER" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
                                        </children>
                                     </AnchorPane>
                                  </children>
@@ -78,12 +79,12 @@
                               <Insets bottom="6.0" top="6.0" />
                            </GridPane.margin>
                         </AnchorPane>
-                        <TextField fx:id="nameOfSeries" GridPane.columnIndex="1">
+                        <JFXTextField fx:id="nameOfSeries" GridPane.columnIndex="1">
                            <GridPane.margin>
                               <Insets />
                            </GridPane.margin>
-                        </TextField>
-                        <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Name:" GridPane.halignment="RIGHT" GridPane.valignment="CENTER">
+                        </JFXTextField>
+                        <Text strokeType="OUTSIDE" strokeWidth="0.0" text="%seriesOfPerformances.gui.name" GridPane.halignment="RIGHT" GridPane.valignment="CENTER">
                            <GridPane.margin>
                               <Insets />
                            </GridPane.margin>
@@ -91,32 +92,32 @@
                               <Font name="Calibri" size="14.0" />
                            </font>
                         </Text>
-                        <Text strokeType="OUTSIDE" text="Musical Piece:" GridPane.halignment="RIGHT" GridPane.rowIndex="1" GridPane.valignment="CENTER">
+                        <Text strokeType="OUTSIDE" text="%seriesOfPerformances.gui.musicalPiece" GridPane.halignment="RIGHT" GridPane.rowIndex="1" GridPane.valignment="CENTER">
                            <font>
                               <Font name="Calibri" size="14.0" />
                            </font>
                         </Text>
-                        <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Instrumentation:" GridPane.halignment="RIGHT" GridPane.rowIndex="2" GridPane.valignment="CENTER">
+                        <Text strokeType="OUTSIDE" strokeWidth="0.0" text="%seriesOfPerformances.gui.instrumentation" GridPane.halignment="RIGHT" GridPane.rowIndex="2" GridPane.valignment="CENTER">
                            <font>
                               <Font name="Calibri" size="14.0" />
                            </font>
                         </Text>
-                        <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Inst. positions:" GridPane.halignment="RIGHT" GridPane.rowIndex="3" GridPane.valignment="CENTER">
+                        <Text strokeType="OUTSIDE" strokeWidth="0.0" text="%seriesOfPerformances.gui.instPositions" GridPane.halignment="RIGHT" GridPane.rowIndex="3" GridPane.valignment="CENTER">
                            <font>
                               <Font name="Calibri" size="14.0" />
                            </font>
                         </Text>
-                        <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Starting date:" GridPane.halignment="RIGHT" GridPane.rowIndex="4" GridPane.valignment="CENTER">
+                        <Text strokeType="OUTSIDE" strokeWidth="0.0" text="%seriesOfPerformances.gui.startingDate" GridPane.halignment="RIGHT" GridPane.rowIndex="4" GridPane.valignment="CENTER">
                            <font>
                               <Font name="Calibri" size="14.0" />
                            </font>
                         </Text>
-                        <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Ending date:" GridPane.halignment="RIGHT" GridPane.rowIndex="5" GridPane.valignment="CENTER">
+                        <Text strokeType="OUTSIDE" strokeWidth="0.0" text="%seriesOfPerformances.gui.endingDate" GridPane.halignment="RIGHT" GridPane.rowIndex="5" GridPane.valignment="CENTER">
                            <font>
                               <Font name="Calibri" size="14.0" />
                            </font>
                         </Text>
-                        <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Is it a Tour?" GridPane.halignment="RIGHT" GridPane.rowIndex="6" GridPane.valignment="CENTER">
+                        <Text strokeType="OUTSIDE" strokeWidth="0.0" text="%seriesOfPerformances.gui.tour" GridPane.halignment="RIGHT" GridPane.rowIndex="6" GridPane.valignment="CENTER">
                            <font>
                               <Font name="Calibri" size="14.0" />
                            </font>
@@ -152,8 +153,8 @@
                <children>
                   <HBox alignment="CENTER" spacing="30.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
                      <children>
-                        <Button fx:id="saveButton" alignment="CENTER" defaultButton="true" mnemonicParsing="false" prefHeight="40" prefWidth="150.0" text="Save" />
-                      <Button fx:id="cancelButton" alignment="CENTER" cancelButton="true" contentDisplay="CENTER" mnemonicParsing="false" prefHeight="40" prefWidth="150.0" text="Cancel" />
+                        <Button fx:id="saveButton" alignment="CENTER" defaultButton="true" mnemonicParsing="false" prefHeight="40" prefWidth="150.0" text="%global.button.save" />
+                      <Button fx:id="cancelButton" alignment="CENTER" cancelButton="true" contentDisplay="CENTER" mnemonicParsing="false" prefHeight="40" prefWidth="150.0" text="%global.button.cancel" />
                      </children>
                      <opaqueInsets>
                         <Insets />
