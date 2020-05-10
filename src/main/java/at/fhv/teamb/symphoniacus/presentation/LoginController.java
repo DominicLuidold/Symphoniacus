@@ -96,7 +96,7 @@ public class LoginController implements Initializable {
         });
 
         // do not focus user shortcut on first-time load
-        // https://stackoverflow.com/**//a/29058225
+        // https://stackoverflow.com/a/29058225
         final BooleanProperty firstTime = new SimpleBooleanProperty(true);
         this.userShortcutField.focusedProperty().addListener(
             (observable, oldValue, newValue)

@@ -14,7 +14,7 @@ public class UkTimeFormatter {
 
     private UkTimeFormatter() {
         //Nicht zum erzeugen eines Objektes gedacht
-        //nur zur Rückgabe eines onverters gedacht
+        //nur zur Rückgabe eines Converters gedacht
     }
 
     /**
