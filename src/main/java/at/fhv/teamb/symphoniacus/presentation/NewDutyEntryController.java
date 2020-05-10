@@ -19,6 +19,7 @@ import at.fhv.teamb.symphoniacus.presentation.internal.TabPaneEntry;
 import com.calendarfx.model.Entry;
 import com.calendarfx.model.Interval;
 import com.jfoenix.controls.JFXDatePicker;
+import com.jfoenix.controls.JFXTextField;
 import com.jfoenix.controls.JFXTimePicker;
 import java.net.URL;
 import java.time.LocalDateTime;
@@ -76,7 +77,7 @@ public class NewDutyEntryController implements Initializable, Parentable<TabPane
     private Button scheduleSaveBtn;
 
     @FXML
-    private TextField dutyNameInput;
+    private JFXTextField dutyNameInput;
 
     @FXML
     private ComboBox<SeriesOfPerformancesEntity> seriesOfPerformancesSelect;
@@ -88,7 +89,7 @@ public class NewDutyEntryController implements Initializable, Parentable<TabPane
     private ComboBox<DutyCategory> dutyCategorySelect;
 
     @FXML
-    private TextField dutyPointsInput;
+    private JFXTextField dutyPointsInput;
 
     @FXML
     private JFXDatePicker dutyStartDateInput;
@@ -112,6 +113,7 @@ public class NewDutyEntryController implements Initializable, Parentable<TabPane
         initCategoryComboBox();
         initSeriesOfPerformancesComboBox();
 
+        /*
         ValidationDecoration cssDecorator = new StyleClassValidationDecoration(
             "error",
             "warning"
@@ -132,7 +134,7 @@ public class NewDutyEntryController implements Initializable, Parentable<TabPane
             )
         );
 
- */
+
 
         this.validationSupport.registerValidator(this.dutyCategorySelect,
             Validator.createEmptyValidator(resources.getString(
@@ -182,6 +184,9 @@ public class NewDutyEntryController implements Initializable, Parentable<TabPane
                 this.isValid = newValue.getErrors().isEmpty();
                 this.scheduleSaveBtn.setDisable(!isValid);
             });
+          */
+
+
 
         // Save button method
         scheduleSaveBtn.setOnAction(event -> saveNewDutyEntry());
@@ -201,7 +206,7 @@ public class NewDutyEntryController implements Initializable, Parentable<TabPane
         -> check if persisted state is latest
      */
     private void closeNewDutyEntry() {
-        if(this.duty!=null){
+        if (this.duty != null) {
             if (this.duty
                 .getPersistenceState()
                 .equals(PersistenceState.EDITED)
@@ -265,6 +270,7 @@ public class NewDutyEntryController implements Initializable, Parentable<TabPane
 
 
     private void saveNewDutyEntry() {   //TODO: handle edited points
+        /*
          if (validateInputs()) {
             duty=dutyManager.createDuty(
                 dutyCategorySelect.getValue(),
@@ -297,6 +303,8 @@ public class NewDutyEntryController implements Initializable, Parentable<TabPane
             LOG.debug(
                 "New Duty could not be saved");
         }
+
+         */
     }
 
 
@@ -421,20 +429,20 @@ public class NewDutyEntryController implements Initializable, Parentable<TabPane
         });
     }
 
-    public void openNewSOP(){
+    public void openNewSOP() {
         this.parentController.addTab(TabPaneEntry.ADD_SOP);
     }
 
-    public void setPointsInTextfield(){
+    public void setPointsInTextfield() {
         dutyPointsInput.setText(Integer.toString(dutyCategorySelect.getValue().getPoints()));
     }
 
 
 
-    public String calculateTimeOfDay(LocalTime starttime){
-        if(starttime.isBefore(LocalTime.of(10, 01))){
+    public String calculateTimeOfDay(LocalTime starttime) {
+        if (starttime.isBefore(LocalTime.of(10, 01))) {
             return "MORNING";
-        }if(starttime.isBefore(LocalTime.of(17, 01))){
+        } if (starttime.isBefore(LocalTime.of(17, 01))) {
             return "AFTERNOON";
         }
         return "EVENING";
