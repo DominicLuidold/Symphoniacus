@@ -4,8 +4,10 @@ import at.fhv.teamb.symphoniacus.application.DutyCategoryManager;
 import at.fhv.teamb.symphoniacus.application.DutyManager;
 import at.fhv.teamb.symphoniacus.domain.Duty;
 import at.fhv.teamb.symphoniacus.domain.DutyCategory;
+import at.fhv.teamb.symphoniacus.domain.DutyCategoryChangelog;
 import at.fhv.teamb.symphoniacus.persistence.PersistenceState;
 import at.fhv.teamb.symphoniacus.persistence.dao.SeriesOfPerformancesDao;
+import at.fhv.teamb.symphoniacus.persistence.model.DutyCategoryChangelogEntity;
 import at.fhv.teamb.symphoniacus.persistence.model.SeriesOfPerformancesEntity;
 import at.fhv.teamb.symphoniacus.presentation.internal.Parentable;
 import at.fhv.teamb.symphoniacus.presentation.internal.TabPaneEntry;
@@ -480,7 +482,19 @@ public class NewDutyEntryController implements Initializable, Parentable<TabPane
     }
 
     public void setPointsInTextfield() {
-        dutyPointsInput.setText(Integer.toString(dutyCategorySelect.getValue().getPoints()));
+        DutyCategoryChangelogEntity temp = null;
+        int points = 0;
+        for (DutyCategoryChangelogEntity dcl : this.dutyCategorySelect.getSelectionModel()
+            .getSelectedItem().getEntity().getDutyCategoryChangelogs()) {
+            if (temp == null || dcl.getStartDate().isAfter(temp.getStartDate()) &&
+                this.dutyStartDateInput.getValue().isAfter(dcl.getStartDate())
+                || this.dutyStartDateInput.getValue().isEqual(dcl.getStartDate())) {
+                temp = dcl;
+                points = temp.getPoints();
+            }
+
+        }
+        this.dutyPointsInput.setText(Integer.valueOf(points).toString());
     }
 
 
