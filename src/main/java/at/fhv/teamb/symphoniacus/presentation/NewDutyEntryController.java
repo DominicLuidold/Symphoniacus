@@ -271,7 +271,8 @@ public class NewDutyEntryController implements Initializable, Parentable<TabPane
                 dutyNameInput.getText(),
                 calculateTimeOfDay(dutyStartTimeInput.getValue()),  //TODO: dutyManager.getTimeOfDate(dutyStartDateInput.getValue().atTime(dutyStartTimeInput.getValue()); -> returnt String.
                 dutyStartDateInput.getValue().atTime(dutyStartTimeInput.getValue()),
-                dutyEndDateInput.getValue().atTime(dutyEndTimeInput.getValue())
+                dutyEndDateInput.getValue().atTime(dutyEndTimeInput.getValue()),
+                null
             );
 
              dutyManager.save(duty);
