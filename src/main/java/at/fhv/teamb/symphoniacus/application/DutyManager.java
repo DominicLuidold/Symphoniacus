@@ -223,6 +223,7 @@ public class DutyManager {
      * @param timeOfDay    The time of day description
      * @param start        The start of the duty
      * @param end          The end of the duty
+     * @param sop          The {@link SeriesOfPerformancesEntity} to use
      * @return A duty domain object
      */
     public Duty createDuty(
@@ -230,7 +231,8 @@ public class DutyManager {
         String description,
         String timeOfDay,
         LocalDateTime start,
-        LocalDateTime end // TODO - Wait for SeriesOfPerformances PR
+        LocalDateTime end,
+        SeriesOfPerformancesEntity sop
     ) {
         // Get monthly schedule entity
         MonthlyScheduleEntity monthlyScheduleEntity =
@@ -254,7 +256,7 @@ public class DutyManager {
         dutyEntity.setTimeOfDay(timeOfDay);
         dutyEntity.setStart(start);
         dutyEntity.setEnd(end);
-        // TODO - Wait for SeriesOfPerformances PR
+        dutyEntity.setSeriesOfPerformances(sop);
 
         // Return domain object
         return new Duty(dutyEntity);

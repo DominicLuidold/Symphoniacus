@@ -45,7 +45,7 @@ public class DutyEntity {
     @Column(name = "end")
     private LocalDateTime end;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.LAZY, cascade = {CascadeType.PERSIST, CascadeType.MERGE})
     @JoinColumn(name = "seriesOfPerformancesId")
     private SeriesOfPerformancesEntity seriesOfPerformances;
 
