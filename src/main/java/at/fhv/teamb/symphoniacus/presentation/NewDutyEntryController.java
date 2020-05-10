@@ -22,6 +22,7 @@ import com.jfoenix.controls.JFXDatePicker;
 import com.jfoenix.controls.JFXTimePicker;
 import java.net.URL;
 import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Optional;
@@ -200,18 +201,19 @@ public class NewDutyEntryController implements Initializable, Parentable<TabPane
         -> check if persisted state is latest
      */
     private void closeNewDutyEntry() {
-    /*    //TODO Abfrage SaveState(old, newold)? von duty
-        if (this.duty
-            .getPersistenceState()
-            .equals(PersistenceState.EDITED)
-        ) {
-            ButtonType userSelection = getConfirmation();
-            if (userSelection == ButtonType.OK) {
-                tearDown();
+        if(this.duty!=null){
+            if (this.duty
+                .getPersistenceState()
+                .equals(PersistenceState.EDITED)
+            ) {
+                ButtonType userSelection = getConfirmation();
+                if (userSelection == ButtonType.OK) {
+                    tearDown();
+                }
             }
         } else {
             tearDown();
-        } */
+        }
         LOG.debug("Closing Add Duty");
         this.parentController.removeTab(TabPaneEntry.ADD_DUTY);
     }
@@ -267,10 +269,12 @@ public class NewDutyEntryController implements Initializable, Parentable<TabPane
             duty=dutyManager.createDuty(
                 dutyCategorySelect.getValue(),
                 dutyNameInput.getText(),
-                "placeholder",  //TODO: dutyManager.getTimeOfDate(dutyStartDateInput.getValue().atTime(dutyStartTimeInput.getValue()); -> returnt String.
+                calculateTimeOfDay(dutyStartTimeInput.getValue()),  //TODO: dutyManager.getTimeOfDate(dutyStartDateInput.getValue().atTime(dutyStartTimeInput.getValue()); -> returnt String.
                 dutyStartDateInput.getValue().atTime(dutyStartTimeInput.getValue()),
                 dutyEndDateInput.getValue().atTime(dutyEndTimeInput.getValue())
             );
+
+             dutyManager.save(duty);
 
             // After saving show success dialog
             Alert successAlert = new Alert(Alert.AlertType.INFORMATION);
@@ -301,6 +305,7 @@ public class NewDutyEntryController implements Initializable, Parentable<TabPane
      * validates whether or not:
      * -The name has no more than 45 characters.
      * -The end datetime is after the start datetime.
+     * - the date is inside the timeframe of the corresponding series of performances
      *
      * @return a boolean whether the validation is successful or not
      */
@@ -322,7 +327,8 @@ public class NewDutyEntryController implements Initializable, Parentable<TabPane
                 }
             });
             return false;
-        } else if (dutyEndDateInput.getValue().atTime(dutyEndTimeInput.getValue()).isBefore(dutyStartDateInput.getValue().atTime(dutyStartTimeInput.getValue()))) {
+        } else if (dutyEndDateInput.getValue().atTime(dutyEndTimeInput.getValue())
+            .isBefore(dutyStartDateInput.getValue().atTime(dutyStartTimeInput.getValue()))) {
             alert.setTitle(resources.getString("tab.duty.new.entry.error.title"));
             alert.setContentText(resources.getString(
                 "tab.duty.new.entry.error.endingDateBeforeStartingDate"));
@@ -333,7 +339,20 @@ public class NewDutyEntryController implements Initializable, Parentable<TabPane
                 if (type.equals(okButton)) {
                     alert.close();
                 }
-            }); //todo: uhrzeit verification: wenn startdate = enddate, dann starttime < endtime.
+            });
+            return false;
+        } else if (dutyStartDateInput.getValue().isBefore(seriesOfPerformancesSelect.getValue().getStartDate()) || dutyEndDateInput.getValue().isAfter(seriesOfPerformancesSelect.getValue().getEndDate())){
+            alert.setTitle(resources.getString("tab.duty.new.entry.error.title"));
+            alert.setContentText(resources.getString(
+                "tab.duty.new.entry.error.DutyOutOfSOPTimeframe"));
+            ButtonType okButton = new ButtonType(resources.getString("global.button.ok"),
+                ButtonBar.ButtonData.YES);
+            alert.getButtonTypes().setAll(okButton);
+            alert.showAndWait().ifPresent(type -> {
+                if (type.equals(okButton)) {
+                    alert.close();
+                }
+            });
             return false;
         } else {
             return true;
@@ -408,6 +427,17 @@ public class NewDutyEntryController implements Initializable, Parentable<TabPane
 
     public void setPointsInTextfield(){
         dutyPointsInput.setText(Integer.toString(dutyCategorySelect.getValue().getPoints()));
+    }
+
+
+
+    public String calculateTimeOfDay(LocalTime starttime){
+        if(starttime.isBefore(LocalTime.of(10, 01))){
+            return "MORNING";
+        }if(starttime.isBefore(LocalTime.of(17, 01))){
+            return "AFTERNOON";
+        }
+        return "EVENING";
     }
 
     @Override
