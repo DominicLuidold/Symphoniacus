@@ -17,6 +17,8 @@ public class SeriesOfPerformancesManager {
 
     /**
      * instantiates the attributes.
+     *  * @author : Danijel Antonijevic
+     *  * @author : Nino Heinzle
      */
     public SeriesOfPerformancesManager() {
         this.musicalPieceDao = new MusicalPieceDao();
@@ -63,7 +65,7 @@ public class SeriesOfPerformancesManager {
         series.setEndDate(endDate);
         series.setIsTour(isTour);
 
-        Optional<SeriesOfPerformancesEntity> result = seriesOfPerformancesDao.persist(series);
+        Optional<SeriesOfPerformancesEntity> result = this.seriesOfPerformancesDao.persist(series);
         return result.isPresent();
     }
 
@@ -79,6 +81,6 @@ public class SeriesOfPerformancesManager {
         LocalDate startingDate,
         LocalDate endingDate
     ) {
-        return seriesOfPerformancesDao.doesSeriesAlreadyExist(title, startingDate, endingDate);
+        return this.seriesOfPerformancesDao.doesSeriesAlreadyExist(title, startingDate, endingDate);
     }
 }

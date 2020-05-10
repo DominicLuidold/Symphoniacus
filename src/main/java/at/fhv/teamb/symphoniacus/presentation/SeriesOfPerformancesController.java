@@ -6,6 +6,10 @@ import at.fhv.teamb.symphoniacus.persistence.model.MusicalPieceEntity;
 import at.fhv.teamb.symphoniacus.persistence.model.SectionInstrumentationEntity;
 import at.fhv.teamb.symphoniacus.presentation.internal.Parentable;
 import at.fhv.teamb.symphoniacus.presentation.internal.TabPaneEntry;
+import at.fhv.teamb.symphoniacus.presentation.internal.UkTimeFormatter;
+import com.jfoenix.controls.JFXDatePicker;
+import com.jfoenix.controls.JFXTextField;
+import com.jfoenix.validation.RequiredFieldValidator;
 import java.net.URL;
 import java.util.Iterator;
 import java.util.LinkedHashSet;
@@ -14,6 +18,8 @@ import java.util.List;
 import java.util.Optional;
 import java.util.ResourceBundle;
 import java.util.Set;
+import java.util.concurrent.atomic.AtomicBoolean;
+import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
@@ -26,19 +32,13 @@ import javafx.scene.control.ButtonBar;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.ComboBoxBase;
-import javafx.scene.control.DatePicker;
 import javafx.scene.control.ListView;
-import javafx.scene.control.TextField;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.GridPane;
 import javafx.util.StringConverter;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.controlsfx.control.CheckComboBox;
-import org.controlsfx.validation.ValidationSupport;
-import org.controlsfx.validation.Validator;
-import org.controlsfx.validation.decoration.StyleClassValidationDecoration;
-import org.controlsfx.validation.decoration.ValidationDecoration;
 
 /**
  * GUI Controller responsible for creating a new Series of Performances.
@@ -50,17 +50,18 @@ public class SeriesOfPerformancesController
     implements Initializable, Parentable<TabPaneController> {
 
     private static final Logger LOG = LogManager.getLogger(SeriesOfPerformancesController.class);
-    private boolean isValid = false;
-    private final ValidationSupport validationSupport = new ValidationSupport();
     private SeriesOfPerformancesManager seriesManager;
     private boolean itemChanged;
     private TabPaneController parentController;
+    private AtomicBoolean name = new AtomicBoolean(false);
+    private AtomicBoolean start = new AtomicBoolean(false);
+    private AtomicBoolean end = new AtomicBoolean(false);
 
     @FXML
     private GridPane grid;
 
     @FXML
-    private TextField nameOfSeries;
+    private JFXTextField nameOfSeries;
 
     @FXML
     private CheckComboBox<MusicalPieceEntity> musicalPieceCheckComboBox;
@@ -75,10 +76,10 @@ public class SeriesOfPerformancesController
     private Button addModifyButton;
 
     @FXML
-    private DatePicker startingDate;
+    private JFXDatePicker startingDate;
 
     @FXML
-    private DatePicker endingDate;
+    private JFXDatePicker endingDate;
 
     @FXML
     private CheckBox isTour;
@@ -104,58 +105,81 @@ public class SeriesOfPerformancesController
      */
     @Override
     public void initialize(URL location, ResourceBundle resources) {
+        this.saveButton.setDisable(true);
         this.resources = resources;
         this.seriesManager = new SeriesOfPerformancesManager();
-        listView = new ListView<>();
-        grid.add(listView, 1, 3);
-        instrumentationCheckComboBox
+        this.listView = new ListView<>();
+        this.grid.add(this.listView, 1, 3);
+        this.instrumentationCheckComboBox
             .setTitle(resources
                 .getString("seriesOfPerformances.instrumentations.placeholder"));
         initMusicialPiecesCheckListView();
 
-        ValidationDecoration cssDecorator = new StyleClassValidationDecoration(
-            "error",
-            "warning"
-        );
-        this.validationSupport.setValidationDecorator(cssDecorator);
+        RequiredFieldValidator fieldValidator = new RequiredFieldValidator();
+        fieldValidator.setMessage(resources
+            .getString("seriesOfPerformances.validation.name"));
+        this.nameOfSeries.getValidators().add(fieldValidator);
 
-        this.validationSupport.registerValidator(this.nameOfSeries,
-            Validator.createEmptyValidator(resources
-                .getString("seriesOfPerformances.validation.name")));
+        this.nameOfSeries.focusedProperty().addListener((
+            ObservableValue<? extends Boolean> observable,
+            Boolean oldValue,
+            Boolean newValue) -> {
+            if (!newValue) {
+                if (this.nameOfSeries.validate()) {
+                    this.name.set(true);
+                } else {
+                    this.name.set(false);
+                }
+                checkButtonVisibility();
+            }
+        });
 
-        this.validationSupport.registerValidator(musicalPieceCheckComboBox,
-            Validator.createEmptyValidator(resources
-                .getString("seriesOfPerformances.validation.musicialPiece")));
+        RequiredFieldValidator validator = new RequiredFieldValidator();
+        validator.setMessage(this.resources.getString("seriesOfPerformances.validation.date"));
+        this.startingDate.getValidators().add(validator);
+        this.endingDate.getValidators().addAll(validator);
 
-        this.validationSupport.registerValidator(this.instrumentationCheckComboBox,
-            Validator.createEmptyValidator(resources
-                .getString("seriesOfPerformances.validation.instrumentation")));
+        this.startingDate.focusedProperty().addListener((
+            ObservableValue<? extends Boolean> observable,
+            Boolean oldValue,
+            Boolean newValue)
+            -> {
+            if (!newValue) {
+                if (this.startingDate.validate()) {
+                    this.start.set(true);
+                } else {
+                    this.start.set(false);
+                }
+                checkButtonVisibility();
+            }
+        });
 
-        this.validationSupport.registerValidator(this.startingDate,
-            Validator.createEmptyValidator(resources
-                .getString("seriesOfPerformances.validation.startingDate")));
+        this.endingDate.focusedProperty().addListener((
+            ObservableValue<? extends Boolean> observable,
+            Boolean oldValue,
+            Boolean newValue) -> {
+            if (!newValue) {
 
-        this.validationSupport.registerValidator(this.endingDate,
-            Validator.createEmptyValidator(resources
-                .getString("seriesOfPerformances.validation.endingDate")));
-
-
-        //Sets Save button disabled if form is not valid
-        this.validationSupport.validationResultProperty()
-            .addListener((observable, oldValue, newValue) -> {
-                this.isValid = newValue.getErrors().isEmpty();
-                this.saveButton.setDisable(!isValid);
-            });
+                if (this.endingDate.validate()) {
+                    this.end.set(true);
+                } else {
+                    this.end.set(false);
+                }
+                checkButtonVisibility();
+            }
+        });
 
         // Save button method
-        saveButton.setOnAction(event -> save());
+        this.saveButton.setOnAction(event -> save());
 
         // Cancel button method
-        cancelButton.setOnAction(event -> cancel());
+        this.cancelButton.setOnAction(event -> cancel());
 
         // Add/Modify button method
-        addModifyButton.setOnAction(event -> addModify());
+        this.addModifyButton.setOnAction(event -> addModify());
 
+        startingDate.setConverter(UkTimeFormatter.getUkTimeConverter());
+        endingDate.setConverter(UkTimeFormatter.getUkTimeConverter());
     }
 
     /**
@@ -191,23 +215,23 @@ public class SeriesOfPerformancesController
                     }
                 }
             };
-        musicalPieceCheckComboBox.setConverter(musicalConverter);
+        this.musicalPieceCheckComboBox.setConverter(musicalConverter);
         /*
         Der schlimmste Fehler meines Lebens!:
         https://stackoverflow.com/questions/30643979/checkcombobox-choices-are-empty
          */
-        musicalPieceCheckComboBox.getItems().addAll(musicalPieces);
+        this.musicalPieceCheckComboBox.getItems().addAll(musicalPieces);
 
         // Changes boolean to avoid unnecessary select statements
-        musicalPieceCheckComboBox.getCheckModel().getCheckedItems().addListener(
-            (ListChangeListener<MusicalPieceEntity>) c -> itemChanged = true);
+        this.musicalPieceCheckComboBox.getCheckModel().getCheckedItems().addListener(
+            (ListChangeListener<MusicalPieceEntity>) c -> this.itemChanged = true);
 
         // Call init Instrumentations, when Musical Pieces have been chosen
-        musicalPieceCheckComboBox.addEventHandler(ComboBoxBase.ON_HIDDEN, event -> {
-            if (itemChanged) {
+        this.musicalPieceCheckComboBox.addEventHandler(ComboBoxBase.ON_HIDDEN, event -> {
+            if (this.itemChanged) {
                 loadInstrumentationsFromChosenMusicalPieces(
-                    musicalPieceCheckComboBox.getCheckModel().getCheckedItems());
-                itemChanged = false;
+                    this.musicalPieceCheckComboBox.getCheckModel().getCheckedItems());
+                this.itemChanged = false;
             }
         });
     }
@@ -246,38 +270,38 @@ public class SeriesOfPerformancesController
                 }
             };
         ObservableList<InstrumentationEntity> currentItems =
-            instrumentationCheckComboBox.getItems();
+            this.instrumentationCheckComboBox.getItems();
 
         // Füge neu dazugekommene Instrumentations in die currentlist
         for (InstrumentationEntity instrumentation : instrumentations) {
             if (!(currentItems.contains(instrumentation))) {
-                instrumentationCheckComboBox.getItems().add(instrumentation);
+                this.instrumentationCheckComboBox.getItems().add(instrumentation);
             }
         }
 
         // Alle Instrumentations die nach dem Hinzufügen nicht in der "neuen" Liste vorhanden sind
         // werden gelöscht und handling der CheckIndeces
         Iterator<InstrumentationEntity> iterator =
-            instrumentationCheckComboBox.getItems().iterator();
+            this.instrumentationCheckComboBox.getItems().iterator();
         while (iterator.hasNext()) {
             InstrumentationEntity tempInst = iterator.next();
             if (!(instrumentations.contains(tempInst))) {
-                instrumentationCheckComboBox.getCheckModel().clearCheck(tempInst);
+                this.instrumentationCheckComboBox.getCheckModel().clearCheck(tempInst);
                 // Speichere aktuelle checks in zwischenliste
                 List<InstrumentationEntity> tmp = new LinkedList<>(
-                    instrumentationCheckComboBox.getCheckModel().getCheckedItems());
+                    this.instrumentationCheckComboBox.getCheckModel().getCheckedItems());
                 ObservableList<InstrumentationEntity> tempList =
                     FXCollections.observableArrayList(tmp);
 
-                instrumentationCheckComboBox.getCheckModel().clearChecks();
+                this.instrumentationCheckComboBox.getCheckModel().clearChecks();
 
                 iterator.remove();
 
                 // Durch remove wurde die size der liste verändert und somit sind alle
                 // checkIndices falsche -> deshalb werden nach dem clearen die checks neu gesetzt
                 for (InstrumentationEntity instrumentation : tempList) {
-                    if (instrumentationCheckComboBox.getItems().contains(instrumentation)) {
-                        instrumentationCheckComboBox.getCheckModel().check(instrumentation);
+                    if (this.instrumentationCheckComboBox.getItems().contains(instrumentation)) {
+                        this.instrumentationCheckComboBox.getCheckModel().check(instrumentation);
                     }
                 }
                 loadSectionInstrumentationDescriptions();
@@ -291,14 +315,14 @@ public class SeriesOfPerformancesController
          */
         if (!instrumentations.isEmpty()) {
             ObservableList<Integer> result =
-                instrumentationCheckComboBox.getCheckModel().getCheckedIndices();
+                this.instrumentationCheckComboBox.getCheckModel().getCheckedIndices();
             for (Integer i : result) {
-                instrumentationCheckComboBox.getCheckModel().check(i);
+                this.instrumentationCheckComboBox.getCheckModel().check(i);
             }
         }
 
-        instrumentationCheckComboBox.setConverter(instrumentationConverter);
-        instrumentationCheckComboBox.addEventHandler(
+        this.instrumentationCheckComboBox.setConverter(instrumentationConverter);
+        this.instrumentationCheckComboBox.addEventHandler(
             ComboBoxBase.ON_HIDDEN,
             event -> loadSectionInstrumentationDescriptions()
         );
@@ -310,7 +334,7 @@ public class SeriesOfPerformancesController
      */
     private void loadSectionInstrumentationDescriptions() {
         ObservableList<InstrumentationEntity> instrumentations =
-            instrumentationCheckComboBox.getCheckModel().getCheckedItems();
+            this.instrumentationCheckComboBox.getCheckModel().getCheckedItems();
 
         List<String> desc = new LinkedList<>();
         StringBuilder sb;
@@ -339,12 +363,12 @@ public class SeriesOfPerformancesController
      */
     private void save() {
         if (validateInputs()) {
-            seriesManager.save(nameOfSeries.getText(),
+            this.seriesManager.save(nameOfSeries.getText(),
                 new LinkedHashSet<>(
-                    musicalPieceCheckComboBox.getCheckModel().getCheckedItems()),
+                    this.musicalPieceCheckComboBox.getCheckModel().getCheckedItems()),
                 new LinkedHashSet<>(
-                    instrumentationCheckComboBox.getCheckModel().getCheckedItems()),
-                startingDate.getValue(), endingDate.getValue(), isTour.isSelected()
+                    this.instrumentationCheckComboBox.getCheckModel().getCheckedItems()),
+                this.startingDate.getValue(), endingDate.getValue(), isTour.isSelected()
             );
 
             // After saving show success dialog
@@ -381,7 +405,8 @@ public class SeriesOfPerformancesController
     private boolean validateInputs() {
         //gibts die series of performance bereits -> wenn ja fehlermeldung
         Alert alert = new Alert(Alert.AlertType.WARNING);
-        if (seriesManager.doesSeriesAlreadyExist(nameOfSeries.getText(), startingDate.getValue(),
+        if (this.seriesManager
+            .doesSeriesAlreadyExist(this.nameOfSeries.getText(), this.startingDate.getValue(),
             endingDate.getValue())) {
             alert.setTitle(resources.getString("seriesOfPerformances.error.title"));
             alert.setContentText(resources.getString(
@@ -396,7 +421,7 @@ public class SeriesOfPerformancesController
                 }
             });
             return false;
-        } else if (nameOfSeries.getText().length() > 45) {
+        } else if (this.nameOfSeries.getText().length() > 45) {
             alert.setTitle(resources.getString("seriesOfPerformances.error.title"));
             alert.setContentText(resources.getString(
                 "seriesOfPerformances.error.nameOfSeriesOutOfBounds.message"));
@@ -410,7 +435,7 @@ public class SeriesOfPerformancesController
                 }
             });
             return false;
-        } else if (endingDate.getValue().isBefore(startingDate.getValue())) {
+        } else if (this.endingDate.getValue().isBefore(this.startingDate.getValue())) {
             alert.setTitle(resources.getString("seriesOfPerformances.error.title"));
             alert.setContentText(resources.getString(
                 "seriesOfPerformances.error.endingDateBeforeStartingDate.message"));
@@ -426,7 +451,7 @@ public class SeriesOfPerformancesController
             return false;
         } else if (!isInstrumentationForMusicalPieceSelected()) {
             alert.setTitle(resources.getString("seriesOfPerformances.error.title"));
-            alert.setContentText(resources.getString(
+            alert.setContentText(this.resources.getString(
                 "seriesOfPerformances.error"
                     + ".selectedMusicalPieceWithoutInstrumentation.message"));
             ButtonType okButton = new ButtonType(resources.getString("global.button.ok"),
@@ -462,10 +487,12 @@ public class SeriesOfPerformancesController
 
     private boolean isInstrumentationForMusicalPieceSelected() {
 
-        for (MusicalPieceEntity m : musicalPieceCheckComboBox.getCheckModel().getCheckedItems()) {
+        for (MusicalPieceEntity m : this.musicalPieceCheckComboBox
+            .getCheckModel().getCheckedItems()) {
             boolean isSelected = false;
             for (InstrumentationEntity i : m.getInstrumentations()) {
-                if (instrumentationCheckComboBox.getCheckModel().getCheckedItems().contains(i)) {
+                if (this.instrumentationCheckComboBox
+                    .getCheckModel().getCheckedItems().contains(i)) {
                     isSelected = true;
                 }
             }
@@ -490,5 +517,13 @@ public class SeriesOfPerformancesController
     public void initializeWithParent() {
         // not needed here.
         LOG.debug("Initialized with parent");
+    }
+
+    private void checkButtonVisibility() {
+        if (this.start.get() && this.end.get() && this.name.get()) {
+            this.saveButton.setDisable(false);
+        } else {
+            this.saveButton.setDisable(true);
+        }
     }
 }
