@@ -9,7 +9,7 @@ import at.fhv.teamb.symphoniacus.application.type.DomainUserType;
  */
 public class UserDto {
 
-    private int userId;
+    private final int userId;
     private final String userShortcut;
     private final String password;
     private final String fullName;
@@ -50,12 +50,13 @@ public class UserDto {
     }
 
     public static class UserDtoBuilder {
-        private int userId;
+        private final int userId;
         private String userShortcut;
         private String password;
         private String fullName;
         private DomainUserType type;
 
+        // we need this to be set
         public UserDtoBuilder(int userId) {
             this.userId = userId;
         }
