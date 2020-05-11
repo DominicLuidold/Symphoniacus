@@ -263,6 +263,7 @@ public class NewDutyEntryController implements Initializable, Parentable<TabPane
         }
         LOG.debug("Closing Add Duty");
         this.parentController.removeTab(TabPaneEntry.ADD_DUTY);
+        this.parentController.selectTab(TabPaneEntry.ORG_OFFICER_CALENDAR_VIEW);
     }
 
     private ButtonType getConfirmation() {
@@ -308,6 +309,7 @@ public class NewDutyEntryController implements Initializable, Parentable<TabPane
         );
         LOG.debug("Closing Add Duty");
         this.parentController.removeTab(TabPaneEntry.ADD_DUTY);
+        this.parentController.selectTab(TabPaneEntry.ORG_OFFICER_CALENDAR_VIEW);
     }
 
     private void saveNewDutyEntry() {

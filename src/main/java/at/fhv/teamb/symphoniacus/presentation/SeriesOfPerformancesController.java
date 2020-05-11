@@ -387,6 +387,8 @@ public class SeriesOfPerformancesController
             successAlert.setHeaderText(resources
                 .getString("seriesOfPerformances.success.header"));
             successAlert.show();
+            this.parentController.removeTab(TabPaneEntry.ADD_SOP);
+            this.parentController.selectTab(TabPaneEntry.ADD_DUTY);
         } else {
             LOG.debug(
                 "Series of Performances could not be saved");
@@ -471,6 +473,7 @@ public class SeriesOfPerformancesController
     private void cancel() {
         LOG.debug("Closing Add SOP");
         this.parentController.removeTab(TabPaneEntry.ADD_SOP);
+        this.parentController.selectTab(TabPaneEntry.ADD_DUTY);
     }
 
     private void addModify() {

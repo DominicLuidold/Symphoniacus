@@ -142,6 +142,26 @@ public class TabPaneController implements Initializable, Parentable<MainControll
         }
     }
 
+    /**
+     * Selects a Tab in the TabPane.
+     *
+     * @param tabPaneEntry TabPaneEntry to be selected.
+     */
+    public void selectTab(TabPaneEntry tabPaneEntry) {
+        Tab tab = null;
+        for (Tab t : this.tabPane.getTabs()) {
+            if (t.getText().equals(tabPaneEntry.getTitle())) {
+                tab = t;
+                break;
+            }
+        }
+
+        if (tab != null) {
+            LOG.debug("Selecting tab: {}", tab.getText());
+            this.tabPane.getSelectionModel().select(tab);
+        }
+    }
+
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         this.bundle = resources;
