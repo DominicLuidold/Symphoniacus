@@ -1,8 +1,9 @@
 package at.fhv.teamb.symphoniacus.application;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+
 import at.fhv.teamb.symphoniacus.application.dto.UserDto;
 import at.fhv.teamb.symphoniacus.application.type.DomainUserType;
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
 /**
@@ -29,23 +30,23 @@ class UserDtoTest {
             .build();
 
         // Then: all fields should have the same values
-        Assertions.assertEquals(userId, result.getUserId(), "UserId should be the same");
-        Assertions.assertEquals(
+        assertEquals(userId, result.getUserId(), "UserId should be the same");
+        assertEquals(
             userShortcut,
             result.getUserShortcut(),
             "userShortcut should be the same"
         );
-        Assertions.assertEquals(
+        assertEquals(
             password,
             result.getPassword(),
             "password should be the same"
         );
-        Assertions.assertEquals(
+        assertEquals(
             fullName,
             result.getFullName(),
             "fullName should be the same"
         );
-        Assertions.assertEquals(
+        assertEquals(
             type,
             result.getType(),
             "type should be the same"
