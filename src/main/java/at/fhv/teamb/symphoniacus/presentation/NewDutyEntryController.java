@@ -4,7 +4,6 @@ import at.fhv.teamb.symphoniacus.application.DutyCategoryManager;
 import at.fhv.teamb.symphoniacus.application.DutyManager;
 import at.fhv.teamb.symphoniacus.domain.Duty;
 import at.fhv.teamb.symphoniacus.domain.DutyCategory;
-import at.fhv.teamb.symphoniacus.domain.DutyCategoryChangelog;
 import at.fhv.teamb.symphoniacus.persistence.PersistenceState;
 import at.fhv.teamb.symphoniacus.persistence.dao.SeriesOfPerformancesDao;
 import at.fhv.teamb.symphoniacus.persistence.model.DutyCategoryChangelogEntity;
@@ -15,7 +14,6 @@ import com.jfoenix.controls.JFXDatePicker;
 import com.jfoenix.controls.JFXTextField;
 import com.jfoenix.controls.JFXTimePicker;
 import com.jfoenix.validation.RequiredFieldValidator;
-import java.awt.Color;
 import java.net.URL;
 import java.time.LocalTime;
 import java.util.List;
@@ -28,18 +26,15 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
-import javafx.scene.Node;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.ButtonBar;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.ComboBox;
+import javafx.scene.control.ComboBoxBase;
 import javafx.scene.control.Label;
-import javafx.scene.control.Tooltip;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.AnchorPane;
-import javafx.scene.layout.Background;
-import javafx.scene.layout.BackgroundFill;
 import javafx.scene.layout.Border;
 import javafx.scene.layout.BorderStroke;
 import javafx.scene.layout.BorderStrokeStyle;
@@ -47,11 +42,8 @@ import javafx.scene.layout.BorderWidths;
 import javafx.scene.layout.CornerRadii;
 import javafx.scene.paint.Paint;
 import javafx.util.StringConverter;
-import javax.swing.BorderFactory;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.controlsfx.validation.ValidationSupport;
-import org.controlsfx.validation.Validator;
 import shadow.org.codehaus.plexus.util.StringUtils;
 
 /**
@@ -226,6 +218,10 @@ public class NewDutyEntryController implements Initializable, Parentable<TabPane
         this.dutyPointsInput.textProperty().addListener((observable, oldValue, newValue) -> {
             userEditedPoints = true;
         });
+
+        this.seriesOfPerformancesSelect.addEventHandler(ComboBoxBase.ON_SHOWING,event -> {
+            initSeriesOfPerformancesComboBox();
+        });
     }
 
     private void checkButtonVisibility() {
@@ -314,18 +310,8 @@ public class NewDutyEntryController implements Initializable, Parentable<TabPane
         this.parentController.removeTab(TabPaneEntry.ADD_DUTY);
     }
 
-
-    private void saveNewDutyEntry() {   //TODO: handle edited points
-
+    private void saveNewDutyEntry() {
          if (validateInputs()) {
-           /* duty=dutyManager.createDuty(
-                dutyCategorySelect.getValue(),
-                dutyNameInput.getText(),
-                calculateTimeOfDay(dutyStartTimeInput.getValue()),  //TODO: dutyManager.getTimeOfDate(dutyStartDateInput.getValue().atTime(dutyStartTimeInput.getValue()); -> returnt String.
-                dutyStartDateInput.getValue().atTime(dutyStartTimeInput.getValue()),
-                dutyEndDateInput.getValue().atTime(dutyEndTimeInput.getValue())
-            );*/
-
              this.duty = this.dutyManager.createDuty(
                  this.dutyCategorySelect.getValue(),
                  this.dutyNameInput.getText(),
@@ -435,12 +421,9 @@ public class NewDutyEntryController implements Initializable, Parentable<TabPane
         } else {
             return true;
         }
-
     }
 
-
     public void initCategoryComboBox() {
-
         List<DutyCategory> dutyCategoryList = this.dutyCategoryManager.getDutyCategories();
 
         LOG.debug("Found {} duty categories", dutyCategoryList.size());
@@ -467,7 +450,6 @@ public class NewDutyEntryController implements Initializable, Parentable<TabPane
     }
 
     public void initSeriesOfPerformancesComboBox() {
-
         List<SeriesOfPerformancesEntity> seriesOfPerformancesList =
             new SeriesOfPerformancesDao().getAll();
         this.dutyCategoryManager.getDutyCategories();
@@ -476,12 +458,8 @@ public class NewDutyEntryController implements Initializable, Parentable<TabPane
             FXCollections.observableArrayList();
         LOG.debug("Found {} series of performances", seriesOfPerformancesList.size());
 
-        for (SeriesOfPerformancesEntity sop : seriesOfPerformancesList) {
-            observableList.add(sop);
-        }
-
+        observableList.addAll(seriesOfPerformancesList);
         this.seriesOfPerformancesSelect.getItems().setAll(observableList);
-
         this.seriesOfPerformancesSelect.setConverter(new StringConverter<>() {
             @Override
             public String toString(SeriesOfPerformancesEntity seriesOfPerformancesEntity) {
