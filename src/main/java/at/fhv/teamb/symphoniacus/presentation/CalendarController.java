@@ -64,7 +64,7 @@ public abstract class CalendarController implements Initializable, Parentable<Ta
      * @param end   A LocalDate representing the end
      * @return A subclass of {@link LoadingAnimationTask}
      */
-    protected abstract List<Duty> loadDuties(LocalDate start, LocalDate end);
+    protected abstract LoadingAnimationTask<?> loadDuties(LocalDate start, LocalDate end);
 
     /**
      * Creates a {@link Calendar}.
