@@ -1,7 +1,7 @@
 package at.fhv.teamb.symphoniacus.presentation;
 
 import at.fhv.teamb.symphoniacus.application.LoginManager;
-import at.fhv.teamb.symphoniacus.domain.User;
+import at.fhv.teamb.symphoniacus.application.dto.LoginUserDto;
 import at.fhv.teamb.symphoniacus.presentation.internal.AlertHelper;
 import at.fhv.teamb.symphoniacus.presentation.internal.tasks.LoginTask;
 import java.io.IOException;
@@ -103,8 +103,8 @@ public class LoginController implements Initializable {
      * This function processes the login data using the {@link LoginManager} and checks if there
      * is a corresponding user. If this user exists, an attribute is set to which
      * {@link at.fhv.teamb.symphoniacus.application.type.DomainUserType} he belongs. After that the
-     * function {@link #loadMainScene(User user)} is called. Otherwise the user gets an error
-     * message for the failed login.
+     * method {@link #loadMainScene(LoginUserDto user)} is called.
+     * Otherwise the user gets an error message for the failed login.
      *
      */
     public void processLoginCredentials() {
@@ -133,8 +133,7 @@ public class LoginController implements Initializable {
         thread.start();
 
         task.setOnSucceeded(event -> {
-            Optional<User> userOptional =
-                task.getValue();
+            Optional<LoginUserDto> userOptional = task.getValue();
 
             LOG.debug(
                 "Login with Username: {} and Password {}",
@@ -155,7 +154,7 @@ public class LoginController implements Initializable {
 
     }
 
-    private void loadMainScene(User user) {
+    private void loadMainScene(LoginUserDto user) {
         Locale locale = new Locale("en", "UK");
         try {
             ResourceBundle bundle = ResourceBundle.getBundle("bundles.language", locale);
