@@ -5,7 +5,6 @@ import at.fhv.teamb.symphoniacus.persistence.model.InstrumentationEntity;
 import at.fhv.teamb.symphoniacus.persistence.model.MusicalPieceEntity;
 import at.fhv.teamb.symphoniacus.persistence.model.SectionInstrumentationEntity;
 import at.fhv.teamb.symphoniacus.presentation.internal.Parentable;
-import at.fhv.teamb.symphoniacus.presentation.internal.TabPaneEntry;
 import at.fhv.teamb.symphoniacus.presentation.internal.UkTimeFormatter;
 import com.jfoenix.controls.JFXDatePicker;
 import com.jfoenix.controls.JFXTextField;
@@ -50,13 +49,13 @@ public class SeriesOfPerformancesController
     implements Initializable, Parentable<TabPaneController> {
 
     private static final Logger LOG = LogManager.getLogger(SeriesOfPerformancesController.class);
-    private SeriesOfPerformancesManager seriesManager;
-    private boolean itemChanged;
-    private TabPaneController parentController;
+    // do not make these fields final -> validation
     private AtomicBoolean name = new AtomicBoolean(false);
     private AtomicBoolean start = new AtomicBoolean(false);
     private AtomicBoolean end = new AtomicBoolean(false);
-
+    private SeriesOfPerformancesManager seriesManager;
+    private boolean itemChanged;
+    private TabPaneController parentController;
     @FXML
     private GridPane grid;
 
@@ -125,11 +124,7 @@ public class SeriesOfPerformancesController
             Boolean oldValue,
             Boolean newValue) -> {
             if (!newValue) {
-                if (this.nameOfSeries.validate()) {
-                    this.name.set(true);
-                } else {
-                    this.name.set(false);
-                }
+                this.name.set(this.nameOfSeries.validate());
                 checkButtonVisibility();
             }
         });
@@ -145,11 +140,7 @@ public class SeriesOfPerformancesController
             Boolean newValue)
             -> {
             if (!newValue) {
-                if (this.startingDate.validate()) {
-                    this.start.set(true);
-                } else {
-                    this.start.set(false);
-                }
+                this.start.set(this.startingDate.validate());
                 checkButtonVisibility();
             }
         });
@@ -160,11 +151,7 @@ public class SeriesOfPerformancesController
             Boolean newValue) -> {
             if (!newValue) {
 
-                if (this.endingDate.validate()) {
-                    this.end.set(true);
-                } else {
-                    this.end.set(false);
-                }
+                this.end.set(this.endingDate.validate());
                 checkButtonVisibility();
             }
         });
@@ -394,6 +381,21 @@ public class SeriesOfPerformancesController
         }
     }
 
+    private void showErrorMessage(String errorText) {
+        Alert alert = new Alert(Alert.AlertType.WARNING);
+        alert.setTitle(resources.getString("seriesOfPerformances.error.title"));
+        alert.setContentText(errorText);
+        ButtonType okButton = new ButtonType(resources.getString("global.button.ok"),
+            ButtonBar.ButtonData.YES);
+
+        alert.getButtonTypes().setAll(okButton);
+        alert.showAndWait().ifPresent(type -> {
+            if (type.equals(okButton)) {
+                alert.close();
+            }
+        });
+    }
+
     /**
      * validates whether or not:
      * -The title has no more than 45 characters.
@@ -404,65 +406,35 @@ public class SeriesOfPerformancesController
      */
     private boolean validateInputs() {
         //gibts die series of performance bereits -> wenn ja fehlermeldung
-        Alert alert = new Alert(Alert.AlertType.WARNING);
+
         if (this.seriesManager
             .doesSeriesAlreadyExist(this.nameOfSeries.getText(), this.startingDate.getValue(),
-            endingDate.getValue())) {
-            alert.setTitle(resources.getString("seriesOfPerformances.error.title"));
-            alert.setContentText(resources.getString(
-                "seriesOfPerformances.error.seriesAlreadyExists.message"));
-            ButtonType okButton = new ButtonType(resources.getString("global.button.ok"),
-                ButtonBar.ButtonData.YES);
-
-            alert.getButtonTypes().setAll(okButton);
-            alert.showAndWait().ifPresent(type -> {
-                if (type.equals(okButton)) {
-                    alert.close();
-                }
-            });
+                endingDate.getValue())) {
+            showErrorMessage(
+                resources.getString(
+                    "seriesOfPerformances.error.seriesAlreadyExists.message"
+                )
+            );
             return false;
         } else if (this.nameOfSeries.getText().length() > 45) {
-            alert.setTitle(resources.getString("seriesOfPerformances.error.title"));
-            alert.setContentText(resources.getString(
-                "seriesOfPerformances.error.nameOfSeriesOutOfBounds.message"));
-            ButtonType okButton = new ButtonType(resources.getString("global.button.ok"),
-                ButtonBar.ButtonData.YES);
-
-            alert.getButtonTypes().setAll(okButton);
-            alert.showAndWait().ifPresent(type -> {
-                if (type.equals(okButton)) {
-                    alert.close();
-                }
-            });
+            showErrorMessage(
+                resources.getString(
+                    "seriesOfPerformances.error.nameOfSeriesOutOfBounds.message")
+            );
             return false;
         } else if (this.endingDate.getValue().isBefore(this.startingDate.getValue())) {
-            alert.setTitle(resources.getString("seriesOfPerformances.error.title"));
-            alert.setContentText(resources.getString(
-                "seriesOfPerformances.error.endingDateBeforeStartingDate.message"));
-            ButtonType okButton = new ButtonType(resources.getString("global.button.ok"),
-                ButtonBar.ButtonData.YES);
-
-            alert.getButtonTypes().setAll(okButton);
-            alert.showAndWait().ifPresent(type -> {
-                if (type.equals(okButton)) {
-                    alert.close();
-                }
-            });
+            showErrorMessage(
+                resources.getString(
+                    "seriesOfPerformances.error.endingDateBeforeStartingDate.message"
+                )
+            );
             return false;
         } else if (!isInstrumentationForMusicalPieceSelected()) {
-            alert.setTitle(resources.getString("seriesOfPerformances.error.title"));
-            alert.setContentText(this.resources.getString(
-                "seriesOfPerformances.error"
-                    + ".selectedMusicalPieceWithoutInstrumentation.message"));
-            ButtonType okButton = new ButtonType(resources.getString("global.button.ok"),
-                ButtonBar.ButtonData.YES);
-
-            alert.getButtonTypes().setAll(okButton);
-            alert.showAndWait().ifPresent(type -> {
-                if (type.equals(okButton)) {
-                    alert.close();
-                }
-            });
+            showErrorMessage(
+                this.resources.getString(
+                    "seriesOfPerformances.error"
+                        + ".selectedMusicalPieceWithoutInstrumentation.message")
+            );
             return false;
         } else {
             return true;
@@ -471,7 +443,7 @@ public class SeriesOfPerformancesController
 
     private void cancel() {
         LOG.debug("Closing Add SOP");
-        this.parentController.removeTab(TabPaneEntry.ADD_SOP);
+        this.parentController.removeTab();
     }
 
     private void addModify() {
@@ -520,10 +492,6 @@ public class SeriesOfPerformancesController
     }
 
     private void checkButtonVisibility() {
-        if (this.start.get() && this.end.get() && this.name.get()) {
-            this.saveButton.setDisable(false);
-        } else {
-            this.saveButton.setDisable(true);
-        }
+        this.saveButton.setDisable(!this.start.get() || !this.end.get() || !this.name.get());
     }
 }
