@@ -2,11 +2,11 @@ package at.fhv.teamb.symphoniacus.presentation;
 
 import at.fhv.teamb.symphoniacus.application.AdministrativeAssistantManager;
 import at.fhv.teamb.symphoniacus.application.MusicianManager;
+import at.fhv.teamb.symphoniacus.application.dto.UserDto;
 import at.fhv.teamb.symphoniacus.application.type.DomainUserType;
 import at.fhv.teamb.symphoniacus.application.type.MusicianRoleType;
 import at.fhv.teamb.symphoniacus.domain.AdministrativeAssistant;
 import at.fhv.teamb.symphoniacus.domain.Musician;
-import at.fhv.teamb.symphoniacus.domain.User;
 import at.fhv.teamb.symphoniacus.persistence.model.MusicianRole;
 import at.fhv.teamb.symphoniacus.presentation.internal.TabPaneEntry;
 import java.net.URL;
@@ -37,7 +37,7 @@ public class MainController implements Initializable {
     @FXML
     private UserController userHeaderMenuController;
 
-    private User currentUser;
+    private UserDto currentUser;
     private Musician currentMusician;
     private AdministrativeAssistant currentAssistant;
     private MusicianManager musicianManager;
@@ -56,7 +56,7 @@ public class MainController implements Initializable {
      *
      * @param user Current login user
      */
-    public void setLoginUser(User user) {
+    public void setLoginUser(UserDto user) {
         this.currentUser = user;
 
         if (this.currentUser.getType().equals(DomainUserType.DOMAIN_MUSICIAN)) {
@@ -64,7 +64,7 @@ public class MainController implements Initializable {
                 musicianManager = new MusicianManager();
             }
             Optional<Musician> musician = musicianManager
-                .loadMusician(this.currentUser.getUserEntity());
+                .loadMusician(this.currentUser.getUserId());
 
             if (musician.isPresent()) {
                 LOG.debug("Musician successfully loaded");
@@ -80,7 +80,7 @@ public class MainController implements Initializable {
             }
             Optional<AdministrativeAssistant> administrativeAssistant =
                 administrativeManager.loadAdministrativeAssistant(
-                    this.currentUser.getUserEntity().getUserId()
+                    this.currentUser.getUserId()
                 );
             if (administrativeAssistant.isPresent()) {
                 LOG.debug("AdministrativeAssistant successfully loaded");
