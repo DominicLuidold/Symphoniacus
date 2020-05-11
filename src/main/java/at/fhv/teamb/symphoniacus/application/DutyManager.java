@@ -2,9 +2,12 @@ package at.fhv.teamb.symphoniacus.application;
 
 import at.fhv.teamb.symphoniacus.domain.Duty;
 import at.fhv.teamb.symphoniacus.domain.DutyCategory;
+import at.fhv.teamb.symphoniacus.domain.DutyCategoryChangelog;
 import at.fhv.teamb.symphoniacus.domain.Section;
 import at.fhv.teamb.symphoniacus.persistence.PersistenceState;
+import at.fhv.teamb.symphoniacus.persistence.dao.DutyCategoryChangeLogDao;
 import at.fhv.teamb.symphoniacus.persistence.dao.DutyDao;
+import at.fhv.teamb.symphoniacus.persistence.model.DutyCategoryChangelogEntity;
 import at.fhv.teamb.symphoniacus.persistence.model.DutyEntity;
 import at.fhv.teamb.symphoniacus.persistence.model.MonthlyScheduleEntity;
 import at.fhv.teamb.symphoniacus.persistence.model.SectionEntity;
@@ -32,6 +35,7 @@ public class DutyManager {
     private final MonthlyScheduleManager monthlyScheduleManager;
     private final WeeklyScheduleManager weeklyScheduleManager;
     protected DutyDao dutyDao;
+    private DutyCategoryChangeLogDao changeLogDao;
 
     /**
      * Initialize the DutyManager.
@@ -39,6 +43,7 @@ public class DutyManager {
     public DutyManager() {
         this.monthlyScheduleManager = new MonthlyScheduleManager();
         this.weeklyScheduleManager = new WeeklyScheduleManager();
+        this.changeLogDao = new DutyCategoryChangeLogDao();
         this.dutyDao = new DutyDao();
     }
 
@@ -271,10 +276,30 @@ public class DutyManager {
      *
      * @param duty The duty to save
      */
-    public void save(Duty duty) {
-        Optional<DutyEntity> persisted = this.dutyDao.persist(duty.getEntity());
+    public void save(Duty duty, boolean userPointsChanged, Integer points) {
 
-        if (persisted.isPresent()) {
+        Optional<DutyEntity> persistedDuty = this.dutyDao.persist(duty.getEntity());
+
+        if (userPointsChanged) {
+            if (this.changeLogDao.doesLogAlreadyExists(duty.getEntity())) {
+                Optional<DutyCategoryChangelogEntity> changeLog = this.changeLogDao
+                    .getChangeLogByDetails(duty.getEntity());
+                if (changeLog.isPresent()) {
+                    changeLog.get().setPoints(points);
+                    changeLogDao.update(changeLog.get());
+                } else {
+                    LOG.error("Returned changelog is null but shouldn't be null! @save");
+                }
+            } else {
+                DutyCategoryChangelogEntity changeLog = new DutyCategoryChangelogEntity();
+                changeLog.setDutyCategory(duty.getEntity().getDutyCategory());
+                changeLog.setPoints(points);
+                changeLog.setStartDate(duty.getEntity().getStart().toLocalDate());
+                changeLogDao.persist(changeLog);
+            }
+        }
+
+        if (persistedDuty.isPresent()) {
             duty.setPersistenceState(PersistenceState.PERSISTED);
             LOG.debug(
                 "Persisted duty {{}, '{}'}",

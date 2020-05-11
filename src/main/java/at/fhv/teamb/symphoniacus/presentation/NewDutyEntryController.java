@@ -36,6 +36,7 @@ import javafx.scene.control.ButtonType;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.Tooltip;
+import javafx.scene.image.ImageView;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.Background;
 import javafx.scene.layout.BackgroundFill;
@@ -51,6 +52,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.controlsfx.validation.ValidationSupport;
 import org.controlsfx.validation.Validator;
+import shadow.org.codehaus.plexus.util.StringUtils;
 
 /**
  * GUI Controller responsible for creating a new Duty Entry.
@@ -71,6 +73,7 @@ public class NewDutyEntryController implements Initializable, Parentable<TabPane
     private AtomicBoolean validCategory = new AtomicBoolean(false);
     private AtomicBoolean validStartTime = new AtomicBoolean(false);
     private AtomicBoolean validEndTime = new AtomicBoolean(false);
+    private boolean userEditedPoints;
 
     @FXML
     private AnchorPane newDutyEntryPane;
@@ -147,6 +150,7 @@ public class NewDutyEntryController implements Initializable, Parentable<TabPane
             } else {
                 this.validCategory.set(false);
             }
+            updatePointsView();
             checkButtonVisibility();
         });
 
@@ -164,6 +168,7 @@ public class NewDutyEntryController implements Initializable, Parentable<TabPane
             } else {
                 this.validStartDate.set(false);
             }
+            updatePointsView();
             checkButtonVisibility();
         });
 
@@ -217,6 +222,10 @@ public class NewDutyEntryController implements Initializable, Parentable<TabPane
 
         //Button to open new tab for new series of performances
         this.seriesOfPerformancesNewBtn.setOnAction(e -> openNewSOP());
+
+        this.dutyPointsInput.textProperty().addListener((observable, oldValue, newValue) -> {
+            userEditedPoints = true;
+        });
     }
 
     private void checkButtonVisibility() {
@@ -235,16 +244,8 @@ public class NewDutyEntryController implements Initializable, Parentable<TabPane
                 BorderStrokeStyle.SOLID, CornerRadii.EMPTY, BorderWidths.DEFAULT)));
             this.scheduleSaveBtn.setDisable(true);
         }
-
-        // Check if Dates for duty are selected -> to calculate the correct points
-        if (this.validStartDate.get() && validCategory.get()) {
-            this.dutyPointsInput.setDisable(false);
-            setPointsInTextfield();
-        } else {
-            this.dutyPointsInput.clear();
-            this.dutyPointsInput.setDisable(true);
-        }
     }
+
 
     /**
      * Actions to be executed after clicking the 'Back' Button:
@@ -297,6 +298,7 @@ public class NewDutyEntryController implements Initializable, Parentable<TabPane
             this.dutyManager,
             this.duty
         );
+        this.dutyCategorySelect.getItems().clear();
         this.duty = null;
         this.dutyManager = null;
         //Folgende 4 Statements Wirklich nötig?
@@ -308,24 +310,33 @@ public class NewDutyEntryController implements Initializable, Parentable<TabPane
             new Label(resources
                 .getString("tab.duty.new.entry.dropdown.load.seriesofperformances.default"))
         );
-        //this.dutyCategorySelect.getItems().clear();
         LOG.debug("Closing Add Duty");
         this.parentController.removeTab(TabPaneEntry.ADD_DUTY);
     }
 
 
     private void saveNewDutyEntry() {   //TODO: handle edited points
-        /*
+
          if (validateInputs()) {
-            duty=dutyManager.createDuty(
+           /* duty=dutyManager.createDuty(
                 dutyCategorySelect.getValue(),
                 dutyNameInput.getText(),
                 calculateTimeOfDay(dutyStartTimeInput.getValue()),  //TODO: dutyManager.getTimeOfDate(dutyStartDateInput.getValue().atTime(dutyStartTimeInput.getValue()); -> returnt String.
                 dutyStartDateInput.getValue().atTime(dutyStartTimeInput.getValue()),
                 dutyEndDateInput.getValue().atTime(dutyEndTimeInput.getValue())
-            );
+            );*/
 
-             dutyManager.save(duty);
+             this.duty = this.dutyManager.createDuty(
+                 this.dutyCategorySelect.getValue(),
+                 this.dutyNameInput.getText(),
+                 calculateTimeOfDay(this.dutyStartTimeInput.getValue()),
+                 this.dutyStartDateInput.getValue().atTime(this.dutyStartTimeInput.getValue()),
+                 this.dutyEndDateInput.getValue().atTime(this.dutyEndTimeInput.getValue()),
+                 this.seriesOfPerformancesSelect.getValue()
+                 );
+
+             this.dutyManager.save(this.duty,this.userEditedPoints,
+                 Integer.parseInt(this.dutyPointsInput.getText()));
 
             // After saving show success dialog
             Alert successAlert = new Alert(Alert.AlertType.INFORMATION);
@@ -348,8 +359,6 @@ public class NewDutyEntryController implements Initializable, Parentable<TabPane
             LOG.debug(
                 "New Duty could not be saved");
         }
-
-         */
     }
 
 
@@ -393,10 +402,11 @@ public class NewDutyEntryController implements Initializable, Parentable<TabPane
                 }
             });
             return false;
-        } else if (dutyStartDateInput.getValue()
+        } else if (!this.seriesOfPerformancesSelect.getSelectionModel().isEmpty()
+            && (dutyStartDateInput.getValue()
             .isBefore(seriesOfPerformancesSelect.getValue().getStartDate()) ||
             dutyEndDateInput.getValue()
-                .isAfter(seriesOfPerformancesSelect.getValue().getEndDate())) {
+                .isAfter(seriesOfPerformancesSelect.getValue().getEndDate()))) {
             alert.setTitle(resources.getString("tab.duty.new.entry.error.title"));
             alert.setContentText(resources.getString(
                 "tab.duty.new.entry.error.DutyOutOfSOPTimeframe"));
@@ -409,9 +419,23 @@ public class NewDutyEntryController implements Initializable, Parentable<TabPane
                 }
             });
             return false;
+        } else if (!StringUtils.isNumeric(this.dutyPointsInput.getText())) {
+            alert.setTitle(resources.getString("tab.duty.new.entry.error.inputpoints.title"));
+            alert.setContentText(resources.getString(
+                "tab.duty.new.entry.error.inputpoints.context"));
+            ButtonType okButton = new ButtonType(resources.getString("global.button.ok"),
+                ButtonBar.ButtonData.YES);
+            alert.getButtonTypes().setAll(okButton);
+            alert.showAndWait().ifPresent(type -> {
+                if (type.equals(okButton)) {
+                    alert.close();
+                }
+            });
+            return false;
         } else {
             return true;
         }
+
     }
 
 
@@ -481,28 +505,39 @@ public class NewDutyEntryController implements Initializable, Parentable<TabPane
         this.parentController.addTab(TabPaneEntry.ADD_SOP);
     }
 
-    public void setPointsInTextfield() {
+    private void setPointsInTextfield() {
         DutyCategoryChangelogEntity temp = null;
         int points = 0;
         for (DutyCategoryChangelogEntity dcl : this.dutyCategorySelect.getSelectionModel()
             .getSelectedItem().getEntity().getDutyCategoryChangelogs()) {
-            if (temp == null || dcl.getStartDate().isAfter(temp.getStartDate()) &&
-                this.dutyStartDateInput.getValue().isAfter(dcl.getStartDate())
+            if (temp == null || dcl.getStartDate().isAfter(temp.getStartDate())
+                && this.dutyStartDateInput.getValue().isAfter(dcl.getStartDate())
                 || this.dutyStartDateInput.getValue().isEqual(dcl.getStartDate())) {
                 temp = dcl;
                 points = temp.getPoints();
             }
-
         }
         this.dutyPointsInput.setText(Integer.valueOf(points).toString());
+        userEditedPoints = false;
+    }
+
+    private void updatePointsView() {
+        // Check if Dates for duty are selected -> to calculate the correct points
+        if (this.validStartDate.get() && validCategory.get()) {
+            this.dutyPointsInput.setDisable(false);
+            setPointsInTextfield();
+        } else {
+            this.dutyPointsInput.clear();
+            this.dutyPointsInput.setDisable(true);
+        }
     }
 
 
     public String calculateTimeOfDay(LocalTime starttime) {
-        if (starttime.isBefore(LocalTime.of(10, 01))) {
+        if (starttime.isBefore(LocalTime.of(10, 1))) {
             return "MORNING";
         }
-        if (starttime.isBefore(LocalTime.of(17, 01))) {
+        if (starttime.isBefore(LocalTime.of(17, 1))) {
             return "AFTERNOON";
         }
         return "EVENING";
