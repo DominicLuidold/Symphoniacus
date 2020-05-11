@@ -25,7 +25,7 @@
                <Separator />
                <Label fx:id="dutyTitle" />
                <Pane HBox.hgrow="ALWAYS" />
-               <Button fx:id="getOldDuty" mnemonicParsing="false" text="%tab.duty.schedule.table.btn.getolddutyschedule" />
+               <Button fx:id="getOldDutyBtn" mnemonicParsing="false" text="%tab.duty.schedule.table.btn.getolddutyschedule" />
                <ComboBox fx:id="oldDutySelect" layoutX="15.0" layoutY="33.0" prefWidth="160.0" promptText="%tab.duty.schedule.table.chooseolddutyschedule" />
                <Separator />
                <Button fx:id="scheduleSaveBtn" mnemonicParsing="false" text="%global.button.save" />
@@ -81,7 +81,7 @@
                                     <PropertyValueFactory property="points" />
                                 </cellValueFactory>
                             </TableColumn>
-                            <TableColumn fx:id="columnSchedule2" prefWidth="125.0" text="%tab.duty.schedule.table.musicians.schedule">
+                            <TableColumn fx:id="columnBtnWithoutRequests" prefWidth="125.0" text="%tab.duty.schedule.table.musicians.schedule">
                             </TableColumn>
                         </columns>
                     </TableView>
@@ -119,7 +119,7 @@
                                     <PropertyValueFactory property="date" />
                                 </cellValueFactory>
                             </TableColumn>
-                            <TableColumn fx:id="columnSchedule" prefWidth="125.0" text="%tab.duty.schedule.table.musicians.schedule">
+                            <TableColumn fx:id="columnScheduleBtnWithRequests" prefWidth="125.0" text="%tab.duty.schedule.table.musicians.schedule">
                             </TableColumn>
                         </columns>
                     </TableView>

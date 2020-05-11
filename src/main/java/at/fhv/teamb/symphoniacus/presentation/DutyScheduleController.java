@@ -72,7 +72,7 @@ public class DutyScheduleController
     private Button scheduleBackBtn;
 
     @FXML
-    private Button getOldDuty;
+    private Button getOldDutyBtn;
 
     @FXML
     private Label dutyTitle;
@@ -90,10 +90,10 @@ public class DutyScheduleController
     private TableView<MusicianTableModel> musicianTableWithoutRequests;
 
     @FXML
-    private TableColumn<MusicianTableModel, Button> columnSchedule;
+    private TableColumn<MusicianTableModel, Button> columnScheduleBtnWithRequests;
 
     @FXML
-    private TableColumn<MusicianTableModel, Button> columnSchedule2;
+    private TableColumn<MusicianTableModel, Button> columnBtnWithoutRequests;
 
     @FXML
     private TableColumn<DutyPositionMusicianTableModel, Button> columnUnsetPosition;
@@ -104,157 +104,22 @@ public class DutyScheduleController
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         this.registerController();
+
         this.dutyScheduleManager = null;
         this.dutySchedule.setVisible(false);
         this.resources = resources;
-        this.musicianTableWithRequests.setRowFactory(row -> new TableRow<>() {
-            @Override
-            protected void updateItem(MusicianTableModel item, boolean empty) {
-                super.updateItem(item, empty);
 
-                if (item == null || empty) {
-                    setStyle("");
-                } else {
-                    if (getTableView().getSelectionModel().getSelectedItems().contains(item)) {
-                        setStyle("");
-                    } else if (item.isWishPositive()) {
-                        setStyle("-fx-background-color: lightseagreen");
-                    } else {
-                        setStyle("-fx-background-color: lightcoral");
-                    }
-                }
-            }
-        });
+        // Set button actions
+        this.setButtonActions();
 
-        this.scheduleSaveBtn.setOnAction(e -> {
-            if (this.actualSectionInstrumentation
-                .getPersistenceState()
-                .equals(PersistenceState.EDITED)
-            ) {
-                this.dutyScheduleManager.persist(this.actualSectionInstrumentation);
-                if (this.actualSectionInstrumentation
-                    .getPersistenceState()
-                    .equals(PersistenceState.PERSISTED)
-                ) {
-                    Notifications.create()
-                        .title(resources.getString("notification.save.successful.title"))
-                        .text(resources.getString("notification.save.successful.message"))
-                        .position(Pos.CENTER)
-                        .hideAfter(new Duration(4000))
-                        .show();
-                }
+        // Set mouse click events
+        this.setMouseClickEvents();
 
-            } else {
-                Notifications.create()
-                    .title(resources.getString("notification.save.nochange.title"))
-                    .text(resources.getString("notification.save.nochange.message"))
-                    .position(Pos.CENTER)
-                    .hideAfter(new Duration(4000))
-                    .showError();
-            }
-            if (this.actualSectionInstrumentation
-                .getPersistenceState()
-                .equals(PersistenceState.EDITED)
-            ) {
-                Notifications.create()
-                    .title(resources.getString("notification.save.failed.title"))
-                    .text(resources.getString("notification.save.failed.message"))
-                    .position(Pos.CENTER)
-                    .hideAfter(new Duration(4000))
-                    .showError();
-            }
-        });
+        // Set row factories
+        this.setRowFactories();
 
-        this.scheduleBackBtn.setOnAction(e -> closeDutySchedule());
-
-        this.getOldDuty.setOnAction(e -> {
-            LOG.debug("Load old Duty pressed");
-            loadOldDuty();
-        });
-
-        this.musicianTableWithRequests.setOnMouseClicked((MouseEvent event) -> {
-            // add selected item click listener
-            if (event.getButton().equals(MouseButton.PRIMARY) && event.getClickCount() == 2) {
-                this.handleWishScheduleClickEvent(
-                    this.musicianTableWithRequests.getSelectionModel().getSelectedItem()
-                );
-            }
-        });
-
-        this.musicianTableWithoutRequests.setOnMouseClicked((MouseEvent event) -> {
-            // add selected item click listener
-            if (event.getButton().equals(MouseButton.PRIMARY) && event.getClickCount() == 2) {
-                MusicianTableModel mtm =
-                    this.musicianTableWithoutRequests.getSelectionModel().getSelectedItem();
-                if (mtm != null) {
-                    addMusicianToPosition(
-                        this.actualSectionInstrumentation,
-                        mtm.getMusician(),
-                        this.selectedDutyPosition
-                    );
-                }
-            }
-        });
-
-        this.positionsTable.setOnMouseClicked((MouseEvent event) -> {
-            // add selected item click listener
-            if (event.getButton().equals(MouseButton.PRIMARY) && event.getClickCount() == 2) {
-
-                DutyPositionMusicianTableModel mtm =
-                    this.positionsTable.getSelectionModel().getSelectedItem();
-
-                if (mtm != null && mtm.getDutyPosition().getAssignedMusician().isPresent()) {
-                    this.removeMusicianFromPosition(
-                        mtm.getDutyPosition().getAssignedMusician().get()
-                    );
-                } else {
-                    LOG.error("Cannot unset null musician");
-                }
-            }
-        });
-
-        this.columnSchedule.setCellFactory(
-            ScheduleButtonTableCell.forTableColumn(
-                this.resources.getString("tab.duty.schedule.table.dutyposition.set.btn"),
-                (MusicianTableModel mtm) -> {
-                    LOG.debug("Schedule btn with requests has been pressed");
-                    this.handleWishScheduleClickEvent(mtm);
-                    return mtm;
-                }
-            )
-        );
-
-        this.columnSchedule2.setCellFactory(
-            ScheduleButtonTableCell.forTableColumn(
-                this.resources.getString("tab.duty.schedule.table.dutyposition.set.btn"),
-                (MusicianTableModel mtm) -> {
-                    LOG.debug("Schedule btn without requests has been pressed");
-                    this.addMusicianToPosition(
-                        this.actualSectionInstrumentation,
-                        mtm.getMusician(),
-                        this.selectedDutyPosition
-                    );
-                    return mtm;
-                }
-            )
-        );
-
-        this.columnUnsetPosition.setCellFactory(
-            ScheduleButtonTableCell.forTableColumn(
-                this.resources.getString("tab.duty.schedule.table.dutyposition.unset.btn"),
-                (DutyPositionMusicianTableModel dpmtm) -> {
-                    LOG.debug("Unset musician button has been pressed");
-
-                    Optional<Musician> assignedMusician = dpmtm.getDutyPosition()
-                        .getAssignedMusician();
-
-                    this.selectedDutyPosition = dpmtm.getDutyPosition();
-
-                    assignedMusician.ifPresent(this::removeMusicianFromPosition);
-                    return dpmtm;
-                }
-            )
-        );
+        // Set cell factories
+        this.setCellFactories();
 
         this.positionsTable
             .getSelectionModel()
@@ -759,6 +624,185 @@ public class DutyScheduleController
             label.setText("-");
         }
         return buttonType;
+    }
+
+    /**
+     * Sets the actions for all buttons of the duty schedule view.
+     */
+    private void setButtonActions() {
+        // Save button
+        this.scheduleSaveBtn.setOnAction(e -> {
+            if (this.actualSectionInstrumentation
+                .getPersistenceState()
+                .equals(PersistenceState.EDITED)
+            ) {
+                this.dutyScheduleManager.persist(this.actualSectionInstrumentation);
+                if (this.actualSectionInstrumentation
+                    .getPersistenceState()
+                    .equals(PersistenceState.PERSISTED)
+                ) {
+                    Notifications.create()
+                        .title(resources.getString("notification.save.successful.title"))
+                        .text(resources.getString("notification.save.successful.message"))
+                        .position(Pos.CENTER)
+                        .hideAfter(new Duration(4000))
+                        .show();
+                }
+
+            } else {
+                Notifications.create()
+                    .title(resources.getString("notification.save.nochange.title"))
+                    .text(resources.getString("notification.save.nochange.message"))
+                    .position(Pos.CENTER)
+                    .hideAfter(new Duration(4000))
+                    .showError();
+            }
+            if (this.actualSectionInstrumentation
+                .getPersistenceState()
+                .equals(PersistenceState.EDITED)
+            ) {
+                Notifications.create()
+                    .title(resources.getString("notification.save.failed.title"))
+                    .text(resources.getString("notification.save.failed.message"))
+                    .position(Pos.CENTER)
+                    .hideAfter(new Duration(4000))
+                    .showError();
+            }
+        });
+
+        // Back button
+        this.scheduleBackBtn.setOnAction(e -> closeDutySchedule());
+
+        // Load old duties button
+        this.getOldDutyBtn.setOnAction(e -> {
+            LOG.debug("Load old Duty pressed");
+            loadOldDuty();
+        });
+    }
+
+    /**
+     * Sets the mouse click events of the duty schedule view.
+     */
+    private void setMouseClickEvents() {
+        // Musician table with requests
+        this.musicianTableWithRequests.setOnMouseClicked((MouseEvent event) -> {
+            // add selected item click listener
+            if (event.getButton().equals(MouseButton.PRIMARY) && event.getClickCount() == 2) {
+                this.handleWishScheduleClickEvent(
+                    this.musicianTableWithRequests.getSelectionModel().getSelectedItem()
+                );
+            }
+        });
+
+        // Musician table without requests
+        this.musicianTableWithoutRequests.setOnMouseClicked((MouseEvent event) -> {
+            // add selected item click listener
+            if (event.getButton().equals(MouseButton.PRIMARY) && event.getClickCount() == 2) {
+                MusicianTableModel mtm =
+                    this.musicianTableWithoutRequests.getSelectionModel().getSelectedItem();
+                if (mtm != null) {
+                    addMusicianToPosition(
+                        this.actualSectionInstrumentation,
+                        mtm.getMusician(),
+                        this.selectedDutyPosition
+                    );
+                }
+            }
+        });
+
+        // Positions table
+        this.positionsTable.setOnMouseClicked((MouseEvent event) -> {
+            // add selected item click listener
+            if (event.getButton().equals(MouseButton.PRIMARY) && event.getClickCount() == 2) {
+
+                DutyPositionMusicianTableModel mtm =
+                    this.positionsTable.getSelectionModel().getSelectedItem();
+
+                if (mtm != null && mtm.getDutyPosition().getAssignedMusician().isPresent()) {
+                    this.removeMusicianFromPosition(
+                        mtm.getDutyPosition().getAssignedMusician().get()
+                    );
+                } else {
+                    LOG.error("Cannot unset null musician");
+                }
+            }
+        });
+    }
+
+    /**
+     * Sets the row factories used in the duty schedule view.
+     */
+    private void setRowFactories() {
+        // Musician with request
+        this.musicianTableWithRequests.setRowFactory(row -> new TableRow<>() {
+            @Override
+            protected void updateItem(MusicianTableModel item, boolean empty) {
+                super.updateItem(item, empty);
+
+                if (item == null || empty) {
+                    setStyle("");
+                } else {
+                    if (getTableView().getSelectionModel().getSelectedItems().contains(item)) {
+                        setStyle("");
+                    } else if (item.isWishPositive()) {
+                        setStyle("-fx-background-color: lightseagreen");
+                    } else {
+                        setStyle("-fx-background-color: lightcoral");
+                    }
+                }
+            }
+        });
+    }
+
+    /**
+     * Sets the cell factories used in the duty schedule view.
+     */
+    private void setCellFactories() {
+        // Add button column - with requests
+        this.columnScheduleBtnWithRequests.setCellFactory(
+            ScheduleButtonTableCell.forTableColumn(
+                this.resources.getString("tab.duty.schedule.table.dutyposition.set.btn"),
+                (MusicianTableModel mtm) -> {
+                    LOG.debug("Schedule btn with requests has been pressed");
+                    this.handleWishScheduleClickEvent(mtm);
+                    return mtm;
+                }
+            )
+        );
+
+        // Add button column - without requests
+        this.columnBtnWithoutRequests.setCellFactory(
+            ScheduleButtonTableCell.forTableColumn(
+                this.resources.getString("tab.duty.schedule.table.dutyposition.set.btn"),
+                (MusicianTableModel mtm) -> {
+                    LOG.debug("Schedule btn without requests has been pressed");
+                    this.addMusicianToPosition(
+                        this.actualSectionInstrumentation,
+                        mtm.getMusician(),
+                        this.selectedDutyPosition
+                    );
+                    return mtm;
+                }
+            )
+        );
+
+        // Remove button column
+        this.columnUnsetPosition.setCellFactory(
+            ScheduleButtonTableCell.forTableColumn(
+                this.resources.getString("tab.duty.schedule.table.dutyposition.unset.btn"),
+                (DutyPositionMusicianTableModel dpmtm) -> {
+                    LOG.debug("Unset musician button has been pressed");
+
+                    Optional<Musician> assignedMusician = dpmtm.getDutyPosition()
+                        .getAssignedMusician();
+
+                    this.selectedDutyPosition = dpmtm.getDutyPosition();
+
+                    assignedMusician.ifPresent(this::removeMusicianFromPosition);
+                    return dpmtm;
+                }
+            )
+        );
     }
 
     /**
