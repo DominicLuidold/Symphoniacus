@@ -78,17 +78,16 @@ public class DutyCategoryChangeLogDao extends BaseDao<DutyCategoryChangelogEntit
     }
 
     public Optional<DutyCategoryChangelogEntity> getChangeLogByDetails(DutyEntity duty) {
+        TypedQuery<DutyCategoryChangelogEntity> query = entityManager.createQuery(
+            "SELECT changelog FROM DutyCategoryChangelogEntity changelog "
+                + "WHERE changelog.dutyCategory = :givenCategory "
+                + "AND changelog.startDate = :givenStartDate ",
+            DutyCategoryChangelogEntity.class
+        );
 
-            TypedQuery<DutyCategoryChangelogEntity> query = entityManager.createQuery(
-                "SELECT changelog FROM DutyCategoryChangelogEntity changelog "
-                    + "WHERE changelog.dutyCategory = :givenCategory "
-                    + "AND changelog.startDate = :givenStartDate ",
-                DutyCategoryChangelogEntity.class
-            );
+        query.setParameter("givenCategory", duty.getDutyCategory());
+        query.setParameter("givenStartDate", duty.getStart().toLocalDate());
 
-            query.setParameter("givenCategory", duty.getDutyCategory());
-            query.setParameter("givenStartDate", duty.getStart().toLocalDate());
-
-            return Optional.of(query.getSingleResult());
+        return Optional.of(query.getSingleResult());
     }
 }

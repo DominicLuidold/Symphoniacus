@@ -247,12 +247,6 @@ public class DutyManager {
         // Get weekly schedule entity
         WeeklyScheduleEntity weeklyScheduleEntity =
             this.weeklyScheduleManager.createIfNotExists(start.toLocalDate(), start.getYear());
-        List<SectionMonthlyScheduleEntity> sectionMonthlySchedules =
-            this.sectionMonthlyScheduleManager.createIfNotExist(
-                start.getYear(),
-                start.getMonthValue(),
-                monthlyScheduleEntity
-            );
 
         // Add weekly schedule to monthly schedule and vice versa
         monthlyScheduleEntity.addWeeklySchedule(weeklyScheduleEntity);
@@ -270,7 +264,13 @@ public class DutyManager {
         dutyEntity.setStart(start);
         dutyEntity.setEnd(end);
         dutyEntity.setSeriesOfPerformances(sop);
-        for (SectionMonthlyScheduleEntity sectionMonthlySchedule : sectionMonthlySchedules) {
+        for (SectionMonthlyScheduleEntity sectionMonthlySchedule :
+            this.sectionMonthlyScheduleManager.createIfNotExist(
+                start.getYear(),
+                start.getMonthValue(),
+                monthlyScheduleEntity
+            )
+        ) {
             dutyEntity.addSectionMonthlySchedule(sectionMonthlySchedule);
         }
 

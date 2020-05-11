@@ -72,7 +72,7 @@ public class SeriesOfPerformancesDao extends BaseDao<SeriesOfPerformancesEntity>
      *
      * @return A List of duty categories
      */
-    public List<SeriesOfPerformancesEntity> getAll(){
+    public List<SeriesOfPerformancesEntity> getAll() {
         TypedQuery<SeriesOfPerformancesEntity> query = entityManager.createQuery(
             "SELECT sop FROM SeriesOfPerformancesEntity sop",
             SeriesOfPerformancesEntity.class
