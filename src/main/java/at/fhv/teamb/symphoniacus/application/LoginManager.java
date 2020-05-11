@@ -1,6 +1,6 @@
 package at.fhv.teamb.symphoniacus.application;
 
-import at.fhv.teamb.symphoniacus.application.dto.UserDto;
+import at.fhv.teamb.symphoniacus.application.dto.LoginUserDto;
 import at.fhv.teamb.symphoniacus.application.type.DomainUserType;
 import at.fhv.teamb.symphoniacus.domain.User;
 import at.fhv.teamb.symphoniacus.persistence.dao.UserDao;
@@ -30,7 +30,7 @@ public class LoginManager {
      * @param dto UserDto filled with shortcut and password
      * @return A User matching provided credentials
      */
-    public Optional<UserDto> login(UserDto dto)
+    public Optional<LoginUserDto> login(LoginUserDto dto)
         throws NoSuchAlgorithmException {
         if (dto.getUserShortcut() == null || dto.getPassword() == null) {
             LOG.error("Login not possible - either userShortCut or userPassword is null");
@@ -84,7 +84,7 @@ public class LoginManager {
         UserEntity e = this.currentLoggedInUser.getUserEntity();
 
         // create DTO
-        UserDto resultDto = new UserDto.UserDtoBuilder(e.getUserId())
+        LoginUserDto resultDto = new LoginUserDto.UserDtoBuilder(e.getUserId())
             .withUserShortcut(e.getShortcut())
             .withType(this.currentLoggedInUser.getType())
             .withFullName(this.currentLoggedInUser.getFullName())

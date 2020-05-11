@@ -7,7 +7,7 @@ import at.fhv.teamb.symphoniacus.application.type.DomainUserType;
  *
  * @author Valentin Goronjic
  */
-public class UserDto {
+public class LoginUserDto {
 
     private final int userId;
     private final String userShortcut;
@@ -15,7 +15,7 @@ public class UserDto {
     private final String fullName;
     private final DomainUserType type;
 
-    private UserDto(
+    private LoginUserDto(
         int userId,
         String userShortcut,
         String password,
@@ -85,8 +85,8 @@ public class UserDto {
          * Constructs a new UserDto with the previously set options in the builder.
          * @return Constructed UserDTO.
          */
-        public UserDto build() {
-            return new UserDto(
+        public LoginUserDto build() {
+            return new LoginUserDto(
                 this.userId,
                 this.userShortcut,
                 this.password,

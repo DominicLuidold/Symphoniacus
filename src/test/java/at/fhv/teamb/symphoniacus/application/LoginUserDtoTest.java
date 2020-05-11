@@ -2,16 +2,16 @@ package at.fhv.teamb.symphoniacus.application;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-import at.fhv.teamb.symphoniacus.application.dto.UserDto;
+import at.fhv.teamb.symphoniacus.application.dto.LoginUserDto;
 import at.fhv.teamb.symphoniacus.application.type.DomainUserType;
 import org.junit.jupiter.api.Test;
 
 /**
- * Unit test for {@link UserDto}.
+ * Unit test for {@link LoginUserDto}.
  *
  * @author Valentin Goronjic
  */
-class UserDtoTest {
+class LoginUserDtoTest {
 
     @Test
     void userDtoBuilder_shouldReturnAFilledDto() {
@@ -23,7 +23,7 @@ class UserDtoTest {
         DomainUserType type = DomainUserType.DOMAIN_MUSICIAN;
 
         // When: we create a Dto with this data
-        UserDto result = new UserDto.UserDtoBuilder(userId).withUserShortcut(userShortcut)
+        LoginUserDto result = new LoginUserDto.UserDtoBuilder(userId).withUserShortcut(userShortcut)
             .withPassword(password)
             .withFullName(fullName)
             .withType(type)

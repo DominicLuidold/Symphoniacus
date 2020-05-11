@@ -2,7 +2,7 @@ package at.fhv.teamb.symphoniacus.presentation;
 
 import at.fhv.teamb.symphoniacus.application.AdministrativeAssistantManager;
 import at.fhv.teamb.symphoniacus.application.MusicianManager;
-import at.fhv.teamb.symphoniacus.application.dto.UserDto;
+import at.fhv.teamb.symphoniacus.application.dto.LoginUserDto;
 import at.fhv.teamb.symphoniacus.application.type.DomainUserType;
 import at.fhv.teamb.symphoniacus.application.type.MusicianRoleType;
 import at.fhv.teamb.symphoniacus.domain.AdministrativeAssistant;
@@ -37,7 +37,7 @@ public class MainController implements Initializable {
     @FXML
     private UserController userHeaderMenuController;
 
-    private UserDto currentUser;
+    private LoginUserDto currentUser;
     private Musician currentMusician;
     private AdministrativeAssistant currentAssistant;
     private MusicianManager musicianManager;
@@ -56,7 +56,7 @@ public class MainController implements Initializable {
      *
      * @param user Current login user
      */
-    public void setLoginUser(UserDto user) {
+    public void setLoginUser(LoginUserDto user) {
         this.currentUser = user;
 
         if (this.currentUser.getType().equals(DomainUserType.DOMAIN_MUSICIAN)) {
