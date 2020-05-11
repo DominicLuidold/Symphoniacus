@@ -18,7 +18,7 @@ public class OrganizationalOfficerCalendarController extends CalendarController 
     private static final Logger LOG =
         LogManager.getLogger(OrganizationalOfficerCalendarController.class);
     private TabPaneController parentController;
-    private AdministrativeAssistant administrativeAssistant;
+    private AdministrativeAssistant administrativeAssistant; // not used YET - still to come
     private ResourceBundle bundle;
 
     /**

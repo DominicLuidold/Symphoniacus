@@ -6,10 +6,10 @@ import javafx.util.StringConverter;
 
 /**
  * US - UK Time Converter.
- * @author : Danijel Antonijevic
- * @author : Nino Heinzle
- * @created : 10.05.20, So.
- **/
+ *
+ * @author Danijel Antonijevic
+ * @author Nino Heinzle
+ */
 public class UkTimeFormatter {
 
     private UkTimeFormatter() {
@@ -22,7 +22,7 @@ public class UkTimeFormatter {
      * @return StringConverter to convert the time
      */
     public static StringConverter<LocalDate> getUkTimeConverter() {
-        StringConverter<LocalDate> converter = (new StringConverter<>() {
+        return (new StringConverter<>() {
             final DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
 
             @Override
@@ -41,6 +41,5 @@ public class UkTimeFormatter {
                 return LocalDate.parse(dateString, dateTimeFormatter);
             }
         });
-        return converter;
     }
 }

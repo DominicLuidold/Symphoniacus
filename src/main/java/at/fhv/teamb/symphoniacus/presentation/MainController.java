@@ -106,23 +106,8 @@ public class MainController implements Initializable {
         return currentAssistant;
     }
 
-    protected Queue<TabPaneEntry> getPermittedTabs(
-        DomainUserType type,
-        Musician m,
-        ResourceBundle bundle
-    ) {
-        return this.getPermittedTabs(m, null);
-    }
-
-    protected Queue<TabPaneEntry> getPermittedTabs(
-        DomainUserType type,
-        AdministrativeAssistant assistant,
-        ResourceBundle bundle
-    ) {
-        return this.getPermittedTabs(null, assistant);
-    }
-
-    private Queue<TabPaneEntry> getPermittedTabs(
+    // intentionally set package modifier
+    Queue<TabPaneEntry> getPermittedTabs(
         Musician m,
         AdministrativeAssistant assistant
     ) {

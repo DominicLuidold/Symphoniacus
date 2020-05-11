@@ -459,7 +459,7 @@ public class DutyScheduleController
                     );
                 }
                 this.oldDutySelect.getItems().setAll(observableList);
-                this.oldDutySelect.setConverter(new StringConverter<OldDutyComboView>() {
+                this.oldDutySelect.setConverter(new StringConverter<>() {
                     @Override
                     public String toString(OldDutyComboView duty) {
                         return duty.getType() + " | " + duty.getStart();
