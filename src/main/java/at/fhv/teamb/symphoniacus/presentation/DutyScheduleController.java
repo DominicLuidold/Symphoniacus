@@ -9,6 +9,7 @@ import at.fhv.teamb.symphoniacus.domain.DutyPosition;
 import at.fhv.teamb.symphoniacus.domain.Musician;
 import at.fhv.teamb.symphoniacus.domain.Section;
 import at.fhv.teamb.symphoniacus.persistence.PersistenceState;
+import at.fhv.teamb.symphoniacus.presentation.internal.AlertHelper;
 import at.fhv.teamb.symphoniacus.presentation.internal.DutyPositionMusicianTableModel;
 import at.fhv.teamb.symphoniacus.presentation.internal.MusicianTableModel;
 import at.fhv.teamb.symphoniacus.presentation.internal.OldDutyComboView;
@@ -354,6 +355,12 @@ public class DutyScheduleController
             }
             mc.showStatusBarLoaded();
         });
+        task.setOnFailed(event -> AlertHelper.showAlert(
+            Alert.AlertType.ERROR,
+            this.scheduleSaveBtn.getScene().getWindow(),
+            this.resources.getString("alert.duty.schedule.musicians.load.failed.title"),
+            this.resources.getString("alert.duty.schedule.musicians.load.failed.message")
+        ));
         new Thread(task).start();
     }
 
@@ -539,6 +546,16 @@ public class DutyScheduleController
                         }
                     }
                 } catch (PointsNotCalculableException e) {
+                    AlertHelper.showAlert(
+                        Alert.AlertType.ERROR,
+                        this.scheduleSaveBtn.getScene().getWindow(),
+                        this.resources.getString(
+                            "alert.duty.schedule.old.duty.load.failed.title"
+                        ),
+                        this.resources.getString(
+                            "alert.duty.schedule.old.duty.load.failed.message"
+                        )
+                    );
                     LOG.error("The points of at least one musician could not be calculated", e);
                 }
             }
@@ -659,14 +676,6 @@ public class DutyScheduleController
     }
 
     private void removeMusicianFromPosition(Musician musician) {
-        try {
-            this.dutyScheduleManager.getMusiciansAvailableForPosition(
-                this.duty,
-                this.selectedDutyPosition
-            );
-        } catch (PointsNotCalculableException e) {
-            LOG.error("The points of at least one musician could not be calculated", e);
-        }
         this.dutyScheduleManager.removeMusicianFromPosition(
             this.actualSectionInstrumentation,
             musician,
