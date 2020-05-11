@@ -30,23 +30,23 @@ public class LoginUserDto {
     }
 
     public int getUserId() {
-        return userId;
+        return this.userId;
     }
 
     public String getUserShortcut() {
-        return userShortcut;
+        return this.userShortcut;
     }
 
     public String getPassword() {
-        return password;
+        return this.password;
     }
 
     public DomainUserType getType() {
-        return type;
+        return this.type;
     }
 
     public String getFullName() {
-        return fullName;
+        return this.fullName;
     }
 
     public static class UserDtoBuilder {
