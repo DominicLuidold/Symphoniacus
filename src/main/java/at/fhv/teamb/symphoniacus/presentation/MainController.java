@@ -155,6 +155,7 @@ public class MainController implements Initializable {
         }
 
         if (result.isEmpty()) {
+            LOG.debug("No Tabs allowed. Adding unsupported tab as backup");
             result.add(
                 TabPaneEntry.UNSUPPORTED
             );

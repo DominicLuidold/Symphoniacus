@@ -2,7 +2,6 @@ package at.fhv.teamb.symphoniacus.presentation.internal.tasks;
 
 import at.fhv.teamb.symphoniacus.application.LoginManager;
 import at.fhv.teamb.symphoniacus.application.dto.UserDto;
-import at.fhv.teamb.symphoniacus.domain.User;
 import java.util.Optional;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
