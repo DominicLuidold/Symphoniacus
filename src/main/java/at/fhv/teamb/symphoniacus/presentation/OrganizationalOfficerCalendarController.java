@@ -46,8 +46,8 @@ public class OrganizationalOfficerCalendarController extends CalendarController 
         task.setOnSucceeded(event -> {
             // Create calendar
             Calendar calendar = this.createCalendar(
-                resources.getString("oo.calendar.name"),
-                resources.getString("oo.calendar.shortname"),
+                this.bundle.getString("oo.calendar.name"),
+                this.bundle.getString("oo.calendar.shortname"),
                 false
             );
 
@@ -63,11 +63,11 @@ public class OrganizationalOfficerCalendarController extends CalendarController 
             );
             this.calendarView.addEventHandler(
                 CustomCalendarButtonEvent.ADD_SERIES_OF_PERFORMANCES,
-                event -> this.parentController.addTab(TabPaneEntry.ADD_SOP)
+                addSOPEvent -> this.parentController.addTab(TabPaneEntry.ADD_SOP)
             );
             this.calendarView.addEventHandler(
                 CustomCalendarButtonEvent.ADD_DUTY,
-                event -> this.parentController.addTab(TabPaneEntry.ADD_DUTY)
+                addDutyEvent -> this.parentController.addTab(TabPaneEntry.ADD_DUTY)
             );
             LOG.debug("Initialized OrganizationalOfficerCalendarController with parent");
         });
