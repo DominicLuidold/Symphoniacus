@@ -15,7 +15,7 @@ public class SectionInstrumentationDao extends BaseDao<SectionInstrumentationEnt
      * @param instrumentation given Instrumentation
      * @return a List of all SectionInstrumentations with the same InstrumentationId
      */
-    public Optional<List<SectionInstrumentationEntity>> getSectionInstrumentationToInstrumentation(
+    public List<SectionInstrumentationEntity> getSectionInstrumentationToInstrumentation(
         InstrumentationEntity instrumentation) {
 
         TypedQuery<SectionInstrumentationEntity> query = entityManager.createQuery(
@@ -24,7 +24,7 @@ public class SectionInstrumentationDao extends BaseDao<SectionInstrumentationEnt
             SectionInstrumentationEntity.class
         );
         query.setParameter("inst", instrumentation);
-        return Optional.of(query.getResultList());
+        return query.getResultList();
     }
 
     /**

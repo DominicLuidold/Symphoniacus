@@ -104,11 +104,8 @@ public class TabPaneController implements Initializable, Parentable<MainControll
         this.tabPane.getTabs().add(tab);
         this.tabPane.getSelectionModel().select(tab);
 
-        if (controller == null) {
-            // FXML has no controller defined
-            return Optional.empty();
-        }
-        return Optional.of(controller);
+        // FXML has no controller defined
+        return Optional.ofNullable(controller);
     }
 
     /**

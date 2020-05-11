@@ -61,13 +61,7 @@ public class DutyManager {
      */
     public Optional<Duty> loadDutyDetails(Integer dutyId) {
         Optional<DutyEntity> dutyEntity = this.dutyDao.find(dutyId);
-
-        if (dutyEntity.isPresent()) {
-            Duty d = new Duty(dutyEntity.get());
-            return Optional.of(d);
-        } else {
-            return Optional.empty();
-        }
+        return dutyEntity.map(Duty::new);
     }
 
     /**
@@ -158,8 +152,7 @@ public class DutyManager {
      *
      * @return
      */
-
-    public Optional<List<Duty>> getOtherDutiesForSopOrSection(
+    public List<Duty> getOtherDutiesForSopOrSection(
         Duty duty,
         Section section,
         Integer numberOfDuties
@@ -167,19 +160,21 @@ public class DutyManager {
         // Look whether it is a SoP or not.
         if (duty == null) {
             LOG.error("Cannot getLastDuties when duty is null");
-            return Optional.empty();
+            return new LinkedList<>();
         }
 
         SeriesOfPerformancesEntity sop = duty
             .getEntity()
             .getSeriesOfPerformances();
 
-        List<DutyEntity> resultList = null;
+        List<DutyEntity> resultList;
         if (sop.getSeriesOfPerformancesId() != null) {
             // get last duties for this SoP
-            resultList = this.dutyDao
-                .getOtherDutiesForSeriesOfPerformances(sop, duty.getEntity().getStart(),
-                    numberOfDuties);
+            resultList = this.dutyDao.getOtherDutiesForSeriesOfPerformances(
+                sop,
+                duty.getEntity().getStart(),
+                numberOfDuties
+            );
         } else {
             // get last duties of section
             // TODO change this go get last 5 non-series of performances-duties
@@ -192,13 +187,9 @@ public class DutyManager {
 
         if (resultList == null || resultList.isEmpty()) {
             LOG.error("No results found for getOtherDutiesForSopOrSection");
-            return Optional.empty();
+            return new LinkedList<>();
         }
 
-        return Optional.of(
-            convertEntitiesToDomainObjects(
-                resultList
-            )
-        );
+        return convertEntitiesToDomainObjects(resultList);
     }
 }
