@@ -49,9 +49,10 @@ public class SeriesOfPerformancesController
     implements Initializable, Parentable<TabPaneController> {
 
     private static final Logger LOG = LogManager.getLogger(SeriesOfPerformancesController.class);
-    private final AtomicBoolean name = new AtomicBoolean(false);
-    private final AtomicBoolean start = new AtomicBoolean(false);
-    private final AtomicBoolean end = new AtomicBoolean(false);
+    // do not make these fields final -> validation
+    private AtomicBoolean name = new AtomicBoolean(false);
+    private AtomicBoolean start = new AtomicBoolean(false);
+    private AtomicBoolean end = new AtomicBoolean(false);
     private SeriesOfPerformancesManager seriesManager;
     private boolean itemChanged;
     private TabPaneController parentController;
