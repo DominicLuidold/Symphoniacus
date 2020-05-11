@@ -1,6 +1,5 @@
 package at.fhv.teamb.symphoniacus.application;
 
-import at.fhv.teamb.symphoniacus.application.exception.PointsNotCalculableException;
 import at.fhv.teamb.symphoniacus.domain.ActualSectionInstrumentation;
 import at.fhv.teamb.symphoniacus.domain.Duty;
 import at.fhv.teamb.symphoniacus.domain.DutyPosition;
@@ -100,7 +99,6 @@ public class DutyScheduleManager {
      * @param duty     The currently edited duty
      * @param position The position to determine musicians for
      * @return A Set of available musicians for the given duty position
-     * @throws PointsNotCalculableException if the points of a Musician cannot be calculated
      */
     public Set<Musician> getMusiciansAvailableForPosition(
         Duty duty,

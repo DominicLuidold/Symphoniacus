@@ -2,7 +2,6 @@ package at.fhv.teamb.symphoniacus.presentation;
 
 import at.fhv.teamb.symphoniacus.application.DutyManager;
 import at.fhv.teamb.symphoniacus.application.DutyScheduleManager;
-import at.fhv.teamb.symphoniacus.application.exception.PointsNotCalculableException;
 import at.fhv.teamb.symphoniacus.domain.ActualSectionInstrumentation;
 import at.fhv.teamb.symphoniacus.domain.Duty;
 import at.fhv.teamb.symphoniacus.domain.DutyPosition;
@@ -508,55 +507,41 @@ public class DutyScheduleController
                         this.section
                     );
 
-                try {
-                    if (oldasi.isPresent()) {
-                        for (DutyPosition dp : this.actualSectionInstrumentation.getDuty()
-                            .getDutyPositions()) {
-                            Set<Musician> avMusicians = this.dutyScheduleManager
-                                .getMusiciansAvailableForPosition(this.duty, dp);
-                            Optional<Musician> oldMusician = Optional.empty();
-                            List<DutyPosition> oldDutyPositions =
-                                oldasi.get().getDuty().getDutyPositions();
+                if (oldasi.isPresent()) {
+                    for (DutyPosition dp : this.actualSectionInstrumentation.getDuty()
+                        .getDutyPositions()) {
+                        Set<Musician> avMusicians = this.dutyScheduleManager
+                            .getMusiciansAvailableForPosition(this.duty, dp);
+                        Optional<Musician> oldMusician = Optional.empty();
+                        List<DutyPosition> oldDutyPositions =
+                            oldasi.get().getDuty().getDutyPositions();
 
-                            for (DutyPosition odp : oldDutyPositions) {
-                                if (odp.getEntity().getInstrumentationPosition()
-                                    .getInstrumentationPositionId()
-                                    .equals(dp.getEntity().getInstrumentationPosition()
-                                        .getInstrumentationPositionId())
-                                ) {
-                                    if (odp.getAssignedMusician().isPresent()) {
-                                        oldMusician = odp.getAssignedMusician();
-                                    }
+                        for (DutyPosition odp : oldDutyPositions) {
+                            if (odp.getEntity().getInstrumentationPosition()
+                                .getInstrumentationPositionId()
+                                .equals(dp.getEntity().getInstrumentationPosition()
+                                    .getInstrumentationPositionId())
+                            ) {
+                                if (odp.getAssignedMusician().isPresent()) {
+                                    oldMusician = odp.getAssignedMusician();
                                 }
                             }
+                        }
 
-                            if (oldMusician.isPresent()) {
-                                for (Musician m : avMusicians) {
-                                    if (m.getEntity().getMusicianId()
-                                        .equals(oldMusician.get().getEntity().getMusicianId())
-                                    ) {
-                                        this.addMusicianToPosition(
-                                            this.actualSectionInstrumentation,
-                                            m,
-                                            dp
-                                        );
-                                    }
+                        if (oldMusician.isPresent()) {
+                            for (Musician m : avMusicians) {
+                                if (m.getEntity().getMusicianId()
+                                    .equals(oldMusician.get().getEntity().getMusicianId())
+                                ) {
+                                    this.addMusicianToPosition(
+                                        this.actualSectionInstrumentation,
+                                        m,
+                                        dp
+                                    );
                                 }
                             }
                         }
                     }
-                } catch (PointsNotCalculableException e) {
-                    AlertHelper.showAlert(
-                        Alert.AlertType.ERROR,
-                        this.scheduleSaveBtn.getScene().getWindow(),
-                        this.resources.getString(
-                            "alert.duty.schedule.old.duty.load.failed.title"
-                        ),
-                        this.resources.getString(
-                            "alert.duty.schedule.old.duty.load.failed.message"
-                        )
-                    );
-                    LOG.error("The points of at least one musician could not be calculated", e);
                 }
             }
         }
