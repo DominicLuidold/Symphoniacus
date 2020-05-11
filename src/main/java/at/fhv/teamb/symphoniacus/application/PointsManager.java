@@ -9,12 +9,10 @@ import at.fhv.teamb.symphoniacus.persistence.model.DutyCategoryEntity;
 import at.fhv.teamb.symphoniacus.persistence.model.DutyEntity;
 import at.fhv.teamb.symphoniacus.persistence.model.DutyPositionEntity;
 import at.fhv.teamb.symphoniacus.persistence.model.MusicianEntity;
-import java.awt.Point;
 import java.time.LocalDate;
 import java.util.LinkedHashSet;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Optional;
 import java.util.Set;
 
 /**
@@ -56,7 +54,7 @@ public class PointsManager {
      * @param musician point of interest
      * @return Points domain object containing the number of Points (getValue)
      */
-    public Optional<Points> getDebitPointsFromMusician(MusicianEntity musician) {
+    public Points getDebitPointsFromMusician(MusicianEntity musician) {
         if (!isMusicianExternal(musician)) {
             return Points.calcDebitPoints(this.conDao.getContractualObligation(musician));
         } else {
@@ -73,7 +71,7 @@ public class PointsManager {
      * @param month    LocalDate any day of a month represents the whole month
      * @return Points domain object containing the number of Points (getValue)
      */
-    public Optional<Points> getGainedPointsForMonthFromMusician(
+    public Points getGainedPointsForMonthFromMusician(
         MusicianEntity musician,
         LocalDate month
     ) {
@@ -105,7 +103,7 @@ public class PointsManager {
                     dutyCategoryChangelogs.addAll(changelogEntityList);
                 }
             }
-            return (Points.calcGainedPoints(listOfDutiesFromMusician, dutyCategoryChangelogs));
+            return Points.calcGainedPoints(listOfDutiesFromMusician, dutyCategoryChangelogs);
         } else {
             return Points.getZeroPoints();
         }
@@ -141,7 +139,7 @@ public class PointsManager {
      * @param month    LocalDate any day of a month represents the whole month
      * @return Points domain object containing the number of Points (getValue)
      */
-    public Optional<Points> getBalanceFromMusician(MusicianEntity musician, LocalDate month) {
+    public Points getBalanceFromMusician(MusicianEntity musician, LocalDate month) {
         if (!isMusicianExternal(musician)) {
             List<DutyEntity> listOfDutiesFromMusician;
             // Beware! if allDuties isn't loaded this method will load
@@ -166,6 +164,6 @@ public class PointsManager {
     }
 
     private boolean isMusicianExternal(MusicianEntity musician) {
-        return (musician.getUser().getFirstName().equals("Extern"));
+        return musician.getUser().getFirstName().equals("Extern");
     }
 }

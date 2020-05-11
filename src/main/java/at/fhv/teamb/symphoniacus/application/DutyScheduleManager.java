@@ -105,7 +105,7 @@ public class DutyScheduleManager {
     public Set<Musician> getMusiciansAvailableForPosition(
         Duty duty,
         DutyPosition position
-    ) throws PointsNotCalculableException {
+    ) {
         if (position == null) {
             LOG.error("Fetching available musicians not possible - duty position is null");
             return new HashSet<>();
@@ -269,22 +269,16 @@ public class DutyScheduleManager {
      *
      * @param duty The duty to use
      */
-    private void convertMusicianEntitiesToDomainObjects(Duty duty)
-        throws PointsNotCalculableException {
+    private void convertMusicianEntitiesToDomainObjects(Duty duty) {
         for (MusicianEntity entity : this.sectionMusicianEntities) {
             // Get points for musician
-            Optional<Points> points = this.pointsManager.getBalanceFromMusician(
+            Points points = this.pointsManager.getBalanceFromMusician(
                 entity,
                 duty.getEntity().getStart().toLocalDate()
             );
 
-            // Throw exception if points are missing
-            if (points.isEmpty()) {
-                throw new PointsNotCalculableException("Points for musician cannot be calculated");
-            }
-
             // Create domain object
-            Musician m = new Musician(entity, points.get());
+            Musician m = new Musician(entity, points);
 
             // Fill domain object with wish requests
             this.wishRequestManager.setMusicianWishRequest(m, duty.getEntity());

@@ -7,7 +7,6 @@ import at.fhv.teamb.symphoniacus.persistence.model.DutyEntity;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
-import java.util.Optional;
 import java.util.Set;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -36,8 +35,8 @@ public class Points {
      * @param obligationEntity Contract of a musician w/ debitPoints
      * @return Points
      */
-    public static Optional<Points> calcDebitPoints(ContractualObligationEntity obligationEntity) {
-        return Optional.of(new Points(obligationEntity.getPointsPerMonth()));
+    public static Points calcDebitPoints(ContractualObligationEntity obligationEntity) {
+        return new Points(obligationEntity.getPointsPerMonth());
     }
 
     /**
@@ -49,13 +48,13 @@ public class Points {
      *                      history of changed points to dutycategories
      * @return Points
      */
-    public static Optional<Points> calcGainedPoints(
+    public static Points calcGainedPoints(
         List<DutyEntity> duties,
         List<DutyCategoryChangelogEntity> catChangeLogs
     ) {
         if (duties.isEmpty()) {
             LOG.debug("No duties delivered -> Points cannot be calculated");
-            return Optional.of(new Points(0));
+            return new Points(0);
         }
         int points = 0;
         for (DutyEntity duty : duties) {
@@ -65,7 +64,7 @@ public class Points {
                 points += giveChangeLogPointsOfDuty(duty, catChangeLogs);
             }
         }
-        return Optional.of(new Points(points));
+        return new Points(points);
     }
 
     /**
@@ -76,23 +75,23 @@ public class Points {
      * @param dutyCategories Set of dutyCategories (contain Points)
      * @return Points
      */
-    public static Optional<Points> calcBalancePoints(
+    public static Points calcBalancePoints(
         List<DutyEntity> duties,
         Set<DutyCategoryEntity> dutyCategories
     ) {
         if (duties.isEmpty()) {
             LOG.debug("No duties delivered -> Points cannot be calculated");
-            return Optional.of(new Points(0));
+            return new Points(0);
         }
 
         if (isGivenMonthCurrentMonth(duties.get(0).getStart())) {
             return calcBalancePointsForCurrentMonth(duties, dutyCategories);
         } else if (isGivenMonthBeforeCurrentMonth(duties.get(0).getStart())) {
-            return Optional.of(new Points(0));
+            return new Points(0);
         } else if (isGivenMonthAfterCurrentMonth(duties.get(0).getStart())) {
             return calcBalancePointsForMonthAfterCurrent(duties, dutyCategories);
         }
-        return Optional.of(new Points(0));
+        return new Points(0);
     }
 
     /**
@@ -129,8 +128,8 @@ public class Points {
      *
      * @return A Points Object with 0 Points (for External Musicians)
      */
-    public static Optional<Points> getZeroPoints() {
-        return Optional.of(new Points(0));
+    public static Points getZeroPoints() {
+        return new Points(0);
     }
 
     private static boolean isGivenMonthBeforeCurrentMonth(LocalDateTime month) {
@@ -163,7 +162,7 @@ public class Points {
      * @param dutyCategories The duty categories to use for calculation
      * @return Calculated points
      */
-    private static Optional<Points> calcBalancePointsForCurrentMonth(
+    private static Points calcBalancePointsForCurrentMonth(
         List<DutyEntity> duties,
         Set<DutyCategoryEntity> dutyCategories
     ) {
@@ -183,7 +182,7 @@ public class Points {
                 }
             }
         }
-        return Optional.of(new Points(points));
+        return new Points(points);
     }
 
     /**
@@ -193,7 +192,7 @@ public class Points {
      * @param dutyCategories The duty categories to use for calculation
      * @return Calculated points
      */
-    private static Optional<Points> calcBalancePointsForMonthAfterCurrent(
+    private static Points calcBalancePointsForMonthAfterCurrent(
         List<DutyEntity> duties,
         Set<DutyCategoryEntity> dutyCategories
     ) {
@@ -206,6 +205,6 @@ public class Points {
                 }
             }
         }
-        return Optional.of(new Points(points));
+        return new Points(points);
     }
 }
