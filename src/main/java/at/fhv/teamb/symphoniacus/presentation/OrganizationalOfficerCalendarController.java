@@ -94,8 +94,8 @@ public class OrganizationalOfficerCalendarController extends CalendarController 
     protected FindAllInRangeTask loadDuties(LocalDate start, LocalDate end) {
         return new FindAllInRangeTask(
             this.dutyManager,
-            DEFAULT_INTERVAL_START,
-            DEFAULT_INTERVAL_END,
+            start,
+            end,
             this.calendarPane
         );
     }

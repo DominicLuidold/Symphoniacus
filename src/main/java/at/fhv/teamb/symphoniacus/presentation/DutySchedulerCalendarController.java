@@ -392,8 +392,8 @@ public class DutySchedulerCalendarController extends CalendarController implemen
         return new FindAllInRangeWithSectionTask(
             this.dutyManager,
             this.section.getEntity(),
-            DEFAULT_INTERVAL_START,
-            DEFAULT_INTERVAL_END,
+            start,
+            end,
             this.calendarPane
         );
     }
