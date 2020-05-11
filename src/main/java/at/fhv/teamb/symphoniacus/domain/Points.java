@@ -53,7 +53,7 @@ public class Points {
         List<DutyCategoryChangelogEntity> catChangeLogs
     ) {
         if (duties.isEmpty()) {
-            LOG.debug("No duties delivered -> Points cannot be calculated");
+            LOG.error("No duties delivered -> Points cannot be calculated");
             return new Points(0);
         }
         int points = 0;
@@ -80,7 +80,7 @@ public class Points {
         Set<DutyCategoryEntity> dutyCategories
     ) {
         if (duties.isEmpty()) {
-            LOG.debug("No duties delivered -> Points cannot be calculated");
+            LOG.error("No duties delivered -> Points cannot be calculated");
             return new Points(0);
         }
 
