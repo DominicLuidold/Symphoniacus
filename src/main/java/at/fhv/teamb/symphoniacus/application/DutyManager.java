@@ -2,7 +2,6 @@ package at.fhv.teamb.symphoniacus.application;
 
 import at.fhv.teamb.symphoniacus.domain.Duty;
 import at.fhv.teamb.symphoniacus.domain.DutyCategory;
-import at.fhv.teamb.symphoniacus.domain.DutyCategoryChangelog;
 import at.fhv.teamb.symphoniacus.domain.Section;
 import at.fhv.teamb.symphoniacus.persistence.PersistenceState;
 import at.fhv.teamb.symphoniacus.persistence.dao.DutyCategoryChangeLogDao;
@@ -11,6 +10,7 @@ import at.fhv.teamb.symphoniacus.persistence.model.DutyCategoryChangelogEntity;
 import at.fhv.teamb.symphoniacus.persistence.model.DutyEntity;
 import at.fhv.teamb.symphoniacus.persistence.model.MonthlyScheduleEntity;
 import at.fhv.teamb.symphoniacus.persistence.model.SectionEntity;
+import at.fhv.teamb.symphoniacus.persistence.model.SectionMonthlyScheduleEntity;
 import at.fhv.teamb.symphoniacus.persistence.model.SeriesOfPerformancesEntity;
 import at.fhv.teamb.symphoniacus.persistence.model.WeeklyScheduleEntity;
 import java.time.DayOfWeek;
@@ -33,6 +33,7 @@ import org.apache.logging.log4j.Logger;
 public class DutyManager {
     private static final Logger LOG = LogManager.getLogger(DutyManager.class);
     private final MonthlyScheduleManager monthlyScheduleManager;
+    private final SectionMonthlyScheduleManager sectionMonthlyScheduleManager;
     private final WeeklyScheduleManager weeklyScheduleManager;
     protected DutyDao dutyDao;
     private DutyCategoryChangeLogDao changeLogDao;
@@ -42,6 +43,7 @@ public class DutyManager {
      */
     public DutyManager() {
         this.monthlyScheduleManager = new MonthlyScheduleManager();
+        this.sectionMonthlyScheduleManager = new SectionMonthlyScheduleManager();
         this.weeklyScheduleManager = new WeeklyScheduleManager();
         this.changeLogDao = new DutyCategoryChangeLogDao();
         this.dutyDao = new DutyDao();
@@ -245,6 +247,12 @@ public class DutyManager {
         // Get weekly schedule entity
         WeeklyScheduleEntity weeklyScheduleEntity =
             this.weeklyScheduleManager.createIfNotExists(start.toLocalDate(), start.getYear());
+        List<SectionMonthlyScheduleEntity> sectionMonthlySchedules =
+            this.sectionMonthlyScheduleManager.createIfNotExist(
+                start.getYear(),
+                start.getMonthValue(),
+                monthlyScheduleEntity
+            );
 
         // Add weekly schedule to monthly schedule and vice versa
         monthlyScheduleEntity.addWeeklySchedule(weeklyScheduleEntity);
@@ -262,6 +270,9 @@ public class DutyManager {
         dutyEntity.setStart(start);
         dutyEntity.setEnd(end);
         dutyEntity.setSeriesOfPerformances(sop);
+        for (SectionMonthlyScheduleEntity sectionMonthlySchedule : sectionMonthlySchedules) {
+            dutyEntity.addSectionMonthlySchedule(sectionMonthlySchedule);
+        }
 
         // Return domain object
         return new Duty(dutyEntity);
