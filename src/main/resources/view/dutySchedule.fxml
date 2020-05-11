@@ -81,7 +81,7 @@
                                     <PropertyValueFactory property="points" />
                                 </cellValueFactory>
                             </TableColumn>
-                            <TableColumn fx:id="columnBtnWithoutRequests" prefWidth="125.0" text="%tab.duty.schedule.table.musicians.schedule">
+                            <TableColumn fx:id="columnScheduleBtnWithoutRequests" prefWidth="125.0" text="%tab.duty.schedule.table.musicians.schedule">
                             </TableColumn>
                         </columns>
                     </TableView>

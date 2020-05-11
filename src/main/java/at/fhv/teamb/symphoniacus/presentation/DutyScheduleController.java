@@ -93,7 +93,7 @@ public class DutyScheduleController
     private TableColumn<MusicianTableModel, Button> columnScheduleBtnWithRequests;
 
     @FXML
-    private TableColumn<MusicianTableModel, Button> columnBtnWithoutRequests;
+    private TableColumn<MusicianTableModel, Button> columnScheduleBtnWithoutRequests;
 
     @FXML
     private TableColumn<DutyPositionMusicianTableModel, Button> columnUnsetPosition;
@@ -771,7 +771,7 @@ public class DutyScheduleController
         );
 
         // Add button column - without requests
-        this.columnBtnWithoutRequests.setCellFactory(
+        this.columnScheduleBtnWithoutRequests.setCellFactory(
             ScheduleButtonTableCell.forTableColumn(
                 this.resources.getString("tab.duty.schedule.table.dutyposition.set.btn"),
                 (MusicianTableModel mtm) -> {
