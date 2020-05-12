@@ -1,11 +1,15 @@
 package at.fhv.teamb.symphoniacus.presentation;
 
+import java.net.URL;
+import java.util.List;
+import java.util.ResourceBundle;
 import javafx.fxml.FXML;
+import javafx.fxml.Initializable;
 import javafx.scene.control.Label;
+import javafx.scene.layout.VBox;
 
 
-
-public class OrganizationalOfficerPopoverController {
+public class OrganizationalOfficerPopoverController implements Initializable {
     @FXML
     private Label titleText;
 
@@ -16,7 +20,7 @@ public class OrganizationalOfficerPopoverController {
     private Label pointsText;
 
     @FXML
-    private Label instrumentationText;
+    private VBox instrumentationsVBox;
 
     @FXML
     private Label section1Text;
@@ -43,4 +47,24 @@ public class OrganizationalOfficerPopoverController {
     private Label section8Text;
 
 
+    @Override
+    public void initialize(URL location, ResourceBundle resources) {
+
+    }
+
+    public void setTitleText(String titleText) {
+        this.titleText.setText(titleText);
+    }
+
+    public void setDescriptionText(String descriptionText) {
+        this.descriptionText.setText(descriptionText);
+    }
+
+    public void setPointsText(String pointsText) {
+        this.pointsText.setText(pointsText);
+    }
+
+    public void setInstrumentationText(List<Label> instrumentations) {
+        this.instrumentationsVBox.getChildren().addAll(instrumentations);
+    }
 }
