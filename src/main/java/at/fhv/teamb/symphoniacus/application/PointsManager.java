@@ -92,7 +92,7 @@ public class PointsManager {
             List<DutyCategoryChangelogEntity> dutyCategoryChangelogs = new LinkedList<>();
             for (DutyCategoryEntity dc : this.getAllDutyCategories(listOfDutiesFromMusician)) {
                 List<DutyCategoryChangelogEntity> changelogEntityList =
-                    this.dutyCatChangeDao.getDutyCategoryChangeLog(dc);
+                    this.dutyCatChangeDao.getDutyCategoryChangelogs(dc);
                 if (changelogEntityList != null) {
                     dutyCategoryChangelogs.addAll(changelogEntityList);
                 }

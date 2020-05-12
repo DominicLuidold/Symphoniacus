@@ -285,7 +285,7 @@ public class DutyManager {
         if (userPointsChanged) {
             if (this.changeLogDao.doesLogAlreadyExists(duty.getEntity())) {
                 Optional<DutyCategoryChangelogEntity> changeLog =
-                    this.changeLogDao.getChangeLogByDetails(duty.getEntity());
+                    this.changeLogDao.getChangelogByDetails(duty.getEntity());
                 if (changeLog.isPresent()) {
                     changeLog.get().setPoints(points);
                     changeLogDao.update(changeLog.get());
