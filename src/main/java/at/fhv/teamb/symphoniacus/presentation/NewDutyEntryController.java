@@ -59,7 +59,6 @@ public class NewDutyEntryController implements Initializable, Parentable<TabPane
     private Duty duty;
     private DutyManager dutyManager;
     private DutyCategoryManager dutyCategoryManager;
-    private AtomicBoolean validName = new AtomicBoolean(false);
     private AtomicBoolean validStartDate = new AtomicBoolean(false);
     private AtomicBoolean validEndDate = new AtomicBoolean(false);
     private AtomicBoolean validCategory = new AtomicBoolean(false);
@@ -77,7 +76,7 @@ public class NewDutyEntryController implements Initializable, Parentable<TabPane
     private Button scheduleSaveBtn;
 
     @FXML
-    private JFXTextField dutyNameInput;
+    private JFXTextField dutyDescriptionInput;
 
     @FXML
     private ComboBox<SeriesOfPerformancesEntity> seriesOfPerformancesSelect;
@@ -113,24 +112,6 @@ public class NewDutyEntryController implements Initializable, Parentable<TabPane
 
         this.scheduleSaveBtn.setDisable(true);
         this.dutyPointsInput.setDisable(true);
-
-        // Validate Name Input
-        RequiredFieldValidator nameValidator = new RequiredFieldValidator();
-        nameValidator.setMessage(this.resources.getString("tab.duty.new.entry.error.namemissing"));
-        this.dutyNameInput.getValidators().add(nameValidator);
-        this.dutyNameInput.focusedProperty().addListener((
-            ObservableValue<? extends Boolean> observable,
-            Boolean oldValue,
-            Boolean newValue) -> {
-            if (!newValue) {
-                if (this.dutyNameInput.validate()) {
-                    this.validName.set(true);
-                } else {
-                    this.validName.set(false);
-                }
-                checkButtonVisibility();
-            }
-        });
 
         // Validate Combobox dutyCategory
         this.dutyCategorySelect.valueProperty().addListener((
@@ -227,9 +208,10 @@ public class NewDutyEntryController implements Initializable, Parentable<TabPane
     private void checkButtonVisibility() {
         if (!this.dutyCategorySelect.getSelectionModel().isEmpty()) {
             this.dutyCategorySelect.setBorder(null);
-            if (this.validName.get() && this.validCategory.get() && this.validStartDate.get()
-                && this.validEndDate.get() && this.validStartTime.get() &&
-                this.validEndTime.get()) {
+            if (this.validCategory.get() && this.validStartDate.get()
+                && this.validEndDate.get() && this.validStartTime.get()
+                && this.validEndTime.get()
+            ) {
                 this.scheduleSaveBtn.setDisable(false);
             } else {
                 this.scheduleSaveBtn.setDisable(true);
@@ -316,7 +298,7 @@ public class NewDutyEntryController implements Initializable, Parentable<TabPane
          if (validateInputs()) {
              this.duty = this.dutyManager.createDuty(
                  this.dutyCategorySelect.getValue(),
-                 this.dutyNameInput.getText(),
+                 this.dutyDescriptionInput.getText(),
                  calculateTimeOfDay(this.dutyStartTimeInput.getValue()),
                  this.dutyStartDateInput.getValue().atTime(this.dutyStartTimeInput.getValue()),
                  this.dutyEndDateInput.getValue().atTime(this.dutyEndTimeInput.getValue()),
@@ -362,7 +344,7 @@ public class NewDutyEntryController implements Initializable, Parentable<TabPane
     private boolean validateInputs() {
 
         Alert alert = new Alert(Alert.AlertType.WARNING);
-        if (dutyNameInput.getText().length() > 45) {
+        if (dutyDescriptionInput.getText().length() > 45) {
             alert.setTitle(resources.getString("tab.duty.new.entry.error.title"));
             alert.setContentText(resources.getString(
                 "tab.duty.new.entry.error.nametoolong"));
