@@ -67,4 +67,48 @@ public class OrganizationalOfficerPopoverController implements Initializable {
     public void setInstrumentationText(List<Label> instrumentations) {
         this.instrumentationsVBox.getChildren().addAll(instrumentations);
     }
+
+    public void setStatusSection(Boolean isReady, int sectionnum) {
+        Label section = null;
+        switch (sectionnum) {
+            case 1:
+                section = this.section1Text;
+                break;
+            case 2:
+                section = this.section2Text;
+                break;
+            case 3:
+                section = this.section3Text;
+                break;
+            case 4:
+                section = this.section4Text;
+                break;
+            case 5:
+                section = this.section5Text;
+                break;
+            case 6:
+                section = this.section6Text;
+                break;
+            case 7:
+                section = this.section7Text;
+                break;
+            case 8:
+                section = this.section8Text;
+                break;
+        }
+
+        if (section != null) {
+            StringBuilder sectionText = new StringBuilder(section.getText());
+            if (isReady) {
+                sectionText.insert(0, "✅ ");
+                section.setStyle("-fx-text-fill: green");
+
+            } else {
+                sectionText.insert(0, "✗ ");
+                section.setStyle("-fx-text-fill: red");
+            }
+            section.setText(sectionText.toString());
+        }
+    }
+
 }

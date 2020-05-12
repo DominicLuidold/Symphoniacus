@@ -63,6 +63,9 @@ public class CustomOrganizationOfficerPopOverContentNode extends PopOverContentP
                 }
                 popoverController.setInstrumentationText(instrumentations);
 
+                popoverController.setStatusSection(true, 1);
+                popoverController.setStatusSection(false, 2);
+
             } catch (IOException e) {
                 e.printStackTrace();
             }
