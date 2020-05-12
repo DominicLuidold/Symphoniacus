@@ -5,8 +5,10 @@ import at.fhv.teamb.symphoniacus.domain.AdministrativeAssistant;
 import at.fhv.teamb.symphoniacus.domain.Duty;
 import at.fhv.teamb.symphoniacus.presentation.internal.CustomCalendarButtonEvent;
 import at.fhv.teamb.symphoniacus.presentation.internal.TabPaneEntry;
+import at.fhv.teamb.symphoniacus.presentation.internal.popover.CustomOrganizationOfficerPopOverContentNode;
 import at.fhv.teamb.symphoniacus.presentation.internal.skin.OrganizationalOfficerCalendarSkin;
 import com.calendarfx.model.Calendar;
+import com.calendarfx.model.Entry;
 import java.net.URL;
 import java.time.LocalDate;
 import java.util.List;
@@ -74,6 +76,14 @@ public class OrganizationalOfficerCalendarController extends CalendarController 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         this.bundle = resources;
+        this.calendarView.setEntryDetailsPopOverContentCallback(param ->
+            new CustomOrganizationOfficerPopOverContentNode(
+                param.getPopOver(),
+                param.getDateControl(),
+                param.getNode(),
+                param.getEntry()
+            )
+        );
         LOG.debug("Initialized OrganizationalOfficerCalendarController");
     }
 
