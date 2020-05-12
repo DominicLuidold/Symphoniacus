@@ -444,7 +444,7 @@ public class SeriesOfPerformancesController
 
     private void cancel() {
         LOG.debug("Closing Add SOP");
-        this.parentController.removeTab();
+        this.parentController.removeTab(TabPaneEntry.ADD_SOP);
     }
 
     private void addModify() {
