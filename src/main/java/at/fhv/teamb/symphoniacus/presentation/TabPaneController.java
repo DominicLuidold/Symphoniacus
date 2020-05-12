@@ -55,8 +55,8 @@ public class TabPaneController implements Initializable, Parentable<MainControll
         this.tabPane.getTabs().setAll(newTabs);
     }
 
-    protected void removeTab() {
-        removeTab(TabPaneEntry.ADD_SOP.getTitle());
+    protected void removeTab(TabPaneEntry entry) {
+        removeTab(entry.getTitle());
     }
 
     protected Optional<Parentable<TabPaneController>> addTab(TabPaneEntry entry) {

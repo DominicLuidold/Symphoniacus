@@ -5,6 +5,7 @@ import at.fhv.teamb.symphoniacus.persistence.model.InstrumentationEntity;
 import at.fhv.teamb.symphoniacus.persistence.model.MusicalPieceEntity;
 import at.fhv.teamb.symphoniacus.persistence.model.SectionInstrumentationEntity;
 import at.fhv.teamb.symphoniacus.presentation.internal.Parentable;
+import at.fhv.teamb.symphoniacus.presentation.internal.TabPaneEntry;
 import at.fhv.teamb.symphoniacus.presentation.internal.UkTimeFormatter;
 import com.jfoenix.controls.JFXDatePicker;
 import com.jfoenix.controls.JFXTextField;
