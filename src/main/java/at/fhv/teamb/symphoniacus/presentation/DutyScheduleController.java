@@ -834,6 +834,10 @@ public class DutyScheduleController
                     )
                     + " - "
                     + duty.getTitle()
+                    + " - "
+                    + duty.getEntity().getDutyCategory().getPoints()
+                    + " "
+                    + this.resources.getString("tab.duty.schedule.table.musicians.points")
             )
         );
     }
