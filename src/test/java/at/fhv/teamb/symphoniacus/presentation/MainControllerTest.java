@@ -35,9 +35,8 @@ public class MainControllerTest {
         entity.setUser(user);
         Musician m = new Musician(entity);
         Queue<TabPaneEntry> tabs = mainController.getPermittedTabs(
-            DomainUserType.DOMAIN_MUSICIAN,
             m,
-            bundle
+            null
         );
         Assertions.assertTrue(
             tabs.contains(
@@ -62,9 +61,8 @@ public class MainControllerTest {
 
         // When: we call getPermittedTabs from TabPaneController
         Queue<TabPaneEntry> tabs = mainController.getPermittedTabs(
-            DomainUserType.DOMAIN_MUSICIAN,
             m,
-            bundle
+            null
         );
 
         // Then: We should see dutySchedulerCalendar and dutySchedule (last one hidden) - Tabs
@@ -81,9 +79,8 @@ public class MainControllerTest {
         AdministrativeAssistantEntity entity = new AdministrativeAssistantEntity();
         AdministrativeAssistant aa = new AdministrativeAssistant(entity);
         Queue<TabPaneEntry> tabs = mainController.getPermittedTabs(
-            DomainUserType.DOMAIN_ADMINISTRATIVE_ASSISTANT,
-            aa,
-            bundle
+            null,
+            aa
         );
         Assertions.assertTrue(
             tabs.contains(

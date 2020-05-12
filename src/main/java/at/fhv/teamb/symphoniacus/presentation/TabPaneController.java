@@ -55,8 +55,8 @@ public class TabPaneController implements Initializable, Parentable<MainControll
         this.tabPane.getTabs().setAll(newTabs);
     }
 
-    protected void removeTab(TabPaneEntry entry) {
-        removeTab(entry.getTitle());
+    protected void removeTab() {
+        removeTab(TabPaneEntry.ADD_SOP.getTitle());
     }
 
     protected Optional<Parentable<TabPaneController>> addTab(TabPaneEntry entry) {
@@ -75,7 +75,7 @@ public class TabPaneController implements Initializable, Parentable<MainControll
             this.bundle
         );
 
-        Parentable<TabPaneController> controller = null;
+        Parentable<TabPaneController> controller;
         try {
             Parent p = loader.load();
             tab.setContent(p);
@@ -104,22 +104,22 @@ public class TabPaneController implements Initializable, Parentable<MainControll
         this.tabPane.getTabs().add(tab);
         this.tabPane.getSelectionModel().select(tab);
 
-        if (controller == null) {
-            // FXML has no controller defined
-            return Optional.empty();
-        }
-        return Optional.of(controller);
+        // FXML has no controller defined
+        return Optional.ofNullable(controller);
     }
 
+    /**
+     * Initializes the TabPane menu, depending on the currently logged in user type
+     * as set in {@link MainController#getLoginUserType()} )}.
+     */
     protected void initializeTabMenu() {
         MainController parent = this.getParentController();
 
         Queue<TabPaneEntry> tabs = new LinkedList<>();
         if (parent.getLoginUserType().equals(DomainUserType.DOMAIN_MUSICIAN)) {
             tabs = parent.getPermittedTabs(
-                parent.getLoginUserType(),
                 parent.getCurrentMusician(),
-                this.bundle
+                null
             );
         } else if (
             parent.getLoginUserType().equals(
@@ -127,9 +127,8 @@ public class TabPaneController implements Initializable, Parentable<MainControll
             )
         ) {
             tabs = parent.getPermittedTabs(
-                parent.getLoginUserType(),
-                parent.getCurrentAssistant(),
-                this.bundle
+                null,
+                parent.getCurrentAssistant()
             );
         }
 

@@ -1,7 +1,7 @@
 package at.fhv.teamb.symphoniacus.presentation.internal.tasks;
 
 import at.fhv.teamb.symphoniacus.application.LoginManager;
-import at.fhv.teamb.symphoniacus.domain.User;
+import at.fhv.teamb.symphoniacus.application.dto.LoginUserDto;
 import java.util.Optional;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
@@ -15,7 +15,7 @@ import org.apache.logging.log4j.Logger;
  * @author Valentin Goronjic
  * @see LoadingAnimationTask
  */
-public class LoginTask extends LoadingAnimationTask<Optional<User>> {
+public class LoginTask extends LoadingAnimationTask<Optional<LoginUserDto>> {
 
     private static final Logger LOG = LogManager.getLogger(LoginTask.class);
     private LoginManager loginManager;
@@ -43,9 +43,14 @@ public class LoginTask extends LoadingAnimationTask<Optional<User>> {
     }
 
     @Override
-    protected Optional<User> call() throws Exception {
+    protected Optional<LoginUserDto> call() throws Exception {
         super.call();
         LOG.debug("Processing login");
-        return loginManager.login(this.userShortcut.getText(), this.pw.getText());
+        // userId -1 in args => not yet available at this stage, not needed here
+        LoginUserDto dto = new LoginUserDto.UserDtoBuilder(-1)
+            .withUserShortcut(this.userShortcut.getText())
+            .withPassword(this.pw.getText())
+            .build();
+        return loginManager.login(dto);
     }
 }

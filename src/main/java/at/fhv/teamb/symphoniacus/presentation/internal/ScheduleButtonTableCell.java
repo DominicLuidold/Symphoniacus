@@ -8,8 +8,9 @@ import javafx.scene.control.TableColumn;
 import javafx.util.Callback;
 
 /**
- * TODO Zusammenfassung.
- * @author Valentin
+ * Button that is used to schedule a musician in a TableView.
+ *
+ * @author Valentin Goronjic
  */
 public class ScheduleButtonTableCell<S> extends TableCell<S, Button> {
 

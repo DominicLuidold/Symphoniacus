@@ -28,9 +28,9 @@ public class MasterController {
 
     private static final Logger LOG = LogManager.getLogger(MasterController.class);
     private static MasterController INSTANCE;
-    private static JFXSpinner SPINNER = new JFXSpinner();
-    private Label statusTextField;
-    private Map<String, Initializable> map = new HashedMap<>();
+    private static final JFXSpinner SPINNER = new JFXSpinner();
+    private final Label statusTextField;
+    private final Map<String, Initializable> map = new HashedMap<>();
 
     private MasterController() {
         this.statusTextField = new Label();
@@ -128,11 +128,10 @@ public class MasterController {
      * @param statusBar The StatusBar which is defined in {@link TabPaneController} FXML
      */
     public void setStatusBar(StatusBar statusBar) {
-        StatusBar sb = statusBar;
         this.statusTextField.textProperty().addListener(
             it -> {
                 LOG.debug("set to {}", this.statusTextField.getText());
-                sb.setText(this.statusTextField.getText());
+                statusBar.setText(this.statusTextField.getText());
             }
         );
         this.statusTextField.setText("Loaded");

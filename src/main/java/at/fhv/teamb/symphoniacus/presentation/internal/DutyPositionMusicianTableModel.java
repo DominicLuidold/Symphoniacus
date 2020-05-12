@@ -16,7 +16,7 @@ public class DutyPositionMusicianTableModel {
 
     /**
      * Returns the position description.
-     * @return
+     * @return Description of Instrumentation Position
      */
     public String getRole() {
         return this.dutyPosition
@@ -27,7 +27,7 @@ public class DutyPositionMusicianTableModel {
 
     /**
      * Returns the musician Shortcut.
-     * @return
+     * @return Shortcut of assigned musician if present, else empty string
      */
     public String getMusicanShortcut() {
 
