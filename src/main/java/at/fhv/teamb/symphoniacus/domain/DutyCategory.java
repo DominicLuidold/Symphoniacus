@@ -3,7 +3,6 @@ package at.fhv.teamb.symphoniacus.domain;
 import at.fhv.teamb.symphoniacus.persistence.PersistenceState;
 import at.fhv.teamb.symphoniacus.persistence.model.DutyCategoryChangelogEntity;
 import at.fhv.teamb.symphoniacus.persistence.model.DutyCategoryEntity;
-import java.time.LocalDate;
 import java.util.Collections;
 import java.util.List;
 
@@ -28,30 +27,6 @@ public class DutyCategory {
         this.entity = entity;
         this.changelogList = Collections.unmodifiableList(changelogList);
         this.persistenceState = PersistenceState.PERSISTED;
-    }
-
-    /**
-     * Checks whether new points value for DutyCategory are valid.
-     *
-     * @param points The new point value
-     * @return True if valid, false otherwise
-     */
-    public boolean newPointsValid(int points) {
-        return points >= 0;
-    }
-
-    /**
-     * Creates a new {@link DutyCategoryChangelogEntity} that carries the new points.
-     *
-     * <p>Updating the duty category points itself is performed by a database trigger.
-     *
-     * @param points The points to use
-     */
-    public void updatePoints(int points) {
-        DutyCategoryChangelogEntity changelogEntity = new DutyCategoryChangelogEntity();
-        changelogEntity.setStartDate(LocalDate.now());
-        changelogEntity.setPoints(points);
-        this.entity.addDutyCategoryChangelog(changelogEntity);
     }
 
     public int getPoints() {

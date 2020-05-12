@@ -54,30 +54,6 @@ public class DutyCategoryManager {
     }
 
     /**
-     * Updates the points of a duty category.
-     *
-     * <p>This method <b>WILL NOT</b> persist the changes made to the object. To persist any
-     * changes made, refer to {@link #persist(DutyCategory)}. It will, however, subsequently
-     * change the {@link PersistenceState} of the object from {@link PersistenceState#PERSISTED}
-     * to {@link PersistenceState#EDITED}, provided that given {@code points} value is valid.
-     *
-     * @param dutyCategory The duty category to use
-     * @param points       The new value of points to use
-     * @see #persist(DutyCategory)
-     */
-    public void updatePoints(DutyCategory dutyCategory, int points) {
-        if (!dutyCategory.newPointsValid(points)) {
-            return;
-        }
-
-        // Update object state
-        dutyCategory.setPersistenceState(PersistenceState.EDITED);
-
-        // Delegate to domain object
-        dutyCategory.updatePoints(points);
-    }
-
-    /**
      * Persists the changes made to the {@link DutyCategory} object to the database.
      *
      * <p>The method will subsequently change the {@link PersistenceState} of the object

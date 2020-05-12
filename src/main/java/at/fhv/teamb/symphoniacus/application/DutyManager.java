@@ -288,13 +288,12 @@ public class DutyManager {
      * @param duty The duty to save
      */
     public void save(Duty duty, boolean userPointsChanged, Integer points) {
-
         Optional<DutyEntity> persistedDuty = this.dutyDao.persist(duty.getEntity());
 
         if (userPointsChanged) {
             if (this.changeLogDao.doesLogAlreadyExists(duty.getEntity())) {
-                Optional<DutyCategoryChangelogEntity> changeLog = this.changeLogDao
-                    .getChangeLogByDetails(duty.getEntity());
+                Optional<DutyCategoryChangelogEntity> changeLog =
+                    this.changeLogDao.getChangeLogByDetails(duty.getEntity());
                 if (changeLog.isPresent()) {
                     changeLog.get().setPoints(points);
                     changeLogDao.update(changeLog.get());
