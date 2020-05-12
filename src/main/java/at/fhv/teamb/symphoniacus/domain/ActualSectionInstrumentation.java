@@ -22,6 +22,7 @@ public class ActualSectionInstrumentation {
      */
     public void assignMusicianToPosition(Musician musician, DutyPosition dutyPosition) {
         musician.getEntity().addDutyPosition(dutyPosition.getEntity());
+        dutyPosition.setMusician(musician);
     }
 
     /**
@@ -32,6 +33,7 @@ public class ActualSectionInstrumentation {
      */
     public void removeMusicianFromPosition(Musician musician, DutyPosition dutyPosition) {
         musician.getEntity().removeDutyPosition(dutyPosition.getEntity());
+        dutyPosition.setMusician(null);
     }
 
     public Duty getDuty() {

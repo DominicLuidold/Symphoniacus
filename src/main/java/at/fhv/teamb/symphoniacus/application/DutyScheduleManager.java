@@ -13,6 +13,7 @@ import at.fhv.teamb.symphoniacus.persistence.dao.MusicianDao;
 import at.fhv.teamb.symphoniacus.persistence.model.DutyEntity;
 import at.fhv.teamb.symphoniacus.persistence.model.DutyPositionEntity;
 import at.fhv.teamb.symphoniacus.persistence.model.MusicianEntity;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.HashSet;
@@ -83,7 +84,14 @@ public class DutyScheduleManager {
         // Create DutyPosition domain objects
         List<DutyPosition> dutyPositions = new LinkedList<>();
         for (DutyPositionEntity dutyPosition : dutyPositionEntities) {
-            dutyPositions.add(new DutyPosition(dutyPosition));
+
+            DutyPosition dp = new DutyPosition(dutyPosition);
+            if (dp.getAssignedMusician().isPresent()) {
+                Musician m = dp.getAssignedMusician().get();
+                addPointsToMusician(m, duty.getEntity().getStart().toLocalDate());
+            }
+
+            dutyPositions.add(dp);
         }
 
         // Fill Duty with available information
@@ -183,6 +191,8 @@ public class DutyScheduleManager {
         this.setMusicians.add(musician);
         this.unsetMusicians.remove(musician);
 
+        addPointsToMusician(musician, position.getEntity().getDuty().getStart().toLocalDate());
+
         // Update object state
         instrumentation.getDuty().setPersistenceState(PersistenceState.EDITED);
 
@@ -262,6 +272,32 @@ public class DutyScheduleManager {
         this.sectionMusicianEntities.addAll(externalMusicianEntities);
     }
 
+    private void addPointsToMusician(Musician musician, LocalDate start) {
+        LOG.debug("Adding points to Musician");
+        Points balancePoints = this.pointsManager.getBalanceFromMusician(
+            musician.getEntity(),
+            start
+        );
+
+        Points debitPoints = this.pointsManager.getDebitPointsFromMusician(
+            musician.getEntity()
+        );
+        Points gainedPoints = this.pointsManager.getGainedPointsForMonthFromMusician(
+            musician.getEntity(),
+            start
+        );
+
+        musician.setBalancePoints(balancePoints);
+        musician.setDebitPoints(debitPoints);
+        musician.setGainedPoints(gainedPoints);
+        LOG.debug(
+            "Balance Points: {} | Debit Points: {} | Gained Points: {}",
+            balancePoints.getValue(),
+            debitPoints.getValue(),
+            gainedPoints.getValue()
+        );
+    }
+
     /**
      * Converts {@link MusicianEntity} objects to domain {@link Musician}s.
      *
@@ -269,14 +305,12 @@ public class DutyScheduleManager {
      */
     private void convertMusicianEntitiesToDomainObjects(Duty duty) {
         for (MusicianEntity entity : this.sectionMusicianEntities) {
-            // Get points for musician
-            Points points = this.pointsManager.getBalanceFromMusician(
-                entity,
-                duty.getEntity().getStart().toLocalDate()
-            );
+            // Get balancePoints for musician
+
 
             // Create domain object
-            Musician m = new Musician(entity, points);
+            Musician m = new Musician(entity);
+            addPointsToMusician(m, duty.getEntity().getStart().toLocalDate());
 
             // Fill domain object with wish requests
             this.wishRequestManager.setMusicianWishRequest(m, duty.getEntity());

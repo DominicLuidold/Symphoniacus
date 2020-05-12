@@ -10,6 +10,7 @@ import java.util.Optional;
  */
 public class DutyPosition {
     private DutyPositionEntity entity;
+    private Musician musician;
 
     /**
      * Initializes the DutyPosition object based on provided {@link DutyPositionEntity}.
@@ -18,6 +19,9 @@ public class DutyPosition {
      */
     public DutyPosition(DutyPositionEntity entity) {
         this.entity = entity;
+        if (this.entity.getMusician() != null) {
+            this.musician = new Musician(this.entity.getMusician());
+        }
     }
 
     /**
@@ -26,14 +30,21 @@ public class DutyPosition {
      * @return Optional containing the musician, if any is assigned
      */
     public Optional<Musician> getAssignedMusician() {
-        if (this.entity.getMusician() == null) {
-            return Optional.empty();
-        } else {
-            return Optional.of(new Musician(this.entity.getMusician()));
+        if (this.musician == null && this.getEntity().getMusician() != null) {
+            this.musician = new Musician(this.entity.getMusician());
         }
+        return Optional.ofNullable(this.musician);
     }
 
     public DutyPositionEntity getEntity() {
         return this.entity;
+    }
+
+    public Musician getMusician() {
+        return musician;
+    }
+
+    public void setMusician(Musician musician) {
+        this.musician = musician;
     }
 }
