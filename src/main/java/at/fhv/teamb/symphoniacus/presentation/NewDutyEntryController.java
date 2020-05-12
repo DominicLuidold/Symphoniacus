@@ -27,7 +27,6 @@ import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
-import javafx.scene.control.ButtonBar;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.ComboBoxBase;
@@ -292,17 +291,19 @@ public class NewDutyEntryController implements Initializable, Parentable<TabPane
      */
     private boolean validateInputs() {
         if (dutyDescriptionInput.getText().length() > 45) {
-            this.showErrorAlert(
+            MainController.showErrorAlert(
                 this.resources.getString("tab.duty.new.entry.error.title"),
-                this.resources.getString("tab.duty.new.entry.error.nametoolong")
+                this.resources.getString("tab.duty.new.entry.error.nametoolong"),
+                this.resources.getString("global.button.ok")
             );
             return false;
         } else if (dutyEndDateInput.getValue().atTime(dutyEndTimeInput.getValue())
             .isBefore(dutyStartDateInput.getValue().atTime(dutyStartTimeInput.getValue()))
         ) {
-            this.showErrorAlert(
+            MainController.showErrorAlert(
                 this.resources.getString("tab.duty.new.entry.error.title"),
-                this.resources.getString("tab.duty.new.entry.error.endingDateBeforeStartingDate")
+                this.resources.getString("tab.duty.new.entry.error.endingDateBeforeStartingDate"),
+                this.resources.getString("global.button.ok")
             );
             return false;
         } else if (!this.seriesOfPerformancesSelect.getSelectionModel().isEmpty()
@@ -311,15 +312,17 @@ public class NewDutyEntryController implements Initializable, Parentable<TabPane
             || dutyEndDateInput.getValue()
             .isAfter(seriesOfPerformancesSelect.getValue().getEndDate()))
         ) {
-            this.showErrorAlert(
+            MainController.showErrorAlert(
                 this.resources.getString("tab.duty.new.entry.error.title"),
-                this.resources.getString("tab.duty.new.entry.error.DutyOutOfSOPTimeframe")
+                this.resources.getString("tab.duty.new.entry.error.DutyOutOfSOPTimeframe"),
+                this.resources.getString("global.button.ok")
             );
             return false;
         } else if (!StringUtils.isNumeric(this.dutyPointsInput.getText())) {
-            this.showErrorAlert(
+            MainController.showErrorAlert(
                 this.resources.getString("tab.duty.new.entry.error.inputpoints.title"),
-                this.resources.getString("tab.duty.new.entry.error.inputpoints.context")
+                this.resources.getString("tab.duty.new.entry.error.inputpoints.context"),
+                this.resources.getString("global.button.ok")
             );
             return false;
         } else {
@@ -448,30 +451,6 @@ public class NewDutyEntryController implements Initializable, Parentable<TabPane
             label.setText("-");
         }
         return buttonType;
-    }
-
-    /**
-     * Shows an error alert with a custom title and error message.
-     *
-     * @param alertTitle The alert title to use
-     * @param errorText  The error text to use
-     */
-    private void showErrorAlert(String alertTitle, String errorText) {
-        Alert alert = new Alert(Alert.AlertType.ERROR);
-        alert.setTitle(alertTitle);
-        alert.setContentText(errorText);
-
-        ButtonType okButton = new ButtonType(
-            this.resources.getString("global.button.ok"),
-            ButtonBar.ButtonData.YES
-        );
-        alert.getButtonTypes().setAll(okButton);
-        alert.showAndWait().ifPresent(type -> {
-            if (type.equals(okButton)) {
-                alert.close();
-                ;
-            }
-        });
     }
 
     /**

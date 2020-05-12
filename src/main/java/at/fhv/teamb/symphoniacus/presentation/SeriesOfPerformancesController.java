@@ -28,7 +28,6 @@ import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
-import javafx.scene.control.ButtonBar;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.ComboBoxBase;
@@ -140,8 +139,8 @@ public class SeriesOfPerformancesController
             oldValue,
             newValue)
             -> {
-                this.start.set(this.startingDate.validate());
-                checkButtonVisibility();
+            this.start.set(this.startingDate.validate());
+            checkButtonVisibility();
 
         });
 
@@ -149,8 +148,8 @@ public class SeriesOfPerformancesController
             observable,
             oldValue,
             newValue) -> {
-                this.end.set(this.endingDate.validate());
-                checkButtonVisibility();
+            this.end.set(this.endingDate.validate());
+            checkButtonVisibility();
         });
 
         // Save button method
@@ -380,21 +379,6 @@ public class SeriesOfPerformancesController
         }
     }
 
-    private void showErrorMessage(String errorText) {
-        Alert alert = new Alert(Alert.AlertType.WARNING);
-        alert.setTitle(resources.getString("seriesOfPerformances.error.title"));
-        alert.setContentText(errorText);
-        ButtonType okButton = new ButtonType(resources.getString("global.button.ok"),
-            ButtonBar.ButtonData.YES);
-
-        alert.getButtonTypes().setAll(okButton);
-        alert.showAndWait().ifPresent(type -> {
-            if (type.equals(okButton)) {
-                alert.close();
-            }
-        });
-    }
-
     /**
      * validates whether or not:
      * -The title has no more than 45 characters.
@@ -409,30 +393,38 @@ public class SeriesOfPerformancesController
         if (this.seriesManager
             .doesSeriesAlreadyExist(this.nameOfSeries.getText(), this.startingDate.getValue(),
                 endingDate.getValue())) {
-            showErrorMessage(
-                resources.getString(
+            MainController.showErrorAlert(
+                this.resources.getString("seriesOfPerformances.error.title"),
+                this.resources.getString(
                     "seriesOfPerformances.error.seriesAlreadyExists.message"
-                )
+                ),
+                this.resources.getString("global.button.ok")
             );
             return false;
         } else if (this.nameOfSeries.getText().length() > 45) {
-            showErrorMessage(
-                resources.getString(
-                    "seriesOfPerformances.error.nameOfSeriesOutOfBounds.message")
+            MainController.showErrorAlert(
+                this.resources.getString("seriesOfPerformances.error.title"),
+                this.resources.getString(
+                    "seriesOfPerformances.error.nameOfSeriesOutOfBounds.message"),
+                this.resources.getString("global.button.ok")
             );
             return false;
         } else if (this.endingDate.getValue().isBefore(this.startingDate.getValue())) {
-            showErrorMessage(
-                resources.getString(
+            MainController.showErrorAlert(
+                this.resources.getString("seriesOfPerformances.error.title"),
+                this.resources.getString(
                     "seriesOfPerformances.error.endingDateBeforeStartingDate.message"
-                )
+                ),
+                this.resources.getString("global.button.ok")
             );
             return false;
         } else if (!isInstrumentationForMusicalPieceSelected()) {
-            showErrorMessage(
+            MainController.showErrorAlert(
+                this.resources.getString("seriesOfPerformances.error.title"),
                 this.resources.getString(
-                    "seriesOfPerformances.error"
-                        + ".selectedMusicalPieceWithoutInstrumentation.message")
+                    "seriesOfPerformances.error.selectedMusicalPieceWithoutInstrumentation.message"
+                ),
+                this.resources.getString("global.button.ok")
             );
             return false;
         } else {
