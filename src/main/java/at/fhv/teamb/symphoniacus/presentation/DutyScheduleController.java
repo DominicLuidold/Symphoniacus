@@ -731,10 +731,18 @@ public class DutyScheduleController
         lblBalancePoints.setTextFill(Color.web("#000000"));
         lblSummaryPoints.setTextFill(Color.web("#000000"));
         Font f = Font.getDefault();
-        Font newFont = Font.font(f.getFamily(), FontWeight.BOLD, 14);
-        lblSummaryPoints.setFont(newFont);
+        Font boldFont = Font.font(f.getFamily(), FontWeight.BOLD, 14);
+        lblSummaryPoints.setFont(boldFont);
+        Label lblMusicianName = new Label();
+        lblMusicianName.setFont(boldFont);
 
-        VBox vbox = new VBox(lblGainedPoints, lblBalancePoints, new Separator(), lblSummaryPoints);
+        VBox vbox = new VBox(
+            lblMusicianName, new Separator(),
+            lblGainedPoints,
+            lblBalancePoints,
+            new Separator(),
+            lblSummaryPoints
+        );
         vbox.setPadding(new Insets(15, 15, 15, 15));
         PopOver popOver = new PopOver(vbox);
 
@@ -755,6 +763,7 @@ public class DutyScheduleController
                     this.duty.getEntity().getStart().toLocalDate()
                 );
 
+                lblMusicianName.setText(mtm.getMusician().getFullName());
                 lblGainedPoints.setText(
                     MessageFormat.format(
                         this.resources.getString(
@@ -776,7 +785,8 @@ public class DutyScheduleController
                         this.resources.getString(
                             "tab.duty.schedule.table.musicians.summary.popup"
                         ),
-                        mtm.getBalancePoints() + mtm.getGainedPoints()
+                        // without parsing, 0 as prefix may be shown
+                        Integer.valueOf(mtm.getBalancePoints() + mtm.getGainedPoints())
                     )
                 );
 

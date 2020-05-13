@@ -78,7 +78,7 @@
                             </TableColumn>
                             <TableColumn fx:id="columnPointsWithoutRequests" prefWidth="100.0" text="%tab.duty.schedule.table.musicians.balancePoints">
                                 <cellValueFactory>
-                                    <PropertyValueFactory property="pointsSummary" />
+                                    <PropertyValueFactory property="balancePoints" />
                                 </cellValueFactory>
                             </TableColumn>
                             <TableColumn id="columnDebitPoints" prefWidth="100.0" text="%tab.duty.schedule.table.musicians.debitPoints">

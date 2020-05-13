@@ -36,12 +36,13 @@ public class MusicianTableModel implements MusicianPointsTableModel {
      *
      * @return value of Points of Musician.
      */
-    public Integer getBalancePoints() {
+    @Override
+    public String getBalancePoints() {
         try {
-            return this.musician.getBalancePoints().getValue();
+            return String.valueOf(this.musician.getBalancePoints().getValue());
         } catch (PointsNotCalculatedException e) {
             LOG.error(e);
-            return -1;
+            return String.valueOf(-1);
         }
     }
 
@@ -50,12 +51,13 @@ public class MusicianTableModel implements MusicianPointsTableModel {
      *
      * @return Points
      */
-    public Integer getDebitPoints() {
+    @Override
+    public String getDebitPoints() {
         try {
-            return this.musician.getDebitPoints().getValue();
+            return String.valueOf(this.musician.getDebitPoints().getValue());
         } catch (PointsNotCalculatedException e) {
             LOG.error(e);
-            return -1;
+            return String.valueOf(-1);
         }
     }
 
@@ -64,12 +66,13 @@ public class MusicianTableModel implements MusicianPointsTableModel {
      *
      * @return Points
      */
-    public Integer getGainedPoints() {
+    @Override
+    public String getGainedPoints() {
         try {
-            return this.musician.getGainedPoints().getValue();
+            return String.valueOf(this.musician.getGainedPoints().getValue());
         } catch (PointsNotCalculatedException e) {
             LOG.error(e);
-            return -1;
+            return String.valueOf(-1);
         }
     }
 

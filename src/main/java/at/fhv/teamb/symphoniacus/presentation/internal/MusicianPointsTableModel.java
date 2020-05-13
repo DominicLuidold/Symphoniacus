@@ -8,11 +8,11 @@ import at.fhv.teamb.symphoniacus.domain.Musician;
  * @author Valentin Goronjic
  */
 public interface MusicianPointsTableModel {
-    Integer getBalancePoints();
+    String getBalancePoints();
 
-    Integer getDebitPoints();
+    String getDebitPoints();
 
-    Integer getGainedPoints();
+    String getGainedPoints();
 
     Musician getMusician();
 }
