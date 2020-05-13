@@ -2,17 +2,24 @@ package at.fhv.teamb.symphoniacus.application;
 
 import at.fhv.teamb.symphoniacus.domain.Duty;
 import at.fhv.teamb.symphoniacus.domain.DutyCategory;
+import at.fhv.teamb.symphoniacus.domain.DutyPosition;
+import at.fhv.teamb.symphoniacus.domain.InstrumentationPosition;
 import at.fhv.teamb.symphoniacus.domain.Section;
 import at.fhv.teamb.symphoniacus.persistence.PersistenceState;
 import at.fhv.teamb.symphoniacus.persistence.dao.DutyCategoryChangeLogDao;
 import at.fhv.teamb.symphoniacus.persistence.dao.DutyDao;
+import at.fhv.teamb.symphoniacus.persistence.dao.InstrumentationDao;
 import at.fhv.teamb.symphoniacus.persistence.model.DutyCategoryChangelogEntity;
 import at.fhv.teamb.symphoniacus.persistence.model.DutyEntity;
+import at.fhv.teamb.symphoniacus.persistence.model.DutyPositionEntity;
+import at.fhv.teamb.symphoniacus.persistence.model.InstrumentationEntity;
+import at.fhv.teamb.symphoniacus.persistence.model.InstrumentationPositionEntity;
 import at.fhv.teamb.symphoniacus.persistence.model.MonthlyScheduleEntity;
 import at.fhv.teamb.symphoniacus.persistence.model.SectionEntity;
 import at.fhv.teamb.symphoniacus.persistence.model.SectionMonthlyScheduleEntity;
 import at.fhv.teamb.symphoniacus.persistence.model.SeriesOfPerformancesEntity;
 import at.fhv.teamb.symphoniacus.persistence.model.WeeklyScheduleEntity;
+import java.lang.instrument.Instrumentation;
 import java.time.DayOfWeek;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -20,6 +27,7 @@ import java.time.YearMonth;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -28,6 +36,7 @@ import org.apache.logging.log4j.Logger;
  * {@link SectionEntity}.
  *
  * @author Nino Heinzle
+ * @author Danijel Antonijevic
  * @author Dominic Luidold
  */
 public class DutyManager {
@@ -36,6 +45,7 @@ public class DutyManager {
     private final SectionMonthlyScheduleManager sectionMonthlyScheduleManager;
     private final WeeklyScheduleManager weeklyScheduleManager;
     protected DutyDao dutyDao;
+    private InstrumentationDao instrumentationDao;
     private DutyCategoryChangeLogDao changeLogDao;
 
     /**
@@ -47,6 +57,7 @@ public class DutyManager {
         this.weeklyScheduleManager = new WeeklyScheduleManager();
         this.changeLogDao = new DutyCategoryChangeLogDao();
         this.dutyDao = new DutyDao();
+        this.instrumentationDao = new InstrumentationDao();
     }
 
     /**
@@ -279,7 +290,13 @@ public class DutyManager {
      *
      * @param duty The duty to save
      */
-    public void save(Duty duty, boolean userPointsChanged, Integer points) {
+    public void save(
+        Duty duty,
+        boolean userPointsChanged,
+        Integer points,
+        Set<InstrumentationEntity> instrumentations
+    ) {
+        createDutyPositions(instrumentations, duty.getEntity());
         Optional<DutyEntity> persistedDuty = this.dutyDao.persist(duty.getEntity());
 
         if (userPointsChanged) {
@@ -343,5 +360,35 @@ public class DutyManager {
                 duty.getTitle()
             );
         }
+    }
+
+    public Set<InstrumentationEntity> getAllInstrumentationsToSeries(
+        SeriesOfPerformancesEntity series) {
+        return this.instrumentationDao.getAllInstrumentationsToSeries(series);
+    }
+
+    private void createDutyPositions(
+        Set<InstrumentationEntity> instrumentations,
+        DutyEntity duty) {
+
+        List<DutyPositionEntity> dutyPositions = new LinkedList<>();
+
+        for (InstrumentationEntity inst : instrumentations) {
+            for (InstrumentationPositionEntity instPosition : inst.getInstrumentationPositions()) {
+                DutyPositionEntity pos = new DutyPositionEntity();
+                pos.setMusician(null);
+                pos.setDescription(null);
+                pos.setDuty(duty);
+                pos.setInstrumentationPosition(instPosition);
+                pos.setSection(getSectionToInstrumentationPosition(instPosition));
+                dutyPositions.add(pos);
+            }
+        }
+        duty.getDutyPositions().addAll(dutyPositions);
+    }
+
+    private SectionEntity getSectionToInstrumentationPosition(
+        InstrumentationPositionEntity instPosition) {
+        return instPosition.getSectionInstrumentation().getSection();
     }
 }

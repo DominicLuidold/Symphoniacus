@@ -7,6 +7,7 @@ import at.fhv.teamb.symphoniacus.domain.DutyCategory;
 import at.fhv.teamb.symphoniacus.persistence.PersistenceState;
 import at.fhv.teamb.symphoniacus.persistence.dao.SeriesOfPerformancesDao;
 import at.fhv.teamb.symphoniacus.persistence.model.DutyCategoryChangelogEntity;
+import at.fhv.teamb.symphoniacus.persistence.model.InstrumentationEntity;
 import at.fhv.teamb.symphoniacus.persistence.model.SeriesOfPerformancesEntity;
 import at.fhv.teamb.symphoniacus.presentation.internal.Parentable;
 import at.fhv.teamb.symphoniacus.presentation.internal.TabPaneEntry;
@@ -16,13 +17,16 @@ import com.jfoenix.controls.JFXTimePicker;
 import com.jfoenix.validation.RequiredFieldValidator;
 import java.net.URL;
 import java.time.LocalTime;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Optional;
 import java.util.ResourceBundle;
+import java.util.Set;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.stream.Collectors;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.collections.ObservableSet;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Alert;
@@ -42,6 +46,7 @@ import javafx.scene.paint.Paint;
 import javafx.util.StringConverter;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.controlsfx.control.CheckComboBox;
 import shadow.org.codehaus.plexus.util.StringUtils;
 
 /**
@@ -49,6 +54,8 @@ import shadow.org.codehaus.plexus.util.StringUtils;
  *
  * @author Theresa Gierer
  * @author Dominic Luidold
+ * @author Danijel Antonijevic
+ * @author Nino Heinzle
  */
 public class NewDutyEntryController implements Initializable, Parentable<TabPaneController> {
     private static final Logger LOG = LogManager.getLogger(NewDutyEntryController.class);
@@ -100,11 +107,15 @@ public class NewDutyEntryController implements Initializable, Parentable<TabPane
     @FXML
     private Button scheduleBackBtn;
 
+    @FXML
+    private CheckComboBox<InstrumentationEntity> instrumentationsSelect;
+
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         this.resources = resources;
         this.dutyManager = new DutyManager();
         this.dutyCategoryManager = new DutyCategoryManager();
+
 
         // Init combo boxes with data
         this.initCategoryComboBox();
@@ -130,6 +141,22 @@ public class NewDutyEntryController implements Initializable, Parentable<TabPane
             ComboBoxBase.ON_SHOWING,
             event -> initSeriesOfPerformancesComboBox()
         );
+
+        // Show Instrumentations of a selected series
+        this.seriesOfPerformancesSelect.addEventHandler(ComboBoxBase.ON_HIDDEN, event -> {
+            if (!this.seriesOfPerformancesSelect.getSelectionModel().isEmpty()) {
+                initIntrumentationsCheckComboBox();
+            } else {
+                this.instrumentationsSelect.getItems().clear();
+            }
+        });
+
+        this.instrumentationsSelect.addEventHandler(ComboBoxBase.ON_HIDDEN, event -> {
+            if (!this.instrumentationsSelect.getCheckModel().getCheckedItems().isEmpty()) {
+                // TODO - wenn langweilig prompt der ausgewählten
+            }
+        });
+
     }
 
     /**
@@ -209,7 +236,9 @@ public class NewDutyEntryController implements Initializable, Parentable<TabPane
         this.seriesOfPerformancesSelect.setConverter(new StringConverter<>() {
             @Override
             public String toString(SeriesOfPerformancesEntity seriesOfPerformancesEntity) {
-                return seriesOfPerformancesEntity.getDescription();
+                return seriesOfPerformancesEntity.getDescription()
+                    + " | " + " (" + seriesOfPerformancesEntity.getStartDate().toString()
+                    + ")-(" + seriesOfPerformancesEntity.getEndDate().toString() + ")";
             }
 
             @Override
@@ -376,11 +405,15 @@ public class NewDutyEntryController implements Initializable, Parentable<TabPane
                 this.seriesOfPerformancesSelect.getValue()
             );
 
+            Set<InstrumentationEntity> instrumentations
+                = new LinkedHashSet<>(
+                this.instrumentationsSelect.getCheckModel().getCheckedItems());
             // Delegate saving to manager
             this.dutyManager.save(
                 this.duty,
                 this.userEditedPoints,
-                Integer.parseInt(this.dutyPointsInput.getText())
+                Integer.parseInt(this.dutyPointsInput.getText()),
+                instrumentations
             );
 
             // Show success alert
@@ -510,4 +543,47 @@ public class NewDutyEntryController implements Initializable, Parentable<TabPane
     public void initializeWithParent() {
         // Intentionally empty - currently not needed
     }
+
+    private void initIntrumentationsCheckComboBox() {
+        final ObservableSet<InstrumentationEntity> instrumentations =
+            FXCollections.observableSet(this.dutyManager.getAllInstrumentationsToSeries(
+                this.seriesOfPerformancesSelect.getSelectionModel().getSelectedItem()));
+
+        final StringConverter<InstrumentationEntity> instConverter =
+            new StringConverter<>() {
+                @Override
+                public String toString(InstrumentationEntity inst) {
+                    return inst.getName() + " - "
+                        + inst.getMusicalPiece().getName();
+                }
+
+                @Override
+                public InstrumentationEntity fromString(String nameOfInst) {
+                    LOG.error(
+                        "Somehow the instrumentation couldn't get found by its"
+                            + " name in the NewDutyEntryController");
+                    //Should never be able to get here
+                    return null;
+                }
+            };
+
+        this.instrumentationsSelect.setConverter(instConverter);
+        this.instrumentationsSelect.getItems().setAll(instrumentations);
+
+        /*
+            Refresh BUG!
+            https://github.com/controlsfx/controlsfx/issues/1004
+            Hier ein selbstgebauter workaround.
+         */
+        if (!instrumentations.isEmpty()) {
+            ObservableList<Integer> result =
+                this.instrumentationsSelect.getCheckModel().getCheckedIndices();
+            for (Integer i : result) {
+                this.instrumentationsSelect.getCheckModel().check(i);
+            }
+        }
+        this.instrumentationsSelect.getCheckModel().clearChecks();
+
+    }
+
 }

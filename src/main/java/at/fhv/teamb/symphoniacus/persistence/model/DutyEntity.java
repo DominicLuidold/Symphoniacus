@@ -50,6 +50,7 @@ public class DutyEntity {
     private SeriesOfPerformancesEntity seriesOfPerformances;
 
     @OneToMany(
+        fetch = FetchType.LAZY,
         cascade = {CascadeType.PERSIST, CascadeType.MERGE},
         mappedBy = "duty",
         orphanRemoval = true

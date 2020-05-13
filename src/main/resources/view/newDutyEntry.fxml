@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import com.jfoenix.controls.JFXDatePicker?>
+<?import com.jfoenix.controls.JFXTextField?>
 <?import com.jfoenix.controls.JFXTimePicker?>
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Button?>
@@ -17,8 +18,8 @@
 <?import javafx.scene.layout.StackPane?>
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
+<?import org.controlsfx.control.CheckComboBox?>
 
-<?import com.jfoenix.controls.JFXTextField?>
 <AnchorPane fx:id="newDutyEntryPane" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="at.fhv.teamb.symphoniacus.presentation.NewDutyEntryController">
     <SplitPane fx:id="horizontalSplitPane" orientation="VERTICAL" prefHeight="160.0" prefWidth="200.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
         <items>
@@ -37,15 +38,17 @@
                </children>
             </AnchorPane>
                 <GridPane alignment="CENTER" hgap="10" prefHeight="200.0" vgap="20">
-                    <Label fx:id="seriesOfPerformancesLabel" text="%tab.duty.new.entry.label.seriesofperformances" GridPane.columnIndex="0" GridPane.rowIndex="0" />
-                    <ComboBox fx:id="seriesOfPerformancesSelect" layoutX="15.0" layoutY="33.0" prefWidth="250.0" promptText="%tab.duty.new.entry.dropdown.load.seriesofperformances" GridPane.columnIndex="1" GridPane.rowIndex="0" />
-                    <Button fx:id="newSeriesOfPerformancesBtn" mnemonicParsing="false" prefWidth="150.0" text="%tab.duty.new.entry.button.new.seriesofperformances" GridPane.columnIndex="3" GridPane.rowIndex="0" />
-                    <Label fx:id="dutyCategoryLabel" text="%tab.duty.new.entry.label.category" GridPane.columnIndex="0" GridPane.rowIndex="1" />
-                    <ComboBox fx:id="dutyCategorySelect" layoutX="15.0" layoutY="33.0" prefWidth="250.0" promptText="%tab.duty.new.entry.dropdown.load.category" GridPane.columnIndex="1" GridPane.rowIndex="1" />
-                    <Label fx:id="dutyPointsLabel" text="%tab.duty.new.entry.label.points" GridPane.columnIndex="0" GridPane.rowIndex="2" />
-                    <JFXTextField fx:id="dutyPointsInput" GridPane.columnIndex="1" GridPane.rowIndex="2" />
-                    <Label fx:id="dutyDescriptionLabel" text="%tab.duty.new.entry.label.description" GridPane.columnIndex="0" GridPane.rowIndex="3" />
-                    <JFXTextField fx:id="dutyDescriptionInput" GridPane.columnIndex="1" GridPane.rowIndex="3" />
+                    <Label fx:id="seriesOfPerformancesLabel" text="%tab.duty.new.entry.label.seriesofperformances" GridPane.columnIndex="0" />
+               <Label fx:id="instrumentationsLabel" text="%tab.duty.new.entry.dropdown.load.instrumentations" GridPane.rowIndex="1" />
+                    <ComboBox fx:id="seriesOfPerformancesSelect" layoutX="15.0" layoutY="33.0" prefWidth="250.0" promptText="%tab.duty.new.entry.dropdown.load.seriesofperformances" GridPane.columnIndex="1" />
+               <CheckComboBox fx:id="instrumentationsSelect" prefWidth="250.0" title="%tab.duty.new.entry.dropdown.load.instrumentations.default" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+                    <Button fx:id="newSeriesOfPerformancesBtn" mnemonicParsing="false" prefWidth="150.0" text="%tab.duty.new.entry.button.new.seriesofperformances" GridPane.columnIndex="3" />
+                    <Label fx:id="dutyCategoryLabel" text="%tab.duty.new.entry.label.category" GridPane.columnIndex="0" GridPane.rowIndex="2" />
+                    <ComboBox fx:id="dutyCategorySelect" layoutX="15.0" layoutY="33.0" prefWidth="250.0" promptText="%tab.duty.new.entry.dropdown.load.category" GridPane.columnIndex="1" GridPane.rowIndex="2" />
+                    <Label fx:id="dutyPointsLabel" text="%tab.duty.new.entry.label.points" GridPane.columnIndex="0" GridPane.rowIndex="3" />
+                    <JFXTextField fx:id="dutyPointsInput" GridPane.columnIndex="1" GridPane.rowIndex="3" />
+                    <Label fx:id="dutyDescriptionLabel" text="%tab.duty.new.entry.label.description" GridPane.columnIndex="0" GridPane.rowIndex="4" />
+                    <JFXTextField fx:id="dutyDescriptionInput" GridPane.columnIndex="1" GridPane.rowIndex="4" />
                <columnConstraints>
                   <ColumnConstraints hgrow="NEVER" prefWidth="250.0" />
                   <ColumnConstraints hgrow="NEVER" prefWidth="250.0" />
@@ -53,6 +56,7 @@
                   <ColumnConstraints hgrow="NEVER" prefWidth="200.0" />
                </columnConstraints>
                <rowConstraints>
+                  <RowConstraints minHeight="10.0" prefHeight="30.0" />
                   <RowConstraints />
                   <RowConstraints />
                   <RowConstraints />

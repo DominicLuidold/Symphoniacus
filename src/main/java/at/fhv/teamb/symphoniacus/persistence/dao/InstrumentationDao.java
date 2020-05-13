@@ -3,6 +3,8 @@ package at.fhv.teamb.symphoniacus.persistence.dao;
 import at.fhv.teamb.symphoniacus.persistence.BaseDao;
 import at.fhv.teamb.symphoniacus.persistence.model.InstrumentationEntity;
 import at.fhv.teamb.symphoniacus.persistence.model.MusicalPieceEntity;
+import at.fhv.teamb.symphoniacus.persistence.model.SeriesOfPerformancesEntity;
+import java.lang.instrument.Instrumentation;
 import java.util.LinkedHashSet;
 import java.util.Optional;
 import java.util.Set;
@@ -57,5 +59,26 @@ public class InstrumentationDao extends BaseDao<InstrumentationEntity> {
     @Override
     public boolean remove(InstrumentationEntity elem) {
         return false;
+    }
+
+    /**
+     * Get all Instrumentations.
+     * @param series series of performances
+     * @return Instrumentation Entity Set
+     */
+    public Set<InstrumentationEntity> getAllInstrumentationsToSeries(
+        SeriesOfPerformancesEntity series) {
+
+        TypedQuery<InstrumentationEntity> query = entityManager
+            .createQuery(
+                "SELECT inst FROM InstrumentationEntity inst "
+                    + "INNER JOIN inst.seriesOfPerformances sp "
+                    + "WHERE sp.seriesOfPerformancesId = :seriesId",
+                InstrumentationEntity.class);
+
+        query.setParameter("seriesId", series.getSeriesOfPerformancesId());
+
+        return new LinkedHashSet<>(query.getResultList());
+
     }
 }
