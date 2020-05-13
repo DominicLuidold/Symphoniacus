@@ -7,9 +7,9 @@ import at.fhv.teamb.symphoniacus.domain.Musician;
 import at.fhv.teamb.symphoniacus.domain.Section;
 import at.fhv.teamb.symphoniacus.domain.SectionMonthlySchedule;
 import at.fhv.teamb.symphoniacus.presentation.internal.CustomCalendarButtonEvent;
+import at.fhv.teamb.symphoniacus.presentation.internal.popover.CustomDutyPopoverNode;
 import at.fhv.teamb.symphoniacus.presentation.internal.skin.DutySchedulerCalendarSkin;
 import com.calendarfx.model.Calendar;
-import com.calendarfx.model.Entry;
 import java.net.URL;
 import java.text.MessageFormat;
 import java.time.LocalDate;
@@ -117,6 +117,16 @@ public class DutySchedulerCalendarController extends CalendarController implemen
     public void initialize(URL location, ResourceBundle resources) {
         this.resources = resources;
         this.registerController();
+
+        this.calendarView.setEntryDetailsPopOverContentCallback(param ->
+            new CustomDutyPopoverNode(
+                param.getPopOver(),
+                param.getDateControl(),
+                param.getNode(),
+                param.getEntry(),
+                this.section
+            )
+        );
         LOG.debug("Initialized DutySchedulerCalendarController");
     }
 
@@ -350,6 +360,8 @@ public class DutySchedulerCalendarController extends CalendarController implemen
      */
     @Override
     protected void setEntryDetailsCallback() {
+
+        /*
         this.calendarView.setEntryDetailsCallback(
             param -> {
                 if (param.getEntry() instanceof Entry) {
@@ -378,6 +390,8 @@ public class DutySchedulerCalendarController extends CalendarController implemen
                 return false;
             }
         );
+
+         */
     }
 
     /**
