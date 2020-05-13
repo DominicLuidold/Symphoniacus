@@ -134,14 +134,12 @@ public class Musician {
         try {
             int balancePoints = getBalancePoints().getValue();
             int gainedPoints = getGainedPoints().getValue();
-            int debitPoints = getDebitPoints().getValue();
             sb.append(gainedPoints);
 
             sb.append("/");
             sb.append(balancePoints);
-            sb.append(" (= ");
+            sb.append(" \u21D2 ");
             sb.append(gainedPoints + balancePoints);
-            sb.append(")");
         } catch (PointsNotCalculatedException e) {
             LOG.error(e);
         }

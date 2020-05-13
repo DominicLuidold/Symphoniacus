@@ -14,6 +14,7 @@ import at.fhv.teamb.symphoniacus.presentation.internal.MusicianTableModel;
 import at.fhv.teamb.symphoniacus.presentation.internal.OldDutyComboView;
 import at.fhv.teamb.symphoniacus.presentation.internal.Parentable;
 import at.fhv.teamb.symphoniacus.presentation.internal.ScheduleButtonTableCell;
+import at.fhv.teamb.symphoniacus.presentation.internal.TableModel;
 import at.fhv.teamb.symphoniacus.presentation.internal.tasks.GetMusiciansAvailableForPositionTask;
 import at.fhv.teamb.symphoniacus.presentation.internal.tasks.GetOtherDutiesTask;
 import at.fhv.teamb.symphoniacus.presentation.internal.tasks.GetPositionsWithMusiciansTask;
@@ -32,24 +33,33 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.geometry.Insets;
 import javafx.geometry.Pos;
+import javafx.scene.Node;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.ButtonBar;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
+import javafx.scene.control.Separator;
+import javafx.scene.control.TableCell;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableRow;
 import javafx.scene.control.TableView;
 import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.VBox;
+import javafx.scene.paint.Color;
+import javafx.scene.text.Font;
+import javafx.scene.text.FontWeight;
 import javafx.util.Duration;
 import javafx.util.StringConverter;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.controlsfx.control.Notifications;
+import org.controlsfx.control.PopOver;
 
 public class DutyScheduleController
     implements Controllable, Initializable, Parentable<DutySchedulerCalendarController> {
@@ -102,6 +112,15 @@ public class DutyScheduleController
     @FXML
     private ComboBox<OldDutyComboView> oldDutySelect;
 
+    @FXML
+    private TableColumn<TableModel, String> columnPointsWithRequests;
+
+    @FXML
+    private TableColumn<TableModel, String> columnPointsWithoutRequests;
+
+    @FXML
+    private TableColumn<TableModel, String> columnPointsSummary;
+
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         this.registerController();
@@ -115,6 +134,9 @@ public class DutyScheduleController
 
         // Set mouse click events
         this.setMouseClickEvents();
+
+        // set mouse hover events
+        this.setMouseHoverEvents();
 
         // Set row factories
         this.setRowFactories();
@@ -574,7 +596,7 @@ public class DutyScheduleController
 
     private void closeDutySchedule() {
         //TODO Abfrage SaveState(old, newold)? von actualSectionInstrumentation
-        if (this.actualSectionInstrumentation
+        if (this.actualSectionInstrumentation != null && this.actualSectionInstrumentation
             .getPersistenceState()
             .equals(PersistenceState.EDITED)
         ) {
@@ -698,6 +720,73 @@ public class DutyScheduleController
             LOG.debug("Load old Duty pressed");
             loadOldDuty();
         });
+    }
+
+    private TableCell<TableModel, String> getPointsTableCell() {
+        Label lblGainedPoints = new Label();
+        Label lblBalancePoints = new Label();
+        Label lblSummaryPoints = new Label();
+        lblGainedPoints.setTextFill(Color.web("#000000"));
+        lblBalancePoints.setTextFill(Color.web("#000000"));
+        lblSummaryPoints.setTextFill(Color.web("#000000"));
+        Font f = Font.getDefault();
+        Font newFont = Font.font(f.getFamily(), FontWeight.BOLD, 14);
+        lblSummaryPoints.setFont(newFont);
+
+        VBox vbox = new VBox(lblGainedPoints, lblBalancePoints, new Separator(), lblSummaryPoints);
+        vbox.setPadding(new Insets(15, 15, 15, 15));
+        PopOver popOver = new PopOver(vbox);
+
+
+        TableCell<TableModel, String> cell = new TableCell<>() {
+            @Override
+            protected void updateItem(String item, boolean empty) {
+                super.updateItem(item, empty);
+                setText(item);
+            }
+        };
+        cell.addEventHandler(MouseEvent.MOUSE_ENTERED, event -> {
+            TableModel mtm = cell.getTableRow().getItem();
+            if (mtm.getMusician() != null) {
+                LOG.debug("Musician set on this position");
+
+                lblGainedPoints.setText(mtm.getGainedPoints() + " Points already gained");
+                lblBalancePoints.setText(mtm.getBalancePoints() + " Points planned");
+                lblSummaryPoints.setText(
+                    mtm.getBalancePoints() + mtm.getGainedPoints()
+                        + " Points in summary"
+                );
+                popOver.show((Node) event.getSource());
+                popOver.requestFocus();
+            } else {
+                LOG.debug("No musician set on this position");
+            }
+        });
+        cell.addEventHandler(MouseEvent.MOUSE_EXITED, event -> {
+            if (popOver.isShowing()) {
+                popOver.hide();
+            }
+        });
+        return cell;
+    }
+
+    /**
+     * Sets the mouse hover events of the duty schedule view.
+     */
+    private void setMouseHoverEvents() {
+
+        this.columnPointsWithoutRequests.setCellFactory(
+            column -> getPointsTableCell()
+        );
+
+        this.columnPointsWithRequests.setCellFactory(
+            column -> getPointsTableCell()
+        );
+
+        this.columnPointsSummary.setCellFactory(
+            column -> getPointsTableCell()
+        );
+
     }
 
     /**

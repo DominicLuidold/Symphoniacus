@@ -14,7 +14,7 @@ import org.apache.logging.log4j.Logger;
  * @author Valentin Goronjic
  * @author Tobias Moser
  */
-public class MusicianTableModel {
+public class MusicianTableModel implements TableModel {
     private boolean schedule;
     private Musician musician;
 
