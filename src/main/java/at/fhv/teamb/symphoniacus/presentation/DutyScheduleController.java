@@ -785,8 +785,10 @@ public class DutyScheduleController
                         this.resources.getString(
                             "tab.duty.schedule.table.musicians.summary.popup"
                         ),
-                        // without parsing, 0 as prefix may be shown
-                        Integer.valueOf(mtm.getBalancePoints() + mtm.getGainedPoints())
+                        // those are strings, so parse them as int
+                        Integer.valueOf(mtm.getBalancePoints())
+                            + Integer.valueOf(mtm.getGainedPoints()
+                        )
                     )
                 );
 
