@@ -1,12 +1,13 @@
 package at.fhv.teamb.symphoniacus.presentation.internal.tasks;
 
 import at.fhv.teamb.symphoniacus.application.DutyScheduleManager;
+import at.fhv.teamb.symphoniacus.domain.ActualSectionInstrumentation;
 import at.fhv.teamb.symphoniacus.domain.Duty;
-import at.fhv.teamb.symphoniacus.domain.DutyPosition;
 import at.fhv.teamb.symphoniacus.domain.Musician;
+import at.fhv.teamb.symphoniacus.domain.Section;
 import at.fhv.teamb.symphoniacus.presentation.DutyScheduleController;
+import java.util.Optional;
 import java.util.Set;
-import javafx.concurrent.Task;
 import javafx.scene.layout.AnchorPane;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -17,38 +18,40 @@ import org.apache.logging.log4j.Logger;
  *
  * @author Valentin Goronjic
  */
-public class GetMusiciansAvailableForPositionTask extends LoadingAnimationTask<Set<Musician>> {
+public class GetPositionsWithMusiciansTask
+    extends LoadingAnimationTask<Optional<ActualSectionInstrumentation>> {
+
     private static final Logger LOG =
-        LogManager.getLogger(GetMusiciansAvailableForPositionTask.class);
+        LogManager.getLogger(GetPositionsWithMusiciansTask.class);
     private final DutyScheduleManager dutyScheduleManager;
     private final Duty duty;
-    private final DutyPosition dutyPosition;
+    private final Section section;
 
     /**
      * Constructs a new Task.
      *
-     * @param dsm          DutyScheduleManager which was defined in {@link DutyScheduleController}
-     * @param duty         Current duty
-     * @param dutyPosition Current duty position
+     * @param dsm     DutyScheduleManager which was defined in {@link DutyScheduleController}
+     * @param duty    Current duty
+     * @param section Section
      */
-    public GetMusiciansAvailableForPositionTask(
+    public GetPositionsWithMusiciansTask(
         DutyScheduleManager dsm,
         Duty duty,
-        DutyPosition dutyPosition,
+        Section section,
         AnchorPane pane
     ) {
         super(pane);
         this.dutyScheduleManager = dsm;
         this.duty = duty;
-        this.dutyPosition = dutyPosition;
+        this.section = section;
     }
 
     @Override
-    protected Set<Musician> call() throws Exception {
+    protected Optional<ActualSectionInstrumentation> call() throws Exception {
         super.call();
-        return this.dutyScheduleManager.getMusiciansAvailableForPosition(
+        return this.dutyScheduleManager.getInstrumentationDetails(
             this.duty,
-            this.dutyPosition
+            this.section
         );
     }
 }
