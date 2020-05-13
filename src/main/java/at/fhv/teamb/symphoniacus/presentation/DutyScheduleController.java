@@ -7,6 +7,7 @@ import at.fhv.teamb.symphoniacus.domain.Duty;
 import at.fhv.teamb.symphoniacus.domain.DutyPosition;
 import at.fhv.teamb.symphoniacus.domain.Musician;
 import at.fhv.teamb.symphoniacus.domain.Section;
+import at.fhv.teamb.symphoniacus.domain.exception.PointsNotCalculatedException;
 import at.fhv.teamb.symphoniacus.persistence.PersistenceState;
 import at.fhv.teamb.symphoniacus.presentation.internal.AlertHelper;
 import at.fhv.teamb.symphoniacus.presentation.internal.DutyPositionMusicianTableModel;
@@ -117,9 +118,6 @@ public class DutyScheduleController
 
     @FXML
     private TableColumn<TableModel, String> columnPointsWithoutRequests;
-
-    @FXML
-    private TableColumn<TableModel, String> columnPointsSummary;
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
@@ -321,7 +319,9 @@ public class DutyScheduleController
 
                     for (DutyPosition dp : positionList) {
                         observablePositionList.add(
-                            new DutyPositionMusicianTableModel(dp)
+                            new DutyPositionMusicianTableModel(
+                                dp
+                            )
                         );
                     }
                     this.positionsTable.setItems(observablePositionList);
@@ -559,9 +559,9 @@ public class DutyScheduleController
             .show();
 
         this.positionsTable.refresh();
+        this.initDutyPositionsTableWithMusicians();
         this.initMusicianTableWithoutRequests();
     }
-
     private void removeMusicianFromPosition(Musician musician) {
         this.dutyScheduleManager.removeMusicianFromPosition(
             this.actualSectionInstrumentation,
@@ -756,6 +756,7 @@ public class DutyScheduleController
                     mtm.getBalancePoints() + mtm.getGainedPoints()
                         + " Points in summary"
                 );
+
                 popOver.show((Node) event.getSource());
                 popOver.requestFocus();
             } else {
@@ -782,11 +783,6 @@ public class DutyScheduleController
         this.columnPointsWithRequests.setCellFactory(
             column -> getPointsTableCell()
         );
-
-        this.columnPointsSummary.setCellFactory(
-            column -> getPointsTableCell()
-        );
-
     }
 
     /**

@@ -154,8 +154,8 @@ public class DutyDao extends BaseDao<DutyEntity> {
 
         TypedQuery<DutyEntity> query = entityManager.createQuery(
             "SELECT d FROM DutyEntity d "
-                + "INNER JOIN d.dutyPositions dp "
-                + "INNER JOIN dp.musician m "
+                + "JOIN FETCH d.dutyPositions dp "
+                + "JOIN FETCH JOIN dp.musician m "
                 + "JOIN FETCH d.dutyCategory "
                 + "WHERE d.end <= :end AND d.start >= :start AND m = :musician",
             DutyEntity.class

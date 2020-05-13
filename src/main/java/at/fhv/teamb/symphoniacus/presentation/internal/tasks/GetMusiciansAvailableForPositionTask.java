@@ -46,6 +46,7 @@ public class GetMusiciansAvailableForPositionTask extends LoadingAnimationTask<S
     @Override
     protected Set<Musician> call() throws Exception {
         super.call();
+        LOG.debug("GetMusiciansAvailableForPositionTask called");
         return this.dutyScheduleManager.getMusiciansAvailableForPosition(
             this.duty,
             this.dutyPosition

@@ -83,14 +83,8 @@ public class DutyScheduleManager {
 
         // Create DutyPosition domain objects
         List<DutyPosition> dutyPositions = new LinkedList<>();
-        for (DutyPositionEntity dutyPosition : dutyPositionEntities) {
-
-            DutyPosition dp = new DutyPosition(dutyPosition);
-            if (dp.getAssignedMusician().isPresent()) {
-                Musician m = dp.getAssignedMusician().get();
-                addPointsToMusician(m, duty.getEntity().getStart().toLocalDate());
-            }
-
+        for (DutyPositionEntity dpEntity : dutyPositionEntities) {
+            DutyPosition dp = new DutyPosition(dpEntity);
             dutyPositions.add(dp);
         }
 
@@ -190,8 +184,6 @@ public class DutyScheduleManager {
         // Update local musician lists
         this.setMusicians.add(musician);
         this.unsetMusicians.remove(musician);
-
-        addPointsToMusician(musician, position.getEntity().getDuty().getStart().toLocalDate());
 
         // Update object state
         instrumentation.getDuty().setPersistenceState(PersistenceState.EDITED);
@@ -307,9 +299,10 @@ public class DutyScheduleManager {
         for (MusicianEntity entity : this.sectionMusicianEntities) {
             // Get balancePoints for musician
 
-
             // Create domain object
             Musician m = new Musician(entity);
+
+            // add points
             addPointsToMusician(m, duty.getEntity().getStart().toLocalDate());
 
             // Fill domain object with wish requests
