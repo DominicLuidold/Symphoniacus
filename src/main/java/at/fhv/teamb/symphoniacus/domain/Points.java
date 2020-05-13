@@ -207,12 +207,4 @@ public class Points {
         }
         return new Points(points);
     }
-
-    public static Points add(Points points, int valueToAdd) {
-        return new Points(points.getValue() + valueToAdd);
-    }
-
-    public static Points remove(Points points, int valueToAdd) {
-        return new Points(points.getValue() - valueToAdd);
-    }
 }
