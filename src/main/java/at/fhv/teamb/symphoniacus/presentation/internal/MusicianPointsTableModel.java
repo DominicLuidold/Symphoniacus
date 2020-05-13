@@ -7,9 +7,12 @@ import at.fhv.teamb.symphoniacus.domain.Musician;
  *
  * @author Valentin Goronjic
  */
-public interface TableModel {
+public interface MusicianPointsTableModel {
     Integer getBalancePoints();
+
     Integer getDebitPoints();
+
     Integer getGainedPoints();
+
     Musician getMusician();
 }

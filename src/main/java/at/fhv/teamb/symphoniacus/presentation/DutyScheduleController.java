@@ -10,11 +10,11 @@ import at.fhv.teamb.symphoniacus.domain.Section;
 import at.fhv.teamb.symphoniacus.persistence.PersistenceState;
 import at.fhv.teamb.symphoniacus.presentation.internal.AlertHelper;
 import at.fhv.teamb.symphoniacus.presentation.internal.DutyPositionMusicianTableModel;
+import at.fhv.teamb.symphoniacus.presentation.internal.MusicianPointsTableModel;
 import at.fhv.teamb.symphoniacus.presentation.internal.MusicianTableModel;
 import at.fhv.teamb.symphoniacus.presentation.internal.OldDutyComboView;
 import at.fhv.teamb.symphoniacus.presentation.internal.Parentable;
 import at.fhv.teamb.symphoniacus.presentation.internal.ScheduleButtonTableCell;
-import at.fhv.teamb.symphoniacus.presentation.internal.TableModel;
 import at.fhv.teamb.symphoniacus.presentation.internal.tasks.GetMusiciansAvailableForPositionTask;
 import at.fhv.teamb.symphoniacus.presentation.internal.tasks.GetOtherDutiesTask;
 import at.fhv.teamb.symphoniacus.presentation.internal.tasks.GetPositionsWithMusiciansTask;
@@ -114,10 +114,10 @@ public class DutyScheduleController
     private ComboBox<OldDutyComboView> oldDutySelect;
 
     @FXML
-    private TableColumn<TableModel, String> columnPointsWithRequests;
+    private TableColumn<MusicianPointsTableModel, String> columnPointsWithRequests;
 
     @FXML
-    private TableColumn<TableModel, String> columnPointsWithoutRequests;
+    private TableColumn<MusicianPointsTableModel, String> columnPointsWithoutRequests;
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
@@ -723,7 +723,7 @@ public class DutyScheduleController
         });
     }
 
-    private TableCell<TableModel, String> getPointsTableCell() {
+    private TableCell<MusicianPointsTableModel, String> getPointsTableCell() {
         Label lblGainedPoints = new Label();
         Label lblBalancePoints = new Label();
         Label lblSummaryPoints = new Label();
@@ -739,7 +739,7 @@ public class DutyScheduleController
         PopOver popOver = new PopOver(vbox);
 
 
-        TableCell<TableModel, String> cell = new TableCell<>() {
+        TableCell<MusicianPointsTableModel, String> cell = new TableCell<>() {
             @Override
             protected void updateItem(String item, boolean empty) {
                 super.updateItem(item, empty);
@@ -747,7 +747,7 @@ public class DutyScheduleController
             }
         };
         cell.addEventHandler(MouseEvent.MOUSE_ENTERED, event -> {
-            TableModel mtm = cell.getTableRow().getItem();
+            MusicianPointsTableModel mtm = cell.getTableRow().getItem();
             if (mtm.getMusician() != null) {
                 LOG.debug("Musician set on this position");
                 this.dutyScheduleManager.addGainedPointsToMusician(

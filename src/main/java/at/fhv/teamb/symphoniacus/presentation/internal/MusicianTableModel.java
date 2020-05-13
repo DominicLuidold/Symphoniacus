@@ -1,11 +1,8 @@
 package at.fhv.teamb.symphoniacus.presentation.internal;
 
 import at.fhv.teamb.symphoniacus.domain.Musician;
-import at.fhv.teamb.symphoniacus.domain.Points;
 import at.fhv.teamb.symphoniacus.domain.exception.PointsNotCalculatedException;
-import at.fhv.teamb.symphoniacus.presentation.DutyScheduleController;
 import java.time.format.DateTimeFormatter;
-import java.util.Optional;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -15,7 +12,7 @@ import org.apache.logging.log4j.Logger;
  * @author Valentin Goronjic
  * @author Tobias Moser
  */
-public class MusicianTableModel implements TableModel {
+public class MusicianTableModel implements MusicianPointsTableModel {
 
     private static final Logger LOG = LogManager.getLogger(MusicianTableModel.class);
     private boolean schedule;
@@ -48,6 +45,11 @@ public class MusicianTableModel implements TableModel {
         }
     }
 
+    /**
+     * Returns the debit points of this musician.
+     *
+     * @return Points
+     */
     public Integer getDebitPoints() {
         try {
             return this.musician.getDebitPoints().getValue();
@@ -57,6 +59,11 @@ public class MusicianTableModel implements TableModel {
         }
     }
 
+    /**
+     * Returns the gained points of this musician.
+     *
+     * @return Points
+     */
     public Integer getGainedPoints() {
         try {
             return this.musician.getGainedPoints().getValue();
@@ -66,18 +73,6 @@ public class MusicianTableModel implements TableModel {
         }
     }
 
-    public String getPointsSummary() {
-        if (this.musician != null) {
-            Points p = null;
-            try {
-                p = this.musician.getBalancePoints();
-                return String.valueOf(p.getValue());
-            } catch (PointsNotCalculatedException e) {
-                LOG.error(e);
-            }
-        }
-        return String.valueOf(-1);
-    }
     public boolean getSchedule() {
         return this.schedule;
     }

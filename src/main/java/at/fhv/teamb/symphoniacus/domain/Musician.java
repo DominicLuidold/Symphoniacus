@@ -96,6 +96,12 @@ public class Musician {
         this.balancePoints = balancePoints;
     }
 
+    /**
+     * Gets the debit points if calculated previously.
+     *
+     * @return Balance Points for a month
+     * @throws PointsNotCalculatedException If points not previously calculated
+     */
     public Points getDebitPoints() throws PointsNotCalculatedException {
         if (this.debitPoints == null) {
             throw new PointsNotCalculatedException("Debit Points have not been calculated");
@@ -108,6 +114,12 @@ public class Musician {
         this.debitPoints = debitPoints;
     }
 
+    /**
+     * Gets the gained points if calculated previously.
+     *
+     * @return Gained Points for a month
+     * @throws PointsNotCalculatedException If points not previously calculated
+     */
     public Points getGainedPoints() throws PointsNotCalculatedException {
         if (this.gainedPoints == null) {
             throw new PointsNotCalculatedException("Gained Points have not been calculated");
@@ -118,32 +130,6 @@ public class Musician {
 
     public void setGainedPoints(Points gainedPoints) {
         this.gainedPoints = gainedPoints;
-    }
-
-    public Optional<String> getPointsSummaryText() {
-        if (
-            this.gainedPoints == null
-                || this.balancePoints == null
-                || this.debitPoints == null
-        ) {
-            LOG.error("Cannot calculate pointsSummary");
-            return Optional.empty();
-        }
-        StringBuilder sb = new StringBuilder();
-
-        try {
-            int balancePoints = getBalancePoints().getValue();
-            int gainedPoints = getGainedPoints().getValue();
-            sb.append(gainedPoints);
-
-            sb.append("/");
-            sb.append(balancePoints);
-            sb.append(" \u21D2 ");
-            sb.append(gainedPoints + balancePoints);
-        } catch (PointsNotCalculatedException e) {
-            LOG.error(e);
-        }
-        return Optional.of(sb.toString());
     }
 
     /**

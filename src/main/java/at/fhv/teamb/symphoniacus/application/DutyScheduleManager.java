@@ -264,6 +264,12 @@ public class DutyScheduleManager {
         this.sectionMusicianEntities.addAll(externalMusicianEntities);
     }
 
+    /**
+     * Adds Balance Points for a monnth to a musician.
+     *
+     * @param musician Musician to add points
+     * @param start Start of month
+     */
     public void addBalancePointsToMusician(Musician musician, LocalDate start) {
         Points balancePoints = this.pointsManager.getBalanceFromMusician(
             musician.getEntity(),
@@ -273,6 +279,11 @@ public class DutyScheduleManager {
         LOG.debug("Balance Points set to {}", balancePoints.getValue());
     }
 
+    /**
+     * Adds Debit Points to a musician.
+     *
+     * @param musician Musician to add points
+     */
     public void addDebitPointsToMusician(Musician musician) {
         Points debitPoints = this.pointsManager.getDebitPointsFromMusician(
             musician.getEntity()
@@ -281,6 +292,12 @@ public class DutyScheduleManager {
         LOG.debug("Debit Points set to {}", debitPoints.getValue());
     }
 
+    /**
+     * Adds Gained Points for a month to a musician.
+     *
+     * @param musician Musician to add points
+     * @param start Start of month
+     */
     public void addGainedPointsToMusician(Musician musician, LocalDate start) {
         Points gainedPoints = this.pointsManager.getGainedPointsForMonthFromMusician(
             musician.getEntity(),
