@@ -1,10 +1,9 @@
 package at.fhv.teamb.symphoniacus.presentation;
 
 import at.fhv.teamb.symphoniacus.application.SectionMonthlyScheduleManager;
+import at.fhv.teamb.symphoniacus.application.dto.SectionDto;
 import at.fhv.teamb.symphoniacus.application.type.DomainUserType;
-import at.fhv.teamb.symphoniacus.domain.Duty;
 import at.fhv.teamb.symphoniacus.domain.Musician;
-import at.fhv.teamb.symphoniacus.domain.Section;
 import at.fhv.teamb.symphoniacus.domain.SectionMonthlySchedule;
 import at.fhv.teamb.symphoniacus.presentation.internal.CustomCalendarButtonEvent;
 import at.fhv.teamb.symphoniacus.presentation.internal.popover.CustomDutyPopoverNode;
@@ -49,7 +48,7 @@ import org.kordamp.ikonli.javafx.FontIcon;
 public class DutySchedulerCalendarController extends CalendarController implements Controllable {
     private static final Logger LOG = LogManager.getLogger(DutySchedulerCalendarController.class);
     private ResourceBundle resources;
-    private Section section;
+    private SectionDto section;
     private TabPaneController parentController;
 
     @FXML
@@ -74,7 +73,18 @@ public class DutySchedulerCalendarController extends CalendarController implemen
             LOG.error("Current user type is unsupported for this view");
             return;
         }
-        this.section = musician.getSection();
+        SectionDto.SectionDtoBuilder sectionDtoBuilder = new SectionDto
+            .SectionDtoBuilder(musician.getSection().getEntity().getSectionId());
+        sectionDtoBuilder
+            .withSectionShortcut(musician.getEntity().getSection().getSectionShortcut());
+        sectionDtoBuilder.withDescription(musician.getEntity().getSection().getDescription());
+        sectionDtoBuilder.withSectionMonthlySchedules(
+            musician.getEntity().getSection().getSectionMonthlySchedules());
+        sectionDtoBuilder.withMusicians(musician.getEntity().getSection().getMusicians());
+        sectionDtoBuilder.withDutyPositions(musician.getEntity().getSection().getDutyPositions());
+        sectionDtoBuilder.withSectionInstrumentations(
+            musician.getSection().getEntity().getSectionInstrumentations());
+        this.section = sectionDtoBuilder.build();
 
         // Tell CalendarFX to use custom skin
         this.setCalendarSkin();
@@ -93,8 +103,8 @@ public class DutySchedulerCalendarController extends CalendarController implemen
         task.setOnSucceeded(event -> {
             // Create calendar
             Calendar calendar = this.createCalendar(
-                this.section.getEntity().getDescription(),
-                this.section.getEntity().getSectionShortcut(),
+                this.section.getDescription(),
+                this.section.getSectionShortcut(),
                 true
             );
 
@@ -404,7 +414,7 @@ public class DutySchedulerCalendarController extends CalendarController implemen
     protected FindAllInRangeWithSectionTask loadDuties(LocalDate start, LocalDate end) {
         return new FindAllInRangeWithSectionTask(
             this.dutyManager,
-            this.section.getEntity(),
+            this.section,
             start,
             end,
             this.calendarPane

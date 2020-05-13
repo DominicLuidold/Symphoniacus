@@ -1,5 +1,6 @@
 package at.fhv.teamb.symphoniacus.application;
 
+import at.fhv.teamb.symphoniacus.application.dto.SectionDto;
 import at.fhv.teamb.symphoniacus.domain.ActualSectionInstrumentation;
 import at.fhv.teamb.symphoniacus.domain.Duty;
 import at.fhv.teamb.symphoniacus.domain.DutyPosition;
@@ -13,6 +14,7 @@ import at.fhv.teamb.symphoniacus.persistence.dao.MusicianDao;
 import at.fhv.teamb.symphoniacus.persistence.model.DutyEntity;
 import at.fhv.teamb.symphoniacus.persistence.model.DutyPositionEntity;
 import at.fhv.teamb.symphoniacus.persistence.model.MusicianEntity;
+import at.fhv.teamb.symphoniacus.persistence.model.SectionEntity;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.HashSet;
@@ -67,7 +69,7 @@ public class DutyScheduleManager {
      */
     public Optional<ActualSectionInstrumentation> getInstrumentationDetails(
         Duty duty,
-        Section section
+        SectionDto section
     ) {
         if (duty == null || section == null) {
             LOG.error(
@@ -76,9 +78,15 @@ public class DutyScheduleManager {
             return Optional.empty();
         }
 
+        SectionEntity sectionEntity = new SectionEntity();
+        sectionEntity.setSectionId(section.getSectionId());
+        sectionEntity.setSectionShortcut(section.getSectionShortcut());
+        sectionEntity.setDescription(section.getDescription());
+
+
         // Get all DutyPosition entities from database
         List<DutyPositionEntity> dutyPositionEntities =
-            this.dutyPositionDao.findCorrespondingPositions(duty.getEntity(), section.getEntity());
+            this.dutyPositionDao.findCorrespondingPositions(duty.getEntity(), sectionEntity);
 
         // Create DutyPosition domain objects
         List<DutyPosition> dutyPositions = new LinkedList<>();

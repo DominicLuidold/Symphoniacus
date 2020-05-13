@@ -1,10 +1,13 @@
 package at.fhv.teamb.symphoniacus.presentation.internal.popover;
 
 import at.fhv.teamb.symphoniacus.application.DutyScheduleManager;
+import at.fhv.teamb.symphoniacus.application.SectionManager;
+import at.fhv.teamb.symphoniacus.application.dto.SectionDto;
 import at.fhv.teamb.symphoniacus.domain.ActualSectionInstrumentation;
 import at.fhv.teamb.symphoniacus.domain.Duty;
 import at.fhv.teamb.symphoniacus.domain.DutyPosition;
 import at.fhv.teamb.symphoniacus.domain.Section;
+import at.fhv.teamb.symphoniacus.persistence.dao.SectionDao;
 import at.fhv.teamb.symphoniacus.persistence.model.InstrumentationEntity;
 import at.fhv.teamb.symphoniacus.presentation.DutyPopoverController;
 import com.calendarfx.model.Entry;
@@ -26,17 +29,18 @@ import org.controlsfx.control.PopOver;
 public class CustomDutyPopoverNode extends PopOverContentPane {
     private Entry<?> entry;
     private Duty duty;
-    private Section section;
+    private SectionDto section;
     private DutyPopoverController popoverController;
 
     /**
      * Custom Popover for Dutyscheduler.
      */
-    public CustomDutyPopoverNode(PopOver popOver,
-                                 DateControl dateControl,
-                                 Node node,
-                                 Entry<?> entry,
-                                 Section section
+    public CustomDutyPopoverNode(
+        PopOver popOver,
+        DateControl dateControl,
+        Node node,
+        Entry<?> entry,
+        SectionDto section
     ) {
         if (entry.getUserObject() != null) {
             this.duty = (Duty) entry.getUserObject();
@@ -49,10 +53,11 @@ public class CustomDutyPopoverNode extends PopOverContentPane {
     /**
      * Custom Popover for OrganizationOfficer.
      */
-    public CustomDutyPopoverNode(PopOver popOver,
-                                 DateControl dateControl,
-                                 Node node,
-                                 Entry<?> entry
+    public CustomDutyPopoverNode(
+        PopOver popOver,
+        DateControl dateControl,
+        Node node,
+        Entry<?> entry
     ) {
         if (entry.getUserObject() != null) {
             this.duty = (Duty) entry.getUserObject();
@@ -108,8 +113,28 @@ public class CustomDutyPopoverNode extends PopOverContentPane {
      * Load details for Organization Officer.
      */
     public void loadOrganizationOfficerPoperties() {
-        popoverController.setStatusSection(true, 1);
-        popoverController.setStatusSection(false, 2);
+        List<SectionDto> sections = new SectionManager().getAll();
+        DutyScheduleManager dutyScheduleManager = new DutyScheduleManager();
+
+        for (SectionDto section : sections) {
+            Optional<ActualSectionInstrumentation> asi =
+                dutyScheduleManager.getInstrumentationDetails(
+                    duty,
+                    section
+                );
+            if (asi.isPresent()) {
+                Boolean ready = true;
+                for (DutyPosition dp : asi.get().getDuty().getDutyPositions()) {
+                    if (dp.getAssignedMusician().isEmpty()) {
+                        ready = false;
+                        break;
+                    }
+                }
+                popoverController.setStatusSection(ready, section.getSectionId());
+            }
+
+        }
+
         popoverController.disableEditDutyBtn();
         popoverController.disableEditScheduleBtn();
 
@@ -118,6 +143,7 @@ public class CustomDutyPopoverNode extends PopOverContentPane {
     /**
      * Load details for Dutyscheduler.
      */
+    @SuppressWarnings("checkstyle:AvoidEscapedUnicodeCharacters")
     public void loadDutySchedulerProperties() {
         popoverController.setDuty(duty);
         popoverController.setSection(section);
@@ -137,14 +163,14 @@ public class CustomDutyPopoverNode extends PopOverContentPane {
             for (DutyPosition dp : dps) {
                 if (dp.getAssignedMusician().isPresent()) {
                     Label l = new Label(
-                        "✅ " + dp.getEntity()
+                        "\u2714 " + dp.getEntity()
                             .getInstrumentationPosition().getPositionDescription()
                             + ": " + dp.getAssignedMusician().get().getFullName());
                     l.setStyle("-fx-text-fill: green");
                     ldps.add(l);
 
                 } else {
-                    Label l = new Label("✗ " + dp.getEntity()
+                    Label l = new Label("\u2718 " + dp.getEntity()
                         .getInstrumentationPosition().getPositionDescription());
                     l.setStyle("-fx-text-fill: red");
                     ldps.add(l);

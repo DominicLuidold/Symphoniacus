@@ -1,5 +1,6 @@
 package at.fhv.teamb.symphoniacus.application;
 
+import at.fhv.teamb.symphoniacus.application.dto.SectionDto;
 import at.fhv.teamb.symphoniacus.domain.Duty;
 import at.fhv.teamb.symphoniacus.domain.DutyCategory;
 import at.fhv.teamb.symphoniacus.domain.Section;
@@ -135,19 +136,23 @@ public class DutyManager {
     /**
      * Finds all duties in a specific range of time for a section.
      *
-     * @param sectionOfUser The section of the current user
+     * @param section       The section of the current user
      * @param start         A LocalDate that represents the start
      * @param end           A LocalDate that represents the end
      * @return A List of the matching duties
      */
     public List<Duty> findAllInRangeWithSection(
-        SectionEntity sectionOfUser,
+        SectionDto section,
         LocalDate start,
         LocalDate end
     ) {
+        SectionEntity sectionEntity = new SectionEntity();
+        sectionEntity.setSectionId(section.getSectionId());
+        sectionEntity.setSectionShortcut(section.getSectionShortcut());
+        sectionEntity.setDescription(section.getDescription());
         return convertEntitiesToDomainObjects(
             this.dutyDao.findAllInRangeWithSection(
-                sectionOfUser,
+                sectionEntity,
                 start.atStartOfDay(),
                 end.atStartOfDay(),
                 true, // TODO - Add logic to determine which parameters are true
@@ -180,7 +185,7 @@ public class DutyManager {
      */
     public List<Duty> getOtherDutiesForSopOrSection(
         Duty duty,
-        Section section,
+        SectionDto section,
         Integer numberOfDuties
     ) {
         // Look whether it is a SoP or not.
@@ -202,11 +207,16 @@ public class DutyManager {
                 numberOfDuties
             );
         } else {
+            SectionEntity sectionEntity = new SectionEntity();
+            sectionEntity.setSectionId(section.getSectionId());
+            sectionEntity.setSectionShortcut(section.getSectionShortcut());
+            sectionEntity.setDescription(section.getDescription());
+
             // get last duties of section
             // TODO change this go get last 5 non-series of performances-duties
             resultList = this.dutyDao.getOtherDutiesForSection(
                 duty.getEntity(),
-                section.getEntity(),
+                sectionEntity,
                 numberOfDuties
             );
         }

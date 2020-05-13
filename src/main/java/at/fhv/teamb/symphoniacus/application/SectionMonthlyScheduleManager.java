@@ -1,5 +1,6 @@
 package at.fhv.teamb.symphoniacus.application;
 
+import at.fhv.teamb.symphoniacus.application.dto.SectionDto;
 import at.fhv.teamb.symphoniacus.domain.Section;
 import at.fhv.teamb.symphoniacus.domain.SectionMonthlySchedule;
 import at.fhv.teamb.symphoniacus.persistence.PersistenceState;
@@ -46,12 +47,17 @@ public class SectionMonthlyScheduleManager {
      * @param year    The year to use
      * @return A List of section monthly schedules of this year
      */
-    public Set<SectionMonthlySchedule> getSectionMonthlySchedules(Section section, Year year) {
+    public Set<SectionMonthlySchedule> getSectionMonthlySchedules(SectionDto section, Year year) {
         Set<SectionMonthlySchedule> sectionMonthlySchedules = new HashSet<>();
+
+        SectionEntity sectionEntity = new SectionEntity();
+        sectionEntity.setSectionId(section.getSectionId());
+        sectionEntity.setSectionShortcut(section.getSectionShortcut());
+        sectionEntity.setDescription(section.getDescription());
 
         // Fetch section monthly schedules from database
         for (SectionMonthlyScheduleEntity smsEntity : this.smsDao
-            .findAllInYear(section.getEntity(), year)
+            .findAllInYear(sectionEntity, year)
         ) {
             // Convert entity to domain object
             SectionMonthlySchedule sms = new SectionMonthlySchedule(smsEntity);

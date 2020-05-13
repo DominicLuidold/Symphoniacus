@@ -2,6 +2,7 @@ package at.fhv.teamb.symphoniacus.presentation;
 
 import at.fhv.teamb.symphoniacus.application.DutyManager;
 import at.fhv.teamb.symphoniacus.application.DutyScheduleManager;
+import at.fhv.teamb.symphoniacus.application.dto.SectionDto;
 import at.fhv.teamb.symphoniacus.domain.ActualSectionInstrumentation;
 import at.fhv.teamb.symphoniacus.domain.Duty;
 import at.fhv.teamb.symphoniacus.domain.DutyPosition;
@@ -58,7 +59,7 @@ public class DutyScheduleController
     @FXML
     public Button scheduleSaveBtn;
     private Duty duty;
-    private Section section;
+    private SectionDto section;
     private DutyScheduleManager dutyScheduleManager;
     private DutyManager dutyManager;
     private ActualSectionInstrumentation actualSectionInstrumentation;
@@ -885,7 +886,7 @@ public class DutyScheduleController
         );
     }
 
-    public void setSection(Section section) {
+    public void setSection(SectionDto section) {
         this.section = section;
     }
 

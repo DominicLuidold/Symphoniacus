@@ -1,7 +1,7 @@
 package at.fhv.teamb.symphoniacus.presentation;
 
+import at.fhv.teamb.symphoniacus.application.dto.SectionDto;
 import at.fhv.teamb.symphoniacus.domain.Duty;
-import at.fhv.teamb.symphoniacus.domain.Section;
 import java.net.URL;
 import java.util.List;
 import java.util.ResourceBundle;
@@ -58,7 +58,7 @@ public class DutyPopoverController  implements Initializable {
     private Button editDutyBtn;
 
     private Duty currentDuty;
-    private Section section;
+    private SectionDto section;
     private DutyScheduleController dutyScheduleController;
 
     @Override
@@ -109,7 +109,7 @@ public class DutyPopoverController  implements Initializable {
         this.currentDuty = duty;
     }
 
-    public void setSection(Section section) {
+    public void setSection(SectionDto section) {
         this.section = section;
     }
 
