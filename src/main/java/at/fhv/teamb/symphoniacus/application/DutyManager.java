@@ -119,12 +119,13 @@ public class DutyManager {
      * @return A List of the matching duties
      */
     public List<Duty> findAllInWeekWithSection(
-        SectionEntity sectionOfUser,
+        SectionDto sectionOfUser,
         LocalDate start
     ) {
+        SectionEntity sectionEntity = sectionDtoToSectionEntity(sectionOfUser);
         return convertEntitiesToDomainObjects(
             this.dutyDao.findAllInWeekWithSection(
-                sectionOfUser,
+                sectionEntity,
                 getLastMondayDate(start).atStartOfDay(),
                 false,
                 false,
@@ -146,10 +147,7 @@ public class DutyManager {
         LocalDate start,
         LocalDate end
     ) {
-        SectionEntity sectionEntity = new SectionEntity();
-        sectionEntity.setSectionId(section.getSectionId());
-        sectionEntity.setSectionShortcut(section.getSectionShortcut());
-        sectionEntity.setDescription(section.getDescription());
+        SectionEntity sectionEntity = sectionDtoToSectionEntity(section);
         return convertEntitiesToDomainObjects(
             this.dutyDao.findAllInRangeWithSection(
                 sectionEntity,
@@ -207,11 +205,8 @@ public class DutyManager {
                 numberOfDuties
             );
         } else {
-            SectionEntity sectionEntity = new SectionEntity();
-            sectionEntity.setSectionId(section.getSectionId());
-            sectionEntity.setSectionShortcut(section.getSectionShortcut());
-            sectionEntity.setDescription(section.getDescription());
 
+            SectionEntity sectionEntity = sectionDtoToSectionEntity(section);
             // get last duties of section
             // TODO change this go get last 5 non-series of performances-duties
             resultList = this.dutyDao.getOtherDutiesForSection(
@@ -364,5 +359,13 @@ public class DutyManager {
                 duty.getTitle()
             );
         }
+    }
+
+    private SectionEntity sectionDtoToSectionEntity(SectionDto section) {
+        SectionEntity sectionEntity = new SectionEntity();
+        sectionEntity.setSectionId(section.getSectionId());
+        sectionEntity.setSectionShortcut(section.getSectionShortcut());
+        sectionEntity.setDescription(section.getDescription());
+        return sectionEntity;
     }
 }
