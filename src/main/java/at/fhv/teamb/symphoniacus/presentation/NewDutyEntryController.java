@@ -2,6 +2,7 @@ package at.fhv.teamb.symphoniacus.presentation;
 
 import at.fhv.teamb.symphoniacus.application.DutyCategoryManager;
 import at.fhv.teamb.symphoniacus.application.DutyManager;
+import at.fhv.teamb.symphoniacus.application.SeriesOfPerformancesManager;
 import at.fhv.teamb.symphoniacus.domain.Duty;
 import at.fhv.teamb.symphoniacus.domain.DutyCategory;
 import at.fhv.teamb.symphoniacus.persistence.PersistenceState;
@@ -64,6 +65,7 @@ public class NewDutyEntryController implements Initializable, Parentable<TabPane
     private Duty duty;
     private DutyManager dutyManager;
     private DutyCategoryManager dutyCategoryManager;
+    private SeriesOfPerformancesManager seriesOfPerformancesManager;
     private AtomicBoolean validStartDate = new AtomicBoolean(false);
     private AtomicBoolean validEndDate = new AtomicBoolean(false);
     private AtomicBoolean validCategory = new AtomicBoolean(false);
@@ -114,8 +116,8 @@ public class NewDutyEntryController implements Initializable, Parentable<TabPane
     public void initialize(URL location, ResourceBundle resources) {
         this.resources = resources;
         this.dutyManager = new DutyManager();
+        this.seriesOfPerformancesManager = new SeriesOfPerformancesManager();
         this.dutyCategoryManager = new DutyCategoryManager();
-
 
         // Init combo boxes with data
         this.initCategoryComboBox();
@@ -145,7 +147,7 @@ public class NewDutyEntryController implements Initializable, Parentable<TabPane
         // Show Instrumentations of a selected series
         this.seriesOfPerformancesSelect.addEventHandler(ComboBoxBase.ON_HIDDEN, event -> {
             if (!this.seriesOfPerformancesSelect.getSelectionModel().isEmpty()) {
-                initIntrumentationsCheckComboBox();
+                initInstrumentationsCheckComboBox();
             } else {
                 this.instrumentationsSelect.getItems().clear();
             }
@@ -226,7 +228,6 @@ public class NewDutyEntryController implements Initializable, Parentable<TabPane
         List<SeriesOfPerformancesEntity> seriesOfPerformancesList =
             new SeriesOfPerformancesDao().getAll();
         LOG.debug("Found {} series of performances", seriesOfPerformancesList.size());
-        //this.dutyCategoryManager.getDutyCategories();
 
         final ObservableList<SeriesOfPerformancesEntity> observableList =
             FXCollections.observableArrayList();
@@ -248,6 +249,52 @@ public class NewDutyEntryController implements Initializable, Parentable<TabPane
                     .collect(Collectors.toList()).get(0);
             }
         });
+    }
+
+    /**
+     * Initializes the {@link #instrumentationsSelect} combo box with data.
+     */
+    private void initInstrumentationsCheckComboBox() {
+        final ObservableSet<InstrumentationEntity> instrumentations =
+            FXCollections.observableSet(
+                this.seriesOfPerformancesManager.getAllInstrumentations(
+                    this.seriesOfPerformancesSelect.getSelectionModel().getSelectedItem()
+                )
+            );
+
+        final StringConverter<InstrumentationEntity> instConverter =
+            new StringConverter<>() {
+                @Override
+                public String toString(InstrumentationEntity inst) {
+                    return inst.getName() + " - "
+                        + inst.getMusicalPiece().getName();
+                }
+
+                @Override
+                public InstrumentationEntity fromString(String nameOfInst) {
+                    LOG.error(
+                        "Somehow the instrumentation couldn't get found by its"
+                            + " name in the NewDutyEntryController");
+                    //Should never be able to get here
+                    return null;
+                }
+            };
+
+        this.instrumentationsSelect.setConverter(instConverter);
+        this.instrumentationsSelect.getItems().setAll(instrumentations);
+
+        /*
+            Refresh Bub - See https://github.com/controlsfx/controlsfx/issues/1004
+            Custom workaround to fix:
+         */
+        if (!instrumentations.isEmpty()) {
+            ObservableList<Integer> result =
+                this.instrumentationsSelect.getCheckModel().getCheckedIndices();
+            for (Integer i : result) {
+                this.instrumentationsSelect.getCheckModel().check(i);
+            }
+        }
+        this.instrumentationsSelect.getCheckModel().clearChecks();
     }
 
     /**
@@ -543,47 +590,4 @@ public class NewDutyEntryController implements Initializable, Parentable<TabPane
     public void initializeWithParent() {
         // Intentionally empty - currently not needed
     }
-
-    private void initIntrumentationsCheckComboBox() {
-        final ObservableSet<InstrumentationEntity> instrumentations =
-            FXCollections.observableSet(this.dutyManager.getAllInstrumentationsToSeries(
-                this.seriesOfPerformancesSelect.getSelectionModel().getSelectedItem()));
-
-        final StringConverter<InstrumentationEntity> instConverter =
-            new StringConverter<>() {
-                @Override
-                public String toString(InstrumentationEntity inst) {
-                    return inst.getName() + " - "
-                        + inst.getMusicalPiece().getName();
-                }
-
-                @Override
-                public InstrumentationEntity fromString(String nameOfInst) {
-                    LOG.error(
-                        "Somehow the instrumentation couldn't get found by its"
-                            + " name in the NewDutyEntryController");
-                    //Should never be able to get here
-                    return null;
-                }
-            };
-
-        this.instrumentationsSelect.setConverter(instConverter);
-        this.instrumentationsSelect.getItems().setAll(instrumentations);
-
-        /*
-            Refresh BUG!
-            https://github.com/controlsfx/controlsfx/issues/1004
-            Hier ein selbstgebauter workaround.
-         */
-        if (!instrumentations.isEmpty()) {
-            ObservableList<Integer> result =
-                this.instrumentationsSelect.getCheckModel().getCheckedIndices();
-            for (Integer i : result) {
-                this.instrumentationsSelect.getCheckModel().check(i);
-            }
-        }
-        this.instrumentationsSelect.getCheckModel().clearChecks();
-
-    }
-
 }

@@ -1,5 +1,6 @@
 package at.fhv.teamb.symphoniacus.presentation;
 
+import at.fhv.teamb.symphoniacus.application.MusicalPieceManager;
 import at.fhv.teamb.symphoniacus.application.SeriesOfPerformancesManager;
 import at.fhv.teamb.symphoniacus.persistence.model.InstrumentationEntity;
 import at.fhv.teamb.symphoniacus.persistence.model.MusicalPieceEntity;
@@ -54,6 +55,7 @@ public class SeriesOfPerformancesController
     private AtomicBoolean start = new AtomicBoolean(false);
     private AtomicBoolean end = new AtomicBoolean(false);
     private SeriesOfPerformancesManager seriesManager;
+    private MusicalPieceManager musicalPieceManager;
     private boolean itemChanged;
     private TabPaneController parentController;
     @FXML
@@ -107,6 +109,7 @@ public class SeriesOfPerformancesController
         this.saveButton.setDisable(true);
         this.resources = resources;
         this.seriesManager = new SeriesOfPerformancesManager();
+        this.musicalPieceManager = new MusicalPieceManager();
         this.listView = new ListView<>();
         this.grid.add(this.listView, 1, 3);
         this.instrumentationCheckComboBox
@@ -173,7 +176,7 @@ public class SeriesOfPerformancesController
     public void initMusicialPiecesCheckListView() {
         final ObservableList<MusicalPieceEntity> musicalPieces =
             FXCollections.observableArrayList();
-        Set<MusicalPieceEntity> mp = seriesManager.getAllMusicalPieces();
+        Set<MusicalPieceEntity> mp = this.musicalPieceManager.getAllMusicalPieces();
         musicalPieces.addAll(mp);
 
         final StringConverter<MusicalPieceEntity> musicalConverter =
@@ -185,8 +188,9 @@ public class SeriesOfPerformancesController
 
                 @Override
                 public MusicalPieceEntity fromString(String nameOfPiece) {
-                    Optional<MusicalPieceEntity> piece =
-                        SeriesOfPerformancesManager.getMusicalPieceFromName(nameOfPiece);
+                    Optional<MusicalPieceEntity> piece = musicalPieceManager.getByName(
+                        nameOfPiece
+                    );
                     if (piece.isPresent()) {
                         return piece.get();
                     } else {
@@ -230,7 +234,7 @@ public class SeriesOfPerformancesController
     ) {
         Set<MusicalPieceEntity> mp = new LinkedHashSet<>(musicalPieces);
 
-        Set<InstrumentationEntity> inst = this.seriesManager.getInstrumentationsToMusicalPieces(mp);
+        Set<InstrumentationEntity> inst = this.musicalPieceManager.getInstrumentations(mp);
 
         // All Intrumentations of the checked musical pieces
         ObservableSet<InstrumentationEntity> instrumentations = FXCollections.observableSet();
