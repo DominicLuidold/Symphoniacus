@@ -1,43 +1,31 @@
 package at.fhv.teamb.symphoniacus.application;
 
 import at.fhv.teamb.symphoniacus.persistence.dao.InstrumentationDao;
-import at.fhv.teamb.symphoniacus.persistence.dao.MusicalPieceDao;
 import at.fhv.teamb.symphoniacus.persistence.dao.SeriesOfPerformancesDao;
 import at.fhv.teamb.symphoniacus.persistence.model.InstrumentationEntity;
+import at.fhv.teamb.symphoniacus.persistence.model.InstrumentationPositionEntity;
 import at.fhv.teamb.symphoniacus.persistence.model.MusicalPieceEntity;
 import at.fhv.teamb.symphoniacus.persistence.model.SeriesOfPerformancesEntity;
 import java.time.LocalDate;
 import java.util.Optional;
 import java.util.Set;
 
+/**
+ * This class is responsible for obtaining and handling all instances of series of performances.
+ *
+ * @author Nino Heinzle
+ * @author Danijel Antonijevic
+ */
 public class SeriesOfPerformancesManager {
-    private MusicalPieceDao musicalPieceDao;
-    private InstrumentationDao instrumentationDao;
-    private SeriesOfPerformancesDao seriesOfPerformancesDao;
+    private final InstrumentationDao instrumentationDao;
+    private final SeriesOfPerformancesDao seriesOfPerformancesDao;
 
     /**
-     * instantiates the attributes.
-     *  * @author : Danijel Antonijevic
-     *  * @author : Nino Heinzle
+     * Initialize the SeriesOfPerformancesManager.
      */
     public SeriesOfPerformancesManager() {
-        this.musicalPieceDao = new MusicalPieceDao();
         this.instrumentationDao = new InstrumentationDao();
         this.seriesOfPerformancesDao = new SeriesOfPerformancesDao();
-    }
-
-    public Set<MusicalPieceEntity> getAllMusicalPieces() {
-        return this.musicalPieceDao.getAllMusicalPieces();
-    }
-
-    public Set<InstrumentationEntity> getInstrumentationsToMusicalPieces(
-        Set<MusicalPieceEntity> musicalPieces) {
-        return this.instrumentationDao.getInstrumentationsToMusicalPieces(musicalPieces);
-    }
-
-    public static Optional<MusicalPieceEntity> getMusicalPieceFromName(String name) {
-        MusicalPieceDao pieceDao = new MusicalPieceDao();
-        return pieceDao.getMusicalPieceFromName(name);
     }
 
     /**
@@ -46,16 +34,18 @@ public class SeriesOfPerformancesManager {
      * @param name             Given name of the seriesOfPerformances
      * @param musicalPieces    Given musicalPieces
      * @param instrumentations Given instrumentations to the musicalPieces
-     * @param startDate        starting Date
-     * @param endDate          ending Date
-     * @param isTour           boolean which represents whether it's a tour or not
-     * @return boolean as a proof that the persistence was successful
+     * @param startDate        Starting Date
+     * @param endDate          Ending Date
+     * @param isTour           Represents whether it's a tour or not
+     * @return true if persisting was successful, false otherwise
      */
     public boolean save(
         String name,
         Set<MusicalPieceEntity> musicalPieces,
-        Set<InstrumentationEntity> instrumentations, LocalDate startDate,
-        LocalDate endDate, boolean isTour
+        Set<InstrumentationEntity> instrumentations,
+        LocalDate startDate,
+        LocalDate endDate,
+        boolean isTour
     ) {
         SeriesOfPerformancesEntity series = new SeriesOfPerformancesEntity();
         series.setDescription(name);
@@ -70,10 +60,11 @@ public class SeriesOfPerformancesManager {
     }
 
     /**
-     *checks if the seriesOfPerformances exists with the given parameters or not.
-     * @param title given Title of the seriesOfPerformances
+     * checks if the seriesOfPerformances exists with the given parameters or not.
+     *
+     * @param title        given Title of the seriesOfPerformances
      * @param startingDate given starting Date
-     * @param endingDate given ending Date
+     * @param endingDate   given ending Date
      * @return a boolean whether the seriesOfPerformances exists with the given parameters or not.
      */
     public boolean doesSeriesAlreadyExist(
@@ -82,5 +73,18 @@ public class SeriesOfPerformancesManager {
         LocalDate endingDate
     ) {
         return this.seriesOfPerformancesDao.doesSeriesAlreadyExist(title, startingDate, endingDate);
+    }
+
+    /**
+     * Returns a Set of {@link InstrumentationPositionEntity} belonging to a
+     * {@link SeriesOfPerformancesEntity}.
+     *
+     * @param series The series of performances to use
+     * @return A Set of instrumentation entities
+     */
+    public Set<InstrumentationEntity> getAllInstrumentations(
+        SeriesOfPerformancesEntity series
+    ) {
+        return this.instrumentationDao.getAllInstrumentationsToSeries(series);
     }
 }

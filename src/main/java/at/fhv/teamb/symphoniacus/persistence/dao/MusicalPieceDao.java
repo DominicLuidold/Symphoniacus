@@ -10,40 +10,43 @@ import javax.persistence.TypedQuery;
 public class MusicalPieceDao extends BaseDao<MusicalPieceEntity> {
 
     /**
-     * Fetch every musical piece that exists from the DB.
-     *
-     * @return Set of MusicalPieceEntity
-     */
-    public Set<MusicalPieceEntity> getAllMusicalPieces() {
-        TypedQuery<MusicalPieceEntity> query = entityManager
-            .createQuery("SELECT mp FROM MusicalPieceEntity mp", MusicalPieceEntity.class);
-
-        Set<MusicalPieceEntity> musicalPieces = new LinkedHashSet<>();
-        musicalPieces.addAll(query.getResultList());
-        return musicalPieces;
-    }
-
-    /**
-     * searches all musicalPieces for a given name.
-     *
-     * @param name given name of a musicalPiece
-     * @return the musical piece with the same name
-     */
-    public Optional<MusicalPieceEntity> getMusicalPieceFromName(String name) {
-        TypedQuery<MusicalPieceEntity> query = entityManager
-            .createQuery("SELECT mp FROM MusicalPieceEntity mp "
-                + "WHERE mp.name = :nameOfPiece", MusicalPieceEntity.class);
-
-        query.setParameter("nameOfPiece", name);
-        return Optional.of(query.getSingleResult());
-    }
-
-    /**
      * {@inheritDoc}
      */
     @Override
     public Optional<MusicalPieceEntity> find(Integer key) {
         return this.find(MusicalPieceEntity.class, key);
+    }
+
+    /**
+     * Fetches all {@link MusicalPieceEntity} objects.
+     *
+     * @return A Set of MusicalPieceEntity
+     */
+    public Set<MusicalPieceEntity> getAll() {
+        TypedQuery<MusicalPieceEntity> query = entityManager.createQuery(
+            "SELECT mp FROM MusicalPieceEntity mp",
+            MusicalPieceEntity.class
+        );
+
+        return new LinkedHashSet<>(query.getResultList());
+    }
+
+    /**
+     * Returns all {@link MusicalPieceEntity} objects for a given name.
+     *
+     * @param name The name to search for
+     * @return A musical piece with the same name
+     */
+    public Optional<MusicalPieceEntity> getMusicalPieceFromName(String name) {
+        TypedQuery<MusicalPieceEntity> query = entityManager.createQuery(
+            "SELECT mp FROM MusicalPieceEntity mp "
+                + "WHERE mp.name = :nameOfPiece",
+            MusicalPieceEntity.class
+        );
+
+        query.setParameter("nameOfPiece", name);
+
+        return Optional.of(query.getSingleResult());
     }
 
     /**

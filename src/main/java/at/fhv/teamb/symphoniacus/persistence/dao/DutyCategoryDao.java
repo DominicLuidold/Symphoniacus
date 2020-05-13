@@ -2,6 +2,7 @@ package at.fhv.teamb.symphoniacus.persistence.dao;
 
 import at.fhv.teamb.symphoniacus.persistence.BaseDao;
 import at.fhv.teamb.symphoniacus.persistence.model.DutyCategoryEntity;
+import at.fhv.teamb.symphoniacus.persistence.model.MusicalPieceEntity;
 import java.util.List;
 import java.util.Optional;
 import javax.persistence.EntityTransaction;
@@ -24,12 +25,27 @@ public class DutyCategoryDao extends BaseDao<DutyCategoryEntity> {
      */
     public List<DutyCategoryEntity> getAll() {
         TypedQuery<DutyCategoryEntity> query = entityManager.createQuery(
-            "SELECT dC FROM DutyCategoryEntity dC "
-                + "JOIN FETCH dC.dutyCategoryChangelogs",
+            "SELECT dC FROM DutyCategoryEntity dC",
             DutyCategoryEntity.class
         );
 
         return query.getResultList();
+    }
+
+
+    /**
+     * searches all dutyCategories for a given name.
+     *
+     * @param type given name of a dutyCategories
+     * @return the musical piece with the same name
+     */
+    public Optional<DutyCategoryEntity> getDutyCategoryFromName(String type) {
+        TypedQuery<DutyCategoryEntity> query = entityManager
+            .createQuery("SELECT dc FROM DutyCategoryEntity dc "
+                + "WHERE dc.type = :nameOfCategory", DutyCategoryEntity.class);
+
+        query.setParameter("nameOfCategory", type);
+        return Optional.of(query.getSingleResult());
     }
 
     /**

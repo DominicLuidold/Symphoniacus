@@ -99,12 +99,11 @@ public class DutyScheduleManager {
      * @param duty     The currently edited duty
      * @param position The position to determine musicians for
      * @return A Set of available musicians for the given duty position
-     * @throws IllegalStateException if a Musician or Points object has an illegal state
      */
     public Set<Musician> getMusiciansAvailableForPosition(
         Duty duty,
         DutyPosition position
-    ) throws IllegalStateException {
+    ) {
         if (position == null) {
             LOG.error("Fetching available musicians not possible - duty position is null");
             return new HashSet<>();
@@ -113,19 +112,7 @@ public class DutyScheduleManager {
         // Fetch section musicians from database if not present
         if (this.sectionMusicians == null) {
             // Get musician entities from database
-            this.sectionMusicians = new HashSet<>();
-            if (this.sectionMusicianEntities == null) {
-                this.sectionMusicianEntities = this.musicianDao.findAllWithSectionAndActiveContract(
-                    position.getEntity().getSection()
-                );
-            }
-
-            // Fetch external musician placeholders from database
-            if (this.externalMusicianEntities == null) {
-                this.externalMusicianEntities =
-                    this.musicianDao.findExternalsWithSection(position.getEntity().getSection());
-            }
-            this.sectionMusicianEntities.addAll(externalMusicianEntities);
+            this.fetchMusicians(position);
 
             // Tell PointsManager to cache duties locally
             this.pointsManager.loadAllDutiesOfMusicians(
@@ -137,26 +124,7 @@ public class DutyScheduleManager {
             this.wishRequestManager.loadAllWishRequests(duty.getEntity());
 
             // Convert musician entities to domain objects
-            for (MusicianEntity entity : this.sectionMusicianEntities) {
-                // Get points for musician
-                Optional<Points> points = this.pointsManager.getBalanceFromMusician(
-                    entity,
-                    duty.getEntity().getStart().toLocalDate()
-                );
-
-                // Throw exception if points are missing
-                if (points.isEmpty()) {
-                    throw new IllegalStateException("Points for musician cannot be calculated");
-                }
-
-                // Create domain object
-                Musician m = new Musician(entity, points.get());
-
-                // Fill domain object with wish requests
-                this.wishRequestManager.setMusicianWishRequest(m, duty.getEntity());
-
-                this.sectionMusicians.add(m);
-            }
+            this.convertMusicianEntitiesToDomainObjects(duty);
         }
 
         // Fetch duties from database if not present
@@ -270,6 +238,50 @@ public class DutyScheduleManager {
                 instrumentation.getDuty().getEntity().getDutyId(),
                 instrumentation.getDuty().getTitle()
             );
+        }
+    }
+
+    /**
+     * Fetches {@link MusicianEntity} objects from the database.
+     *
+     * @param position The duty position to use
+     */
+    private void fetchMusicians(DutyPosition position) {
+        this.sectionMusicians = new HashSet<>();
+        if (this.sectionMusicianEntities == null) {
+            this.sectionMusicianEntities = this.musicianDao.findAllWithSectionAndActiveContract(
+                position.getEntity().getSection()
+            );
+        }
+
+        // Fetch external musician placeholders from database
+        if (this.externalMusicianEntities == null) {
+            this.externalMusicianEntities =
+                this.musicianDao.findExternalsWithSection(position.getEntity().getSection());
+        }
+        this.sectionMusicianEntities.addAll(externalMusicianEntities);
+    }
+
+    /**
+     * Converts {@link MusicianEntity} objects to domain {@link Musician}s.
+     *
+     * @param duty The duty to use
+     */
+    private void convertMusicianEntitiesToDomainObjects(Duty duty) {
+        for (MusicianEntity entity : this.sectionMusicianEntities) {
+            // Get points for musician
+            Points points = this.pointsManager.getBalanceFromMusician(
+                entity,
+                duty.getEntity().getStart().toLocalDate()
+            );
+
+            // Create domain object
+            Musician m = new Musician(entity, points);
+
+            // Fill domain object with wish requests
+            this.wishRequestManager.setMusicianWishRequest(m, duty.getEntity());
+
+            this.sectionMusicians.add(m);
         }
     }
 }

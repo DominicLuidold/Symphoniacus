@@ -39,7 +39,7 @@
         </ImageView>
 
         <!-- Add Header Label -->
-        <Label fx:id="label" text="%login.field.title" GridPane.columnIndex="0"
+        <Label fx:id="label" text="%login.title" GridPane.columnIndex="0"
                GridPane.rowIndex="1" GridPane.columnSpan="1"
                GridPane.rowSpan="1" GridPane.halignment="CENTER">
             <font>
@@ -51,13 +51,13 @@
         </Label>
 
         <!-- Add Name Text Field -->
-        <TextField fx:id="userShortcutField" style="-fx-font-size: 18;" prefHeight="40" alignment="CENTER" GridPane.columnIndex="0" GridPane.rowIndex="3" promptText="%login.field.usershortcut.prompt" GridPane.halignment="CENTER" />
+        <TextField fx:id="userShortcutField" style="-fx-font-size: 18;" prefHeight="40" alignment="CENTER" GridPane.columnIndex="0" GridPane.rowIndex="3" promptText="%login.field.shortcut.prompt" GridPane.halignment="CENTER" />
 
         <!-- Add Password Field -->
         <PasswordField fx:id="passwordField" style="-fx-font-size: 18;" prefHeight="40" alignment="CENTER" GridPane.columnIndex="0" GridPane.rowIndex="5" promptText="%login.field.password.prompt" GridPane.halignment="CENTER" />
 
         <!-- Add Submit Button -->
-        <Button fx:id="submitButton" text="%login.field.submit"
+        <Button fx:id="submitButton" text="%login.submit"
                 prefWidth="300" prefHeight="40" defaultButton="true"
                 GridPane.columnIndex="0" GridPane.rowIndex="6"
                 GridPane.columnSpan="1" GridPane.rowSpan="1"

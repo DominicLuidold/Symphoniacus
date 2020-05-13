@@ -1,7 +1,7 @@
 package at.fhv.teamb.symphoniacus.presentation;
 
 import at.fhv.teamb.symphoniacus.application.LoginManager;
-import at.fhv.teamb.symphoniacus.domain.User;
+import at.fhv.teamb.symphoniacus.application.dto.LoginUserDto;
 import at.fhv.teamb.symphoniacus.presentation.internal.AlertHelper;
 import at.fhv.teamb.symphoniacus.presentation.internal.tasks.LoginTask;
 import java.io.IOException;
@@ -11,15 +11,12 @@ import java.util.Optional;
 import java.util.ResourceBundle;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.SimpleBooleanProperty;
-import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
-import javafx.scene.control.Label;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
-import javafx.scene.image.ImageView;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.GridPane;
 import javafx.stage.Stage;
@@ -57,15 +54,9 @@ public class LoginController implements Initializable {
     @FXML
     private Button submitButton;
 
-    @FXML
-    private ImageView image;
-
-    @FXML
-    private Label label;
     private LoginManager loginManager;
-
     private boolean isValid = false;
-    private ValidationSupport validationSupport = new ValidationSupport();
+    private final ValidationSupport validationSupport = new ValidationSupport();
     private ResourceBundle resources;
 
     @Override
@@ -78,16 +69,10 @@ public class LoginController implements Initializable {
         );
         this.validationSupport.setValidationDecorator(cssDecorator);
         this.validationSupport.registerValidator(this.userShortcutField,
-            Validator.createEmptyValidator(resources.getString(
-                "login.error.usershortcutmissing"
-                )
-            )
+            Validator.createEmptyValidator(resources.getString("login.error.shortcut.missing"))
         );
         this.validationSupport.registerValidator(this.passwordField,
-            Validator.createEmptyValidator(resources.getString(
-                "login.error.passwordmissing"
-                )
-            )
+            Validator.createEmptyValidator(resources.getString("login.error.password.missing"))
         );
         this.validationSupport.validationResultProperty().addListener((o, oldVal, newVal) -> {
             this.isValid = newVal.getErrors().isEmpty();
@@ -112,12 +97,11 @@ public class LoginController implements Initializable {
      * This function processes the login data using the {@link LoginManager} and checks if there
      * is a corresponding user. If this user exists, an attribute is set to which
      * {@link at.fhv.teamb.symphoniacus.application.type.DomainUserType} he belongs. After that the
-     * function {@link #loadMainScene(User user)} is called. Otherwise the user gets an error
-     * message for the failed login.
+     * method {@link #loadMainScene(LoginUserDto user)} is called.
+     * Otherwise the user gets an error message for the failed login.
      *
-     * @param actionEvent event triggered by login
      */
-    public void processLoginCredentials(ActionEvent actionEvent) {
+    public void processLoginCredentials() {
         LOG.debug("Login btn pressed");
         Window owner = this.submitButton.getScene().getWindow();
         if (!this.isValid) {
@@ -127,10 +111,12 @@ public class LoginController implements Initializable {
                 sb.append(vm.getText());
                 sb.append("\n");
             }
-            AlertHelper.showAlert(Alert.AlertType.ERROR, owner, this.resources.getString(
-                "login.error.missingrequiredfields.title"
-                ),
-                sb.toString());
+            AlertHelper.showAlert(
+                Alert.AlertType.ERROR,
+                owner,
+                this.resources.getString("login.error.missing.fields.title"),
+                sb.toString()
+            );
             return;
         }
         LoginTask task = new LoginTask(
@@ -143,8 +129,7 @@ public class LoginController implements Initializable {
         thread.start();
 
         task.setOnSucceeded(event -> {
-            Optional<User> userOptional =
-                task.getValue();
+            Optional<LoginUserDto> userOptional = task.getValue();
 
             LOG.debug(
                 "Login with Username: {} and Password {}",
@@ -157,19 +142,19 @@ public class LoginController implements Initializable {
             } else {
                 AlertHelper.showAlert(
                     Alert.AlertType.ERROR, owner,
-                    this.resources.getString("login.error.login.failed.title"),
-                    this.resources.getString("login.error.login.failed.message"
-                    ));
+                    this.resources.getString("login.error.failed.title"),
+                    this.resources.getString("login.error.failed.message")
+                );
             }
         });
 
     }
 
-    private void loadMainScene(User user) {
+    private void loadMainScene(LoginUserDto user) {
         Locale locale = new Locale("en", "UK");
         try {
             ResourceBundle bundle = ResourceBundle.getBundle("bundles.language", locale);
-            MainController controller = MasterController.<MainController>switchSceneTo(
+            MainController controller = MasterController.switchSceneTo(
                 "/view/mainWindow.fxml",
                 bundle,
                 this.submitButton
@@ -179,10 +164,11 @@ public class LoginController implements Initializable {
         } catch (IOException e) {
             LOG.error("Cannot load main scene", e);
             Stage owner = (Stage) this.submitButton.getScene().getWindow();
-            AlertHelper.showAlert(Alert.AlertType.ERROR, owner, "Login failed",
-                this.resources.getString(
-                    "login.error.login.technical.problems"
-                )
+            AlertHelper.showAlert(
+                Alert.AlertType.ERROR,
+                owner,
+                this.resources.getString("login.error.failed.title"),
+                this.resources.getString("login.error.technical.problems")
             );
         }
     }

@@ -5,11 +5,11 @@ package at.fhv.teamb.symphoniacus.presentation.internal;
  * {@link at.fhv.teamb.symphoniacus.presentation.MainController}
  * to build the Tab Pane Header menu.
  *
- * @author Valentin
+ * @author Valentin Goronjic
  */
 public enum TabPaneEntry {
     ADD_SOP(1, "Add SOP", "/view/addNewSeriesOfPerformances.fxml", true),
-    ADD_DUTY(1, "Add Duty", "/view/unsupportedTab.fxml", true),
+    ADD_DUTY(1, "Add Duty", "/view/newDutyEntry.fxml", true),
     ORG_OFFICER_CALENDAR_VIEW(
         1, "Duty Roster",
         "/view/organizationalOfficerCalendarView.fxml",

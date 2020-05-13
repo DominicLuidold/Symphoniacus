@@ -1,5 +1,6 @@
 package at.fhv.teamb.symphoniacus.presentation;
 
+import at.fhv.teamb.symphoniacus.application.MusicalPieceManager;
 import at.fhv.teamb.symphoniacus.application.SeriesOfPerformancesManager;
 import at.fhv.teamb.symphoniacus.persistence.model.InstrumentationEntity;
 import at.fhv.teamb.symphoniacus.persistence.model.MusicalPieceEntity;
@@ -28,7 +29,6 @@ import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
-import javafx.scene.control.ButtonBar;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.ComboBoxBase;
@@ -50,13 +50,14 @@ public class SeriesOfPerformancesController
     implements Initializable, Parentable<TabPaneController> {
 
     private static final Logger LOG = LogManager.getLogger(SeriesOfPerformancesController.class);
-    private SeriesOfPerformancesManager seriesManager;
-    private boolean itemChanged;
-    private TabPaneController parentController;
+    // do not make these fields final -> validation
     private AtomicBoolean name = new AtomicBoolean(false);
     private AtomicBoolean start = new AtomicBoolean(false);
     private AtomicBoolean end = new AtomicBoolean(false);
-
+    private SeriesOfPerformancesManager seriesManager;
+    private MusicalPieceManager musicalPieceManager;
+    private boolean itemChanged;
+    private TabPaneController parentController;
     @FXML
     private GridPane grid;
 
@@ -108,6 +109,7 @@ public class SeriesOfPerformancesController
         this.saveButton.setDisable(true);
         this.resources = resources;
         this.seriesManager = new SeriesOfPerformancesManager();
+        this.musicalPieceManager = new MusicalPieceManager();
         this.listView = new ListView<>();
         this.grid.add(this.listView, 1, 3);
         this.instrumentationCheckComboBox
@@ -125,11 +127,7 @@ public class SeriesOfPerformancesController
             Boolean oldValue,
             Boolean newValue) -> {
             if (!newValue) {
-                if (this.nameOfSeries.validate()) {
-                    this.name.set(true);
-                } else {
-                    this.name.set(false);
-                }
+                this.name.set(this.nameOfSeries.validate());
                 checkButtonVisibility();
             }
         });
@@ -139,34 +137,22 @@ public class SeriesOfPerformancesController
         this.startingDate.getValidators().add(validator);
         this.endingDate.getValidators().addAll(validator);
 
-        this.startingDate.focusedProperty().addListener((
-            ObservableValue<? extends Boolean> observable,
-            Boolean oldValue,
-            Boolean newValue)
+        this.startingDate.valueProperty().addListener((
+            observable,
+            oldValue,
+            newValue)
             -> {
-            if (!newValue) {
-                if (this.startingDate.validate()) {
-                    this.start.set(true);
-                } else {
-                    this.start.set(false);
-                }
-                checkButtonVisibility();
-            }
+            this.start.set(this.startingDate.validate());
+            checkButtonVisibility();
+
         });
 
-        this.endingDate.focusedProperty().addListener((
-            ObservableValue<? extends Boolean> observable,
-            Boolean oldValue,
-            Boolean newValue) -> {
-            if (!newValue) {
-
-                if (this.endingDate.validate()) {
-                    this.end.set(true);
-                } else {
-                    this.end.set(false);
-                }
-                checkButtonVisibility();
-            }
+        this.endingDate.valueProperty().addListener((
+            observable,
+            oldValue,
+            newValue) -> {
+            this.end.set(this.endingDate.validate());
+            checkButtonVisibility();
         });
 
         // Save button method
@@ -190,7 +176,7 @@ public class SeriesOfPerformancesController
     public void initMusicialPiecesCheckListView() {
         final ObservableList<MusicalPieceEntity> musicalPieces =
             FXCollections.observableArrayList();
-        Set<MusicalPieceEntity> mp = seriesManager.getAllMusicalPieces();
+        Set<MusicalPieceEntity> mp = this.musicalPieceManager.getAllMusicalPieces();
         musicalPieces.addAll(mp);
 
         final StringConverter<MusicalPieceEntity> musicalConverter =
@@ -202,8 +188,9 @@ public class SeriesOfPerformancesController
 
                 @Override
                 public MusicalPieceEntity fromString(String nameOfPiece) {
-                    Optional<MusicalPieceEntity> piece =
-                        SeriesOfPerformancesManager.getMusicalPieceFromName(nameOfPiece);
+                    Optional<MusicalPieceEntity> piece = musicalPieceManager.getByName(
+                        nameOfPiece
+                    );
                     if (piece.isPresent()) {
                         return piece.get();
                     } else {
@@ -247,7 +234,7 @@ public class SeriesOfPerformancesController
     ) {
         Set<MusicalPieceEntity> mp = new LinkedHashSet<>(musicalPieces);
 
-        Set<InstrumentationEntity> inst = this.seriesManager.getInstrumentationsToMusicalPieces(mp);
+        Set<InstrumentationEntity> inst = this.musicalPieceManager.getInstrumentations(mp);
 
         // All Intrumentations of the checked musical pieces
         ObservableSet<InstrumentationEntity> instrumentations = FXCollections.observableSet();
@@ -388,6 +375,8 @@ public class SeriesOfPerformancesController
             successAlert.setHeaderText(resources
                 .getString("seriesOfPerformances.success.header"));
             successAlert.show();
+            this.parentController.removeTab(TabPaneEntry.ADD_SOP);
+            this.parentController.selectTab(TabPaneEntry.ADD_DUTY);
         } else {
             LOG.debug(
                 "Series of Performances could not be saved");
@@ -404,65 +393,43 @@ public class SeriesOfPerformancesController
      */
     private boolean validateInputs() {
         //gibts die series of performance bereits -> wenn ja fehlermeldung
-        Alert alert = new Alert(Alert.AlertType.WARNING);
+
         if (this.seriesManager
             .doesSeriesAlreadyExist(this.nameOfSeries.getText(), this.startingDate.getValue(),
-            endingDate.getValue())) {
-            alert.setTitle(resources.getString("seriesOfPerformances.error.title"));
-            alert.setContentText(resources.getString(
-                "seriesOfPerformances.error.seriesAlreadyExists.message"));
-            ButtonType okButton = new ButtonType(resources.getString("global.button.ok"),
-                ButtonBar.ButtonData.YES);
-
-            alert.getButtonTypes().setAll(okButton);
-            alert.showAndWait().ifPresent(type -> {
-                if (type.equals(okButton)) {
-                    alert.close();
-                }
-            });
+                endingDate.getValue())) {
+            MainController.showErrorAlert(
+                this.resources.getString("seriesOfPerformances.error.title"),
+                this.resources.getString(
+                    "seriesOfPerformances.error.seriesAlreadyExists.message"
+                ),
+                this.resources.getString("global.button.ok")
+            );
             return false;
         } else if (this.nameOfSeries.getText().length() > 45) {
-            alert.setTitle(resources.getString("seriesOfPerformances.error.title"));
-            alert.setContentText(resources.getString(
-                "seriesOfPerformances.error.nameOfSeriesOutOfBounds.message"));
-            ButtonType okButton = new ButtonType(resources.getString("global.button.ok"),
-                ButtonBar.ButtonData.YES);
-
-            alert.getButtonTypes().setAll(okButton);
-            alert.showAndWait().ifPresent(type -> {
-                if (type.equals(okButton)) {
-                    alert.close();
-                }
-            });
+            MainController.showErrorAlert(
+                this.resources.getString("seriesOfPerformances.error.title"),
+                this.resources.getString(
+                    "seriesOfPerformances.error.nameOfSeriesOutOfBounds.message"),
+                this.resources.getString("global.button.ok")
+            );
             return false;
         } else if (this.endingDate.getValue().isBefore(this.startingDate.getValue())) {
-            alert.setTitle(resources.getString("seriesOfPerformances.error.title"));
-            alert.setContentText(resources.getString(
-                "seriesOfPerformances.error.endingDateBeforeStartingDate.message"));
-            ButtonType okButton = new ButtonType(resources.getString("global.button.ok"),
-                ButtonBar.ButtonData.YES);
-
-            alert.getButtonTypes().setAll(okButton);
-            alert.showAndWait().ifPresent(type -> {
-                if (type.equals(okButton)) {
-                    alert.close();
-                }
-            });
+            MainController.showErrorAlert(
+                this.resources.getString("seriesOfPerformances.error.title"),
+                this.resources.getString(
+                    "seriesOfPerformances.error.endingDateBeforeStartingDate.message"
+                ),
+                this.resources.getString("global.button.ok")
+            );
             return false;
         } else if (!isInstrumentationForMusicalPieceSelected()) {
-            alert.setTitle(resources.getString("seriesOfPerformances.error.title"));
-            alert.setContentText(this.resources.getString(
-                "seriesOfPerformances.error"
-                    + ".selectedMusicalPieceWithoutInstrumentation.message"));
-            ButtonType okButton = new ButtonType(resources.getString("global.button.ok"),
-                ButtonBar.ButtonData.YES);
-
-            alert.getButtonTypes().setAll(okButton);
-            alert.showAndWait().ifPresent(type -> {
-                if (type.equals(okButton)) {
-                    alert.close();
-                }
-            });
+            MainController.showErrorAlert(
+                this.resources.getString("seriesOfPerformances.error.title"),
+                this.resources.getString(
+                    "seriesOfPerformances.error.selectedMusicalPieceWithoutInstrumentation.message"
+                ),
+                this.resources.getString("global.button.ok")
+            );
             return false;
         } else {
             return true;
@@ -472,6 +439,7 @@ public class SeriesOfPerformancesController
     private void cancel() {
         LOG.debug("Closing Add SOP");
         this.parentController.removeTab(TabPaneEntry.ADD_SOP);
+        this.parentController.selectTab(TabPaneEntry.ADD_DUTY);
     }
 
     private void addModify() {
@@ -520,10 +488,6 @@ public class SeriesOfPerformancesController
     }
 
     private void checkButtonVisibility() {
-        if (this.start.get() && this.end.get() && this.name.get()) {
-            this.saveButton.setDisable(false);
-        } else {
-            this.saveButton.setDisable(true);
-        }
+        this.saveButton.setDisable(!this.start.get() || !this.end.get() || !this.name.get());
     }
 }

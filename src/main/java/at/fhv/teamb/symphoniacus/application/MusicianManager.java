@@ -58,8 +58,7 @@ public class MusicianManager {
             "Loaded musician with musicianId {}",
             musicianEntity.get().getMusicianId()
         );
-        Musician m = new Musician(musicianEntity.get());
-        return Optional.of(m);
+        return Optional.of(new Musician(musicianEntity.get()));
     }
 
 }

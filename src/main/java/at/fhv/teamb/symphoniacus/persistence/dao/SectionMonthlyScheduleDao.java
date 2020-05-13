@@ -1,7 +1,6 @@
 package at.fhv.teamb.symphoniacus.persistence.dao;
 
 import at.fhv.teamb.symphoniacus.domain.Section;
-import at.fhv.teamb.symphoniacus.domain.SectionMonthlySchedule;
 import at.fhv.teamb.symphoniacus.persistence.BaseDao;
 import at.fhv.teamb.symphoniacus.persistence.model.SectionEntity;
 import at.fhv.teamb.symphoniacus.persistence.model.SectionMonthlyScheduleEntity;
@@ -9,7 +8,6 @@ import java.time.Month;
 import java.time.Year;
 import java.util.List;
 import java.util.Optional;
-import javax.persistence.EntityTransaction;
 import javax.persistence.TypedQuery;
 
 /**
@@ -28,7 +26,7 @@ public class SectionMonthlyScheduleDao extends BaseDao<SectionMonthlyScheduleEnt
     }
 
     /**
-     * Finds all {@link SectionMonthlySchedule} objects based on provided {@link Section}
+     * Finds all {@link SectionMonthlyScheduleEntity} objects based on provided {@link Section}
      * object and year.
      *
      * @param section The section to use
@@ -51,12 +49,34 @@ public class SectionMonthlyScheduleDao extends BaseDao<SectionMonthlyScheduleEnt
     }
 
     /**
-     * Finds all {@link SectionMonthlySchedule} objects based on provided {@link Section}
-     * object, year and month.
+     * Finds a List of {@link SectionMonthlyScheduleEntity} objects based on
+     * provided year and month.
      *
      * @param year  The year to use
      * @param month The month to use
      * @return A List of section monthly schedules
+     */
+    public List<SectionMonthlyScheduleEntity> findAllInYearAndMonth(Year year, Month month) {
+        TypedQuery<SectionMonthlyScheduleEntity> query = entityManager.createQuery(
+            "SELECT sms FROM SectionMonthlyScheduleEntity sms "
+                + "JOIN FETCH sms.monthlySchedule ms "
+                + "WHERE ms.year = :year AND ms.month = :month",
+            SectionMonthlyScheduleEntity.class
+        );
+
+        query.setParameter("year", year.getValue());
+        query.setParameter("month", month.getValue());
+
+        return query.getResultList();
+    }
+
+    /**
+     * Finds a {@link SectionMonthlyScheduleEntity} object based on provided {@link Section}
+     * object, year and month.
+     *
+     * @param year  The year to use
+     * @param month The month to use
+     * @return A section monthly schedule
      */
     public SectionMonthlyScheduleEntity findAllInYearAndMonth(
         SectionEntity section,
