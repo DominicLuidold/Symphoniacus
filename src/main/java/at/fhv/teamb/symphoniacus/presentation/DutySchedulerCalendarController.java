@@ -17,7 +17,6 @@ import java.time.LocalDate;
 import java.time.Month;
 import java.time.Year;
 import java.time.format.TextStyle;
-import java.util.List;
 import java.util.Locale;
 import java.util.ResourceBundle;
 import java.util.Set;
@@ -206,13 +205,13 @@ public class DutySchedulerCalendarController extends CalendarController implemen
                                 .owner(this.calendarView.getParent().getScene().getWindow())
                                 .title(
                                     this.resources.getString(
-                                        "notification.schedule.forward.already.title"
+                                        "notif.schedule.forward.already.title"
                                     )
                                 )
                                 .text(
                                     MessageFormat.format(
                                         this.resources.getString(
-                                            "notification.schedule.forward.already.message"
+                                            "notif.schedule.forward.already.message"
                                         ),
                                         month
                                     )
@@ -250,13 +249,13 @@ public class DutySchedulerCalendarController extends CalendarController implemen
                                     .owner(this.calendarView.getParent().getScene().getWindow())
                                     .title(
                                         this.resources.getString(
-                                            "notification.schedule.forward.fail.title"
+                                            "notif.schedule.forward.fail.title"
                                         )
                                     )
                                     .text(
                                         MessageFormat.format(
                                             this.resources.getString(
-                                                "notification.schedule.forward.fail.message"
+                                                "notif.schedule.forward.fail.message"
                                             ),
                                             month
                                         )
@@ -273,13 +272,13 @@ public class DutySchedulerCalendarController extends CalendarController implemen
                                     .owner(this.calendarView.getParent().getScene().getWindow())
                                     .title(
                                         this.resources.getString(
-                                            "notification.schedule.forward.ok.title"
+                                            "notif.schedule.forward.ok.title"
                                         )
                                     )
                                     .text(
                                         MessageFormat.format(
                                             this.resources.getString(
-                                                "notification.schedule.forward.ok.message"
+                                                "notif.schedule.forward.ok.message"
                                             ),
                                             month
                                         )

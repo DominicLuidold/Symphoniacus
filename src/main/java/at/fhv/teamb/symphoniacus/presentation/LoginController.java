@@ -69,16 +69,10 @@ public class LoginController implements Initializable {
         );
         this.validationSupport.setValidationDecorator(cssDecorator);
         this.validationSupport.registerValidator(this.userShortcutField,
-            Validator.createEmptyValidator(resources.getString(
-                "login.error.usershortcutmissing"
-                )
-            )
+            Validator.createEmptyValidator(resources.getString("login.error.shortcut.missing"))
         );
         this.validationSupport.registerValidator(this.passwordField,
-            Validator.createEmptyValidator(resources.getString(
-                "login.error.passwordmissing"
-                )
-            )
+            Validator.createEmptyValidator(resources.getString("login.error.password.missing"))
         );
         this.validationSupport.validationResultProperty().addListener((o, oldVal, newVal) -> {
             this.isValid = newVal.getErrors().isEmpty();
@@ -117,10 +111,12 @@ public class LoginController implements Initializable {
                 sb.append(vm.getText());
                 sb.append("\n");
             }
-            AlertHelper.showAlert(Alert.AlertType.ERROR, owner, this.resources.getString(
-                "login.error.missingrequiredfields.title"
-                ),
-                sb.toString());
+            AlertHelper.showAlert(
+                Alert.AlertType.ERROR,
+                owner,
+                this.resources.getString("login.error.missing.fields.title"),
+                sb.toString()
+            );
             return;
         }
         LoginTask task = new LoginTask(
@@ -146,9 +142,9 @@ public class LoginController implements Initializable {
             } else {
                 AlertHelper.showAlert(
                     Alert.AlertType.ERROR, owner,
-                    this.resources.getString("login.error.login.failed.title"),
-                    this.resources.getString("login.error.login.failed.message"
-                    ));
+                    this.resources.getString("login.error.failed.title"),
+                    this.resources.getString("login.error.failed.message")
+                );
             }
         });
 
@@ -168,10 +164,11 @@ public class LoginController implements Initializable {
         } catch (IOException e) {
             LOG.error("Cannot load main scene", e);
             Stage owner = (Stage) this.submitButton.getScene().getWindow();
-            AlertHelper.showAlert(Alert.AlertType.ERROR, owner, "Login failed",
-                this.resources.getString(
-                    "login.error.login.technical.problems"
-                )
+            AlertHelper.showAlert(
+                Alert.AlertType.ERROR,
+                owner,
+                this.resources.getString("login.error.failed.title"),
+                this.resources.getString("login.error.technical.problems")
             );
         }
     }

@@ -25,8 +25,8 @@
                <Separator />
                <Label fx:id="dutyTitle" />
                <Pane HBox.hgrow="ALWAYS" />
-               <Button fx:id="getOldDutyBtn" mnemonicParsing="false" text="%tab.duty.schedule.table.btn.getolddutyschedule" />
-               <ComboBox fx:id="oldDutySelect" layoutX="15.0" layoutY="33.0" prefWidth="160.0" promptText="%tab.duty.schedule.table.chooseolddutyschedule" />
+               <Button fx:id="getOldDutyBtn" mnemonicParsing="false" text="%tab.duty.schedule.old.duty.btn" />
+               <ComboBox fx:id="oldDutySelect" layoutX="15.0" layoutY="33.0" prefWidth="160.0" promptText="%tab.duty.schedule.old.duty.choose" />
                <Separator />
                <Button fx:id="scheduleSaveBtn" mnemonicParsing="false" text="%global.button.save" />
            </items>
@@ -40,17 +40,17 @@
        <items>
             <TableView fx:id="positionsTable">
                 <columns>
-                    <TableColumn fx:id="role" prefWidth="120.0" text="%tab.duty.schedule.table.dutyrole.role" >
+                    <TableColumn fx:id="role" prefWidth="120.0" text="%tab.duty.schedule.table.role" >
                         <cellValueFactory>
                             <PropertyValueFactory property="role" />
                         </cellValueFactory>
                     </TableColumn>
-                    <TableColumn fx:id="musicianShortcut" prefWidth="120.0" text="%tab.duty.schedule.table.dutyposition.musican" >
+                    <TableColumn fx:id="musicianShortcut" prefWidth="120.0" text="%tab.duty.schedule.table.position.musician" >
                         <cellValueFactory>
                             <PropertyValueFactory property="musicanShortcut" />
                         </cellValueFactory>
                     </TableColumn>
-                    <TableColumn fx:id="columnUnsetPosition" prefWidth="125" text="%tab.duty.schedule.table.dutyposition.unset">
+                    <TableColumn fx:id="columnUnsetPosition" prefWidth="125" text="%tab.duty.schedule.table.position.unset">
                     </TableColumn>
                 </columns>
             </TableView>

@@ -313,8 +313,11 @@ public class DutyScheduleController
             this.section,
             5
         );
-        this.oldDutySelect.setPlaceholder(new Label(resources.getString(
-            "tab.duty.schedule.oldduty.select.default")));
+        this.oldDutySelect.setPlaceholder(
+            new Label(
+                this.resources.getString("tab.duty.schedule.old.duty.select.default")
+            )
+        );
         task.setOnSucceeded(event -> {
             List<Duty> dutyList = task.getValue();
             ObservableList<OldDutyComboView> observableList = FXCollections.observableArrayList();
@@ -351,12 +354,12 @@ public class DutyScheduleController
         if (this.oldDutySelect.getSelectionModel().getSelectedItem() == null) {
             LOG.debug("No old Duty selected");
             Notifications.create()
-                .title(
-                    resources
-                        .getString("notification.duty.schedule.oldduty.nodutyselected.titel"))
+                .title(this.resources.getString("notif.duty.schedule.old.duty.none.selected.title"))
                 .text(
-                    resources
-                        .getString("notification.duty.schedule.oldduty.nodutyselected.message"))
+                    this.resources.getString(
+                        "notif.duty.schedule.old.duty.none.selected.message"
+                    )
+                )
                 .position(Pos.CENTER)
                 .hideAfter(new Duration(2000))
                 .show();
@@ -437,10 +440,10 @@ public class DutyScheduleController
             // Negative wish, show alert
             Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
             alert.setTitle(this.resources.getString(
-                "notification.duty.schedule.musician.withnegativewhish.title"
+                "alert.duty.schedule.musician.wish.negative.title"
             ));
             alert.setContentText(this.resources.getString(
-                "notification.duty.schedule.musician.withnegativewhish.message"
+                "alert.duty.schedule.musician.with.negative.message"
             ));
 
             ButtonType okButton = new ButtonType(
@@ -475,10 +478,16 @@ public class DutyScheduleController
     ) {
         if (dutyPosition == null) {
             Notifications.create()
-                .title(resources
-                    .getString("notification.duty.schedule.addMusicianToPosition.noposition.title"))
-                .text(resources.getString(
-                    "notification.duty.schedule.addMusicianToPosition.noposition.message"))
+                .title(
+                    this.resources.getString(
+                        "notif.duty.schedule.position.add.musician.unavailable.title"
+                    )
+                )
+                .text(
+                    this.resources.getString(
+                        "notif.duty.schedule.position.add.musician.unavailable.message"
+                    )
+                )
                 .position(Pos.CENTER)
                 .hideAfter(new Duration(2000))
                 .show();
@@ -513,10 +522,16 @@ public class DutyScheduleController
 
         Notifications.create()
             .owner(this.getParentController().calendarView)
-            .title(resources
-                .getString("notification.duty.schedule.addMusicianToPosition.musicianset.title"))
-            .text(resources
-                .getString("notification.duty.schedule.addMusicianToPosition.musicianset.message"))
+            .title(
+                this.resources.getString(
+                    "notif.duty.schedule.position.add.musician.set.message.title"
+                )
+            )
+            .text(
+                this.resources.getString(
+                    "notif.duty.schedule.position.add.musician.set.message"
+                )
+            )
             .position(Pos.CENTER)
             .hideAfter(new Duration(2000))
             .show();
@@ -550,7 +565,7 @@ public class DutyScheduleController
 
         this.labelCurrentPosition.textProperty().bindBidirectional(
             new SimpleStringProperty(
-                resources.getString("tab.duty.schedule.currentposition")
+                this.resources.getString("tab.duty.schedule.current.position")
                     + this.selectedDutyPosition
                     .getEntity().getInstrumentationPosition().getPositionDescription()
             )
@@ -591,11 +606,15 @@ public class DutyScheduleController
         this.musicianTableWithoutRequests.refresh();
         this.positionsTable.refresh();
         this.oldDutySelect.getItems().clear();
-        this.oldDutySelect
-            .setPromptText(resources.getString("tab.duty.scheudle.oldduty.select.button"));
+        this.oldDutySelect.setPromptText(
+            this.resources.getString("tab.duty.schedule.old.duty.select.placeholder")
+        );
         this.oldDutySelect.setPlaceholder(
-            new Label(resources.getString("tab.duty.schedule.oldduty.select.default")));
-        this.labelCurrentPosition.setText(resources.getString("tab.duty.schedule.currentposition"));
+            new Label(this.resources.getString("tab.duty.schedule.old.duty.select.default"))
+        );
+        this.labelCurrentPosition.setText(
+            this.resources.getString("tab.duty.schedule.current.position")
+        );
         this.hide();
         MasterController mc = MasterController.getInstance();
         DutySchedulerCalendarController cc =
@@ -608,8 +627,8 @@ public class DutyScheduleController
         ButtonType buttonType = null;
 
         Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
-        alert.setTitle(resources.getString("dialog.save.closewithoutsaving.title"));
-        alert.setHeaderText(resources.getString("dialog.save.closewithoutsaving.message"));
+        alert.setTitle(this.resources.getString("alert.close.without.saving.title"));
+        alert.setHeaderText(this.resources.getString("alert.close.without.saving.message"));
 
         Optional<ButtonType> option = alert.showAndWait();
 
@@ -642,8 +661,8 @@ public class DutyScheduleController
                     .equals(PersistenceState.PERSISTED)
                 ) {
                     Notifications.create()
-                        .title(resources.getString("notification.save.successful.title"))
-                        .text(resources.getString("notification.save.successful.message"))
+                        .title(this.resources.getString("notif.save.successful.title"))
+                        .text(this.resources.getString("notif.save.successful.message"))
                         .position(Pos.CENTER)
                         .hideAfter(new Duration(4000))
                         .show();
@@ -651,8 +670,8 @@ public class DutyScheduleController
 
             } else {
                 Notifications.create()
-                    .title(resources.getString("notification.save.nochange.title"))
-                    .text(resources.getString("notification.save.nochange.message"))
+                    .title(this.resources.getString("notif.save.unedited.title"))
+                    .text(this.resources.getString("notif.save.unedited.message"))
                     .position(Pos.CENTER)
                     .hideAfter(new Duration(4000))
                     .showError();
@@ -662,8 +681,8 @@ public class DutyScheduleController
                 .equals(PersistenceState.EDITED)
             ) {
                 Notifications.create()
-                    .title(resources.getString("notification.save.failed.title"))
-                    .text(resources.getString("notification.save.failed.message"))
+                    .title(this.resources.getString("notif.save.failed.title"))
+                    .text(this.resources.getString("notif.save.failed.message"))
                     .position(Pos.CENTER)
                     .hideAfter(new Duration(4000))
                     .showError();
@@ -761,7 +780,7 @@ public class DutyScheduleController
         // Add button column - with requests
         this.columnScheduleBtnWithRequests.setCellFactory(
             ScheduleButtonTableCell.forTableColumn(
-                this.resources.getString("tab.duty.schedule.table.dutyposition.set.btn"),
+                this.resources.getString("tab.duty.schedule.table.position.set.btn"),
                 (MusicianTableModel mtm) -> {
                     LOG.debug("Schedule btn with requests has been pressed");
                     this.handleWishScheduleClickEvent(mtm);
@@ -773,7 +792,7 @@ public class DutyScheduleController
         // Add button column - without requests
         this.columnScheduleBtnWithoutRequests.setCellFactory(
             ScheduleButtonTableCell.forTableColumn(
-                this.resources.getString("tab.duty.schedule.table.dutyposition.set.btn"),
+                this.resources.getString("tab.duty.schedule.table.position.set.btn"),
                 (MusicianTableModel mtm) -> {
                     LOG.debug("Schedule btn without requests has been pressed");
                     this.addMusicianToPosition(
@@ -789,7 +808,7 @@ public class DutyScheduleController
         // Remove button column
         this.columnUnsetPosition.setCellFactory(
             ScheduleButtonTableCell.forTableColumn(
-                this.resources.getString("tab.duty.schedule.table.dutyposition.unset.btn"),
+                this.resources.getString("tab.duty.schedule.table.position.unset.btn"),
                 (DutyPositionMusicianTableModel dpmtm) -> {
                     LOG.debug("Unset musician button has been pressed");
 

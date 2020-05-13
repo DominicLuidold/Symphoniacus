@@ -468,8 +468,8 @@ public class NewDutyEntryController implements Initializable, Parentable<TabPane
         ButtonType buttonType = null;
 
         Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
-        alert.setTitle(this.resources.getString("dialog.save.closewithoutsaving.title"));
-        alert.setHeaderText(this.resources.getString("dialog.save.closewithoutsaving.message"));
+        alert.setTitle(this.resources.getString("alert.close.without.saving.title"));
+        alert.setHeaderText(this.resources.getString("alert.close.without.saving.message"));
 
         Optional<ButtonType> option = alert.showAndWait();
 
