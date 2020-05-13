@@ -163,14 +163,14 @@ public class CustomDutyPopoverNode extends PopOverContentPane {
             for (DutyPosition dp : dps) {
                 if (dp.getAssignedMusician().isPresent()) {
                     Label l = new Label(
-                        "\u2714 " + dp.getEntity()
+                        "\u2714 " + dp.getEntity() // Unicode character, ✔
                             .getInstrumentationPosition().getPositionDescription()
                             + ": " + dp.getAssignedMusician().get().getFullName());
                     l.setStyle("-fx-text-fill: green");
                     ldps.add(l);
 
                 } else {
-                    Label l = new Label("\u2718 " + dp.getEntity()
+                    Label l = new Label("\u2718 " + dp.getEntity() // Unicode character, ✘
                         .getInstrumentationPosition().getPositionDescription());
                     l.setStyle("-fx-text-fill: red");
                     ldps.add(l);
