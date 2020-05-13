@@ -59,7 +59,8 @@ public class PointsManager {
         if (isMusicianExternal(musician)) {
             return Points.getZeroPoints();
         } else {
-            return Points.calcDebitPoints(this.conDao.getContractualObligation(musician));
+            // only one contractual obligation is loaded in previous DAO
+            return Points.calcDebitPoints(musician.getContractualObligations().get(0));
         }
     }
 

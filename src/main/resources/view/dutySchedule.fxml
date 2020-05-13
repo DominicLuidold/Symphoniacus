@@ -76,7 +76,7 @@
                                     <PropertyValueFactory property="name" />
                                 </cellValueFactory>
                             </TableColumn>
-                            <TableColumn fx:id="columnPointsWithoutRequests" prefWidth="75.0" text="%tab.duty.schedule.table.musicians.gainedBalancePoints">
+                            <TableColumn fx:id="columnPointsWithoutRequests" prefWidth="100.0" text="%tab.duty.schedule.table.musicians.balancePoints">
                                 <cellValueFactory>
                                     <PropertyValueFactory property="pointsSummary" />
                                 </cellValueFactory>
@@ -104,7 +104,7 @@
                                     <PropertyValueFactory property="name" />
                                 </cellValueFactory>
                             </TableColumn>
-                            <TableColumn fx:id="columnPointsWithRequests" prefWidth="75.0" text="%tab.duty.schedule.table.musicians.gainedBalancePoints">
+                            <TableColumn fx:id="columnPointsWithRequests" prefWidth="100.0" text="%tab.duty.schedule.table.musicians.balancePoints">
                                 <cellValueFactory>
                                     <PropertyValueFactory property="pointsSummary" />
                                 </cellValueFactory>

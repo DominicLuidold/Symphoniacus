@@ -264,30 +264,30 @@ public class DutyScheduleManager {
         this.sectionMusicianEntities.addAll(externalMusicianEntities);
     }
 
-    private void addPointsToMusician(Musician musician, LocalDate start) {
-        LOG.debug("Adding points to Musician");
+    public void addBalancePointsToMusician(Musician musician, LocalDate start) {
         Points balancePoints = this.pointsManager.getBalanceFromMusician(
             musician.getEntity(),
             start
         );
+        musician.setBalancePoints(balancePoints);
+        LOG.debug("Balance Points set to {}", balancePoints.getValue());
+    }
 
+    public void addDebitPointsToMusician(Musician musician) {
         Points debitPoints = this.pointsManager.getDebitPointsFromMusician(
             musician.getEntity()
         );
+        musician.setDebitPoints(debitPoints);
+        LOG.debug("Debit Points set to {}", debitPoints.getValue());
+    }
+
+    public void addGainedPointsToMusician(Musician musician, LocalDate start) {
         Points gainedPoints = this.pointsManager.getGainedPointsForMonthFromMusician(
             musician.getEntity(),
             start
         );
-
-        musician.setBalancePoints(balancePoints);
-        musician.setDebitPoints(debitPoints);
         musician.setGainedPoints(gainedPoints);
-        LOG.debug(
-            "Balance Points: {} | Debit Points: {} | Gained Points: {}",
-            balancePoints.getValue(),
-            debitPoints.getValue(),
-            gainedPoints.getValue()
-        );
+        LOG.debug("Gained Points set to {}", gainedPoints.getValue());
     }
 
     /**
@@ -303,7 +303,9 @@ public class DutyScheduleManager {
             Musician m = new Musician(entity);
 
             // add points
-            addPointsToMusician(m, duty.getEntity().getStart().toLocalDate());
+            addBalancePointsToMusician(m, duty.getEntity().getStart().toLocalDate());
+            addDebitPointsToMusician(m);
+            // Gained Points are lazily loaded because of heavy performance impact
 
             // Fill domain object with wish requests
             this.wishRequestManager.setMusicianWishRequest(m, duty.getEntity());

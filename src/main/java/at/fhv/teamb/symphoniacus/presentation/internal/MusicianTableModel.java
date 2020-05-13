@@ -1,6 +1,7 @@
 package at.fhv.teamb.symphoniacus.presentation.internal;
 
 import at.fhv.teamb.symphoniacus.domain.Musician;
+import at.fhv.teamb.symphoniacus.domain.Points;
 import at.fhv.teamb.symphoniacus.domain.exception.PointsNotCalculatedException;
 import at.fhv.teamb.symphoniacus.presentation.DutyScheduleController;
 import java.time.format.DateTimeFormatter;
@@ -15,6 +16,8 @@ import org.apache.logging.log4j.Logger;
  * @author Tobias Moser
  */
 public class MusicianTableModel implements TableModel {
+
+    private static final Logger LOG = LogManager.getLogger(MusicianTableModel.class);
     private boolean schedule;
     private Musician musician;
 
@@ -40,6 +43,7 @@ public class MusicianTableModel implements TableModel {
         try {
             return this.musician.getBalancePoints().getValue();
         } catch (PointsNotCalculatedException e) {
+            LOG.error(e);
             return -1;
         }
     }
@@ -48,6 +52,7 @@ public class MusicianTableModel implements TableModel {
         try {
             return this.musician.getDebitPoints().getValue();
         } catch (PointsNotCalculatedException e) {
+            LOG.error(e);
             return -1;
         }
     }
@@ -56,18 +61,22 @@ public class MusicianTableModel implements TableModel {
         try {
             return this.musician.getGainedPoints().getValue();
         } catch (PointsNotCalculatedException e) {
+            LOG.error(e);
             return -1;
         }
     }
 
     public String getPointsSummary() {
         if (this.musician != null) {
-            Optional<String> points = this.musician.getPointsSummaryText();
-            if (points.isPresent()) {
-                return points.get();
+            Points p = null;
+            try {
+                p = this.musician.getBalancePoints();
+                return String.valueOf(p.getValue());
+            } catch (PointsNotCalculatedException e) {
+                LOG.error(e);
             }
         }
-        return null;
+        return String.valueOf(-1);
     }
     public boolean getSchedule() {
         return this.schedule;

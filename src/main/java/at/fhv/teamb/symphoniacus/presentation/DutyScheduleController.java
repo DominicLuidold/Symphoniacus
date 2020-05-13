@@ -7,7 +7,6 @@ import at.fhv.teamb.symphoniacus.domain.Duty;
 import at.fhv.teamb.symphoniacus.domain.DutyPosition;
 import at.fhv.teamb.symphoniacus.domain.Musician;
 import at.fhv.teamb.symphoniacus.domain.Section;
-import at.fhv.teamb.symphoniacus.domain.exception.PointsNotCalculatedException;
 import at.fhv.teamb.symphoniacus.persistence.PersistenceState;
 import at.fhv.teamb.symphoniacus.presentation.internal.AlertHelper;
 import at.fhv.teamb.symphoniacus.presentation.internal.DutyPositionMusicianTableModel;
@@ -20,6 +19,7 @@ import at.fhv.teamb.symphoniacus.presentation.internal.tasks.GetMusiciansAvailab
 import at.fhv.teamb.symphoniacus.presentation.internal.tasks.GetOtherDutiesTask;
 import at.fhv.teamb.symphoniacus.presentation.internal.tasks.GetPositionsWithMusiciansTask;
 import java.net.URL;
+import java.text.MessageFormat;
 import java.time.format.DateTimeFormatter;
 import java.util.HashSet;
 import java.util.Iterator;
@@ -562,6 +562,7 @@ public class DutyScheduleController
         this.initDutyPositionsTableWithMusicians();
         this.initMusicianTableWithoutRequests();
     }
+
     private void removeMusicianFromPosition(Musician musician) {
         this.dutyScheduleManager.removeMusicianFromPosition(
             this.actualSectionInstrumentation,
@@ -749,12 +750,34 @@ public class DutyScheduleController
             TableModel mtm = cell.getTableRow().getItem();
             if (mtm.getMusician() != null) {
                 LOG.debug("Musician set on this position");
+                this.dutyScheduleManager.addGainedPointsToMusician(
+                    mtm.getMusician(),
+                    this.duty.getEntity().getStart().toLocalDate()
+                );
 
-                lblGainedPoints.setText(mtm.getGainedPoints() + " Points already gained");
-                lblBalancePoints.setText(mtm.getBalancePoints() + " Points planned");
+                lblGainedPoints.setText(
+                    MessageFormat.format(
+                        this.resources.getString(
+                            "tab.duty.schedule.table.musicians.gainedPoints.popup"
+                        ),
+                        mtm.getGainedPoints()
+                    )
+                );
+                lblBalancePoints.setText(
+                    MessageFormat.format(
+                        this.resources.getString(
+                            "tab.duty.schedule.table.musicians.balancePoints.popup"
+                        ),
+                        mtm.getBalancePoints()
+                    )
+                );
                 lblSummaryPoints.setText(
-                    mtm.getBalancePoints() + mtm.getGainedPoints()
-                        + " Points in summary"
+                    MessageFormat.format(
+                        this.resources.getString(
+                            "tab.duty.schedule.table.musicians.summary.popup"
+                        ),
+                        mtm.getBalancePoints() + mtm.getGainedPoints()
+                    )
                 );
 
                 popOver.show((Node) event.getSource());

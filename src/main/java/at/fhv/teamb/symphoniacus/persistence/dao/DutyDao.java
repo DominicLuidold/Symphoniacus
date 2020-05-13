@@ -155,15 +155,21 @@ public class DutyDao extends BaseDao<DutyEntity> {
         TypedQuery<DutyEntity> query = entityManager.createQuery(
             "SELECT d FROM DutyEntity d "
                 + "JOIN FETCH d.dutyPositions dp "
-                + "JOIN FETCH JOIN dp.musician m "
+                + "JOIN FETCH dp.musician m "
+                + "JOIN FETCH m.contractualObligations co "
                 + "JOIN FETCH d.dutyCategory "
-                + "WHERE d.end <= :end AND d.start >= :start AND m = :musician",
+                + "WHERE d.end <= :end "
+                + "AND d.start >= :start "
+                + "AND m = :musician "
+                + "AND co.startDate <= :currentDate "
+                + "AND co.endDate >= :currentDate",
             DutyEntity.class
         );
 
         query.setParameter("musician", musician);
         query.setParameter("start", startWithTime);
         query.setParameter("end", endWithTime);
+        query.setParameter("currentDate", LocalDate.now());
 
         return query.getResultList();
     }

@@ -1,10 +1,6 @@
 package at.fhv.teamb.symphoniacus.presentation.internal;
 
-import at.fhv.teamb.symphoniacus.domain.ActualSectionInstrumentation;
 import at.fhv.teamb.symphoniacus.domain.DutyPosition;
-import at.fhv.teamb.symphoniacus.domain.Musician;
-import at.fhv.teamb.symphoniacus.domain.exception.PointsNotCalculatedException;
-import java.util.Optional;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
