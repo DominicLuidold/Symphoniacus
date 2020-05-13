@@ -25,16 +25,19 @@ import java.util.ResourceBundle;
 import java.util.Set;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.stream.Collectors;
+import javafx.beans.Observable;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.collections.ObservableSet;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.scene.Node;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.ComboBoxBase;
+import javafx.scene.control.Control;
 import javafx.scene.control.Label;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.AnchorPane;
@@ -43,6 +46,8 @@ import javafx.scene.layout.BorderStroke;
 import javafx.scene.layout.BorderStrokeStyle;
 import javafx.scene.layout.BorderWidths;
 import javafx.scene.layout.CornerRadii;
+import javafx.scene.layout.GridPane;
+import javafx.scene.layout.RowConstraints;
 import javafx.scene.paint.Paint;
 import javafx.util.StringConverter;
 import org.apache.logging.log4j.LogManager;
@@ -112,12 +117,22 @@ public class NewDutyEntryController implements Initializable, Parentable<TabPane
     @FXML
     private CheckComboBox<InstrumentationEntity> instrumentationsSelect;
 
+    @FXML
+    private GridPane upperGrid;
+
+    @FXML
+    private Label instrumentationsLabel;
+
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         this.resources = resources;
         this.dutyManager = new DutyManager();
         this.seriesOfPerformancesManager = new SeriesOfPerformancesManager();
         this.dutyCategoryManager = new DutyCategoryManager();
+        //hideInstrumentationRow();
+        //this.upperGrid.setVgap(10);
+        this.instrumentationsSelect.setDisable(true);
+        //this.upperGrid.getRowConstraints().get(1).setMaxHeight(0);
 
         // Init combo boxes with data
         this.initCategoryComboBox();
@@ -148,18 +163,32 @@ public class NewDutyEntryController implements Initializable, Parentable<TabPane
         this.seriesOfPerformancesSelect.addEventHandler(ComboBoxBase.ON_HIDDEN, event -> {
             if (!this.seriesOfPerformancesSelect.getSelectionModel().isEmpty()) {
                 initInstrumentationsCheckComboBox();
+                this.instrumentationsSelect.setDisable(false);
+                //showInstrumentationRow();
+                //this.upperGrid.setVgap(20);
             } else {
-                this.instrumentationsSelect.getItems().clear();
+                this.instrumentationsSelect.setDisable(true);
+                //hideInstrumentationRow();
+                //this.upperGrid.setVgap(10);
             }
         });
-
-        this.instrumentationsSelect.addEventHandler(ComboBoxBase.ON_HIDDEN, event -> {
-            if (!this.instrumentationsSelect.getCheckModel().getCheckedItems().isEmpty()) {
-                // TODO - wenn langweilig prompt der ausgewählten
-            }
-        });
-
     }
+
+    /*
+    private void hideInstrumentationRow() {
+        this.upperGrid.getChildren().remove(instrumentationsLabel);
+        this.upperGrid.getChildren().remove(instrumentationsSelect);
+    }
+
+    private void showInstrumentationRow() {
+        if (!(this.upperGrid.getChildren().contains(instrumentationsLabel)
+            && this.upperGrid.getChildren().contains(instrumentationsSelect))) {
+            this.upperGrid.add(instrumentationsLabel, 0, 1);
+            this.upperGrid.add(instrumentationsSelect, 1, 1);
+        }
+    }
+
+     */
 
     /**
      * Sets the actions for all buttons of the new duty view.
@@ -255,19 +284,24 @@ public class NewDutyEntryController implements Initializable, Parentable<TabPane
      * Initializes the {@link #instrumentationsSelect} combo box with data.
      */
     private void initInstrumentationsCheckComboBox() {
-        final ObservableSet<InstrumentationEntity> instrumentations =
-            FXCollections.observableSet(
-                this.seriesOfPerformancesManager.getAllInstrumentations(
-                    this.seriesOfPerformancesSelect.getSelectionModel().getSelectedItem()
-                )
-            );
+        this.instrumentationsSelect.getCheckModel().clearChecks();
+        final ObservableSet<InstrumentationEntity> observInstrumentations =
+            FXCollections.observableSet();
 
-        final StringConverter<InstrumentationEntity> instConverter =
+        Set<InstrumentationEntity> instrumentations =
+            this.seriesOfPerformancesManager.getAllInstrumentations(
+                this.seriesOfPerformancesSelect.getSelectionModel().getSelectedItem());
+        observInstrumentations.addAll(instrumentations);
+
+        ObservableList<InstrumentationEntity> oldList = this.instrumentationsSelect.getItems();
+        this.instrumentationsSelect.getItems().removeAll(oldList);
+        this.instrumentationsSelect.getItems().addAll(instrumentations);
+        this.instrumentationsSelect.setConverter(
             new StringConverter<>() {
                 @Override
                 public String toString(InstrumentationEntity inst) {
-                    return inst.getName() + " - "
-                        + inst.getMusicalPiece().getName();
+                    return (inst.getName() + " - "
+                        + inst.getMusicalPiece().getName());
                 }
 
                 @Override
@@ -278,23 +312,7 @@ public class NewDutyEntryController implements Initializable, Parentable<TabPane
                     //Should never be able to get here
                     return null;
                 }
-            };
-
-        this.instrumentationsSelect.setConverter(instConverter);
-        this.instrumentationsSelect.getItems().setAll(instrumentations);
-
-        /*
-            Refresh Bub - See https://github.com/controlsfx/controlsfx/issues/1004
-            Custom workaround to fix:
-         */
-        if (!instrumentations.isEmpty()) {
-            ObservableList<Integer> result =
-                this.instrumentationsSelect.getCheckModel().getCheckedIndices();
-            for (Integer i : result) {
-                this.instrumentationsSelect.getCheckModel().check(i);
-            }
-        }
-        this.instrumentationsSelect.getCheckModel().clearChecks();
+            });
     }
 
     /**

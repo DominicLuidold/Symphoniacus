@@ -37,11 +37,11 @@
                   </BorderPane>
                </children>
             </AnchorPane>
-                <GridPane alignment="CENTER" hgap="10" prefHeight="200.0" vgap="20">
+                <GridPane fx:id="upperGrid" alignment="CENTER" hgap="10.0" prefHeight="200.0" vgap="20.0">
                     <Label fx:id="seriesOfPerformancesLabel" text="%tab.duty.new.entry.label.seriesofperformances" GridPane.columnIndex="0" />
                <Label fx:id="instrumentationsLabel" text="%tab.duty.new.entry.dropdown.load.instrumentations" GridPane.rowIndex="1" />
                     <ComboBox fx:id="seriesOfPerformancesSelect" layoutX="15.0" layoutY="33.0" prefWidth="250.0" promptText="%tab.duty.new.entry.dropdown.load.seriesofperformances" GridPane.columnIndex="1" />
-               <CheckComboBox fx:id="instrumentationsSelect" prefWidth="250.0" title="%tab.duty.new.entry.dropdown.load.instrumentations.default" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+               <CheckComboBox fx:id="instrumentationsSelect" prefWidth="250.0" GridPane.columnIndex="1" GridPane.rowIndex="1" />
                     <Button fx:id="newSeriesOfPerformancesBtn" mnemonicParsing="false" prefWidth="150.0" text="%tab.duty.new.entry.button.new.seriesofperformances" GridPane.columnIndex="3" />
                     <Label fx:id="dutyCategoryLabel" text="%tab.duty.new.entry.label.category" GridPane.columnIndex="0" GridPane.rowIndex="2" />
                     <ComboBox fx:id="dutyCategorySelect" layoutX="15.0" layoutY="33.0" prefWidth="250.0" promptText="%tab.duty.new.entry.dropdown.load.category" GridPane.columnIndex="1" GridPane.rowIndex="2" />
@@ -51,7 +51,7 @@
                     <JFXTextField fx:id="dutyDescriptionInput" GridPane.columnIndex="1" GridPane.rowIndex="4" />
                <columnConstraints>
                   <ColumnConstraints hgrow="NEVER" prefWidth="250.0" />
-                  <ColumnConstraints hgrow="NEVER" prefWidth="250.0" />
+                  <ColumnConstraints prefWidth="250.0" />
                   <ColumnConstraints />
                   <ColumnConstraints hgrow="NEVER" prefWidth="200.0" />
                </columnConstraints>
