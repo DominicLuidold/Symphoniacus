@@ -734,6 +734,7 @@ public class DutyScheduleController
         Font boldFont = Font.font(f.getFamily(), FontWeight.BOLD, 14);
         lblSummaryPoints.setFont(boldFont);
         Label lblMusicianName = new Label();
+        lblMusicianName.setTextFill(Color.web("#000000"));
         lblMusicianName.setFont(boldFont);
 
         VBox vbox = new VBox(
