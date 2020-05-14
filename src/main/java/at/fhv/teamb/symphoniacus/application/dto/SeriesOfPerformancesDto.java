@@ -50,7 +50,7 @@ public class SeriesOfPerformancesDto {
         private Set<MusicalPieceDto> musicalPieces;
         private Set<DutyDto> duties;
 
-        public SeriesOfPerformancesBuilder (int seriesId) {
+        public SeriesOfPerformancesBuilder(int seriesId) {
             this.seriesOfPerformancesId = seriesId;
         }
 
