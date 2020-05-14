@@ -674,7 +674,7 @@ public class DutyScheduleController
                 piecesToSelect.addAll(sel);
 
                 for (MusicalPiece mp : sel) {
-                    DutyPosition dp = getPositionForPiece(
+                    DutyPosition dp = getSamePositionForDifferentPiece(
                         dutyPosition,
                         mp,
                         this.duty.getDutyPositions()
@@ -712,23 +712,23 @@ public class DutyScheduleController
         this.initMusicianTableWithoutRequests();
     }
 
-    private DutyPosition getPositionForPiece(
-        DutyPosition dp,
-        MusicalPiece mp,
-        List<DutyPosition> dutyPositions
+    private DutyPosition getSamePositionForDifferentPiece(
+        DutyPosition originalPosition,
+        MusicalPiece differentPiece,
+        List<DutyPosition> allPositions
     ) {
-        for (DutyPosition dutyPosition : dutyPositions) {
+        for (DutyPosition dutyPosition : allPositions) {
             InstrumentationPositionEntity ipe = dutyPosition
                 .getEntity()
                 .getInstrumentationPosition();
             if (
                 ipe.getPositionDescription().equals(
-                    dp
+                    originalPosition
                         .getEntity()
                         .getInstrumentationPosition()
                         .getPositionDescription())
                     && ipe.getInstrumentation().getMusicalPiece().getName().equals(
-                    mp.getEntity()
+                    differentPiece.getEntity()
                         .getName()
                 )
             ) {
