@@ -1,21 +1,28 @@
 package at.fhv.teamb.symphoniacus.presentation.internal;
 
 import at.fhv.teamb.symphoniacus.domain.DutyPosition;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 public class DutyPositionMusicianTableModel {
+
+    private static final Logger LOG = LogManager.getLogger(DutyPositionMusicianTableModel.class);
     private DutyPosition dutyPosition;
 
     /**
-     * Consruct a new Duty Position Musician Table Model.
+     * Construct a new Duty Position Musician Table Model.
      *
      * @param dutyPosition The Position Entry for which the table is for
      */
-    public DutyPositionMusicianTableModel(DutyPosition dutyPosition) {
+    public DutyPositionMusicianTableModel(
+        DutyPosition dutyPosition
+    ) {
         this.dutyPosition = dutyPosition;
     }
 
     /**
      * Returns the position description.
+     *
      * @return Description of Instrumentation Position
      */
     public String getRole() {
@@ -27,13 +34,18 @@ public class DutyPositionMusicianTableModel {
 
     /**
      * Returns the musician Shortcut.
+     *
      * @return Shortcut of assigned musician if present, else empty string
      */
     public String getMusicanShortcut() {
-
         if (this.dutyPosition.getAssignedMusician().isPresent()) {
             return this.dutyPosition.getAssignedMusician().get()
                 .getFullName();
+        } else {
+            LOG.debug(
+                "No musician present for duty position {}",
+                this.dutyPosition.getEntity().getInstrumentationPosition().getPositionDescription()
+            );
         }
         return "";
     }

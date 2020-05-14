@@ -15,6 +15,7 @@ import at.fhv.teamb.symphoniacus.persistence.model.DutyEntity;
 import at.fhv.teamb.symphoniacus.persistence.model.DutyPositionEntity;
 import at.fhv.teamb.symphoniacus.persistence.model.MusicianEntity;
 import at.fhv.teamb.symphoniacus.persistence.model.SectionEntity;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.HashSet;
@@ -90,8 +91,8 @@ public class DutyScheduleManager {
 
         // Create DutyPosition domain objects
         List<DutyPosition> dutyPositions = new LinkedList<>();
-        for (DutyPositionEntity dutyPosition : dutyPositionEntities) {
-            dutyPositions.add(new DutyPosition(dutyPosition));
+        for (DutyPositionEntity dpEntity : dutyPositionEntities) {
+            dutyPositions.add(new DutyPosition(dpEntity));
         }
 
         // Fill Duty with available information
@@ -271,20 +272,64 @@ public class DutyScheduleManager {
     }
 
     /**
+     * Adds Balance Points for a monnth to a musician.
+     *
+     * @param musician Musician to add points
+     * @param start Start of month
+     */
+    public void addBalancePointsToMusician(Musician musician, LocalDate start) {
+        Points balancePoints = this.pointsManager.getBalanceFromMusician(
+            musician.getEntity(),
+            start
+        );
+        musician.setBalancePoints(balancePoints);
+        LOG.debug("Balance Points set to {}", balancePoints.getValue());
+    }
+
+    /**
+     * Adds Debit Points to a musician.
+     *
+     * @param musician Musician to add points
+     */
+    public void addDebitPointsToMusician(Musician musician) {
+        Points debitPoints = this.pointsManager.getDebitPointsFromMusician(
+            musician.getEntity()
+        );
+        musician.setDebitPoints(debitPoints);
+        LOG.debug("Debit Points set to {}", debitPoints.getValue());
+    }
+
+    /**
+     * Adds Gained Points for a month to a musician.
+     *
+     * @param musician Musician to add points
+     * @param start Start of month
+     */
+    public void addGainedPointsToMusician(Musician musician, LocalDate start) {
+        Points gainedPoints = this.pointsManager.getGainedPointsForMonthFromMusician(
+            musician.getEntity(),
+            start
+        );
+        musician.setGainedPoints(gainedPoints);
+        LOG.debug("Gained Points set to {}", gainedPoints.getValue());
+    }
+
+    /**
      * Converts {@link MusicianEntity} objects to domain {@link Musician}s.
      *
      * @param duty The duty to use
      */
     private void convertMusicianEntitiesToDomainObjects(Duty duty) {
         for (MusicianEntity entity : this.sectionMusicianEntities) {
-            // Get points for musician
-            Points points = this.pointsManager.getBalanceFromMusician(
-                entity,
-                duty.getEntity().getStart().toLocalDate()
-            );
+            // Get balancePoints for musician
 
             // Create domain object
-            Musician m = new Musician(entity, points);
+            Musician m = new Musician(entity);
+
+            // add points
+            addBalancePointsToMusician(m, duty.getEntity().getStart().toLocalDate());
+            addDebitPointsToMusician(m);
+            // Gained Points are lazily loaded because of heavy performance impact
 
             // Fill domain object with wish requests
             this.wishRequestManager.setMusicianWishRequest(m, duty.getEntity());
