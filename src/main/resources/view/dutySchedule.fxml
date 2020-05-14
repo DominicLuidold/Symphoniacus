@@ -76,9 +76,14 @@
                                     <PropertyValueFactory property="name" />
                                 </cellValueFactory>
                             </TableColumn>
-                            <TableColumn id="columnPoints" prefWidth="75.0" text="%tab.duty.schedule.table.musicians.points">
+                            <TableColumn fx:id="columnPointsWithoutRequests" prefWidth="100.0" text="%tab.duty.schedule.table.musicians.balancePoints">
                                 <cellValueFactory>
-                                    <PropertyValueFactory property="points" />
+                                    <PropertyValueFactory property="balancePoints" />
+                                </cellValueFactory>
+                            </TableColumn>
+                            <TableColumn id="columnDebitPoints" prefWidth="100.0" text="%tab.duty.schedule.table.musicians.debitPoints">
+                                <cellValueFactory>
+                                    <PropertyValueFactory property="debitPoints" />
                                 </cellValueFactory>
                             </TableColumn>
                             <TableColumn fx:id="columnScheduleBtnWithoutRequests" prefWidth="125.0" text="%tab.duty.schedule.table.musicians.schedule">
@@ -99,9 +104,14 @@
                                     <PropertyValueFactory property="name" />
                                 </cellValueFactory>
                             </TableColumn>
-                            <TableColumn id="columnPoints" prefWidth="75.0" text="%tab.duty.schedule.table.musicians.points">
+                            <TableColumn fx:id="columnPointsWithRequests" prefWidth="100.0" text="%tab.duty.schedule.table.musicians.balancePoints">
                                 <cellValueFactory>
-                                    <PropertyValueFactory property="points" />
+                                    <PropertyValueFactory property="balancePoints" />
+                                </cellValueFactory>
+                            </TableColumn>
+                            <TableColumn id="columnDebitPoints" prefWidth="100.0" text="%tab.duty.schedule.table.musicians.debitPoints">
+                                <cellValueFactory>
+                                    <PropertyValueFactory property="debitPoints" />
                                 </cellValueFactory>
                             </TableColumn>
                             <TableColumn id="columnType" prefWidth="100.0" text="%tab.duty.schedule.table.musicians.request.type">
