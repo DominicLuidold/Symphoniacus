@@ -3,6 +3,7 @@ package at.fhv.teamb.symphoniacus.application.dto;
 import java.time.LocalDateTime;
 
 /**
+ * DTO for Duties.
  * @author : Danijel Antonijevic
  * @author Nino Heinzle
  * @created : 15.05.20, Fr.
@@ -12,19 +13,22 @@ public class DutyDto {
     private final int dutyId;
     private final String description;
     private final String timeOfDay;
+    private final DutyCategoryDto dutyCategory;
     private final LocalDateTime start;
     private final LocalDateTime end;
     private final SeriesOfPerformancesDto seriesOfPerformances;
 
-    public DutyDto(int dutyId,
+    private DutyDto(int dutyId,
                    String description,
                    String timeOfDay,
+                   DutyCategoryDto dutyCategory,
                    LocalDateTime start,
                    LocalDateTime end,
                    SeriesOfPerformancesDto seriesOfPerformances) {
         this.dutyId = dutyId;
         this.description = description;
         this.timeOfDay = timeOfDay;
+        this.dutyCategory = dutyCategory;
         this.start = start;
         this.end = end;
         this.seriesOfPerformances = seriesOfPerformances;
@@ -34,6 +38,7 @@ public class DutyDto {
         private final int dutyId;
         private String description;
         private String timeOfDay;
+        private DutyCategoryDto dutyCategory;
         private LocalDateTime start;
         private LocalDateTime end;
         private SeriesOfPerformancesDto seriesOfPerformances;
@@ -49,6 +54,12 @@ public class DutyDto {
 
         public DutyDtoBuilder withTimeOfDay(String timeOfDay) {
             this.timeOfDay = timeOfDay;
+            return this;
+        }
+
+        public DutyDtoBuilder withDutyCategory(
+            DutyCategoryDto dutyCategory) {
+            this.dutyCategory = dutyCategory;
             return this;
         }
 
@@ -77,6 +88,7 @@ public class DutyDto {
                 this.dutyId,
                 this.description,
                 this.timeOfDay,
+                this.dutyCategory,
                 this.start,
                 this.end,
                 this.seriesOfPerformances
