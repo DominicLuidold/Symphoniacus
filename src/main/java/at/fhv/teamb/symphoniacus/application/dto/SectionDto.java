@@ -41,31 +41,31 @@ public class SectionDto {
 
 
     public int getSectionId() {
-        return sectionId;
+        return this.sectionId;
     }
 
     public String getSectionShortcut() {
-        return sectionShortcut;
+        return this.sectionShortcut;
     }
 
     public String getDescription() {
-        return description;
+        return this.description;
     }
 
     public List<SectionMonthlyScheduleEntity> getSectionMonthlySchedules() {
-        return sectionMonthlySchedules;
+        return this.sectionMonthlySchedules;
     }
 
     public List<MusicianEntity> getMusicians() {
-        return musicians;
+        return this.musicians;
     }
 
     public List<DutyPositionEntity> getDutyPositions() {
-        return dutyPositions;
+        return this.dutyPositions;
     }
 
     public List<SectionInstrumentationEntity> getSectionInstrumentations() {
-        return sectionInstrumentations;
+        return this.sectionInstrumentations;
     }
 
     public static class SectionDtoBuilder {
