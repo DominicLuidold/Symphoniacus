@@ -1,16 +1,15 @@
 package at.fhv.teamb.symphoniacus.presentation;
 
 import at.fhv.teamb.symphoniacus.application.SectionMonthlyScheduleManager;
+import at.fhv.teamb.symphoniacus.application.dto.SectionDto;
 import at.fhv.teamb.symphoniacus.application.type.DomainUserType;
-import at.fhv.teamb.symphoniacus.domain.Duty;
 import at.fhv.teamb.symphoniacus.domain.Musician;
-import at.fhv.teamb.symphoniacus.domain.Section;
 import at.fhv.teamb.symphoniacus.domain.SectionMonthlySchedule;
 import at.fhv.teamb.symphoniacus.presentation.internal.CustomCalendarButtonEvent;
+import at.fhv.teamb.symphoniacus.presentation.internal.popover.CustomDutyPopoverNode;
 import at.fhv.teamb.symphoniacus.presentation.internal.skin.DutySchedulerCalendarSkin;
 import at.fhv.teamb.symphoniacus.presentation.internal.tasks.FindAllInRangeWithSectionTask;
 import com.calendarfx.model.Calendar;
-import com.calendarfx.model.Entry;
 import java.net.URL;
 import java.text.MessageFormat;
 import java.time.LocalDate;
@@ -49,7 +48,7 @@ import org.kordamp.ikonli.javafx.FontIcon;
 public class DutySchedulerCalendarController extends CalendarController implements Controllable {
     private static final Logger LOG = LogManager.getLogger(DutySchedulerCalendarController.class);
     private ResourceBundle resources;
-    private Section section;
+    private SectionDto section;
     private TabPaneController parentController;
 
     @FXML
@@ -74,7 +73,18 @@ public class DutySchedulerCalendarController extends CalendarController implemen
             LOG.error("Current user type is unsupported for this view");
             return;
         }
-        this.section = musician.getSection();
+        SectionDto.SectionDtoBuilder sectionDtoBuilder = new SectionDto
+            .SectionDtoBuilder(musician.getSection().getEntity().getSectionId());
+        sectionDtoBuilder
+            .withSectionShortcut(musician.getEntity().getSection().getSectionShortcut());
+        sectionDtoBuilder.withDescription(musician.getEntity().getSection().getDescription());
+        sectionDtoBuilder.withSectionMonthlySchedules(
+            musician.getEntity().getSection().getSectionMonthlySchedules());
+        sectionDtoBuilder.withMusicians(musician.getEntity().getSection().getMusicians());
+        sectionDtoBuilder.withDutyPositions(musician.getEntity().getSection().getDutyPositions());
+        sectionDtoBuilder.withSectionInstrumentations(
+            musician.getSection().getEntity().getSectionInstrumentations());
+        this.section = sectionDtoBuilder.build();
 
         // Tell CalendarFX to use custom skin
         this.setCalendarSkin();
@@ -93,8 +103,8 @@ public class DutySchedulerCalendarController extends CalendarController implemen
         task.setOnSucceeded(event -> {
             // Create calendar
             Calendar calendar = this.createCalendar(
-                this.section.getEntity().getDescription(),
-                this.section.getEntity().getSectionShortcut(),
+                this.section.getDescription(),
+                this.section.getSectionShortcut(),
                 true
             );
 
@@ -120,6 +130,16 @@ public class DutySchedulerCalendarController extends CalendarController implemen
     public void initialize(URL location, ResourceBundle resources) {
         this.resources = resources;
         this.registerController();
+
+        this.calendarView.setEntryDetailsPopOverContentCallback(param ->
+            new CustomDutyPopoverNode(
+                param.getPopOver(),
+                param.getDateControl(),
+                param.getNode(),
+                param.getEntry(),
+                this.section
+            )
+        );
         LOG.debug("Initialized DutySchedulerCalendarController");
     }
 
@@ -349,38 +369,10 @@ public class DutySchedulerCalendarController extends CalendarController implemen
     }
 
     /**
-     * {@inheritDoc}
+     * Intentional empty.
      */
     @Override
     protected void setEntryDetailsCallback() {
-        this.calendarView.setEntryDetailsCallback(
-            param -> {
-                if (param.getEntry() instanceof Entry) {
-                    Entry<Duty> entry = (Entry<Duty>) param.getEntry();
-                    MasterController mc = MasterController.getInstance();
-
-                    if (mc.get("CalendarController") instanceof DutySchedulerCalendarController) {
-                        DutySchedulerCalendarController cc =
-                            (DutySchedulerCalendarController) mc.get("CalendarController");
-                        cc.hide();
-                    }
-
-                    if (this.dutyScheduleController == null) {
-                        if (mc.get("DutyScheduleController") instanceof DutyScheduleController) {
-                            this.dutyScheduleController =
-                                (DutyScheduleController) mc.get("DutyScheduleController");
-                        }
-                    }
-
-                    this.dutyScheduleController.setDuty(entry.getUserObject());
-                    this.dutyScheduleController.setSection(this.section);
-                    this.dutyScheduleController.show();
-                    return true;
-                }
-                LOG.error("Unrecognized Calendar Entry: No Duty found");
-                return false;
-            }
-        );
     }
 
     /**
@@ -390,7 +382,7 @@ public class DutySchedulerCalendarController extends CalendarController implemen
     protected FindAllInRangeWithSectionTask loadDuties(LocalDate start, LocalDate end) {
         return new FindAllInRangeWithSectionTask(
             this.dutyManager,
-            this.section.getEntity(),
+            this.section,
             start,
             end,
             this.calendarPane

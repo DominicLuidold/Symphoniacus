@@ -1,6 +1,7 @@
 package at.fhv.teamb.symphoniacus.presentation.internal.tasks;
 
 import at.fhv.teamb.symphoniacus.application.DutyManager;
+import at.fhv.teamb.symphoniacus.application.dto.SectionDto;
 import at.fhv.teamb.symphoniacus.domain.Duty;
 import at.fhv.teamb.symphoniacus.domain.Section;
 import java.util.List;
@@ -15,7 +16,7 @@ import javafx.concurrent.Task;
 public class GetOtherDutiesTask extends Task<List<Duty>> {
     private final DutyManager dutyManager;
     private final Duty duty;
-    private final Section section;
+    private final SectionDto section;
     private final Integer numberOfMaxDuties;
 
     /**
@@ -29,7 +30,7 @@ public class GetOtherDutiesTask extends Task<List<Duty>> {
     public GetOtherDutiesTask(
         DutyManager dutyManager,
         Duty duty,
-        Section section,
+        SectionDto section,
         Integer numberOfMaxDuties
     ) {
         this.dutyManager = dutyManager;

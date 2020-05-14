@@ -5,6 +5,7 @@ import at.fhv.teamb.symphoniacus.domain.AdministrativeAssistant;
 import at.fhv.teamb.symphoniacus.domain.Duty;
 import at.fhv.teamb.symphoniacus.presentation.internal.CustomCalendarButtonEvent;
 import at.fhv.teamb.symphoniacus.presentation.internal.TabPaneEntry;
+import at.fhv.teamb.symphoniacus.presentation.internal.popover.CustomDutyPopoverNode;
 import at.fhv.teamb.symphoniacus.presentation.internal.skin.OrganizationalOfficerCalendarSkin;
 import at.fhv.teamb.symphoniacus.presentation.internal.tasks.FindAllInRangeTask;
 import com.calendarfx.model.Calendar;
@@ -48,7 +49,7 @@ public class OrganizationalOfficerCalendarController extends CalendarController 
             Calendar calendar = this.createCalendar(
                 this.bundle.getString("oo.calendar.name"),
                 this.bundle.getString("oo.calendar.shortname"),
-                false
+                true
             );
 
             // Fill calendar
@@ -77,6 +78,14 @@ public class OrganizationalOfficerCalendarController extends CalendarController 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         this.bundle = resources;
+        this.calendarView.setEntryDetailsPopOverContentCallback(param ->
+            new CustomDutyPopoverNode(
+                param.getPopOver(),
+                param.getDateControl(),
+                param.getNode(),
+                param.getEntry()
+            )
+        );
         LOG.debug("Initialized OrganizationalOfficerCalendarController");
     }
 

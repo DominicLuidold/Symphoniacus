@@ -5,6 +5,7 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 
+import at.fhv.teamb.symphoniacus.application.dto.SectionDto;
 import at.fhv.teamb.symphoniacus.domain.Duty;
 import at.fhv.teamb.symphoniacus.persistence.dao.DutyDao;
 import at.fhv.teamb.symphoniacus.persistence.model.DutyEntity;
@@ -28,13 +29,13 @@ import org.mockito.Mockito;
 class DutyManagerTest {
     private LocalDate testDate;
     private DutyManager dutyManager;
-    private SectionEntity section;
+    private SectionDto section;
 
     @BeforeAll
     void initialize() {
         this.testDate = LocalDate.now();
         this.dutyManager = new DutyManager();
-        this.section = Mockito.mock(SectionEntity.class);
+        this.section = Mockito.mock(SectionDto.class);
         this.dutyManager.dutyDao = Mockito.mock(DutyDao.class);
 
         when(this.dutyManager.dutyDao.findAllInRangeWithSection(
