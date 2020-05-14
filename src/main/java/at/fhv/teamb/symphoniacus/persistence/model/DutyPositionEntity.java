@@ -1,5 +1,6 @@
 package at.fhv.teamb.symphoniacus.persistence.model;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -21,15 +22,24 @@ public class DutyPositionEntity {
     @Column(name = "description")
     private String description;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(
+        fetch = FetchType.LAZY,
+        cascade = {CascadeType.PERSIST, CascadeType.MERGE}
+    )
     @JoinColumn(name = "instrumentationPositionId")
     private InstrumentationPositionEntity instrumentationPosition;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(
+        fetch = FetchType.LAZY,
+        cascade = {CascadeType.PERSIST, CascadeType.MERGE}
+    )
     @JoinColumn(name = "dutyId")
     private DutyEntity duty;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(
+        fetch = FetchType.LAZY,
+        cascade = {CascadeType.PERSIST, CascadeType.MERGE}
+    )
     @JoinColumn(name = "sectionId")
     private SectionEntity section;
 

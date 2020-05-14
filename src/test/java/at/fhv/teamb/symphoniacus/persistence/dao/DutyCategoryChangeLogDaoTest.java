@@ -40,7 +40,7 @@ class DutyCategoryChangeLogDaoTest {
         categoryEntity.setDutyCategoryId(3);
 
         List<DutyCategoryChangelogEntity> changelogEntityList =
-            this.dao.getDutyCategoryChangeLog(categoryEntity);
+            this.dao.getDutyCategoryChangelogs(categoryEntity);
 
         assertNotNull(changelogEntityList, "The returning List has to be not null");
 

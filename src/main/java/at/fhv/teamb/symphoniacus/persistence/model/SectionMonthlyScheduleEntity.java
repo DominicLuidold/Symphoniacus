@@ -95,11 +95,9 @@ public class SectionMonthlyScheduleEntity {
 
     public void addDuty(DutyEntity duty) {
         this.duties.add(duty);
-        duty.addSectionMonthlySchedule(this);
     }
 
     public void removeDuty(DutyEntity duty) {
         this.duties.remove(duty);
-        duty.removeSectionMonthlySchedule(this);
     }
 }

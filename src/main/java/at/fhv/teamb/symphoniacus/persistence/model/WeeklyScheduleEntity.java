@@ -3,6 +3,7 @@ package at.fhv.teamb.symphoniacus.persistence.model;
 import java.time.LocalDate;
 import java.util.LinkedList;
 import java.util.List;
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -37,7 +38,7 @@ public class WeeklyScheduleEntity {
     @Column(name = "isConfirmed")
     private boolean isConfirmed;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.LAZY, cascade = {CascadeType.PERSIST, CascadeType.MERGE})
     @JoinColumn(name = "monthlyScheduleId")
     private MonthlyScheduleEntity monthlySchedule;
 
@@ -84,20 +85,19 @@ public class WeeklyScheduleEntity {
         this.publishDate = publishDate;
     }
 
-    public boolean getIsConfirmed() {
-        return this.isConfirmed;
+    public boolean getConfirmed() {
+        return isConfirmed;
     }
 
-    public void setIsConfirmed(boolean isConfirmed) {
-        this.isConfirmed = isConfirmed;
+    public void setConfirmed(boolean confirmed) {
+        this.isConfirmed = confirmed;
     }
 
     public MonthlyScheduleEntity getMonthlySchedule() {
-        return this.monthlySchedule;
+        return monthlySchedule;
     }
 
-    public void setMonthlySchedule(
-        MonthlyScheduleEntity monthlySchedule) {
+    public void setMonthlySchedule(MonthlyScheduleEntity monthlySchedule) {
         this.monthlySchedule = monthlySchedule;
     }
 
@@ -113,17 +113,5 @@ public class WeeklyScheduleEntity {
     public void removeDuty(DutyEntity duty) {
         this.duties.remove(duty);
         duty.setWeeklySchedule(null);
-    }
-
-    public boolean getConfirmed() {
-        return isConfirmed;
-    }
-
-    public void setConfirmed(boolean confirmed) {
-        isConfirmed = confirmed;
-    }
-
-    public void setDuties(List<DutyEntity> duties) {
-        this.duties = duties;
     }
 }

@@ -1,8 +1,10 @@
 package at.fhv.teamb.symphoniacus.persistence.dao;
 
 import at.fhv.teamb.symphoniacus.persistence.BaseDao;
+import at.fhv.teamb.symphoniacus.persistence.model.DutyCategoryEntity;
 import at.fhv.teamb.symphoniacus.persistence.model.SeriesOfPerformancesEntity;
 import java.time.LocalDate;
+import java.util.List;
 import java.util.Optional;
 import javax.persistence.TypedQuery;
 
@@ -14,6 +16,20 @@ public class SeriesOfPerformancesDao extends BaseDao<SeriesOfPerformancesEntity>
     @Override
     public Optional<SeriesOfPerformancesEntity> find(Integer key) {
         return this.find(SeriesOfPerformancesEntity.class, key);
+    }
+
+    /**
+     * Returns all {@link SeriesOfPerformancesEntity} objects.
+     *
+     * @return A List of series of performances entities
+     */
+    public List<SeriesOfPerformancesEntity> getAll() {
+        TypedQuery<SeriesOfPerformancesEntity> query = entityManager.createQuery(
+            "SELECT sop FROM SeriesOfPerformancesEntity sop",
+            SeriesOfPerformancesEntity.class
+        );
+
+        return query.getResultList();
     }
 
     /**

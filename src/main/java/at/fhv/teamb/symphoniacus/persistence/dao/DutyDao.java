@@ -1,7 +1,9 @@
 package at.fhv.teamb.symphoniacus.persistence.dao;
 
 import at.fhv.teamb.symphoniacus.persistence.BaseDao;
+import at.fhv.teamb.symphoniacus.persistence.model.DutyCategoryEntity;
 import at.fhv.teamb.symphoniacus.persistence.model.DutyEntity;
+import at.fhv.teamb.symphoniacus.persistence.model.InstrumentationEntity;
 import at.fhv.teamb.symphoniacus.persistence.model.MusicianEntity;
 import at.fhv.teamb.symphoniacus.persistence.model.SectionEntity;
 import at.fhv.teamb.symphoniacus.persistence.model.SeriesOfPerformancesEntity;
@@ -12,7 +14,6 @@ import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
-import javax.persistence.EntityTransaction;
 import javax.persistence.TypedQuery;
 
 /**
@@ -290,5 +291,43 @@ public class DutyDao extends BaseDao<DutyEntity> {
         query.setMaxResults(maxNumberOfDuties);
 
         return query.getResultList();
+    }
+
+    /**
+     * Checks whether a duty with the given parameters exists or not.
+     *
+     * @param series           given Series of Performances from searched Duty.
+     * @param instrumentations given instrumentation from searched Duty.
+     * @param startingDate     given starting Date from the searched Duty.
+     * @param endingDate       given ending Date from searched Duty.
+     * @param category         given dutyCategory from searched Duty.
+     * @return True if duty exists, false otherwise
+     */
+    public boolean doesDutyAlreadyExists(
+        SeriesOfPerformancesEntity series,
+        List<InstrumentationEntity> instrumentations,
+        LocalDateTime startingDate,
+        LocalDateTime endingDate,
+        DutyCategoryEntity category) {
+
+        TypedQuery<Long> query = entityManager.createQuery(
+            "SELECT COUNT(d) FROM DutyEntity d "
+                + "LEFT JOIN d.dutyPositions dp "
+                + "LEFT JOIN dp.instrumentationPosition ip "
+                + "WHERE ip.instrumentation = :inst "
+                + "AND d.start = :sDate "
+                + "AND d.end = :eDate "
+                + "AND d.seriesOfPerformances = :series "
+                + "AND d.dutyCategory = :category ",
+            Long.class
+        );
+
+        query.setParameter("series", series);
+        query.setParameter("sDate", startingDate);
+        query.setParameter("eDate", endingDate);
+        query.setParameter("inst", instrumentations);
+        query.setParameter("category", category);
+
+        return (query.getSingleResult() >= 1);
     }
 }

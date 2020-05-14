@@ -21,7 +21,7 @@
             </ColumnConstraints>
         </columnConstraints>
 
-        <Label fx:id="label" text="%unsupported" GridPane.columnIndex="0"
+        <Label fx:id="label" text="%global.unsupported" GridPane.columnIndex="0"
                GridPane.rowIndex="1" GridPane.columnSpan="1"
                GridPane.rowSpan="1" GridPane.halignment="CENTER">
             <font>

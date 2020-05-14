@@ -17,6 +17,9 @@ import java.util.Queue;
 import java.util.ResourceBundle;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.scene.control.Alert;
+import javafx.scene.control.ButtonBar;
+import javafx.scene.control.ButtonType;
 import javafx.scene.layout.AnchorPane;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -149,4 +152,23 @@ public class MainController implements Initializable {
         return result;
     }
 
+    /**
+     * Shows an error alert with a custom title and error message.
+     *
+     * @param alertTitle The alert title to use
+     * @param errorText  The error text to use
+     */
+    protected static void showErrorAlert(String alertTitle, String errorText, String buttonTitle) {
+        Alert alert = new Alert(Alert.AlertType.ERROR);
+        alert.setTitle(alertTitle);
+        alert.setContentText(errorText);
+
+        ButtonType okButton = new ButtonType(buttonTitle, ButtonBar.ButtonData.YES);
+        alert.getButtonTypes().setAll(okButton);
+        alert.showAndWait().ifPresent(type -> {
+            if (type.equals(okButton)) {
+                alert.close();
+            }
+        });
+    }
 }

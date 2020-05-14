@@ -4,11 +4,15 @@ import at.fhv.teamb.symphoniacus.domain.Section;
 import at.fhv.teamb.symphoniacus.domain.SectionMonthlySchedule;
 import at.fhv.teamb.symphoniacus.persistence.PersistenceState;
 import at.fhv.teamb.symphoniacus.persistence.dao.DutyPositionDao;
+import at.fhv.teamb.symphoniacus.persistence.dao.SectionDao;
 import at.fhv.teamb.symphoniacus.persistence.dao.SectionMonthlyScheduleDao;
+import at.fhv.teamb.symphoniacus.persistence.model.MonthlyScheduleEntity;
+import at.fhv.teamb.symphoniacus.persistence.model.SectionEntity;
 import at.fhv.teamb.symphoniacus.persistence.model.SectionMonthlyScheduleEntity;
 import java.time.Month;
 import java.time.Year;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 import org.apache.logging.log4j.LogManager;
@@ -23,10 +27,15 @@ import org.apache.logging.log4j.Logger;
 public class SectionMonthlyScheduleManager {
     private static final Logger LOG = LogManager.getLogger(SectionMonthlyScheduleManager.class);
     private final DutyPositionDao dutyPositionDao;
+    private final SectionDao sectionDao;
     private final SectionMonthlyScheduleDao smsDao;
 
+    /**
+     * Initialize the SectionMonthlyScheduleManager.
+     */
     public SectionMonthlyScheduleManager() {
         this.dutyPositionDao = new DutyPositionDao();
+        this.sectionDao = new SectionDao();
         this.smsDao = new SectionMonthlyScheduleDao();
     }
 
@@ -114,6 +123,42 @@ public class SectionMonthlyScheduleManager {
                 sectionMonthlySchedule.getEntity().getSectionMonthlyScheduleId()
             );
         }
+    }
+
+    /**
+     * Returns a List of section monthly schedules for the given month and year, should any exist.
+     * If no section monthly schedules exists for the requested time, new ones are created.
+     *
+     * @param year            The year to use
+     * @param month           The month to use
+     * @param monthlySchedule The monthly schedule to set
+     * @return A List of section monthly schedules
+     */
+    public List<SectionMonthlyScheduleEntity> createIfNotExist(
+        int year,
+        int month,
+        MonthlyScheduleEntity monthlySchedule
+    ) {
+        // Fetch section monthly schedules from database
+        List<SectionMonthlyScheduleEntity> sectionMonthlySchedules =
+            this.smsDao.findAllInYearAndMonth(Year.of(year), Month.of(month));
+
+        // Create section monthly schedules for every section
+        if (sectionMonthlySchedules.isEmpty()) {
+            for (SectionEntity section : this.sectionDao.getAll()) {
+                // Create new section monthly schedule
+                SectionMonthlyScheduleEntity sms = new SectionMonthlyScheduleEntity();
+                sms.setMonthlySchedule(monthlySchedule);
+                sms.setSection(section);
+                sms.setReadyForDutyScheduler(false);
+                sms.setReadyForOrganisationManager(false);
+                sms.setPublished(false);
+
+                sectionMonthlySchedules.add(sms);
+            }
+        }
+
+        return sectionMonthlySchedules;
     }
 
     /**

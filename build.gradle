@@ -36,8 +36,6 @@ dependencies {
     compile 'org.apache.logging.log4j:log4j-slf4j-impl:2.13.2'
     compile 'org.hibernate:hibernate-core:5.4.15.Final'
 
-
-
     implementation 'com.calendarfx:view:11.8.3'
     implementation ('org.controlsfx:controlsfx:11.0.1') {
         exclude group: 'org.controlsfx'
