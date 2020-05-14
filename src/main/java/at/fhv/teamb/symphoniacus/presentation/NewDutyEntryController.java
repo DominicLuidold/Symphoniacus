@@ -134,6 +134,14 @@ public class NewDutyEntryController implements Initializable, Parentable<TabPane
         // Set button actions
         this.setButtonActions();
 
+        // Set event handlers
+        this.setEventHandlers();
+    }
+
+    /**
+     * Sets the event handlers on dutyPointsInput and seriesOfPerformancesSelect
+     */
+    private void setEventHandlers() {
         // Add event listener for updated points
         this.dutyPointsInput.textProperty().addListener(
             (observable, oldValue, newValue) -> userEditedPoints = true
