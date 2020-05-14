@@ -84,8 +84,7 @@ public class DutyScheduleManager {
         // Create DutyPosition domain objects
         List<DutyPosition> dutyPositions = new LinkedList<>();
         for (DutyPositionEntity dpEntity : dutyPositionEntities) {
-            DutyPosition dp = new DutyPosition(dpEntity);
-            dutyPositions.add(dp);
+            dutyPositions.add(new DutyPosition(dpEntity));
         }
 
         // Fill Duty with available information

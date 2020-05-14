@@ -14,6 +14,8 @@ import java.util.LinkedHashSet;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 /**
  * UseCase Controller responsible for delivering all requested Points of a musician w/ timespan.
@@ -22,6 +24,7 @@ import java.util.Set;
  * @author Nino Heinzle
  */
 public class PointsManager {
+    private static final Logger LOG = LogManager.getLogger(PointsManager.class);
     private final ContractualObligationDao conDao;
     private final DutyCategoryChangeLogDao dutyCatChangeDao;
     private final DutyDao dutyDao;
@@ -59,7 +62,13 @@ public class PointsManager {
         if (isMusicianExternal(musician)) {
             return Points.getZeroPoints();
         } else {
-            // only one contractual obligation is loaded in previous DAO
+            // DutyDAO has been modified so that in this case, only one CO
+            // should be loaded at this point. However, we need to double-check.
+            if (musician.getContractualObligations().size() != 1) {
+                LOG.error("More than one contractual obligation is not supported"
+                    + "at this stage for musician {}", musician.getUser().getShortcut());
+                return Points.getZeroPoints();
+            }
             return Points.calcDebitPoints(musician.getContractualObligations().get(0));
         }
     }
