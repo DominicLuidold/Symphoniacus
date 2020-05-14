@@ -22,12 +22,13 @@ import org.apache.logging.log4j.Logger;
 public class Duty {
     private static final Logger LOG = LogManager.getLogger(Duty.class);
     private DutyEntity entity;
-    private List<DutyPosition> dutyPositions;
+    private List<DutyPosition> dutyPositions = new LinkedList<>(); // prevent NPE
     private String title;
     private PersistenceState persistenceState;
+    private List<MusicalPiece> musicalPieces = new LinkedList<>(); // prevent NPE
 
     public Duty(DutyEntity entity) {
-        this(entity, null);
+        this(entity, null, null);
     }
 
     /**
@@ -37,10 +38,17 @@ public class Duty {
      * @param entity        The entity to use
      * @param dutyPositions The List of DutyPositions to use
      */
-    public Duty(DutyEntity entity, List<DutyPosition> dutyPositions) {
+    public Duty(
+        DutyEntity entity,
+        List<DutyPosition> dutyPositions,
+        List<MusicalPiece> musicalPieces
+    ) {
         this.entity = entity;
         if (dutyPositions != null) {
             this.dutyPositions = Collections.unmodifiableList(dutyPositions);
+        }
+        if (musicalPieces != null) {
+            this.musicalPieces = musicalPieces;
         }
     }
 
@@ -103,7 +111,7 @@ public class Duty {
      * Generates a calendar-friendly title for Duty.
      *
      * @return String that looks like this: CATEGORY for SERIES (DESCRIPTION), where the
-     *     "for SERIES", "(DESCRIPTION)" parts are optional.
+     * "for SERIES", "(DESCRIPTION)" parts are optional.
      */
     public String getTitle() {
         if (this.title == null) {
@@ -163,6 +171,14 @@ public class Duty {
 
     public void setPersistenceState(PersistenceState persistenceState) {
         this.persistenceState = persistenceState;
+    }
+
+    public List<MusicalPiece> getMusicalPieces() {
+        return this.musicalPieces;
+    }
+
+    public void setMusicalPieces(List<MusicalPiece> musicalPieces) {
+        this.musicalPieces = musicalPieces;
     }
 
     @Override

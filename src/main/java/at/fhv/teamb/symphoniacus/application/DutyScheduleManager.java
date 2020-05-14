@@ -4,15 +4,18 @@ import at.fhv.teamb.symphoniacus.application.dto.SectionDto;
 import at.fhv.teamb.symphoniacus.domain.ActualSectionInstrumentation;
 import at.fhv.teamb.symphoniacus.domain.Duty;
 import at.fhv.teamb.symphoniacus.domain.DutyPosition;
+import at.fhv.teamb.symphoniacus.domain.MusicalPiece;
 import at.fhv.teamb.symphoniacus.domain.Musician;
 import at.fhv.teamb.symphoniacus.domain.Points;
 import at.fhv.teamb.symphoniacus.domain.Section;
 import at.fhv.teamb.symphoniacus.persistence.PersistenceState;
 import at.fhv.teamb.symphoniacus.persistence.dao.DutyDao;
 import at.fhv.teamb.symphoniacus.persistence.dao.DutyPositionDao;
+import at.fhv.teamb.symphoniacus.persistence.dao.MusicalPieceDao;
 import at.fhv.teamb.symphoniacus.persistence.dao.MusicianDao;
 import at.fhv.teamb.symphoniacus.persistence.model.DutyEntity;
 import at.fhv.teamb.symphoniacus.persistence.model.DutyPositionEntity;
+import at.fhv.teamb.symphoniacus.persistence.model.MusicalPieceEntity;
 import at.fhv.teamb.symphoniacus.persistence.model.MusicianEntity;
 import at.fhv.teamb.symphoniacus.persistence.model.SectionEntity;
 import java.time.LocalDate;
@@ -37,6 +40,7 @@ public class DutyScheduleManager {
     private final DutyDao dutyDao;
     private final DutyPositionDao dutyPositionDao;
     private final MusicianDao musicianDao;
+    private final MusicalPieceDao musicalPieceDao;
     private final PointsManager pointsManager;
     private final Set<Musician> setMusicians;
     private final Set<Musician> unsetMusicians;
@@ -53,6 +57,7 @@ public class DutyScheduleManager {
         this.dutyDao = new DutyDao();
         this.dutyPositionDao = new DutyPositionDao();
         this.musicianDao = new MusicianDao();
+        this.musicalPieceDao = new MusicalPieceDao();
         this.pointsManager = new PointsManager();
         this.setMusicians = new HashSet<>();
         this.unsetMusicians = new HashSet<>();
@@ -94,8 +99,16 @@ public class DutyScheduleManager {
             dutyPositions.add(new DutyPosition(dpEntity));
         }
 
+        List<MusicalPieceEntity> musicalPieces = this.musicalPieceDao.getMusicalPiecesOfDuty(
+            duty.getEntity()
+        );
+        List<MusicalPiece> musicalPiecesDomain = new LinkedList<>();
+        for (MusicalPieceEntity entity : musicalPieces) {
+            musicalPiecesDomain.add(new MusicalPiece(entity));
+        }
+
         // Fill Duty with available information
-        Duty dutyWithInformation = new Duty(duty.getEntity(), dutyPositions);
+        Duty dutyWithInformation = new Duty(duty.getEntity(), dutyPositions, musicalPiecesDomain);
         dutyWithInformation.setPersistenceState(PersistenceState.PERSISTED);
 
         return Optional.of(new ActualSectionInstrumentation(dutyWithInformation));
