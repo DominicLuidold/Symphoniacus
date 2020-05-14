@@ -24,7 +24,7 @@
     <SplitPane fx:id="horizontalSplitPane" orientation="VERTICAL" prefHeight="160.0" prefWidth="200.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
         <items>
              <VBox alignment="CENTER" spacing="20">
-            <AnchorPane fx:id="topAnchor" minHeight="75.0" prefHeight="75.0" VBox.vgrow="ALWAYS">
+            <AnchorPane fx:id="topAnchor" minHeight="75.0">
                <children>
                   <BorderPane fx:id="tabsTopBorderPane" prefHeight="75.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
                      <center>
@@ -37,7 +37,7 @@
                   </BorderPane>
                </children>
             </AnchorPane>
-                <GridPane fx:id="upperGrid" alignment="CENTER" hgap="10.0" prefHeight="200.0" vgap="20.0">
+                <GridPane fx:id="upperGrid" alignment="CENTER" hgap="10.0" prefHeight="200.0" vgap="20.0" VBox.vgrow="ALWAYS">
                     <Label fx:id="seriesOfPerformancesLabel" text="%tab.duty.new.entry.label.seriesofperformances" GridPane.columnIndex="0" />
                <Label fx:id="instrumentationsLabel" text="%tab.duty.new.entry.dropdown.load.instrumentations" GridPane.rowIndex="1" />
                     <ComboBox fx:id="seriesOfPerformancesSelect" layoutX="15.0" layoutY="33.0" prefWidth="250.0" promptText="%tab.duty.new.entry.dropdown.load.seriesofperformances" GridPane.columnIndex="1" />
@@ -67,7 +67,7 @@
                </VBox.margin>
                 </GridPane>
                 <Separator orientation="HORIZONTAL" />
-                <GridPane alignment="CENTER" hgap="10.0" prefHeight="200.0" vgap="20">
+                <GridPane alignment="CENTER" hgap="10.0" prefHeight="200.0" vgap="20" VBox.vgrow="ALWAYS">
       
                                 <Label fx:id="dutyStartDateLabel" text="%tab.duty.new.entry.label.start.date" GridPane.columnIndex="0" GridPane.rowIndex="0" />
                     <StackPane alignment="CENTER_LEFT" GridPane.columnIndex="1" GridPane.rowIndex="0">
@@ -95,10 +95,10 @@
                   <RowConstraints />
                </rowConstraints>
                 </GridPane>
-            <HBox fx:id="tabsBottomButtonHbox" alignment="CENTER" minHeight="40.0" prefHeight="100.0" spacing="30.0">
+            <HBox fx:id="tabsBottomButtonHbox" alignment="CENTER" prefHeight="100.0" spacing="30.0" VBox.vgrow="ALWAYS">
                <children>
-                  <Button fx:id="scheduleSaveBtn" alignment="CENTER" defaultButton="true" mnemonicParsing="false" prefHeight="40" prefWidth="150.0" text="%global.button.save" />
-                  <Button fx:id="scheduleBackBtn" alignment="CENTER" cancelButton="true" contentDisplay="CENTER" mnemonicParsing="false" prefHeight="40" prefWidth="150.0" text="%global.button.back" />
+                  <Button fx:id="scheduleSaveBtn" alignment="CENTER" defaultButton="true" minHeight="40.0" mnemonicParsing="false" prefHeight="40" prefWidth="150.0" text="%global.button.save" />
+                  <Button fx:id="scheduleBackBtn" alignment="CENTER" cancelButton="true" contentDisplay="CENTER" minHeight="40.0" mnemonicParsing="false" prefHeight="40" prefWidth="150.0" text="%global.button.back" />
                </children>
                <opaqueInsets>
                   <Insets />
