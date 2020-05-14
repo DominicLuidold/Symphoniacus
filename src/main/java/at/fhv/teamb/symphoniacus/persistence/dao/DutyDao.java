@@ -314,7 +314,7 @@ public class DutyDao extends BaseDao<DutyEntity> {
             "SELECT COUNT(d) FROM DutyEntity d "
                 + "LEFT JOIN d.dutyPositions dp "
                 + "LEFT JOIN dp.instrumentationPosition ip "
-                + "WHERE ip.instrumentation = :inst "
+                + "WHERE ip.instrumentation IN :inst "
                 + "AND d.start = :sDate "
                 + "AND d.end = :eDate "
                 + "AND d.seriesOfPerformances = :series "

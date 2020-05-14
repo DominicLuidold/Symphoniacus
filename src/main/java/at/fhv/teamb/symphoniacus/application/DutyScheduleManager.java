@@ -78,7 +78,6 @@ public class DutyScheduleManager {
             );
             return Optional.empty();
         }
-
         SectionEntity sectionEntity = new SectionEntity();
         sectionEntity.setSectionId(section.getSectionId());
         sectionEntity.setSectionShortcut(section.getSectionShortcut());
