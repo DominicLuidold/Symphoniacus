@@ -111,7 +111,7 @@ public class Duty {
      * Generates a calendar-friendly title for Duty.
      *
      * @return String that looks like this: CATEGORY for SERIES (DESCRIPTION), where the
-     * "for SERIES", "(DESCRIPTION)" parts are optional.
+     *     "for SERIES", "(DESCRIPTION)" parts are optional.
      */
     public String getTitle() {
         if (this.title == null) {
