@@ -143,7 +143,6 @@ public class CustomDutyPopoverNode extends PopOverContentPane {
     /**
      * Load details for Dutyscheduler.
      */
-    @SuppressWarnings("checkstyle:AvoidEscapedUnicodeCharacters")
     public void loadDutySchedulerProperties() {
         popoverController.setDuty(duty);
         popoverController.setSection(section);

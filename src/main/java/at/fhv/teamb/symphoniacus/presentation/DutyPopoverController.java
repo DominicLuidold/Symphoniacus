@@ -152,11 +152,11 @@ public class DutyPopoverController  implements Initializable {
         if (section != null) {
             StringBuilder sectionText = new StringBuilder(section.getText());
             if (isReady) {
-                sectionText.insert(0, "✅ ");
+                sectionText.insert(0, "\u2714 "); // Unicode character, ✔
                 section.setStyle("-fx-text-fill: green");
 
             } else {
-                sectionText.insert(0, "✗ ");
+                sectionText.insert(0, "\u2718 "); // Unicode character, ✘
                 section.setStyle("-fx-text-fill: red");
             }
             section.setText(sectionText.toString());
