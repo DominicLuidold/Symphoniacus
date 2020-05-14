@@ -93,12 +93,7 @@ public class DutyScheduleManager {
         List<DutyPositionEntity> dutyPositionEntities =
             this.dutyPositionDao.findCorrespondingPositions(duty.getEntity(), sectionEntity);
 
-        // Create DutyPosition domain objects
-        List<DutyPosition> dutyPositions = new LinkedList<>();
-        for (DutyPositionEntity dpEntity : dutyPositionEntities) {
-            dutyPositions.add(new DutyPosition(dpEntity));
-        }
-
+        // Get all Musical Pieces
         List<MusicalPieceEntity> musicalPieces = this.musicalPieceDao.getMusicalPiecesOfDuty(
             duty.getEntity()
         );
@@ -106,6 +101,14 @@ public class DutyScheduleManager {
         for (MusicalPieceEntity entity : musicalPieces) {
             musicalPiecesDomain.add(new MusicalPiece(entity));
         }
+
+        // Create DutyPosition domain objects
+        List<DutyPosition> dutyPositions = new LinkedList<>();
+        for (DutyPositionEntity dpEntity : dutyPositionEntities) {
+            dutyPositions.add(new DutyPosition(dpEntity));
+        }
+
+
 
         // Fill Duty with available information
         Duty dutyWithInformation = new Duty(duty.getEntity(), dutyPositions, musicalPiecesDomain);

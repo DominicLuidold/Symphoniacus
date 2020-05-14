@@ -6,10 +6,13 @@ import at.fhv.teamb.symphoniacus.application.dto.SectionDto;
 import at.fhv.teamb.symphoniacus.domain.ActualSectionInstrumentation;
 import at.fhv.teamb.symphoniacus.domain.Duty;
 import at.fhv.teamb.symphoniacus.domain.DutyPosition;
+import at.fhv.teamb.symphoniacus.domain.MusicalPiece;
 import at.fhv.teamb.symphoniacus.domain.Musician;
 import at.fhv.teamb.symphoniacus.persistence.PersistenceState;
+import at.fhv.teamb.symphoniacus.persistence.model.InstrumentationPositionEntity;
 import at.fhv.teamb.symphoniacus.presentation.internal.AlertHelper;
 import at.fhv.teamb.symphoniacus.presentation.internal.DutyPositionMusicianTableModel;
+import at.fhv.teamb.symphoniacus.presentation.internal.MusicalPieceComboView;
 import at.fhv.teamb.symphoniacus.presentation.internal.MusicianPointsTableModel;
 import at.fhv.teamb.symphoniacus.presentation.internal.MusicianTableModel;
 import at.fhv.teamb.symphoniacus.presentation.internal.OldDutyComboView;
@@ -33,6 +36,8 @@ import java.util.stream.Collectors;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.collections.transformation.FilteredList;
+import javafx.collections.transformation.SortedList;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.geometry.Insets;
@@ -116,7 +121,7 @@ public class DutyScheduleController
     private ComboBox<OldDutyComboView> oldDutySelect;
 
     @FXML
-    private ComboBox<OldDutyComboView> musicalPieceSelect;
+    private ComboBox<MusicalPieceComboView> musicalPieceSelect;
 
     @FXML
     private TableColumn<MusicianPointsTableModel, String> columnPointsWithRequests;
@@ -291,6 +296,26 @@ public class DutyScheduleController
 
     private void initMultipleMusicalPieces() {
         // this one should obviously not be empty
+        // add entries to combobox
+        for (MusicalPiece mp : this.duty.getMusicalPieces()) {
+            this.musicalPieceSelect.getItems().add(
+                new MusicalPieceComboView(mp)
+            );
+        }
+        // show pretty name
+        final StringConverter<MusicalPieceComboView> converter =
+            new StringConverter<>() {
+                @Override
+                public String toString(MusicalPieceComboView object) {
+                    return object.getName();
+                }
+
+                @Override
+                public MusicalPieceComboView fromString(String nameOfPiece) {
+                    return null;
+                }
+            };
+        this.musicalPieceSelect.setConverter(converter);
         this.musicalPieceSelect.visibleProperty().set(true);
     }
 
@@ -341,7 +366,46 @@ public class DutyScheduleController
                             )
                         );
                     }
-                    this.positionsTable.setItems(observablePositionList);
+
+                    FilteredList<DutyPositionMusicianTableModel> filteredList = new FilteredList<>(
+                        observablePositionList,
+                        dp -> {
+                            // always select first musical piece as default
+                            return dp.getDutyPosition().getEntity().getInstrumentationPosition().getInstrumentation().getMusicalPiece().getName().equals(
+                                this.duty.getMusicalPieces().get(0).getEntity().getName()
+                            );
+                        }
+                    );
+                    this.musicalPieceSelect.valueProperty().addListener(
+                        (observable, oldValue, newValue) -> {
+                            LOG.debug("New selected piece is {}", newValue.getName());
+                            filteredList.setPredicate(dutyPosition -> {
+                                InstrumentationPositionEntity instrumentationPosition = dutyPosition
+                                    .getDutyPosition()
+                                    .getEntity()
+                                    .getInstrumentationPosition();
+
+                                if (
+                                    instrumentationPosition
+                                        .getInstrumentation()
+                                        .getMusicalPiece()
+                                        .getName()
+                                        .equals(
+                                            newValue.getName()
+                                        )
+                                ) {
+                                    return true;
+                                }
+
+                                return false;
+                            });
+                        }
+                    );
+                    SortedList<DutyPositionMusicianTableModel> sortedList = new SortedList<>(
+                        filteredList
+                    );
+
+                    this.positionsTable.setItems(sortedList);
                     mc.showStatusBarLoaded();
                 }
             });
