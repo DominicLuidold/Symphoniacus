@@ -711,18 +711,14 @@ public class DutyScheduleController
     private void setButtonActions() {
         // Save button
         this.scheduleSaveBtn.setOnAction(e -> {
+            this.dutyScheduleManager.persist(this.actualSectionInstrumentation);
             if (this.actualSectionInstrumentation
                 .getPersistenceState()
-                .equals(PersistenceState.EDITED)
+                .equals(PersistenceState.PERSISTED)
             ) {
-                this.dutyScheduleManager.persist(this.actualSectionInstrumentation);
-                if (this.actualSectionInstrumentation
-                    .getPersistenceState()
-                    .equals(PersistenceState.PERSISTED)
-                ) {
-                    Notifications.create()
-                        .text(this.resources.getString("notif.save.successful.message"))
-                        .position(Pos.CENTER)
+                Notifications.create()
+                    .text(this.resources.getString("notif.save.successful.message"))
+                    .position(Pos.CENTER)
                     .title(this.resources.getString("notif.save.unedited.title"))
                     .text(this.resources.getString("notif.save.unedited.message"))
                     .position(Pos.CENTER)
