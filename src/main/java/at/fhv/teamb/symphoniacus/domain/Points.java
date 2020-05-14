@@ -25,6 +25,28 @@ public class Points {
         this.value = value;
     }
 
+    /**
+     * Gives the correct number of Points of a duty observing its startDate.
+     * @param duty given duty
+     * @return the correct number of Points of given Duty at a given Date
+     */
+    public static Points getPointsOfDuty(DutyEntity duty) {
+        LocalDate timeOfDuty = duty.getStart().toLocalDate();
+        DutyCategoryChangelogEntity temp = null;
+        int points = 0;
+        for (DutyCategoryChangelogEntity dcl : duty.getDutyCategory().getDutyCategoryChangelogs()) {
+            if (temp == null || (dcl.getStartDate().isAfter(temp.getStartDate())
+                && timeOfDuty.isAfter(dcl.getStartDate()))
+                || timeOfDuty.isEqual(dcl.getStartDate())
+            ) {
+                temp = dcl;
+                points = temp.getPoints();
+            }
+        }
+        return new Points(points);
+
+    }
+
     public int getValue() {
         return this.value;
     }
