@@ -116,6 +116,9 @@ public class DutyScheduleController
     private ComboBox<OldDutyComboView> oldDutySelect;
 
     @FXML
+    private ComboBox<OldDutyComboView> musicalPieceSelect;
+
+    @FXML
     private TableColumn<MusicianPointsTableModel, String> columnPointsWithRequests;
 
     @FXML
@@ -286,6 +289,11 @@ public class DutyScheduleController
         }
     }
 
+    private void initMultipleMusicalPieces() {
+        // this one should obviously not be empty
+        this.musicalPieceSelect.visibleProperty().set(true);
+    }
+
     /**
      * Initialize the left side of the View with the Actualsectioninstrumentation
      * and their Musicians.
@@ -313,6 +321,12 @@ public class DutyScheduleController
                 } else {
                     this.actualSectionInstrumentation = currentAsi.get();
                     this.duty = this.actualSectionInstrumentation.getDuty();
+                    LOG.debug("Musical Pieces? {}", this.duty.getMusicalPieces().size());
+
+                    if (this.duty.getMusicalPieces().size() > 1) {
+                        LOG.debug("Multiple musical piece for this duty found");
+                        this.initMultipleMusicalPieces();
+                    }
 
                     ObservableList<DutyPositionMusicianTableModel> observablePositionList =
                         FXCollections.observableArrayList();
@@ -662,6 +676,8 @@ public class DutyScheduleController
         this.musicianTableWithRequests.refresh();
         this.musicianTableWithoutRequests.refresh();
         this.positionsTable.refresh();
+        this.musicalPieceSelect.getItems().clear();
+        this.musicalPieceSelect.visibleProperty().set(false);
         this.oldDutySelect.getItems().clear();
         this.oldDutySelect.setPromptText(
             this.resources.getString("tab.duty.schedule.old.duty.select.placeholder")

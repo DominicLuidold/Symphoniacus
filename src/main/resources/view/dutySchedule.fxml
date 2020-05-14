@@ -25,6 +25,8 @@
                <Separator />
                <Label fx:id="dutyTitle" />
                <Pane HBox.hgrow="ALWAYS" />
+               <ComboBox fx:id="musicalPieceSelect" visible="false" layoutX="15.0" layoutY="33.0" prefWidth="160.0" promptText="%tab.duty.schedule.header.choose.musicalpiece" />
+               <Separator />
                <Button fx:id="getOldDutyBtn" mnemonicParsing="false" text="%tab.duty.schedule.old.duty.btn" />
                <ComboBox fx:id="oldDutySelect" layoutX="15.0" layoutY="33.0" prefWidth="160.0" promptText="%tab.duty.schedule.old.duty.choose" />
                <Separator />
