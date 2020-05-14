@@ -361,14 +361,6 @@ public class DutyManager {
             );
         }
     }
-
-    private SectionEntity sectionDtoToSectionEntity(SectionDto section) {
-        SectionEntity sectionEntity = new SectionEntity();
-        sectionEntity.setSectionId(section.getSectionId());
-        sectionEntity.setSectionShortcut(section.getSectionShortcut());
-        sectionEntity.setDescription(section.getDescription());
-        return sectionEntity;
-    }
     
     /**
      * Checks whether a duty with the given parameters exists or not.
@@ -394,5 +386,13 @@ public class DutyManager {
             endingDate,
             category
         );
+    }
+
+    private SectionEntity sectionDtoToSectionEntity(SectionDto section) {
+        SectionEntity sectionEntity = new SectionEntity();
+        sectionEntity.setSectionId(section.getSectionId());
+        sectionEntity.setSectionShortcut(section.getSectionShortcut());
+        sectionEntity.setDescription(section.getDescription());
+        return sectionEntity;
     }
 }
