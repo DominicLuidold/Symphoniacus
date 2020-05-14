@@ -22,35 +22,23 @@
     -fx-padding: 0 1 0 1;
 }
 
-#topAnchor {
+#tabsTopBorderPane {
     -fx-background-color: rgba(139, 146, 167, 0.66);
 }
-#buttonHbox > #scheduleSaveBtn, #scheduleBackBtn{
+
+#tabsBottomButtonHbox > Button{
     -fx-background-color:  rgba(139, 146, 167, 0.66);
+    -fx-font-size: 120%;
 }
-#buttonHbox > #scheduleSaveBtn:hover, #scheduleBackBtn:hover{
+
+#tabsBottomButtonHbox > Button:hover{
     -fx-background-color:  #BFC6DB;
 }
-#buttonHbox > #scheduleSaveBtn:pressed, #scheduleBackBtn:pressed{
+
+#tabsBottomButtonHbox > Button:pressed{
     -fx-background-color:  #596075;
     -fx-text-fill: white;
 }
-#saveButton, #cancelButton {
-    -fx-background-color: #8C93A8;
-    -fx-font-size: 120%;
-}
-#saveButton:hover, #cancelButton:hover {
-    -fx-background-color: #BFC6DB;
-
-    /*-fx-border-color: #262D42;*/
-}
-
-#cancelButton:pressed, #saveButton:pressed {
-    -fx-background-color: #596075;
-}
-
-
-
 
 /* UNCOMMENT WHEN WE HAVE NUTZERZENTRIERT SEMINAR
 *, root, .root {

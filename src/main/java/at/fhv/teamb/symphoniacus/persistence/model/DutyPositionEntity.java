@@ -22,18 +22,24 @@ public class DutyPositionEntity {
     @Column(name = "description")
     private String description;
 
-    @ManyToOne(fetch = FetchType.LAZY,
-        cascade = {CascadeType.PERSIST, CascadeType.MERGE})
+    @ManyToOne(
+        fetch = FetchType.LAZY,
+        cascade = {CascadeType.PERSIST, CascadeType.MERGE}
+    )
     @JoinColumn(name = "instrumentationPositionId")
     private InstrumentationPositionEntity instrumentationPosition;
 
-    @ManyToOne(fetch = FetchType.LAZY,
-        cascade = {CascadeType.PERSIST, CascadeType.MERGE})
+    @ManyToOne(
+        fetch = FetchType.LAZY,
+        cascade = {CascadeType.PERSIST, CascadeType.MERGE}
+    )
     @JoinColumn(name = "dutyId")
     private DutyEntity duty;
 
-    @ManyToOne(fetch = FetchType.LAZY,
-        cascade = {CascadeType.PERSIST, CascadeType.MERGE})
+    @ManyToOne(
+        fetch = FetchType.LAZY,
+        cascade = {CascadeType.PERSIST, CascadeType.MERGE}
+    )
     @JoinColumn(name = "sectionId")
     private SectionEntity section;
 

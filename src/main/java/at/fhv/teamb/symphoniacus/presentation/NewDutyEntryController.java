@@ -48,6 +48,8 @@ import javafx.util.StringConverter;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.controlsfx.control.CheckComboBox;
+import org.kordamp.ikonli.fontawesome.FontAwesome;
+import org.kordamp.ikonli.javafx.FontIcon;
 import shadow.org.codehaus.plexus.util.StringUtils;
 
 /**
@@ -118,6 +120,7 @@ public class NewDutyEntryController implements Initializable, Parentable<TabPane
         this.dutyManager = new DutyManager();
         this.seriesOfPerformancesManager = new SeriesOfPerformancesManager();
         this.dutyCategoryManager = new DutyCategoryManager();
+        this.instrumentationsSelect.setDisable(true);
 
         // Init combo boxes with data
         this.initCategoryComboBox();
@@ -133,6 +136,14 @@ public class NewDutyEntryController implements Initializable, Parentable<TabPane
         // Set button actions
         this.setButtonActions();
 
+        // Set event handlers
+        this.setEventHandlers();
+    }
+
+    /**
+     * Sets the event handlers on dutyPointsInput and seriesOfPerformancesSelect.
+     */
+    private void setEventHandlers() {
         // Add event listener for updated points
         this.dutyPointsInput.textProperty().addListener(
             (observable, oldValue, newValue) -> userEditedPoints = true
@@ -144,21 +155,15 @@ public class NewDutyEntryController implements Initializable, Parentable<TabPane
             event -> initSeriesOfPerformancesComboBox()
         );
 
-        // Show Instrumentations of a selected series
+        // Show instrumentations of a selected series
         this.seriesOfPerformancesSelect.addEventHandler(ComboBoxBase.ON_HIDDEN, event -> {
-            if (!this.seriesOfPerformancesSelect.getSelectionModel().isEmpty()) {
-                initInstrumentationsCheckComboBox();
+            if (this.seriesOfPerformancesSelect.getSelectionModel().isEmpty()) {
+                this.instrumentationsSelect.setDisable(true);
             } else {
-                this.instrumentationsSelect.getItems().clear();
+                initInstrumentationsCheckComboBox();
+                this.instrumentationsSelect.setDisable(false);
             }
         });
-
-        this.instrumentationsSelect.addEventHandler(ComboBoxBase.ON_HIDDEN, event -> {
-            if (!this.instrumentationsSelect.getCheckModel().getCheckedItems().isEmpty()) {
-                // TODO - wenn langweilig prompt der ausgewählten
-            }
-        });
-
     }
 
     /**
@@ -173,6 +178,9 @@ public class NewDutyEntryController implements Initializable, Parentable<TabPane
 
         // Button to open new series of performances tabs
         this.newSeriesOfPerformancesBtn.setOnAction(e -> openNewSopTab());
+        FontIcon addIcon = new FontIcon(FontAwesome.PLUS);
+        addIcon.getStyleClass().addAll("button-icon");
+        this.newSeriesOfPerformancesBtn.setGraphic(addIcon);
     }
 
     /**
@@ -255,19 +263,25 @@ public class NewDutyEntryController implements Initializable, Parentable<TabPane
      * Initializes the {@link #instrumentationsSelect} combo box with data.
      */
     private void initInstrumentationsCheckComboBox() {
-        final ObservableSet<InstrumentationEntity> instrumentations =
-            FXCollections.observableSet(
-                this.seriesOfPerformancesManager.getAllInstrumentations(
-                    this.seriesOfPerformancesSelect.getSelectionModel().getSelectedItem()
-                )
-            );
+        this.instrumentationsSelect.getCheckModel().clearChecks();
+        final ObservableSet<InstrumentationEntity> observInstrumentations =
+            FXCollections.observableSet();
 
-        final StringConverter<InstrumentationEntity> instConverter =
+        Set<InstrumentationEntity> instrumentations =
+            this.seriesOfPerformancesManager.getAllInstrumentations(
+                this.seriesOfPerformancesSelect.getSelectionModel().getSelectedItem()
+            );
+        observInstrumentations.addAll(instrumentations);
+
+        ObservableList<InstrumentationEntity> oldList = this.instrumentationsSelect.getItems();
+        this.instrumentationsSelect.getItems().removeAll(oldList);
+        this.instrumentationsSelect.getItems().addAll(instrumentations);
+        this.instrumentationsSelect.setConverter(
             new StringConverter<>() {
                 @Override
                 public String toString(InstrumentationEntity inst) {
-                    return inst.getName() + " - "
-                        + inst.getMusicalPiece().getName();
+                    return (inst.getName() + " - "
+                        + inst.getMusicalPiece().getName());
                 }
 
                 @Override
@@ -278,23 +292,7 @@ public class NewDutyEntryController implements Initializable, Parentable<TabPane
                     //Should never be able to get here
                     return null;
                 }
-            };
-
-        this.instrumentationsSelect.setConverter(instConverter);
-        this.instrumentationsSelect.getItems().setAll(instrumentations);
-
-        /*
-            Refresh Bub - See https://github.com/controlsfx/controlsfx/issues/1004
-            Custom workaround to fix:
-         */
-        if (!instrumentations.isEmpty()) {
-            ObservableList<Integer> result =
-                this.instrumentationsSelect.getCheckModel().getCheckedIndices();
-            for (Integer i : result) {
-                this.instrumentationsSelect.getCheckModel().check(i);
-            }
-        }
-        this.instrumentationsSelect.getCheckModel().clearChecks();
+            });
     }
 
     /**
@@ -313,9 +311,12 @@ public class NewDutyEntryController implements Initializable, Parentable<TabPane
 
             @Override
             public DutyCategory fromString(String title) {
-                return dutyCategoryList.stream()
+                DutyCategory result = dutyCategoryList.stream()
                     .filter(item -> item.getEntity().getType().equals(title))
                     .collect(Collectors.toList()).get(0);
+                LOG.debug("Category Combobox from String -> {}",
+                    result.getEntity().getDutyCategoryId());
+                return result;
             }
         });
     }
@@ -401,6 +402,27 @@ public class NewDutyEntryController implements Initializable, Parentable<TabPane
                 this.resources.getString("global.button.ok")
             );
             return false;
+        } else if (this.seriesOfPerformancesSelect.getSelectionModel().getSelectedItem() != null
+            && this.instrumentationsSelect.getCheckModel().isEmpty()) {
+            MainController.showErrorAlert(
+                this.resources.getString("tab.duty.new.entry.error.title"),
+                this.resources.getString("tab.duty.new.entry.error.instrumentation.title"),
+                this.resources.getString("global.button.ok")
+            );
+            return false;
+        } else if (this.dutyManager.doesDutyAlreadyExists(this.seriesOfPerformancesSelect
+                .getSelectionModel().getSelectedItem(), this.instrumentationsSelect
+                .getCheckModel().getCheckedItems(), this.dutyStartDateInput.getValue()
+                .atTime(this.dutyStartTimeInput.getValue()),
+            this.dutyEndDateInput.getValue().atTime(this.dutyEndTimeInput.getValue()),
+            this.dutyCategorySelect.getSelectionModel().getSelectedItem().getEntity())
+        ) {
+            MainController.showErrorAlert(
+                this.resources.getString("tab.duty.new.entry.error.title"),
+                this.resources.getString("tab.duty.new.entry.error.duty.title"),
+                this.resources.getString("global.button.ok")
+            );
+            return false;
         } else {
             return true;
         }
@@ -452,9 +474,9 @@ public class NewDutyEntryController implements Initializable, Parentable<TabPane
                 this.seriesOfPerformancesSelect.getValue()
             );
 
-            Set<InstrumentationEntity> instrumentations
-                = new LinkedHashSet<>(
-                this.instrumentationsSelect.getCheckModel().getCheckedItems());
+            Set<InstrumentationEntity> instrumentations = new LinkedHashSet<>(
+                this.instrumentationsSelect.getCheckModel().getCheckedItems()
+            );
             // Delegate saving to manager
             this.dutyManager.save(
                 this.duty,
@@ -571,16 +593,16 @@ public class NewDutyEntryController implements Initializable, Parentable<TabPane
      * {@inheritDoc}
      */
     @Override
-    public void setParentController(TabPaneController controller) {
-        this.parentController = controller;
+    public TabPaneController getParentController() {
+        return this.parentController;
     }
 
     /**
      * {@inheritDoc}
      */
     @Override
-    public TabPaneController getParentController() {
-        return this.parentController;
+    public void setParentController(TabPaneController controller) {
+        this.parentController = controller;
     }
 
     /**
