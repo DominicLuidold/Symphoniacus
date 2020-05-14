@@ -10,13 +10,16 @@ import at.fhv.teamb.symphoniacus.domain.Section;
 import at.fhv.teamb.symphoniacus.persistence.PersistenceState;
 import at.fhv.teamb.symphoniacus.presentation.internal.AlertHelper;
 import at.fhv.teamb.symphoniacus.presentation.internal.DutyPositionMusicianTableModel;
+import at.fhv.teamb.symphoniacus.presentation.internal.MusicianPointsTableModel;
 import at.fhv.teamb.symphoniacus.presentation.internal.MusicianTableModel;
 import at.fhv.teamb.symphoniacus.presentation.internal.OldDutyComboView;
 import at.fhv.teamb.symphoniacus.presentation.internal.Parentable;
 import at.fhv.teamb.symphoniacus.presentation.internal.ScheduleButtonTableCell;
 import at.fhv.teamb.symphoniacus.presentation.internal.tasks.GetMusiciansAvailableForPositionTask;
 import at.fhv.teamb.symphoniacus.presentation.internal.tasks.GetOtherDutiesTask;
+import at.fhv.teamb.symphoniacus.presentation.internal.tasks.GetPositionsWithMusiciansTask;
 import java.net.URL;
+import java.text.MessageFormat;
 import java.time.format.DateTimeFormatter;
 import java.util.HashSet;
 import java.util.Iterator;
@@ -31,24 +34,33 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.geometry.Insets;
 import javafx.geometry.Pos;
+import javafx.scene.Node;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.ButtonBar;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
+import javafx.scene.control.Separator;
+import javafx.scene.control.TableCell;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableRow;
 import javafx.scene.control.TableView;
 import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.VBox;
+import javafx.scene.paint.Color;
+import javafx.scene.text.Font;
+import javafx.scene.text.FontWeight;
 import javafx.util.Duration;
 import javafx.util.StringConverter;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.controlsfx.control.Notifications;
+import org.controlsfx.control.PopOver;
 
 public class DutyScheduleController
     implements Controllable, Initializable, Parentable<DutySchedulerCalendarController> {
@@ -101,6 +113,12 @@ public class DutyScheduleController
     @FXML
     private ComboBox<OldDutyComboView> oldDutySelect;
 
+    @FXML
+    private TableColumn<MusicianPointsTableModel, String> columnPointsWithRequests;
+
+    @FXML
+    private TableColumn<MusicianPointsTableModel, String> columnPointsWithoutRequests;
+
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         this.registerController();
@@ -114,6 +132,9 @@ public class DutyScheduleController
 
         // Set mouse click events
         this.setMouseClickEvents();
+
+        // set mouse hover events
+        this.setMouseHoverEvents();
 
         // Set row factories
         this.setRowFactories();
@@ -169,7 +190,8 @@ public class DutyScheduleController
         GetMusiciansAvailableForPositionTask task = new GetMusiciansAvailableForPositionTask(
             this.dutyScheduleManager,
             this.actualSectionInstrumentation.getDuty(),
-            this.selectedDutyPosition
+            this.selectedDutyPosition,
+            this.dutySchedule
         );
         task.setOnSucceeded(event -> {
             Set<Musician> musiciansWithoutWishRequest = task.getValue();
@@ -275,35 +297,39 @@ public class DutyScheduleController
         mc.showStatusBarLoading();
 
         if (this.actualSectionInstrumentation == null) {
-            Optional<ActualSectionInstrumentation> currentAsi = this
-                .dutyScheduleManager
-                .getInstrumentationDetails(
-                    this.duty,
-                    this.section
-                );
-            if (currentAsi.isEmpty()) {
-                LOG.error("Found no asi for duty");
-                return;
-            } else {
-                this.actualSectionInstrumentation = currentAsi.get();
-            }
-        }
-
-
-        this.duty = this.actualSectionInstrumentation.getDuty();
-
-        ObservableList<DutyPositionMusicianTableModel> observablePositionList =
-            FXCollections.observableArrayList();
-        List<DutyPosition> positionList =
-            this.actualSectionInstrumentation.getDuty().getDutyPositions();
-
-        for (DutyPosition dp : positionList) {
-            observablePositionList.add(
-                new DutyPositionMusicianTableModel(dp)
+            GetPositionsWithMusiciansTask task = new GetPositionsWithMusiciansTask(
+                this.dutyScheduleManager,
+                this.duty,
+                this.section,
+                this.dutySchedule
             );
+            task.setOnSucceeded(event -> {
+                Optional<ActualSectionInstrumentation> currentAsi = task.getValue();
+                if (currentAsi.isEmpty()) {
+                    LOG.error("Found no asi for duty");
+                    return;
+                } else {
+                    this.actualSectionInstrumentation = currentAsi.get();
+                    this.duty = this.actualSectionInstrumentation.getDuty();
+
+                    ObservableList<DutyPositionMusicianTableModel> observablePositionList =
+                        FXCollections.observableArrayList();
+                    List<DutyPosition> positionList =
+                        this.actualSectionInstrumentation.getDuty().getDutyPositions();
+
+                    for (DutyPosition dp : positionList) {
+                        observablePositionList.add(
+                            new DutyPositionMusicianTableModel(
+                                dp
+                            )
+                        );
+                    }
+                    this.positionsTable.setItems(observablePositionList);
+                    mc.showStatusBarLoaded();
+                }
+            });
+            new Thread(task).start();
         }
-        this.positionsTable.setItems(observablePositionList);
-        mc.showStatusBarLoaded();
     }
 
     private void initOldDutyComboView() {
@@ -366,48 +392,54 @@ public class DutyScheduleController
                 this.oldDutySelect.getSelectionModel().getSelectedItem().getTitle()
             );
             if (this.actualSectionInstrumentation != null) {
-                Optional<ActualSectionInstrumentation> oldasi = new DutyScheduleManager()
-                    .getInstrumentationDetails(
-                        this.oldDutySelect.getSelectionModel().getSelectedItem().getOldDuty(),
-                        this.section
-                    );
+                GetPositionsWithMusiciansTask task = new GetPositionsWithMusiciansTask(
+                    this.dutyScheduleManager,
+                    this.oldDutySelect.getSelectionModel().getSelectedItem().getOldDuty(),
+                    this.section,
+                    this.dutySchedule
+                );
+                task.setOnSucceeded(event -> {
+                    Optional<ActualSectionInstrumentation> oldasi = task.getValue();
 
-                if (oldasi.isPresent()) {
-                    for (DutyPosition dp : this.actualSectionInstrumentation.getDuty()
-                        .getDutyPositions()) {
-                        Set<Musician> avMusicians = this.dutyScheduleManager
-                            .getMusiciansAvailableForPosition(this.duty, dp);
-                        Optional<Musician> oldMusician = Optional.empty();
-                        List<DutyPosition> oldDutyPositions =
-                            oldasi.get().getDuty().getDutyPositions();
+                    if (oldasi.isPresent()) {
+                        for (DutyPosition dp : this.actualSectionInstrumentation.getDuty()
+                            .getDutyPositions()) {
+                            Set<Musician> avMusicians = this.dutyScheduleManager
+                                .getMusiciansAvailableForPosition(this.duty, dp);
+                            Optional<Musician> oldMusician = Optional.empty();
+                            List<DutyPosition> oldDutyPositions =
+                                oldasi.get().getDuty().getDutyPositions();
 
-                        for (DutyPosition odp : oldDutyPositions) {
-                            if (odp.getEntity().getInstrumentationPosition()
-                                .getInstrumentationPositionId()
-                                .equals(dp.getEntity().getInstrumentationPosition()
-                                    .getInstrumentationPositionId())
-                            ) {
-                                if (odp.getAssignedMusician().isPresent()) {
-                                    oldMusician = odp.getAssignedMusician();
-                                }
-                            }
-                        }
-
-                        if (oldMusician.isPresent()) {
-                            for (Musician m : avMusicians) {
-                                if (m.getEntity().getMusicianId()
-                                    .equals(oldMusician.get().getEntity().getMusicianId())
+                            for (DutyPosition odp : oldDutyPositions) {
+                                if (odp.getEntity().getInstrumentationPosition()
+                                    .getInstrumentationPositionId()
+                                    .equals(dp.getEntity().getInstrumentationPosition()
+                                        .getInstrumentationPositionId())
                                 ) {
-                                    this.addMusicianToPosition(
-                                        this.actualSectionInstrumentation,
-                                        m,
-                                        dp
-                                    );
+                                    if (odp.getAssignedMusician().isPresent()) {
+                                        oldMusician = odp.getAssignedMusician();
+                                    }
                                 }
                             }
+
+                            if (oldMusician.isPresent()) {
+                                for (Musician m : avMusicians) {
+                                    if (m.getEntity().getMusicianId()
+                                        .equals(oldMusician.get().getEntity().getMusicianId())
+                                    ) {
+                                        this.addMusicianToPosition(
+                                            this.actualSectionInstrumentation,
+                                            m,
+                                            dp
+                                        );
+                                    }
+                                }
+                            }
+
                         }
                     }
-                }
+                });
+                new Thread(task).start();
             }
         }
     }
@@ -476,7 +508,8 @@ public class DutyScheduleController
         if (dutyPosition == null) {
             Notifications.create()
                 .title(resources
-                    .getString("notification.duty.schedule.addMusicianToPosition.noposition.title"))
+                    .getString(
+                        "notification.duty.schedule.addMusicianToPosition.noposition.title"))
                 .text(resources.getString(
                     "notification.duty.schedule.addMusicianToPosition.noposition.message"))
                 .position(Pos.CENTER)
@@ -494,7 +527,8 @@ public class DutyScheduleController
             );
             LOG.debug(
                 "New musician for position {} is: {} and oldMusician id {}",
-                dutyPosition.getEntity().getInstrumentationPosition().getPositionDescription(),
+                dutyPosition.getEntity().getInstrumentationPosition()
+                    .getPositionDescription(),
                 newMusician.getFullName(),
                 dutyPosition.getAssignedMusician().get()
             );
@@ -506,7 +540,8 @@ public class DutyScheduleController
             );
             LOG.debug(
                 "New musician for position {} is: {}",
-                dutyPosition.getEntity().getInstrumentationPosition().getPositionDescription(),
+                dutyPosition.getEntity().getInstrumentationPosition()
+                    .getPositionDescription(),
                 newMusician.getFullName()
             );
         }
@@ -514,14 +549,17 @@ public class DutyScheduleController
         Notifications.create()
             .owner(this.getParentController().calendarView)
             .title(resources
-                .getString("notification.duty.schedule.addMusicianToPosition.musicianset.title"))
+                .getString(
+                    "notification.duty.schedule.addMusicianToPosition.musicianset.title"))
             .text(resources
-                .getString("notification.duty.schedule.addMusicianToPosition.musicianset.message"))
+                .getString(
+                    "notification.duty.schedule.addMusicianToPosition.musicianset.message"))
             .position(Pos.CENTER)
             .hideAfter(new Duration(2000))
             .show();
 
         this.positionsTable.refresh();
+        this.initDutyPositionsTableWithMusicians();
         this.initMusicianTableWithoutRequests();
     }
 
@@ -559,7 +597,7 @@ public class DutyScheduleController
 
     private void closeDutySchedule() {
         //TODO Abfrage SaveState(old, newold)? von actualSectionInstrumentation
-        if (this.actualSectionInstrumentation
+        if (this.actualSectionInstrumentation != null && this.actualSectionInstrumentation
             .getPersistenceState()
             .equals(PersistenceState.EDITED)
         ) {
@@ -592,10 +630,12 @@ public class DutyScheduleController
         this.positionsTable.refresh();
         this.oldDutySelect.getItems().clear();
         this.oldDutySelect
-            .setPromptText(resources.getString("tab.duty.scheudle.oldduty.select.button"));
+            .setPromptText(
+                resources.getString("tab.duty.scheudle.oldduty.select.button"));
         this.oldDutySelect.setPlaceholder(
             new Label(resources.getString("tab.duty.schedule.oldduty.select.default")));
-        this.labelCurrentPosition.setText(resources.getString("tab.duty.schedule.currentposition"));
+        this.labelCurrentPosition
+            .setText(resources.getString("tab.duty.schedule.currentposition"));
         this.hide();
         MasterController mc = MasterController.getInstance();
         DutySchedulerCalendarController cc =
@@ -609,7 +649,8 @@ public class DutyScheduleController
 
         Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
         alert.setTitle(resources.getString("dialog.save.closewithoutsaving.title"));
-        alert.setHeaderText(resources.getString("dialog.save.closewithoutsaving.message"));
+        alert.setHeaderText(
+            resources.getString("dialog.save.closewithoutsaving.message"));
 
         Optional<ButtonType> option = alert.showAndWait();
 
@@ -642,8 +683,10 @@ public class DutyScheduleController
                     .equals(PersistenceState.PERSISTED)
                 ) {
                     Notifications.create()
-                        .title(resources.getString("notification.save.successful.title"))
-                        .text(resources.getString("notification.save.successful.message"))
+                        .title(
+                            resources.getString("notification.save.successful.title"))
+                        .text(
+                            resources.getString("notification.save.successful.message"))
                         .position(Pos.CENTER)
                         .hideAfter(new Duration(4000))
                         .show();
@@ -680,6 +723,104 @@ public class DutyScheduleController
         });
     }
 
+    private TableCell<MusicianPointsTableModel, String> getPointsTableCell() {
+        Label lblGainedPoints = new Label();
+        Label lblBalancePoints = new Label();
+        Label lblSummaryPoints = new Label();
+        lblGainedPoints.setTextFill(Color.web("#000000"));
+        lblBalancePoints.setTextFill(Color.web("#000000"));
+        lblSummaryPoints.setTextFill(Color.web("#000000"));
+        Font f = Font.getDefault();
+        Font boldFont = Font.font(f.getFamily(), FontWeight.BOLD, 14);
+        lblSummaryPoints.setFont(boldFont);
+        Label lblMusicianName = new Label();
+        lblMusicianName.setTextFill(Color.web("#000000"));
+        lblMusicianName.setFont(boldFont);
+
+        VBox vbox = new VBox(
+            lblMusicianName, new Separator(),
+            lblGainedPoints,
+            lblBalancePoints,
+            new Separator(),
+            lblSummaryPoints
+        );
+        vbox.setPadding(new Insets(15, 15, 15, 15));
+        PopOver popOver = new PopOver(vbox);
+
+
+        TableCell<MusicianPointsTableModel, String> cell = new TableCell<>() {
+            @Override
+            protected void updateItem(String item, boolean empty) {
+                super.updateItem(item, empty);
+                setText(item);
+            }
+        };
+        cell.addEventHandler(MouseEvent.MOUSE_ENTERED, event -> {
+            MusicianPointsTableModel mtm = cell.getTableRow().getItem();
+            if (mtm != null && mtm.getMusician() != null) {
+                LOG.debug("Musician set on this position");
+                this.dutyScheduleManager.addGainedPointsToMusician(
+                    mtm.getMusician(),
+                    this.duty.getEntity().getStart().toLocalDate()
+                );
+
+                lblMusicianName.setText(mtm.getMusician().getFullName());
+                lblGainedPoints.setText(
+                    MessageFormat.format(
+                        this.resources.getString(
+                            "tab.duty.schedule.table.musicians.gainedPoints.popup"
+                        ),
+                        mtm.getGainedPoints()
+                    )
+                );
+                lblBalancePoints.setText(
+                    MessageFormat.format(
+                        this.resources.getString(
+                            "tab.duty.schedule.table.musicians.balancePoints.popup"
+                        ),
+                        mtm.getBalancePoints()
+                    )
+                );
+                lblSummaryPoints.setText(
+                    MessageFormat.format(
+                        this.resources.getString(
+                            "tab.duty.schedule.table.musicians.summary.popup"
+                        ),
+                        // those are strings, so parse them as int
+                        Integer.valueOf(mtm.getBalancePoints())
+                            + Integer.valueOf(mtm.getGainedPoints()
+                        )
+                    )
+                );
+
+                popOver.show((Node) event.getSource());
+                popOver.requestFocus();
+            } else {
+                LOG.debug("No musician set on this position");
+            }
+        });
+        cell.addEventHandler(MouseEvent.MOUSE_EXITED, event -> {
+            if (popOver.isShowing()) {
+                popOver.hide();
+            }
+        });
+        return cell;
+    }
+
+    /**
+     * Sets the mouse hover events of the duty schedule view.
+     */
+    private void setMouseHoverEvents() {
+
+        this.columnPointsWithoutRequests.setCellFactory(
+            column -> getPointsTableCell()
+        );
+
+        this.columnPointsWithRequests.setCellFactory(
+            column -> getPointsTableCell()
+        );
+    }
+
     /**
      * Sets the mouse click events of the duty schedule view.
      */
@@ -687,7 +828,8 @@ public class DutyScheduleController
         // Musician table with requests
         this.musicianTableWithRequests.setOnMouseClicked((MouseEvent event) -> {
             // add selected item click listener
-            if (event.getButton().equals(MouseButton.PRIMARY) && event.getClickCount() == 2) {
+            if (event.getButton().equals(MouseButton.PRIMARY)
+                && event.getClickCount() == 2) {
                 this.handleWishScheduleClickEvent(
                     this.musicianTableWithRequests.getSelectionModel().getSelectedItem()
                 );
@@ -697,9 +839,11 @@ public class DutyScheduleController
         // Musician table without requests
         this.musicianTableWithoutRequests.setOnMouseClicked((MouseEvent event) -> {
             // add selected item click listener
-            if (event.getButton().equals(MouseButton.PRIMARY) && event.getClickCount() == 2) {
+            if (event.getButton().equals(MouseButton.PRIMARY)
+                && event.getClickCount() == 2) {
                 MusicianTableModel mtm =
-                    this.musicianTableWithoutRequests.getSelectionModel().getSelectedItem();
+                    this.musicianTableWithoutRequests.getSelectionModel()
+                        .getSelectedItem();
                 if (mtm != null) {
                     addMusicianToPosition(
                         this.actualSectionInstrumentation,
@@ -713,12 +857,14 @@ public class DutyScheduleController
         // Positions table
         this.positionsTable.setOnMouseClicked((MouseEvent event) -> {
             // add selected item click listener
-            if (event.getButton().equals(MouseButton.PRIMARY) && event.getClickCount() == 2) {
+            if (event.getButton().equals(MouseButton.PRIMARY)
+                && event.getClickCount() == 2) {
 
                 DutyPositionMusicianTableModel mtm =
                     this.positionsTable.getSelectionModel().getSelectedItem();
 
-                if (mtm != null && mtm.getDutyPosition().getAssignedMusician().isPresent()) {
+                if (mtm != null
+                    && mtm.getDutyPosition().getAssignedMusician().isPresent()) {
                     this.removeMusicianFromPosition(
                         mtm.getDutyPosition().getAssignedMusician().get()
                     );
@@ -742,7 +888,8 @@ public class DutyScheduleController
                 if (item == null || empty) {
                     setStyle("");
                 } else {
-                    if (getTableView().getSelectionModel().getSelectedItems().contains(item)) {
+                    if (getTableView().getSelectionModel().getSelectedItems()
+                        .contains(item)) {
                         setStyle("");
                     } else if (item.isWishPositive()) {
                         setStyle("-fx-background-color: lightseagreen");
@@ -761,7 +908,8 @@ public class DutyScheduleController
         // Add button column - with requests
         this.columnScheduleBtnWithRequests.setCellFactory(
             ScheduleButtonTableCell.forTableColumn(
-                this.resources.getString("tab.duty.schedule.table.dutyposition.set.btn"),
+                this.resources
+                    .getString("tab.duty.schedule.table.dutyposition.set.btn"),
                 (MusicianTableModel mtm) -> {
                     LOG.debug("Schedule btn with requests has been pressed");
                     this.handleWishScheduleClickEvent(mtm);
@@ -773,7 +921,8 @@ public class DutyScheduleController
         // Add button column - without requests
         this.columnScheduleBtnWithoutRequests.setCellFactory(
             ScheduleButtonTableCell.forTableColumn(
-                this.resources.getString("tab.duty.schedule.table.dutyposition.set.btn"),
+                this.resources
+                    .getString("tab.duty.schedule.table.dutyposition.set.btn"),
                 (MusicianTableModel mtm) -> {
                     LOG.debug("Schedule btn without requests has been pressed");
                     this.addMusicianToPosition(
@@ -789,7 +938,8 @@ public class DutyScheduleController
         // Remove button column
         this.columnUnsetPosition.setCellFactory(
             ScheduleButtonTableCell.forTableColumn(
-                this.resources.getString("tab.duty.schedule.table.dutyposition.unset.btn"),
+                this.resources
+                    .getString("tab.duty.schedule.table.dutyposition.unset.btn"),
                 (DutyPositionMusicianTableModel dpmtm) -> {
                     LOG.debug("Unset musician button has been pressed");
 
@@ -814,7 +964,8 @@ public class DutyScheduleController
         if (this.dutyManager == null) {
             this.dutyManager = new DutyManager();
         }
-        Optional<Duty> d = this.dutyManager.loadDutyDetails(duty.getEntity().getDutyId());
+        Optional<Duty> d =
+            this.dutyManager.loadDutyDetails(duty.getEntity().getDutyId());
         if (d.isEmpty()) {
             Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
             alert.setTitle("Cannot load duty");
@@ -834,6 +985,10 @@ public class DutyScheduleController
                     )
                     + " - "
                     + duty.getTitle()
+                    + " - "
+                    + duty.getEntity().getDutyCategory().getPoints()
+                    + " "
+                    + this.resources.getString("tab.duty.schedule.table.musicians.points")
             )
         );
     }

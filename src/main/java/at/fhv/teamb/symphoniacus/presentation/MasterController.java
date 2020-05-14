@@ -84,7 +84,10 @@ public class MasterController {
         LOG.debug("Enabling Spinner");
         SPINNER.setPrefSize(50, 50);
 
-        pane.getChildren().add(SPINNER);
+        if (!pane.getChildren().contains(SPINNER)) {
+            pane.getChildren().add(SPINNER);
+        }
+
         AnchorPane.setBottomAnchor(SPINNER, 50d);
         AnchorPane.setLeftAnchor(SPINNER, (pane.getWidth() - SPINNER.getPrefWidth()) / 2);
     }
@@ -96,7 +99,9 @@ public class MasterController {
      */
     public static void disableSpinner(AnchorPane pane) {
         LOG.debug("Disabling Spinner");
-        pane.getChildren().remove(SPINNER);
+        if (pane.getChildren().contains(SPINNER)) {
+            pane.getChildren().remove(SPINNER);
+        }
     }
 
     /**
