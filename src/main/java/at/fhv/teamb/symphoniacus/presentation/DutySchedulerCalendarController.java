@@ -369,42 +369,10 @@ public class DutySchedulerCalendarController extends CalendarController implemen
     }
 
     /**
-     * {@inheritDoc}
+     * Intentional empty.
      */
     @Override
     protected void setEntryDetailsCallback() {
-
-        /*
-        this.calendarView.setEntryDetailsCallback(
-            param -> {
-                if (param.getEntry() instanceof Entry) {
-                    Entry<Duty> entry = (Entry<Duty>) param.getEntry();
-                    MasterController mc = MasterController.getInstance();
-
-                    if (mc.get("CalendarController") instanceof DutySchedulerCalendarController) {
-                        DutySchedulerCalendarController cc =
-                            (DutySchedulerCalendarController) mc.get("CalendarController");
-                        cc.hide();
-                    }
-
-                    if (this.dutyScheduleController == null) {
-                        if (mc.get("DutyScheduleController") instanceof DutyScheduleController) {
-                            this.dutyScheduleController =
-                                (DutyScheduleController) mc.get("DutyScheduleController");
-                        }
-                    }
-
-                    this.dutyScheduleController.setDuty(entry.getUserObject());
-                    this.dutyScheduleController.setSection(this.section);
-                    this.dutyScheduleController.show();
-                    return true;
-                }
-                LOG.error("Unrecognized Calendar Entry: No Duty found");
-                return false;
-            }
-        );
-
-         */
     }
 
     /**

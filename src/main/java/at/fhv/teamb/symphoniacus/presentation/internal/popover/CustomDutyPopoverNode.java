@@ -93,13 +93,17 @@ public class CustomDutyPopoverNode extends PopOverContentPane {
                     .toString()
                 );
 
-                Set<InstrumentationEntity> instrumentationSet =
-                    duty.getEntity().getSeriesOfPerformances().getInstrumentations();
-                List<Label> instrumentations = new LinkedList<>();
-                for (InstrumentationEntity ie : instrumentationSet) {
-                    instrumentations.add(new Label(ie.getName()));
+                if (duty.getEntity().getSeriesOfPerformances() != null) {
+                    Set<InstrumentationEntity> instrumentationSet =
+                        duty.getEntity().getSeriesOfPerformances().getInstrumentations();
+                    List<Label> instrumentations = new LinkedList<>();
+
+                    for (InstrumentationEntity ie : instrumentationSet) {
+                        instrumentations.add(new Label(ie.getName()));
+                    }
+                    popoverController.setInstrumentationText(instrumentations);
                 }
-                popoverController.setInstrumentationText(instrumentations);
+
 
 
             } catch (IOException e) {

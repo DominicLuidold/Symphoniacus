@@ -76,7 +76,7 @@ public abstract class CalendarController implements Initializable, Parentable<Ta
      * @param readOnly  Indicator whether calendar should be read only
      * @return A Calendar
      */
-    public Calendar createCalendar(String name, String shortName, boolean readOnly) {
+    protected Calendar createCalendar(String name, String shortName, boolean readOnly) {
         Calendar calendar = new Calendar(name);
         calendar.setShortName(shortName);
         calendar.setReadOnly(readOnly);
