@@ -7,6 +7,7 @@ import at.fhv.teamb.symphoniacus.persistence.PersistenceState;
 import at.fhv.teamb.symphoniacus.persistence.dao.DutyCategoryChangeLogDao;
 import at.fhv.teamb.symphoniacus.persistence.dao.DutyDao;
 import at.fhv.teamb.symphoniacus.persistence.model.DutyCategoryChangelogEntity;
+import at.fhv.teamb.symphoniacus.persistence.model.DutyCategoryEntity;
 import at.fhv.teamb.symphoniacus.persistence.model.DutyEntity;
 import at.fhv.teamb.symphoniacus.persistence.model.InstrumentationEntity;
 import at.fhv.teamb.symphoniacus.persistence.model.MonthlyScheduleEntity;
@@ -22,6 +23,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
+import javafx.collections.ObservableList;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -354,5 +356,26 @@ public class DutyManager {
                 duty.getTitle()
             );
         }
+    }
+
+    /**
+     * Checks whether a duty with the given parameters exists or not.
+     *
+     * @param seriesOfPerformances given Series of Performances from searched Duty.
+     * @param instrumentations given instrumentation from searched Duty.
+     * @param startingDate given starting Date from the searched Duty.
+     * @param endingDate given ending Date from searched Duty.
+     * @param category given dutyCategory from searched Duty.
+     * @return whether this specific duty exists or not
+     */
+    public boolean doesDutyAlreadyExists(
+        SeriesOfPerformancesEntity seriesOfPerformances,
+        List<InstrumentationEntity> instrumentations,
+        LocalDateTime startingDate,
+        LocalDateTime endingDate,
+        DutyCategoryEntity category) {
+
+        return this.dutyDao.doesDutyAlreadyExists(seriesOfPerformances,
+            instrumentations,startingDate,endingDate,category);
     }
 }

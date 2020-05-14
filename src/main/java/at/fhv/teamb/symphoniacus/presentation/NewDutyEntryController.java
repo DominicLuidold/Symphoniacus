@@ -419,6 +419,37 @@ public class NewDutyEntryController implements Initializable, Parentable<TabPane
                 this.resources.getString("global.button.ok")
             );
             return false;
+        } else if (this.seriesOfPerformancesSelect.getSelectionModel().getSelectedItem() != null
+            && this.instrumentationsSelect.getCheckModel().isEmpty()) {
+            /*this.instrumentationsSelect.setBorder(
+                new Border(
+                    new BorderStroke(
+                        Paint.valueOf("red"),
+                        BorderStrokeStyle.SOLID,
+                        CornerRadii.EMPTY,
+                        BorderWidths.DEFAULT
+                    )
+                )
+            );*/
+            MainController.showErrorAlert(
+                this.resources.getString("tab.duty.new.entry.error.title"),
+                this.resources.getString("tab.duty.new.entry.error.instrumentation.title"),
+                this.resources.getString("global.button.ok")
+            );
+            return false;
+        } else if (this.dutyManager.doesDutyAlreadyExists(this.seriesOfPerformancesSelect
+            .getSelectionModel().getSelectedItem(),this.instrumentationsSelect
+            .getCheckModel().getCheckedItems(),this.dutyStartDateInput.getValue()
+                .atTime(this.dutyStartTimeInput.getValue()),
+            this.dutyEndDateInput.getValue().atTime(this.dutyEndTimeInput.getValue()),
+            this.dutyCategorySelect.getSelectionModel().getSelectedItem().getEntity())
+        ) {
+            MainController.showErrorAlert(
+                this.resources.getString("tab.duty.new.entry.error.title"),
+                this.resources.getString("tab.duty.new.entry.error.duty.title"),
+                this.resources.getString("global.button.ok")
+            );
+            return false;
         } else {
             return true;
         }
