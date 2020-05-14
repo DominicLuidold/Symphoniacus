@@ -1,13 +1,11 @@
 package at.fhv.teamb.symphoniacus.presentation.internal.tasks;
 
 import at.fhv.teamb.symphoniacus.application.DutyScheduleManager;
+import at.fhv.teamb.symphoniacus.application.dto.SectionDto;
 import at.fhv.teamb.symphoniacus.domain.ActualSectionInstrumentation;
 import at.fhv.teamb.symphoniacus.domain.Duty;
-import at.fhv.teamb.symphoniacus.domain.Musician;
-import at.fhv.teamb.symphoniacus.domain.Section;
 import at.fhv.teamb.symphoniacus.presentation.DutyScheduleController;
 import java.util.Optional;
-import java.util.Set;
 import javafx.scene.layout.AnchorPane;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -25,7 +23,7 @@ public class GetPositionsWithMusiciansTask
         LogManager.getLogger(GetPositionsWithMusiciansTask.class);
     private final DutyScheduleManager dutyScheduleManager;
     private final Duty duty;
-    private final Section section;
+    private final SectionDto section;
 
     /**
      * Constructs a new Task.
@@ -37,7 +35,7 @@ public class GetPositionsWithMusiciansTask
     public GetPositionsWithMusiciansTask(
         DutyScheduleManager dsm,
         Duty duty,
-        Section section,
+        SectionDto section,
         AnchorPane pane
     ) {
         super(pane);
