@@ -7,6 +7,7 @@
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.CheckBox?>
 <?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ListView?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.BorderPane?>
 <?import javafx.scene.layout.ColumnConstraints?>
@@ -23,7 +24,7 @@
    <children>
       <VBox fx:id="seriesVbox" alignment="CENTER" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
          <children>
-            <AnchorPane minHeight="75.0" VBox.vgrow="ALWAYS">
+            <AnchorPane minHeight="75.0" VBox.vgrow="NEVER">
 
                <children>
                   <BorderPane fx:id="tabsTopBorderPane" minHeight="75.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
@@ -54,7 +55,7 @@
                               <Insets bottom="6.0" top="6.0" />
                            </GridPane.margin>
                         </AnchorPane>
-                        <TextFlow fx:id="instrumentationPositionsFlow" minHeight="50.0" GridPane.columnIndex="1" GridPane.rowIndex="3" />
+                        <TextFlow fx:id="instrumentationPositionsFlow" minHeight="50.0" GridPane.columnIndex="1" GridPane.hgrow="NEVER" GridPane.rowIndex="3" GridPane.vgrow="NEVER" />
                         <JFXDatePicker fx:id="endingDate" defaultColor="#16a5d6" GridPane.columnIndex="1" GridPane.rowIndex="5" />
                         <JFXDatePicker fx:id="startingDate" defaultColor="#16a5d6" GridPane.columnIndex="1" GridPane.rowIndex="4" />
                         <AnchorPane GridPane.columnIndex="1" GridPane.rowIndex="2">
@@ -83,17 +84,18 @@
                               <Insets />
                            </GridPane.margin>
                         </JFXTextField>
-                        <Label text="%seriesOfPerformances.gui.name" GridPane.halignment="RIGHT" GridPane.valignment="CENTER">
+                        <Label text="%seriesOfPerformances.gui.name" GridPane.halignment="LEFT" GridPane.valignment="CENTER">
                            <GridPane.margin>
                               <Insets />
                            </GridPane.margin>
                         </Label>
-                        <Label text="%seriesOfPerformances.gui.musicalPiece" GridPane.halignment="RIGHT" GridPane.rowIndex="1" GridPane.valignment="CENTER" />
-                        <Label text="%seriesOfPerformances.gui.instrumentation" GridPane.halignment="RIGHT" GridPane.rowIndex="2" GridPane.valignment="CENTER" />
-                        <Label text="%seriesOfPerformances.gui.instPositions" GridPane.halignment="RIGHT" GridPane.rowIndex="3" GridPane.valignment="CENTER" />
-                        <Label text="%seriesOfPerformances.gui.startingDate" GridPane.halignment="RIGHT" GridPane.rowIndex="4" GridPane.valignment="CENTER" />
-                        <Label text="%seriesOfPerformances.gui.endingDate" GridPane.halignment="RIGHT" GridPane.rowIndex="5" GridPane.valignment="CENTER" />
-                        <Label text="%seriesOfPerformances.gui.tour" GridPane.halignment="RIGHT" GridPane.rowIndex="6" GridPane.valignment="CENTER" />
+                        <Label text="%seriesOfPerformances.gui.musicalPiece" GridPane.halignment="LEFT" GridPane.rowIndex="1" GridPane.valignment="CENTER" />
+                        <ListView fx:id="listView" prefHeight="100.0" GridPane.columnIndex="1" GridPane.hgrow="NEVER" GridPane.rowIndex="3" />
+                        <Label text="%seriesOfPerformances.gui.instrumentation" GridPane.halignment="LEFT" GridPane.rowIndex="2" GridPane.valignment="CENTER" />
+                        <Label text="%seriesOfPerformances.gui.instPositions" GridPane.halignment="LEFT" GridPane.rowIndex="3" GridPane.valignment="CENTER" />
+                        <Label text="%seriesOfPerformances.gui.startingDate" GridPane.halignment="LEFT" GridPane.rowIndex="4" GridPane.valignment="CENTER" />
+                        <Label text="%seriesOfPerformances.gui.endingDate" GridPane.halignment="LEFT" GridPane.rowIndex="5" GridPane.valignment="CENTER" />
+                        <Label text="%seriesOfPerformances.gui.tour" GridPane.halignment="LEFT" GridPane.rowIndex="6" GridPane.valignment="CENTER" />
                         <CheckBox fx:id="isTour" mnemonicParsing="false" GridPane.columnIndex="1" GridPane.rowIndex="6" />
                      </children>
                      <padding>
@@ -103,8 +105,9 @@
                         <Insets />
                      </opaqueInsets>
                      <columnConstraints>
-                        <ColumnConstraints halignment="LEFT" prefWidth="250.0" />
+                        <ColumnConstraints halignment="LEFT" prefWidth="150.0" />
                         <ColumnConstraints halignment="LEFT" hgrow="NEVER" prefWidth="400.0" />
+                        <ColumnConstraints halignment="LEFT" hgrow="NEVER" minWidth="10.0" prefWidth="150.0" />
                      </columnConstraints>
                      <rowConstraints>
                         <RowConstraints />

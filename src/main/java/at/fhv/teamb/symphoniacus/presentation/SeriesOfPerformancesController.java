@@ -110,8 +110,6 @@ public class SeriesOfPerformancesController
         this.resources = resources;
         this.seriesManager = new SeriesOfPerformancesManager();
         this.musicalPieceManager = new MusicalPieceManager();
-        this.listView = new ListView<>();
-        this.grid.add(this.listView, 1, 3);
         this.instrumentationCheckComboBox
             .setTitle(resources
                 .getString("seriesOfPerformances.instrumentations.placeholder"));
