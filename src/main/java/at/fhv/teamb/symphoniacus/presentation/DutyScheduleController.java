@@ -48,6 +48,7 @@ import javafx.scene.control.Button;
 import javafx.scene.control.ButtonBar;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.ComboBox;
+import javafx.scene.control.Dialog;
 import javafx.scene.control.Label;
 import javafx.scene.control.Separator;
 import javafx.scene.control.TableCell;
@@ -61,10 +62,12 @@ import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
+import javafx.stage.Modality;
 import javafx.util.Duration;
 import javafx.util.StringConverter;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.controlsfx.control.CheckListView;
 import org.controlsfx.control.Notifications;
 import org.controlsfx.control.PopOver;
 
@@ -371,9 +374,10 @@ public class DutyScheduleController
                         observablePositionList,
                         dp -> {
                             // always select first musical piece as default
-                            return dp.getDutyPosition().getEntity().getInstrumentationPosition().getInstrumentation().getMusicalPiece().getName().equals(
-                                this.duty.getMusicalPieces().get(0).getEntity().getName()
-                            );
+                            return dp.getDutyPosition().getEntity().getInstrumentationPosition()
+                                .getInstrumentation().getMusicalPiece().getName().equals(
+                                    this.duty.getMusicalPieces().get(0).getEntity().getName()
+                                );
                         }
                     );
                     this.musicalPieceSelect.valueProperty().addListener(
@@ -605,6 +609,35 @@ public class DutyScheduleController
                 .hideAfter(new Duration(2000))
                 .show();
             return;
+        }
+
+        if (this.duty.getMusicalPieces().size() > 1) {
+            LOG.debug("need to assign to multiple positions");
+            ObservableList<MusicalPiece> list = FXCollections.observableList(
+                this.duty.getMusicalPieces()
+            );
+            CheckListView<MusicalPiece> checkListView = new CheckListView<>(list);
+
+
+            Dialog<ButtonType> dialog = new Dialog<>();
+            dialog.initOwner(this.dutySchedule.getParent().getScene().getWindow());
+            dialog.getDialogPane().getButtonTypes().addAll(ButtonType.CANCEL, ButtonType.OK);
+            dialog.getDialogPane().setContent(checkListView);
+            dialog.setResizable(true);
+            dialog.getDialogPane().setPrefWidth(600);
+            dialog.initModality(Modality.APPLICATION_MODAL);
+            dialog.setTitle(this.resources.getString(
+                "tab.duty.schedule.multiple.pieces.dialog.title")
+            );
+
+            Button okButton = (Button) dialog.getDialogPane().lookupButton(ButtonType.OK);
+            okButton.setText(this.resources.getString("tab.duty.schedule.multiple.pieces.dialog.button.ok"));
+            okButton.setOnAction(event -> {
+                ObservableList<MusicalPiece> sel = checkListView.getCheckModel().getCheckedItems();
+                LOG.debug("Selected {} pieces to schedule", sel.size());
+            });
+
+            dialog.show();
         }
 
         if (dutyPosition.getAssignedMusician().isPresent()) {
