@@ -7,7 +7,6 @@ import at.fhv.teamb.symphoniacus.domain.ActualSectionInstrumentation;
 import at.fhv.teamb.symphoniacus.domain.Duty;
 import at.fhv.teamb.symphoniacus.domain.DutyPosition;
 import at.fhv.teamb.symphoniacus.domain.Musician;
-import at.fhv.teamb.symphoniacus.domain.Section;
 import at.fhv.teamb.symphoniacus.persistence.PersistenceState;
 import at.fhv.teamb.symphoniacus.presentation.internal.AlertHelper;
 import at.fhv.teamb.symphoniacus.presentation.internal.DutyPositionMusicianTableModel;
@@ -311,7 +310,6 @@ public class DutyScheduleController
                 Optional<ActualSectionInstrumentation> currentAsi = task.getValue();
                 if (currentAsi.isEmpty()) {
                     LOG.error("Found no asi for duty");
-                    return;
                 } else {
                     this.actualSectionInstrumentation = currentAsi.get();
                     this.duty = this.actualSectionInstrumentation.getDuty();
@@ -812,8 +810,8 @@ public class DutyScheduleController
                             "tab.duty.schedule.table.musicians.summary.popup"
                         ),
                         // those are strings, so parse them as int
-                        Integer.valueOf(mtm.getBalancePoints())
-                            + Integer.valueOf(mtm.getGainedPoints()
+                        Integer.parseInt(mtm.getBalancePoints())
+                            + Integer.parseInt(mtm.getGainedPoints()
                         )
                     )
                 );
