@@ -25,19 +25,16 @@ import java.util.ResourceBundle;
 import java.util.Set;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.stream.Collectors;
-import javafx.beans.Observable;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.collections.ObservableSet;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
-import javafx.scene.Node;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.ComboBoxBase;
-import javafx.scene.control.Control;
 import javafx.scene.control.Label;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.AnchorPane;
@@ -46,8 +43,6 @@ import javafx.scene.layout.BorderStroke;
 import javafx.scene.layout.BorderStrokeStyle;
 import javafx.scene.layout.BorderWidths;
 import javafx.scene.layout.CornerRadii;
-import javafx.scene.layout.GridPane;
-import javafx.scene.layout.RowConstraints;
 import javafx.scene.paint.Paint;
 import javafx.util.StringConverter;
 import org.apache.logging.log4j.LogManager;
@@ -117,22 +112,13 @@ public class NewDutyEntryController implements Initializable, Parentable<TabPane
     @FXML
     private CheckComboBox<InstrumentationEntity> instrumentationsSelect;
 
-    @FXML
-    private GridPane upperGrid;
-
-    @FXML
-    private Label instrumentationsLabel;
-
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         this.resources = resources;
         this.dutyManager = new DutyManager();
         this.seriesOfPerformancesManager = new SeriesOfPerformancesManager();
         this.dutyCategoryManager = new DutyCategoryManager();
-        //hideInstrumentationRow();
-        //this.upperGrid.setVgap(10);
         this.instrumentationsSelect.setDisable(true);
-        //this.upperGrid.getRowConstraints().get(1).setMaxHeight(0);
 
         // Init combo boxes with data
         this.initCategoryComboBox();
@@ -164,31 +150,11 @@ public class NewDutyEntryController implements Initializable, Parentable<TabPane
             if (!this.seriesOfPerformancesSelect.getSelectionModel().isEmpty()) {
                 initInstrumentationsCheckComboBox();
                 this.instrumentationsSelect.setDisable(false);
-                //showInstrumentationRow();
-                //this.upperGrid.setVgap(20);
             } else {
                 this.instrumentationsSelect.setDisable(true);
-                //hideInstrumentationRow();
-                //this.upperGrid.setVgap(10);
             }
         });
     }
-
-    /*
-    private void hideInstrumentationRow() {
-        this.upperGrid.getChildren().remove(instrumentationsLabel);
-        this.upperGrid.getChildren().remove(instrumentationsSelect);
-    }
-
-    private void showInstrumentationRow() {
-        if (!(this.upperGrid.getChildren().contains(instrumentationsLabel)
-            && this.upperGrid.getChildren().contains(instrumentationsSelect))) {
-            this.upperGrid.add(instrumentationsLabel, 0, 1);
-            this.upperGrid.add(instrumentationsSelect, 1, 1);
-        }
-    }
-
-     */
 
     /**
      * Sets the actions for all buttons of the new duty view.
@@ -331,9 +297,12 @@ public class NewDutyEntryController implements Initializable, Parentable<TabPane
 
             @Override
             public DutyCategory fromString(String title) {
-                return dutyCategoryList.stream()
+                DutyCategory result = dutyCategoryList.stream()
                     .filter(item -> item.getEntity().getType().equals(title))
                     .collect(Collectors.toList()).get(0);
+                LOG.debug("Category Combobox from String -> {}",
+                    result.getEntity().getDutyCategoryId());
+                return result;
             }
         });
     }
@@ -421,16 +390,6 @@ public class NewDutyEntryController implements Initializable, Parentable<TabPane
             return false;
         } else if (this.seriesOfPerformancesSelect.getSelectionModel().getSelectedItem() != null
             && this.instrumentationsSelect.getCheckModel().isEmpty()) {
-            /*this.instrumentationsSelect.setBorder(
-                new Border(
-                    new BorderStroke(
-                        Paint.valueOf("red"),
-                        BorderStrokeStyle.SOLID,
-                        CornerRadii.EMPTY,
-                        BorderWidths.DEFAULT
-                    )
-                )
-            );*/
             MainController.showErrorAlert(
                 this.resources.getString("tab.duty.new.entry.error.title"),
                 this.resources.getString("tab.duty.new.entry.error.instrumentation.title"),
@@ -438,8 +397,8 @@ public class NewDutyEntryController implements Initializable, Parentable<TabPane
             );
             return false;
         } else if (this.dutyManager.doesDutyAlreadyExists(this.seriesOfPerformancesSelect
-            .getSelectionModel().getSelectedItem(),this.instrumentationsSelect
-            .getCheckModel().getCheckedItems(),this.dutyStartDateInput.getValue()
+                .getSelectionModel().getSelectedItem(), this.instrumentationsSelect
+                .getCheckModel().getCheckedItems(), this.dutyStartDateInput.getValue()
                 .atTime(this.dutyStartTimeInput.getValue()),
             this.dutyEndDateInput.getValue().atTime(this.dutyEndTimeInput.getValue()),
             this.dutyCategorySelect.getSelectionModel().getSelectedItem().getEntity())
