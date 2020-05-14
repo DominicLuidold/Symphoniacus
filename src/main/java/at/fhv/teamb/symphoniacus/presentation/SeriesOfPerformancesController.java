@@ -39,6 +39,8 @@ import javafx.util.StringConverter;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.controlsfx.control.CheckComboBox;
+import org.kordamp.ikonli.fontawesome.FontAwesome;
+import org.kordamp.ikonli.javafx.FontIcon;
 
 /**
  * GUI Controller responsible for creating a new Series of Performances.
@@ -157,6 +159,9 @@ public class SeriesOfPerformancesController
 
         // Add/Modify button method
         this.addModifyButton.setOnAction(event -> addModify());
+        FontIcon addIcon = new FontIcon(FontAwesome.EDIT);
+        addIcon.getStyleClass().addAll("button-icon");
+        this.addModifyButton.setGraphic(addIcon);
 
         this.startingDate.setConverter(UkTimeFormatter.getUkTimeConverter());
         this.endingDate.setConverter(UkTimeFormatter.getUkTimeConverter());

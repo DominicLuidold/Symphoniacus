@@ -42,7 +42,7 @@
                <Label fx:id="instrumentationsLabel" text="%tab.duty.new.entry.dropdown.load.instrumentations" GridPane.rowIndex="1" />
                     <ComboBox fx:id="seriesOfPerformancesSelect" layoutX="15.0" layoutY="33.0" prefWidth="250.0" promptText="%tab.duty.new.entry.dropdown.load.seriesofperformances" GridPane.columnIndex="1" />
                <CheckComboBox fx:id="instrumentationsSelect" prefWidth="250.0" GridPane.columnIndex="1" GridPane.rowIndex="1" />
-                    <Button fx:id="newSeriesOfPerformancesBtn" mnemonicParsing="false" prefWidth="150.0" text="%tab.duty.new.entry.button.new.seriesofperformances" GridPane.columnIndex="3" />
+                    <Button fx:id="newSeriesOfPerformancesBtn" mnemonicParsing="false" prefWidth="75.0" text="%tab.duty.new.entry.button.new.seriesofperformances" GridPane.columnIndex="3" />
                     <Label fx:id="dutyCategoryLabel" text="%tab.duty.new.entry.label.category" GridPane.columnIndex="0" GridPane.rowIndex="2" />
                     <ComboBox fx:id="dutyCategorySelect" layoutX="15.0" layoutY="33.0" prefWidth="250.0" promptText="%tab.duty.new.entry.dropdown.load.category" GridPane.columnIndex="1" GridPane.rowIndex="2" />
                     <Label fx:id="dutyPointsLabel" text="%tab.duty.new.entry.label.points" GridPane.columnIndex="0" GridPane.rowIndex="3" />

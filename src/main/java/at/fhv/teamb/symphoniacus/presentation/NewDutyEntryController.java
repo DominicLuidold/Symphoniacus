@@ -35,6 +35,7 @@ import javafx.scene.control.Button;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.ComboBoxBase;
+import javafx.scene.control.ContentDisplay;
 import javafx.scene.control.Label;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.AnchorPane;
@@ -48,6 +49,8 @@ import javafx.util.StringConverter;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.controlsfx.control.CheckComboBox;
+import org.kordamp.ikonli.fontawesome.FontAwesome;
+import org.kordamp.ikonli.javafx.FontIcon;
 import shadow.org.codehaus.plexus.util.StringUtils;
 
 /**
@@ -176,6 +179,9 @@ public class NewDutyEntryController implements Initializable, Parentable<TabPane
 
         // Button to open new series of performances tabs
         this.newSeriesOfPerformancesBtn.setOnAction(e -> openNewSopTab());
+        FontIcon addIcon = new FontIcon(FontAwesome.PLUS);
+        addIcon.getStyleClass().addAll("button-icon");
+        this.newSeriesOfPerformancesBtn.setGraphic(addIcon);
     }
 
     /**
