@@ -35,7 +35,6 @@ import javafx.scene.control.Button;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.ComboBoxBase;
-import javafx.scene.control.ContentDisplay;
 import javafx.scene.control.Label;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.AnchorPane;
@@ -142,7 +141,7 @@ public class NewDutyEntryController implements Initializable, Parentable<TabPane
     }
 
     /**
-     * Sets the event handlers on dutyPointsInput and seriesOfPerformancesSelect
+     * Sets the event handlers on dutyPointsInput and seriesOfPerformancesSelect.
      */
     private void setEventHandlers() {
         // Add event listener for updated points
@@ -475,9 +474,9 @@ public class NewDutyEntryController implements Initializable, Parentable<TabPane
                 this.seriesOfPerformancesSelect.getValue()
             );
 
-            Set<InstrumentationEntity> instrumentations
-                = new LinkedHashSet<>(
-                this.instrumentationsSelect.getCheckModel().getCheckedItems());
+            Set<InstrumentationEntity> instrumentations = new LinkedHashSet<>(
+                this.instrumentationsSelect.getCheckModel().getCheckedItems()
+            );
             // Delegate saving to manager
             this.dutyManager.save(
                 this.duty,
@@ -594,16 +593,16 @@ public class NewDutyEntryController implements Initializable, Parentable<TabPane
      * {@inheritDoc}
      */
     @Override
-    public void setParentController(TabPaneController controller) {
-        this.parentController = controller;
+    public TabPaneController getParentController() {
+        return this.parentController;
     }
 
     /**
      * {@inheritDoc}
      */
     @Override
-    public TabPaneController getParentController() {
-        return this.parentController;
+    public void setParentController(TabPaneController controller) {
+        this.parentController = controller;
     }
 
     /**
