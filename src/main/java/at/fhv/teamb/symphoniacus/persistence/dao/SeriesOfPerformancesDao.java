@@ -19,6 +19,20 @@ public class SeriesOfPerformancesDao extends BaseDao<SeriesOfPerformancesEntity>
     }
 
     /**
+     * Returns all {@link SeriesOfPerformancesEntity} objects.
+     *
+     * @return A List of series of performances entities
+     */
+    public List<SeriesOfPerformancesEntity> getAll() {
+        TypedQuery<SeriesOfPerformancesEntity> query = entityManager.createQuery(
+            "SELECT sop FROM SeriesOfPerformancesEntity sop",
+            SeriesOfPerformancesEntity.class
+        );
+
+        return query.getResultList();
+    }
+
+    /**
      * {@inheritDoc}
      */
     @Override
@@ -65,18 +79,5 @@ public class SeriesOfPerformancesDao extends BaseDao<SeriesOfPerformancesEntity>
         query.setParameter("eDate", endingDate);
 
         return (query.getSingleResult() >= 1);
-    }
-
-    /**
-     * Returns all duty categories.
-     *
-     * @return A List of duty categories
-     */
-    public List<SeriesOfPerformancesEntity> getAll() {
-        TypedQuery<SeriesOfPerformancesEntity> query = entityManager.createQuery(
-            "SELECT sop FROM SeriesOfPerformancesEntity sop",
-            SeriesOfPerformancesEntity.class
-        );
-        return query.getResultList();
     }
 }

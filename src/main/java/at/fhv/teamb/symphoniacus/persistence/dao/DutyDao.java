@@ -1,7 +1,6 @@
 package at.fhv.teamb.symphoniacus.persistence.dao;
 
 import at.fhv.teamb.symphoniacus.persistence.BaseDao;
-import at.fhv.teamb.symphoniacus.persistence.model.DutyCategoryChangelogEntity;
 import at.fhv.teamb.symphoniacus.persistence.model.DutyCategoryEntity;
 import at.fhv.teamb.symphoniacus.persistence.model.DutyEntity;
 import at.fhv.teamb.symphoniacus.persistence.model.InstrumentationEntity;
@@ -15,9 +14,7 @@ import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
-import javax.persistence.EntityTransaction;
 import javax.persistence.TypedQuery;
-import net.fortuna.ical4j.model.DateTime;
 
 /**
  * DAO for Duty class.
@@ -293,13 +290,12 @@ public class DutyDao extends BaseDao<DutyEntity> {
     /**
      * Checks whether a duty with the given parameters exists or not.
      *
-     * @param series given Series of Performances from searched Duty.
+     * @param series           given Series of Performances from searched Duty.
      * @param instrumentations given instrumentation from searched Duty.
-     * @param startingDate given starting Date from the searched Duty.
-     * @param endingDate given ending Date from searched Duty.
-     * @param category given dutyCategory from searched Duty.
-     * @return a boolean which represents whether
-     *      such a duty exists with the given parameters or not.
+     * @param startingDate     given starting Date from the searched Duty.
+     * @param endingDate       given ending Date from searched Duty.
+     * @param category         given dutyCategory from searched Duty.
+     * @return True if duty exists, false otherwise
      */
     public boolean doesDutyAlreadyExists(
         SeriesOfPerformancesEntity series,

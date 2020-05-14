@@ -110,48 +110,44 @@ public class SeriesOfPerformancesController
         this.resources = resources;
         this.seriesManager = new SeriesOfPerformancesManager();
         this.musicalPieceManager = new MusicalPieceManager();
-        this.instrumentationCheckComboBox
-            .setTitle(resources
-                .getString("seriesOfPerformances.instrumentations.placeholder"));
-        initMusicialPiecesCheckListView();
+        this.instrumentationCheckComboBox.setTitle(
+            resources.getString("seriesOfPerformances.instrumentations.placeholder")
+        );
+        initMusicalPiecesCheckListView();
 
         RequiredFieldValidator fieldValidator = new RequiredFieldValidator();
-        fieldValidator.setMessage(resources
-            .getString("seriesOfPerformances.validation.name"));
+        fieldValidator.setMessage(
+            resources.getString("seriesOfPerformances.validation.name")
+        );
         this.nameOfSeries.getValidators().add(fieldValidator);
 
-        this.nameOfSeries.focusedProperty().addListener((
-            ObservableValue<? extends Boolean> observable,
-            Boolean oldValue,
-            Boolean newValue) -> {
-            if (!newValue) {
-                this.name.set(this.nameOfSeries.validate());
-                checkButtonVisibility();
+        this.nameOfSeries.focusedProperty().addListener(
+            (ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue) -> {
+                if (!newValue) {
+                    this.name.set(this.nameOfSeries.validate());
+                    checkButtonVisibility();
+                }
             }
-        });
+        );
 
         RequiredFieldValidator validator = new RequiredFieldValidator();
         validator.setMessage(this.resources.getString("seriesOfPerformances.validation.date"));
         this.startingDate.getValidators().add(validator);
         this.endingDate.getValidators().addAll(validator);
 
-        this.startingDate.valueProperty().addListener((
-            observable,
-            oldValue,
-            newValue)
-            -> {
-            this.start.set(this.startingDate.validate());
-            checkButtonVisibility();
+        this.startingDate.valueProperty().addListener(
+            (observable, oldValue, newValue) -> {
+                this.start.set(this.startingDate.validate());
+                checkButtonVisibility();
+            }
+        );
 
-        });
-
-        this.endingDate.valueProperty().addListener((
-            observable,
-            oldValue,
-            newValue) -> {
-            this.end.set(this.endingDate.validate());
-            checkButtonVisibility();
-        });
+        this.endingDate.valueProperty().addListener(
+            (observable, oldValue, newValue) -> {
+                this.end.set(this.endingDate.validate());
+                checkButtonVisibility();
+            }
+        );
 
         // Save button method
         this.saveButton.setOnAction(event -> save());
@@ -162,8 +158,8 @@ public class SeriesOfPerformancesController
         // Add/Modify button method
         this.addModifyButton.setOnAction(event -> addModify());
 
-        startingDate.setConverter(UkTimeFormatter.getUkTimeConverter());
-        endingDate.setConverter(UkTimeFormatter.getUkTimeConverter());
+        this.startingDate.setConverter(UkTimeFormatter.getUkTimeConverter());
+        this.endingDate.setConverter(UkTimeFormatter.getUkTimeConverter());
     }
 
     /**
@@ -171,7 +167,7 @@ public class SeriesOfPerformancesController
      * When selecting one or more musicalPieces, the method
      * loadInstrumentationsFromChosenMusicalPieces is called.
      */
-    public void initMusicialPiecesCheckListView() {
+    public void initMusicalPiecesCheckListView() {
         final ObservableList<MusicalPieceEntity> musicalPieces =
             FXCollections.observableArrayList();
         Set<MusicalPieceEntity> mp = this.musicalPieceManager.getAllMusicalPieces();
@@ -452,7 +448,6 @@ public class SeriesOfPerformancesController
     }
 
     private boolean isInstrumentationForMusicalPieceSelected() {
-
         for (MusicalPieceEntity m : this.musicalPieceCheckComboBox
             .getCheckModel().getCheckedItems()) {
             boolean isSelected = false;

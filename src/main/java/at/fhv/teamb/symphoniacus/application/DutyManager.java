@@ -361,10 +361,10 @@ public class DutyManager {
      * Checks whether a duty with the given parameters exists or not.
      *
      * @param seriesOfPerformances given Series of Performances from searched Duty.
-     * @param instrumentations given instrumentation from searched Duty.
-     * @param startingDate given starting Date from the searched Duty.
-     * @param endingDate given ending Date from searched Duty.
-     * @param category given dutyCategory from searched Duty.
+     * @param instrumentations     given instrumentation from searched Duty.
+     * @param startingDate         given starting Date from the searched Duty.
+     * @param endingDate           given ending Date from searched Duty.
+     * @param category             given dutyCategory from searched Duty.
      * @return whether this specific duty exists or not
      */
     public boolean doesDutyAlreadyExists(
@@ -374,7 +374,12 @@ public class DutyManager {
         LocalDateTime endingDate,
         DutyCategoryEntity category) {
 
-        return this.dutyDao.doesDutyAlreadyExists(seriesOfPerformances,
-            instrumentations,startingDate,endingDate,category);
+        return this.dutyDao.doesDutyAlreadyExists(
+            seriesOfPerformances,
+            instrumentations,
+            startingDate,
+            endingDate,
+            category
+        );
     }
 }

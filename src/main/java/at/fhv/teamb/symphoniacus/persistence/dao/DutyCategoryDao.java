@@ -40,11 +40,14 @@ public class DutyCategoryDao extends BaseDao<DutyCategoryEntity> {
      * @return the musical piece with the same name
      */
     public Optional<DutyCategoryEntity> getDutyCategoryFromName(String type) {
-        TypedQuery<DutyCategoryEntity> query = entityManager
-            .createQuery("SELECT dc FROM DutyCategoryEntity dc "
-                + "WHERE dc.type = :nameOfCategory", DutyCategoryEntity.class);
+        TypedQuery<DutyCategoryEntity> query = entityManager.createQuery(
+            "SELECT dc FROM DutyCategoryEntity dc "
+                + "WHERE dc.type = :nameOfCategory",
+            DutyCategoryEntity.class
+        );
 
         query.setParameter("nameOfCategory", type);
+
         return Optional.of(query.getSingleResult());
     }
 

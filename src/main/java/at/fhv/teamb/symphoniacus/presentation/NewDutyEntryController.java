@@ -145,13 +145,13 @@ public class NewDutyEntryController implements Initializable, Parentable<TabPane
             event -> initSeriesOfPerformancesComboBox()
         );
 
-        // Show Instrumentations of a selected series
+        // Show instrumentations of a selected series
         this.seriesOfPerformancesSelect.addEventHandler(ComboBoxBase.ON_HIDDEN, event -> {
-            if (!this.seriesOfPerformancesSelect.getSelectionModel().isEmpty()) {
+            if (this.seriesOfPerformancesSelect.getSelectionModel().isEmpty()) {
+                this.instrumentationsSelect.setDisable(true);
+            } else {
                 initInstrumentationsCheckComboBox();
                 this.instrumentationsSelect.setDisable(false);
-            } else {
-                this.instrumentationsSelect.setDisable(true);
             }
         });
     }
@@ -256,7 +256,8 @@ public class NewDutyEntryController implements Initializable, Parentable<TabPane
 
         Set<InstrumentationEntity> instrumentations =
             this.seriesOfPerformancesManager.getAllInstrumentations(
-                this.seriesOfPerformancesSelect.getSelectionModel().getSelectedItem());
+                this.seriesOfPerformancesSelect.getSelectionModel().getSelectedItem()
+            );
         observInstrumentations.addAll(instrumentations);
 
         ObservableList<InstrumentationEntity> oldList = this.instrumentationsSelect.getItems();
