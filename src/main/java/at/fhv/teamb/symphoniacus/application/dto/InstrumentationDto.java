@@ -47,35 +47,35 @@ public class InstrumentationDto {
         return this.instPositions;
     }
 
-    public static class InstrumentationBuilder {
+    public static class InstrumentationDtoBuilder {
         private final int instrumentationId;
         private String name;
         private List<MusicalPieceDto> musicalPieces;
         private List<SeriesOfPerformancesDto> seriesOfPerformances;
         private List<InstrumentationPositionDto> instrumentationPositions;
 
-        public InstrumentationBuilder(int instrumentationId) {
+        public InstrumentationDtoBuilder(int instrumentationId) {
             this.instrumentationId = instrumentationId;
         }
 
-        public InstrumentationBuilder withName(String name) {
+        public InstrumentationDtoBuilder withName(String name) {
             this.name = name;
             return this;
         }
 
-        public InstrumentationBuilder withMusicalPieces(List<MusicalPieceDto> musicalPieces) {
+        public InstrumentationDtoBuilder withMusicalPieces(List<MusicalPieceDto> musicalPieces) {
             this.musicalPieces = musicalPieces;
             return this;
         }
 
-        public InstrumentationBuilder withSeriesOfPerformances(
+        public InstrumentationDtoBuilder withSeriesOfPerformances(
             List<SeriesOfPerformancesDto> seriesOfPerformances
         ) {
             this.seriesOfPerformances = seriesOfPerformances;
             return this;
         }
 
-        public InstrumentationBuilder withInstrumentationPositions(
+        public InstrumentationDtoBuilder withInstrumentationPositions(
             List<InstrumentationPositionDto> instPositions) {
             this.instrumentationPositions = instPositions;
             return this;
