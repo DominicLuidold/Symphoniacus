@@ -756,7 +756,7 @@ public class DutyScheduleController
         };
         cell.addEventHandler(MouseEvent.MOUSE_ENTERED, event -> {
             MusicianPointsTableModel mtm = cell.getTableRow().getItem();
-            if (mtm.getMusician() != null) {
+            if (mtm != null && mtm.getMusician() != null) {
                 LOG.debug("Musician set on this position");
                 this.dutyScheduleManager.addGainedPointsToMusician(
                     mtm.getMusician(),
