@@ -65,7 +65,7 @@ public class PointsManager {
             // DutyDAO has been modified so that in this case, only one CO
             // should be loaded at this point. However, we need to double-check.
             if (musician.getContractualObligations().size() != 1) {
-                LOG.error("More than one contractual obligation is not supported"
+                LOG.error("More than one contractual obligation is not supported "
                     + "at this stage for musician {}", musician.getUser().getShortcut());
                 return Points.getZeroPoints();
             }
