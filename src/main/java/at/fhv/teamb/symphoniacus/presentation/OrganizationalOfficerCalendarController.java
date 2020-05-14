@@ -49,7 +49,7 @@ public class OrganizationalOfficerCalendarController extends CalendarController 
             Calendar calendar = this.createCalendar(
                 this.bundle.getString("oo.calendar.name"),
                 this.bundle.getString("oo.calendar.shortname"),
-                false
+                true
             );
 
             // Fill calendar
