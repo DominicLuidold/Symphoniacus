@@ -34,6 +34,34 @@ public class DutyDto {
         this.seriesOfPerformances = seriesOfPerformances;
     }
 
+    public int getDutyId() {
+        return this.dutyId;
+    }
+
+    public String getDescription() {
+        return this.description;
+    }
+
+    public String getTimeOfDay() {
+        return this.timeOfDay;
+    }
+
+    public DutyCategoryDto getDutyCategory() {
+        return this.dutyCategory;
+    }
+
+    public LocalDateTime getStart() {
+        return this.start;
+    }
+
+    public LocalDateTime getEnd() {
+        return this.end;
+    }
+
+    public SeriesOfPerformancesDto getSeriesOfPerformances() {
+        return this.seriesOfPerformances;
+    }
+
     public static class DutyDtoBuilder {
         private final int dutyId;
         private String description;
