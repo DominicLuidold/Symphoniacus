@@ -24,9 +24,9 @@
     <SplitPane fx:id="horizontalSplitPane" orientation="VERTICAL" prefHeight="160.0" prefWidth="200.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
         <items>
              <VBox alignment="CENTER" spacing="20">
-            <AnchorPane fx:id="topAnchor" minHeight="75.0" VBox.vgrow="ALWAYS">
+            <AnchorPane fx:id="topAnchor" minHeight="75.0" prefHeight="75.0" VBox.vgrow="ALWAYS">
                <children>
-                  <BorderPane prefHeight="100.0" prefWidth="200.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                  <BorderPane fx:id="tabsTopBorderPane" prefHeight="75.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
                      <center>
                         <Label fx:id="labelCurrentPosition" alignment="CENTER" text="%menu.tab.duty.new.entry.title" BorderPane.alignment="CENTER">
                             <font>
@@ -95,7 +95,7 @@
                   <RowConstraints />
                </rowConstraints>
                 </GridPane>
-            <HBox fx:id="buttonHbox" alignment="CENTER" minHeight="40.0" prefHeight="100.0" spacing="30.0">
+            <HBox fx:id="tabsBottomButtonHbox" alignment="CENTER" minHeight="40.0" prefHeight="100.0" spacing="30.0">
                <children>
                   <Button fx:id="scheduleSaveBtn" alignment="CENTER" defaultButton="true" mnemonicParsing="false" prefHeight="40" prefWidth="150.0" text="%global.button.save" />
                   <Button fx:id="scheduleBackBtn" alignment="CENTER" cancelButton="true" contentDisplay="CENTER" mnemonicParsing="false" prefHeight="40" prefWidth="150.0" text="%global.button.back" />
