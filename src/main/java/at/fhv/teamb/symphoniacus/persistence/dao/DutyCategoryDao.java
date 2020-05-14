@@ -2,10 +2,8 @@ package at.fhv.teamb.symphoniacus.persistence.dao;
 
 import at.fhv.teamb.symphoniacus.persistence.BaseDao;
 import at.fhv.teamb.symphoniacus.persistence.model.DutyCategoryEntity;
-import at.fhv.teamb.symphoniacus.persistence.model.MusicalPieceEntity;
 import java.util.List;
 import java.util.Optional;
-import javax.persistence.EntityTransaction;
 import javax.persistence.TypedQuery;
 
 public class DutyCategoryDao extends BaseDao<DutyCategoryEntity> {
