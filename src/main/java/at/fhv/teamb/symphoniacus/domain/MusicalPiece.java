@@ -17,4 +17,9 @@ public class MusicalPiece {
     public MusicalPieceEntity getEntity() {
         return this.entity;
     }
+
+    @Override
+    public String toString() {
+        return this.entity.getName();
+    }
 }
