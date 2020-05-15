@@ -1,5 +1,6 @@
 package at.fhv.teamb.symphoniacus.persistence.model;
 
+import at.fhv.teamb.symphoniacus.persistence.model.interfaces.IInstrumentationEntity;
 import at.fhv.teamb.symphoniacus.persistence.model.interfaces.ISeriesOfPerformancesEntity;
 import java.time.LocalDate;
 import java.util.LinkedHashSet;
@@ -38,7 +39,7 @@ public class SeriesOfPerformancesEntity implements ISeriesOfPerformancesEntity {
     @Column(name = "isTour")
     private boolean isTour;
 
-    @ManyToMany(cascade = {CascadeType.MERGE})
+    @ManyToMany(cascade = {CascadeType.MERGE}, targetEntity = InstrumentationEntity.class)
     @JoinTable(
         name = "seriesOfPerformances_instrumentation",
         joinColumns = {
@@ -48,7 +49,7 @@ public class SeriesOfPerformancesEntity implements ISeriesOfPerformancesEntity {
             @JoinColumn(name = "instrumentationId")
         }
     )
-    private Set<InstrumentationEntity> instrumentations = new LinkedHashSet<>();
+    private Set<IInstrumentationEntity> instrumentations = new LinkedHashSet<>();
 
     @ManyToMany(cascade = {CascadeType.MERGE})
     @JoinTable(
@@ -176,21 +177,21 @@ public class SeriesOfPerformancesEntity implements ISeriesOfPerformancesEntity {
         this.negativeDutyWishes = negativeDutyWishes;
     }
 
-    public Set<InstrumentationEntity> getInstrumentations() {
+    public Set<IInstrumentationEntity> getInstrumentations() {
         return this.instrumentations;
     }
 
     public void setInstrumentations(
-        Set<InstrumentationEntity> instrumentations) {
+        Set<IInstrumentationEntity> instrumentations) {
         this.instrumentations = instrumentations;
     }
 
-    public void addInstrumentation(InstrumentationEntity instrumentationEntity) {
+    public void addInstrumentation(IInstrumentationEntity instrumentationEntity) {
         this.instrumentations.add(instrumentationEntity);
         instrumentationEntity.addSeriesOfPerformance(this);
     }
 
-    public void removeInstrumentation(InstrumentationEntity instrumentationEntity) {
+    public void removeInstrumentation(IInstrumentationEntity instrumentationEntity) {
         this.instrumentations.remove(instrumentationEntity);
         instrumentationEntity.removeSeriesOfPerformance(this);
     }

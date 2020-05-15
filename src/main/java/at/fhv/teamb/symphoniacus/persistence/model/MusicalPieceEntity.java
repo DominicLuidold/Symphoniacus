@@ -1,5 +1,6 @@
 package at.fhv.teamb.symphoniacus.persistence.model;
 
+import at.fhv.teamb.symphoniacus.persistence.model.interfaces.IInstrumentationEntity;
 import at.fhv.teamb.symphoniacus.persistence.model.interfaces.IMusicalPieceEntity;
 import java.util.LinkedHashSet;
 import java.util.LinkedList;
@@ -17,6 +18,7 @@ import javax.persistence.Table;
 @Entity
 @Table(name = "musicalPiece")
 public class MusicalPieceEntity implements IMusicalPieceEntity {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "musicalPieceId")
@@ -31,8 +33,8 @@ public class MusicalPieceEntity implements IMusicalPieceEntity {
     @Column(name = "category")
     private String category;
 
-    @OneToMany(mappedBy = "musicalPiece")
-    private Set<InstrumentationEntity> instrumentations = new LinkedHashSet<>();
+    @OneToMany(mappedBy = "musicalPiece", targetEntity = InstrumentationEntity.class)
+    private Set<IInstrumentationEntity> instrumentations = new LinkedHashSet<>();
 
     @ManyToMany(mappedBy = "musicalPieces")
     private List<SeriesOfPerformancesEntity> seriesOfPerformances = new LinkedList<>();
@@ -69,12 +71,11 @@ public class MusicalPieceEntity implements IMusicalPieceEntity {
         this.category = category;
     }
 
-    public Set<InstrumentationEntity> getInstrumentations() {
+    public Set<IInstrumentationEntity> getInstrumentations() {
         return this.instrumentations;
     }
 
-    public void setInstrumentations(
-        Set<InstrumentationEntity> instrumentations) {
+    public void setInstrumentations(Set<IInstrumentationEntity> instrumentations) {
         this.instrumentations = instrumentations;
     }
 

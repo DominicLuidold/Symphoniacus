@@ -1,5 +1,7 @@
 package at.fhv.teamb.symphoniacus.persistence.model;
 
+import at.fhv.teamb.symphoniacus.persistence.model.interfaces.IMonthlyScheduleEntity;
+import at.fhv.teamb.symphoniacus.persistence.model.interfaces.ISectionMonthlyScheduleEntity;
 import java.time.LocalDate;
 import java.util.HashSet;
 import java.util.LinkedList;
@@ -16,7 +18,7 @@ import javax.persistence.Table;
 
 @Entity
 @Table(name = "monthlySchedule")
-public class MonthlyScheduleEntity {
+public class MonthlyScheduleEntity implements IMonthlyScheduleEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "monthlyScheduleId")
@@ -40,8 +42,8 @@ public class MonthlyScheduleEntity {
     @Column(name = "endWish")
     private LocalDate endWish;
 
-    @OneToMany(mappedBy = "monthlySchedule", orphanRemoval = true)
-    private Set<SectionMonthlyScheduleEntity> sectionMonthlySchedules = new HashSet<>();
+    @OneToMany(mappedBy = "monthlySchedule", orphanRemoval = true, targetEntity = SectionMonthlyScheduleEntity.class)
+    private Set<ISectionMonthlyScheduleEntity> sectionMonthlySchedules = new HashSet<>();
 
     @ManyToMany(mappedBy = "monthlySchedules")
     private List<NegativeDateWishEntity> negativeDateWishes = new LinkedList<>();
@@ -105,16 +107,16 @@ public class MonthlyScheduleEntity {
         this.endWish = endWish;
     }
 
-    public Set<SectionMonthlyScheduleEntity> getSectionMonthlySchedule() {
+    public Set<ISectionMonthlyScheduleEntity> getSectionMonthlySchedule() {
         return this.sectionMonthlySchedules;
     }
 
-    public void addSectionMonthlySchedule(SectionMonthlyScheduleEntity sectionMonthlySchedule) {
+    public void addSectionMonthlySchedule(ISectionMonthlyScheduleEntity sectionMonthlySchedule) {
         this.sectionMonthlySchedules.add(sectionMonthlySchedule);
         sectionMonthlySchedule.setMonthlySchedule(this);
     }
 
-    public void removeSectionMonthlySchedule(SectionMonthlyScheduleEntity sectionMonthlySchedule) {
+    public void removeSectionMonthlySchedule(ISectionMonthlyScheduleEntity sectionMonthlySchedule) {
         this.sectionMonthlySchedules.remove(sectionMonthlySchedule);
         sectionMonthlySchedule.setMonthlySchedule(null);
     }

@@ -4,6 +4,7 @@ import at.fhv.teamb.symphoniacus.domain.Section;
 import at.fhv.teamb.symphoniacus.persistence.BaseDao;
 import at.fhv.teamb.symphoniacus.persistence.model.SectionEntity;
 import at.fhv.teamb.symphoniacus.persistence.model.SectionMonthlyScheduleEntity;
+import at.fhv.teamb.symphoniacus.persistence.model.interfaces.ISectionMonthlyScheduleEntity;
 import java.time.Month;
 import java.time.Year;
 import java.util.List;
@@ -56,12 +57,12 @@ public class SectionMonthlyScheduleDao extends BaseDao<SectionMonthlyScheduleEnt
      * @param month The month to use
      * @return A List of section monthly schedules
      */
-    public List<SectionMonthlyScheduleEntity> findAllInYearAndMonth(Year year, Month month) {
-        TypedQuery<SectionMonthlyScheduleEntity> query = entityManager.createQuery(
+    public List<ISectionMonthlyScheduleEntity> findAllInYearAndMonth(Year year, Month month) {
+        TypedQuery<ISectionMonthlyScheduleEntity> query = entityManager.createQuery(
             "SELECT sms FROM SectionMonthlyScheduleEntity sms "
                 + "JOIN FETCH sms.monthlySchedule ms "
                 + "WHERE ms.year = :year AND ms.month = :month",
-            SectionMonthlyScheduleEntity.class
+            ISectionMonthlyScheduleEntity.class
         );
 
         query.setParameter("year", year.getValue());

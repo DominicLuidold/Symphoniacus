@@ -2,9 +2,9 @@ package at.fhv.teamb.symphoniacus.application;
 
 import at.fhv.teamb.symphoniacus.domain.AdministrativeAssistant;
 import at.fhv.teamb.symphoniacus.persistence.dao.AdministrativeAssistantDao;
-import at.fhv.teamb.symphoniacus.persistence.model.AdministrativeAssistantEntity;
+import at.fhv.teamb.symphoniacus.persistence.model.IUserEntity;
 import at.fhv.teamb.symphoniacus.persistence.model.MusicianEntity;
-import at.fhv.teamb.symphoniacus.persistence.model.UserEntity;
+import at.fhv.teamb.symphoniacus.persistence.model.interfaces.IAdministrativeAssistantEntity;
 import java.util.Optional;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -24,14 +24,14 @@ public class AdministrativeAssistantManager {
     }
 
     /**
-     * Returns a {@link MusicianEntity} based on provided {@link UserEntity}.
+     * Returns a {@link MusicianEntity} based on provided {@link IUserEntity}.
      *
      * <p>In case of the user not being a musician, an empty {@link Optional} will be returned.
      *
      * @param user The user to use
      * @return A Musician object representing the provided User
      */
-    public Optional<AdministrativeAssistant> loadAdministrativeAssistant(UserEntity user) {
+    public Optional<AdministrativeAssistant> loadAdministrativeAssistant(IUserEntity user) {
         if (user == null) {
             LOG.error("Cannot load musician with null user.");
             return Optional.empty();
@@ -45,7 +45,7 @@ public class AdministrativeAssistantManager {
      * @return Optional which is filled when loading worked, else empty
      */
     public Optional<AdministrativeAssistant> loadAdministrativeAssistant(int userId) {
-        Optional<AdministrativeAssistantEntity> aa = this.aad.find(userId);
+        Optional<IAdministrativeAssistantEntity> aa = this.aad.find(userId);
 
         // Load attempt failed
         if (aa.isEmpty()) {

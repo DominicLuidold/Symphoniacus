@@ -1,6 +1,9 @@
 package at.fhv.teamb.symphoniacus.persistence.model;
 
+import at.fhv.teamb.symphoniacus.persistence.model.interfaces.IDutyPositionEntity;
+import at.fhv.teamb.symphoniacus.persistence.model.interfaces.IInstrumentationEntity;
 import at.fhv.teamb.symphoniacus.persistence.model.interfaces.IInstrumentationPositionEntity;
+import at.fhv.teamb.symphoniacus.persistence.model.interfaces.ISectionInstrumentationEntity;
 import java.util.LinkedList;
 import java.util.List;
 import javax.persistence.Column;
@@ -20,45 +23,45 @@ public class InstrumentationPositionEntity implements IInstrumentationPositionEn
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "instrumentationPositionId")
-    private Integer instrumentationPositionId;
+    private int instrumentationPositionId;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.LAZY, targetEntity = SectionInstrumentationEntity.class)
     @JoinColumn(name = "sectionInstrumentationId")
-    private SectionInstrumentationEntity sectionInstrumentation;
+    private ISectionInstrumentationEntity sectionInstrumentation;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.LAZY, targetEntity = InstrumentationEntity.class)
     @JoinColumn(name = "instrumentationId")
-    private InstrumentationEntity instrumentation;
+    private IInstrumentationEntity instrumentation;
 
     @Column(name = "positionDescription")
     private String positionDescription;
 
-    @OneToMany(mappedBy = "instrumentationPosition", orphanRemoval = true)
-    private List<DutyPositionEntity> dutyPositions = new LinkedList<>();
+    @OneToMany(mappedBy = "instrumentationPosition", orphanRemoval = true, targetEntity = DutyPositionEntity.class)
+    private List<IDutyPositionEntity> dutyPositions = new LinkedList<>();
 
     public Integer getInstrumentationPositionId() {
         return this.instrumentationPositionId;
     }
 
-    public void setInstrumentationPositionId(Integer instrumentationPositionId) {
+    public void setInstrumentationPositionId(int instrumentationPositionId) {
         this.instrumentationPositionId = instrumentationPositionId;
     }
 
-    public SectionInstrumentationEntity getSectionInstrumentation() {
+    public ISectionInstrumentationEntity getSectionInstrumentation() {
         return this.sectionInstrumentation;
     }
 
     public void setSectionInstrumentation(
-        SectionInstrumentationEntity sectionInstrumentation) {
+        ISectionInstrumentationEntity sectionInstrumentation) {
         this.sectionInstrumentation = sectionInstrumentation;
     }
 
-    public InstrumentationEntity getInstrumentation() {
+    public IInstrumentationEntity getInstrumentation() {
         return this.instrumentation;
     }
 
     public void setInstrumentation(
-        InstrumentationEntity instrumentation
+        IInstrumentationEntity instrumentation
     ) {
         this.instrumentation = instrumentation;
     }
@@ -71,16 +74,16 @@ public class InstrumentationPositionEntity implements IInstrumentationPositionEn
         this.positionDescription = positionDescription;
     }
 
-    public List<DutyPositionEntity> getDutyPositions() {
+    public List<IDutyPositionEntity> getDutyPositions() {
         return this.dutyPositions;
     }
 
-    public void addDutyPosition(DutyPositionEntity dutyPosition) {
+    public void addDutyPosition(IDutyPositionEntity dutyPosition) {
         this.dutyPositions.add(dutyPosition);
         dutyPosition.setInstrumentationPosition(this);
     }
 
-    public void removeDutyPosition(DutyPositionEntity dutyPosition) {
+    public void removeDutyPosition(IDutyPositionEntity dutyPosition) {
         this.dutyPositions.remove(dutyPosition);
         dutyPosition.setInstrumentationPosition(null);
     }

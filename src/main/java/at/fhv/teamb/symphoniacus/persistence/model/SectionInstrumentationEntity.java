@@ -1,5 +1,6 @@
 package at.fhv.teamb.symphoniacus.persistence.model;
 
+import at.fhv.teamb.symphoniacus.persistence.model.interfaces.ISectionInstrumentationEntity;
 import java.util.LinkedList;
 import java.util.List;
 import javax.persistence.Column;
@@ -15,7 +16,7 @@ import javax.persistence.Table;
 
 @Entity
 @Table(name = "sectionInstrumentation")
-public class SectionInstrumentationEntity {
+public class SectionInstrumentationEntity implements ISectionInstrumentationEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "sectionInstrumentationId")

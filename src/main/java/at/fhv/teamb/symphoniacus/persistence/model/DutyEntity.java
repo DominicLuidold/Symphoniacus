@@ -2,6 +2,7 @@ package at.fhv.teamb.symphoniacus.persistence.model;
 
 import at.fhv.teamb.symphoniacus.persistence.model.interfaces.IDutyCategoryEntity;
 import at.fhv.teamb.symphoniacus.persistence.model.interfaces.IDutyEntity;
+import at.fhv.teamb.symphoniacus.persistence.model.interfaces.ISectionMonthlyScheduleEntity;
 import at.fhv.teamb.symphoniacus.persistence.model.interfaces.ISeriesOfPerformancesEntity;
 import java.time.LocalDateTime;
 import java.util.HashSet;
@@ -48,9 +49,9 @@ public class DutyEntity implements IDutyEntity {
     @Column(name = "end")
     private LocalDateTime end;
 
-    @ManyToOne(fetch = FetchType.LAZY, cascade = {CascadeType.PERSIST, CascadeType.MERGE})
+    @ManyToOne(fetch = FetchType.LAZY, cascade = {CascadeType.PERSIST, CascadeType.MERGE}, targetEntity = SeriesOfPerformancesEntity.class)
     @JoinColumn(name = "seriesOfPerformancesId")
-    private SeriesOfPerformancesEntity seriesOfPerformances;
+    private ISeriesOfPerformancesEntity seriesOfPerformances;
 
     @OneToMany(
         fetch = FetchType.LAZY,
@@ -60,7 +61,7 @@ public class DutyEntity implements IDutyEntity {
     )
     private Set<DutyPositionEntity> dutyPositions = new HashSet<>();
 
-    @ManyToMany
+    @ManyToMany(targetEntity = SectionMonthlyScheduleEntity.class)
     @JoinTable(
         name = "duty_sectionMonthlySchedule",
         joinColumns = {
@@ -70,7 +71,7 @@ public class DutyEntity implements IDutyEntity {
             @JoinColumn(name = "sectionMonthlyScheduleId")
         }
     )
-    private Set<SectionMonthlyScheduleEntity> sectionMonthlySchedules = new HashSet<>();
+    private Set<ISectionMonthlyScheduleEntity> sectionMonthlySchedules = new HashSet<>();
 
     public Integer getDutyId() {
         return this.dutyId;
@@ -133,7 +134,7 @@ public class DutyEntity implements IDutyEntity {
     }
 
     public void setSeriesOfPerformances(
-        SeriesOfPerformancesEntity seriesOfPerformances
+        ISeriesOfPerformancesEntity seriesOfPerformances
     ) {
         this.seriesOfPerformances = seriesOfPerformances;
     }
@@ -152,22 +153,22 @@ public class DutyEntity implements IDutyEntity {
         dutyPositionEntity.setDuty(null);
     }
 
-    public Set<SectionMonthlyScheduleEntity> getSectionMonthlySchedules() {
+    public Set<ISectionMonthlyScheduleEntity> getSectionMonthlySchedules() {
         return this.sectionMonthlySchedules;
     }
 
-    public void addSectionMonthlySchedule(SectionMonthlyScheduleEntity sms) {
+    public void addSectionMonthlySchedule(ISectionMonthlyScheduleEntity sms) {
         this.sectionMonthlySchedules.add(sms);
         sms.getDuties().add(this);
     }
 
-    public void removeSectionMonthlySchedule(SectionMonthlyScheduleEntity sms) {
+    public void removeSectionMonthlySchedule(ISectionMonthlyScheduleEntity sms) {
         this.sectionMonthlySchedules.remove(sms);
         sms.getDuties().remove(this);
     }
 
     public void setSectionMonthlySchedules(
-        Set<SectionMonthlyScheduleEntity> sectionMonthlySchedules) {
+        Set<ISectionMonthlyScheduleEntity> sectionMonthlySchedules) {
         this.sectionMonthlySchedules = sectionMonthlySchedules;
     }
 }

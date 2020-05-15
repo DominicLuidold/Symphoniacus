@@ -3,6 +3,7 @@ package at.fhv.teamb.symphoniacus.persistence.model.interfaces;
 import at.fhv.teamb.symphoniacus.persistence.model.InstrumentationPositionEntity;
 import at.fhv.teamb.symphoniacus.persistence.model.MusicalPieceEntity;
 import java.util.List;
+import java.util.Set;
 
 /**
  * Interface for InstrumentationEntity class.
@@ -14,6 +15,18 @@ public interface IInstrumentationEntity {
 
     IMusicalPieceEntity getMusicalPiece();
 
-    List<IInstrumentationPositionEntity> getInstrumentationPositions(); //TODO: find out how the fuck this works
+    //TODO: find out how the fuck this works
+    List<IInstrumentationPositionEntity> getInstrumentationPositions();
 
+    Integer getInstrumentationId();
+
+    List<ISectionInstrumentationEntity> getSectionInstrumentations();
+
+    void setInstrumentationId(int id);
+
+    void setName(String name);
+
+    void addSeriesOfPerformance(ISeriesOfPerformancesEntity entity);
+
+    void removeSeriesOfPerformance(ISeriesOfPerformancesEntity entity);
 }

@@ -37,7 +37,7 @@ public class MusicianEntity {
 
     @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "userId")
-    private UserEntity user;
+    private IUserEntity user;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "sectionId")
@@ -150,11 +150,11 @@ public class MusicianEntity {
         this.musicianId = musicianId;
     }
 
-    public UserEntity getUser() {
+    public IUserEntity getUser() {
         return this.user;
     }
 
-    public void setUser(UserEntity user) {
+    public void setUser(IUserEntity user) {
         this.user = user;
     }
 

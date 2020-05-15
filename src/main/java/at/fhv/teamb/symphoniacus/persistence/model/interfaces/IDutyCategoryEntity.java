@@ -8,6 +8,10 @@ import at.fhv.teamb.symphoniacus.persistence.model.SeriesOfPerformancesEntity;
  * @author Theresa Gierer
  */
 public interface IDutyCategoryEntity {
+
     String getType();
 
+    Integer getDutyCategoryId();
+
+    Integer getPoints();
 }

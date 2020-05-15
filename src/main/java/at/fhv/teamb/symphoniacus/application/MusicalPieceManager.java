@@ -1,15 +1,19 @@
 package at.fhv.teamb.symphoniacus.application;
 
+import at.fhv.teamb.symphoniacus.application.dto.InstrumentationDto;
 import at.fhv.teamb.symphoniacus.application.dto.MusicalPieceDto;
 import at.fhv.teamb.symphoniacus.application.dto.SectionInstrumentationDto;
-import at.fhv.teamb.symphoniacus.application.dto.MusicalPieceDto;
+import at.fhv.teamb.symphoniacus.persistence.dao.InstrumentationDao;
 import at.fhv.teamb.symphoniacus.persistence.dao.MusicalPieceDao;
 import at.fhv.teamb.symphoniacus.persistence.model.MusicalPieceEntity;
 import at.fhv.teamb.symphoniacus.persistence.model.SectionInstrumentationEntity;
+import at.fhv.teamb.symphoniacus.persistence.model.interfaces.IInstrumentationEntity;
+
+import at.fhv.teamb.symphoniacus.persistence.model.interfaces.IMusicalPieceEntity;
+import at.fhv.teamb.symphoniacus.persistence.model.interfaces.ISectionInstrumentationEntity;
 import java.util.LinkedHashSet;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.LinkedHashSet;
 import java.util.Optional;
 import java.util.Set;
 
@@ -35,17 +39,17 @@ public class MusicalPieceManager {
         return pieces;
     }
 
-    private MusicalPieceDto convertMusicalPieceToDto(MusicalPieceEntity entity) {
+    private MusicalPieceDto convertMusicalPieceToDto(IMusicalPieceEntity entity) {
         return new MusicalPieceDto.MusicalPieceDtoBuilder(entity.getMusicalPieceId())
             .withName(entity.getName()).withCategory(entity.getCategory())
             .withInstrumentations(convertInstrumentationToDto(entity.getInstrumentations()))
             .build();
     }
 
-    private Set<IInstrumentationDto> convertInstrumentationToDto(
+    private Set<InstrumentationDto> convertInstrumentationToDto(
         Set<IInstrumentationEntity> entities) {
         Set<InstrumentationDto> instrumentationDtos = new LinkedHashSet<>();
-        for (InstrumentationEntity entity : entities) {
+        for (IInstrumentationEntity entity : entities) {
             instrumentationDtos.add(
                 new InstrumentationDto.InstrumentationDtoBuilder(entity
                     .getInstrumentationId())
@@ -76,7 +80,7 @@ public class MusicalPieceManager {
 
         // Fill in instrumentationDtos
         Set<InstrumentationDto> instrumentationDtos = new LinkedHashSet<>();
-        for (InstrumentationEntity instEntity : this.instrumentationDao
+        for (IInstrumentationEntity instEntity : this.instrumentationDao
             .getInstrumentationsToMusicalPieces(musicalPieceEntities)) {
             instrumentationDtos.add(
                 new InstrumentationDto.InstrumentationDtoBuilder(instEntity
@@ -100,9 +104,9 @@ public class MusicalPieceManager {
 
 
     private List<SectionInstrumentationDto> convertSectionInstrumentationsToDto(
-        List<SectionInstrumentationEntity> entities) {
+        List<ISectionInstrumentationEntity> entities) {
         List<SectionInstrumentationDto> dtos = new LinkedList<>();
-        for (SectionInstrumentationEntity entity : entities) {
+        for (ISectionInstrumentationEntity entity : entities) {
             dtos.add(new SectionInstrumentationDto.SectionInstrumentationDtoBuilder(
                 entity.getSectionInstrumentationId())
                 .withPredefinedSectionInstrumentation(entity.getPredefinedSectionInstrumentation())

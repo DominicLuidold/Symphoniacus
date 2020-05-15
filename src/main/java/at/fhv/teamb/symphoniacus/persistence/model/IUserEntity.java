@@ -1,5 +1,6 @@
 package at.fhv.teamb.symphoniacus.persistence.model;
 
+import at.fhv.teamb.symphoniacus.persistence.model.interfaces.IAdministrativeAssistantEntity;
 import java.math.BigInteger;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
@@ -69,7 +70,7 @@ public class UserEntity {
     private MusicianEntity musician;
 
     @OneToMany(mappedBy = "user")
-    private List<AdministrativeAssistantEntity> administrativeAssistants = new LinkedList<>();
+    private List<IAdministrativeAssistantEntity> administrativeAssistants = new LinkedList<>();
 
     public Integer getUserId() {
         return this.userId;
@@ -195,17 +196,17 @@ public class UserEntity {
         musician.setUser(this);
     }
 
-    public List<AdministrativeAssistantEntity> getAdministrativeAssistants() {
+    public List<IAdministrativeAssistantEntity> getAdministrativeAssistants() {
         return this.administrativeAssistants;
     }
 
-    public void addAdministrativeAssistant(AdministrativeAssistantEntity administrativeAssistant) {
+    public void addAdministrativeAssistant(IAdministrativeAssistantEntity administrativeAssistant) {
         this.administrativeAssistants.add(administrativeAssistant);
         administrativeAssistant.setUser(this);
     }
 
     public void removeAdministrativeAssistant(
-        AdministrativeAssistantEntity administrativeAssistant
+        IAdministrativeAssistantEntity administrativeAssistant
     ) {
         this.administrativeAssistants.remove(administrativeAssistant);
         administrativeAssistant.setUser(null);

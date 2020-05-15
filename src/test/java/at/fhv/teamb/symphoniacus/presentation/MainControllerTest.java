@@ -1,15 +1,14 @@
 package at.fhv.teamb.symphoniacus.presentation;
 
-import at.fhv.teamb.symphoniacus.application.type.DomainUserType;
 import at.fhv.teamb.symphoniacus.application.type.MusicianRoleType;
 import at.fhv.teamb.symphoniacus.domain.AdministrativeAssistant;
 import at.fhv.teamb.symphoniacus.domain.Musician;
 import at.fhv.teamb.symphoniacus.persistence.model.AdministrativeAssistantEntity;
+import at.fhv.teamb.symphoniacus.persistence.model.IUserEntity;
 import at.fhv.teamb.symphoniacus.persistence.model.MusicianEntity;
 import at.fhv.teamb.symphoniacus.persistence.model.MusicianRole;
-import at.fhv.teamb.symphoniacus.persistence.model.UserEntity;
+import at.fhv.teamb.symphoniacus.persistence.model.interfaces.IAdministrativeAssistantEntity;
 import at.fhv.teamb.symphoniacus.presentation.internal.TabPaneEntry;
-import java.util.List;
 import java.util.Locale;
 import java.util.Queue;
 import java.util.ResourceBundle;
@@ -30,7 +29,7 @@ public class MainControllerTest {
     @Test
     public void testGetPermittedTabs_shouldReturnAListOfPermittedTabsForMusician() {
         MusicianEntity entity = new MusicianEntity();
-        UserEntity user = new UserEntity();
+        IUserEntity user = new IUserEntity();
         user.setFirstName("Max");
         entity.setUser(user);
         Musician m = new Musician(entity);
@@ -50,7 +49,7 @@ public class MainControllerTest {
     public void testGetPermittedTabs_shouldReturnAListOfPermittedTabsForMusicianWithRoles() {
         // Given: Musician is Musician with Duty Scheduler role
         MusicianEntity entity = new MusicianEntity();
-        UserEntity user = new UserEntity();
+        IUserEntity user = new IUserEntity();
         user.setFirstName("Max");
         entity.setUser(user);
         MusicianRole role = new MusicianRole();
@@ -76,7 +75,7 @@ public class MainControllerTest {
 
     @Test
     public void testGetPermittedTabs_shouldReturnAListOfPermittedTabsForAssistant() {
-        AdministrativeAssistantEntity entity = new AdministrativeAssistantEntity();
+        IAdministrativeAssistantEntity entity = new AdministrativeAssistantEntity();
         AdministrativeAssistant aa = new AdministrativeAssistant(entity);
         Queue<TabPaneEntry> tabs = mainController.getPermittedTabs(
             null,

@@ -1,18 +1,18 @@
 package at.fhv.teamb.symphoniacus.domain;
 
 import at.fhv.teamb.symphoniacus.application.type.DomainUserType;
-import at.fhv.teamb.symphoniacus.persistence.model.UserEntity;
+import at.fhv.teamb.symphoniacus.persistence.model.IUserEntity;
 
 public class User {
 
-    private final UserEntity userEntity;
+    private final IUserEntity userEntity;
     protected DomainUserType type;
 
-    public User(UserEntity userEntity) {
+    public User(IUserEntity userEntity) {
         this.userEntity = userEntity;
     }
 
-    public UserEntity getUserEntity() {
+    public IUserEntity getUserEntity() {
         return userEntity;
     }
 

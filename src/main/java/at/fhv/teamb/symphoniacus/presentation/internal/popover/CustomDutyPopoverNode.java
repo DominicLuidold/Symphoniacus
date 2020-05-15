@@ -9,6 +9,7 @@ import at.fhv.teamb.symphoniacus.domain.DutyPosition;
 import at.fhv.teamb.symphoniacus.domain.Section;
 import at.fhv.teamb.symphoniacus.persistence.dao.SectionDao;
 import at.fhv.teamb.symphoniacus.persistence.model.InstrumentationEntity;
+import at.fhv.teamb.symphoniacus.persistence.model.interfaces.IInstrumentationEntity;
 import at.fhv.teamb.symphoniacus.presentation.DutyPopoverController;
 import com.calendarfx.model.Entry;
 import com.calendarfx.view.DateControl;
@@ -94,11 +95,11 @@ public class CustomDutyPopoverNode extends PopOverContentPane {
                 );
 
                 if (duty.getEntity().getSeriesOfPerformances() != null) {
-                    Set<InstrumentationEntity> instrumentationSet =
+                    Set<IInstrumentationEntity> instrumentationSet =
                         duty.getEntity().getSeriesOfPerformances().getInstrumentations();
                     List<Label> instrumentations = new LinkedList<>();
 
-                    for (InstrumentationEntity ie : instrumentationSet) {
+                    for (IInstrumentationEntity ie : instrumentationSet) {
                         instrumentations.add(new Label(ie.getName()));
                     }
                     popoverController.setInstrumentationText(instrumentations);

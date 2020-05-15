@@ -10,6 +10,9 @@ import at.fhv.teamb.symphoniacus.persistence.dao.SectionMonthlyScheduleDao;
 import at.fhv.teamb.symphoniacus.persistence.model.MonthlyScheduleEntity;
 import at.fhv.teamb.symphoniacus.persistence.model.SectionEntity;
 import at.fhv.teamb.symphoniacus.persistence.model.SectionMonthlyScheduleEntity;
+import at.fhv.teamb.symphoniacus.persistence.model.interfaces.IMonthlyScheduleEntity;
+import at.fhv.teamb.symphoniacus.persistence.model.interfaces.ISectionEntity;
+import at.fhv.teamb.symphoniacus.persistence.model.interfaces.ISectionMonthlyScheduleEntity;
 import java.time.Month;
 import java.time.Year;
 import java.util.HashSet;
@@ -140,20 +143,20 @@ public class SectionMonthlyScheduleManager {
      * @param monthlySchedule The monthly schedule to set
      * @return A List of section monthly schedules
      */
-    public List<SectionMonthlyScheduleEntity> createIfNotExist(
+    public List<ISectionMonthlyScheduleEntity> createIfNotExist(
         int year,
         int month,
-        MonthlyScheduleEntity monthlySchedule
+        IMonthlyScheduleEntity monthlySchedule
     ) {
         // Fetch section monthly schedules from database
-        List<SectionMonthlyScheduleEntity> sectionMonthlySchedules =
+        List<ISectionMonthlyScheduleEntity> sectionMonthlySchedules =
             this.smsDao.findAllInYearAndMonth(Year.of(year), Month.of(month));
 
         // Create section monthly schedules for every section
         if (sectionMonthlySchedules.isEmpty()) {
-            for (SectionEntity section : this.sectionDao.getAll()) {
+            for (ISectionEntity section : this.sectionDao.getAll()) {
                 // Create new section monthly schedule
-                SectionMonthlyScheduleEntity sms = new SectionMonthlyScheduleEntity();
+                ISectionMonthlyScheduleEntity sms = new SectionMonthlyScheduleEntity();
                 sms.setMonthlySchedule(monthlySchedule);
                 sms.setSection(section);
                 sms.setReadyForDutyScheduler(false);

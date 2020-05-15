@@ -143,10 +143,10 @@ public class SeriesOfPerformancesManager {
      * @return all Series of Performances
      */
     public List<SeriesOfPerformancesDto> getAllSeries() {
-        List<SeriesOfPerformancesEntity> seriesList = seriesOfPerformancesDao.getAll();
+        List<ISeriesOfPerformancesEntity> seriesList = seriesOfPerformancesDao.getAll();
 
         List<SeriesOfPerformancesDto> seriesDtoList = new LinkedList<>();
-        for (SeriesOfPerformancesEntity series : seriesList) {
+        for (ISeriesOfPerformancesEntity series : seriesList) {
             SeriesOfPerformancesDto seriesDto =
                 new SeriesOfPerformancesDto
                     .SeriesOfPerformancesDtoBuilder(series.getSeriesOfPerformancesId())

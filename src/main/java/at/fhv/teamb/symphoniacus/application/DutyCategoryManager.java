@@ -10,6 +10,7 @@ import at.fhv.teamb.symphoniacus.persistence.dao.DutyCategoryDao;
 import at.fhv.teamb.symphoniacus.persistence.model.DutyCategoryChangelogEntity;
 import at.fhv.teamb.symphoniacus.persistence.model.DutyCategoryEntity;
 import at.fhv.teamb.symphoniacus.persistence.model.DutyEntity;
+import at.fhv.teamb.symphoniacus.persistence.model.interfaces.IDutyCategoryEntity;
 import java.util.LinkedHashSet;
 import java.util.LinkedList;
 import java.util.List;
@@ -114,7 +115,7 @@ public class DutyCategoryManager {
         }
     }
 
-    private DutyCategoryDto convertCategoryEntityToDto(DutyCategoryEntity dutyCat) {
+    private DutyCategoryDto convertCategoryEntityToDto(IDutyCategoryEntity dutyCat) {
         return new DutyCategoryDto.DutyCategoryDtoBuilder(dutyCat.getDutyCategoryId())
             .withPoints(dutyCat.getPoints()).withType(dutyCat.getType()).build();
     }

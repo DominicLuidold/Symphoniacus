@@ -28,6 +28,7 @@ import at.fhv.teamb.symphoniacus.persistence.model.interfaces.IDutyCategoryChang
 import at.fhv.teamb.symphoniacus.persistence.model.interfaces.IDutyCategoryEntity;
 import at.fhv.teamb.symphoniacus.persistence.model.interfaces.IDutyEntity;
 import at.fhv.teamb.symphoniacus.persistence.model.interfaces.IInstrumentationEntity;
+import at.fhv.teamb.symphoniacus.persistence.model.interfaces.ISectionMonthlyScheduleEntity;
 import at.fhv.teamb.symphoniacus.persistence.model.interfaces.ISeriesOfPerformancesEntity;
 import java.time.DayOfWeek;
 import java.time.LocalDate;
@@ -272,7 +273,7 @@ public class DutyManager {
         monthlyScheduleEntity.addWeeklySchedule(weeklyScheduleEntity);
 
         // Create duty entity
-        DutyDto dutyEntity = new DutyDto();
+        DutyEntity dutyEntity = new DutyEntity(); // wtf
 
         // Add duty to weekly schedule and vice versa
         weeklyScheduleEntity.addDuty(dutyEntity);
@@ -280,7 +281,7 @@ public class DutyManager {
 
         Optional<DutyCategoryEntity> dutyCat = this.categoryDao.find(dutyCategory
             .getDutyCategoryId());
-        Optional<SeriesOfPerformancesEntity> sopEntity = this.seriesDao.find(sop
+        Optional<ISeriesOfPerformancesEntity> sopEntity = this.seriesDao.find(sop
             .getSeriesOfPerformancesId());
 
         if (dutyCat.isPresent()) {
@@ -291,7 +292,7 @@ public class DutyManager {
             dutyEntity.setStart(start);
             dutyEntity.setEnd(end);
             sopEntity.ifPresent(dutyEntity::setSeriesOfPerformances);
-            for (SectionMonthlyScheduleEntity sectionMonthlySchedule :
+            for (ISectionMonthlyScheduleEntity sectionMonthlySchedule :
                 this.sectionMonthlyScheduleManager.createIfNotExist(
                     start.getYear(),
                     start.getMonthValue(),
@@ -303,6 +304,8 @@ public class DutyManager {
         }
 
         // Return domain object
+        DutyCategoryDto dutyCatDto = new DutyCategoryDto.DutyCategoryDtoBuilder(dutyCat.get().getDutyCategoryId()).build();
+        //return new DutyDto.DutyDtoBuilder().withDutyCategory();
         return new Duty(dutyEntity);
     }
 
@@ -414,7 +417,7 @@ public class DutyManager {
         dutyCat.setPoints(category.getPoints());
 
         //Convert List of instDTO to instEntity
-        List<InstrumentationEntity> instrumentationEntity = new LinkedList<>();
+        List<IInstrumentationEntity> instrumentationEntity = new LinkedList<>();
 
         for (InstrumentationDto i : instrumentations) {
             IInstrumentationEntity inst = new InstrumentationEntity();

@@ -3,8 +3,7 @@ package at.fhv.teamb.symphoniacus.domain;
 import at.fhv.teamb.symphoniacus.domain.exception.PointsNotCalculatedException;
 import at.fhv.teamb.symphoniacus.persistence.model.DutyPositionEntity;
 import at.fhv.teamb.symphoniacus.persistence.model.MusicianEntity;
-import at.fhv.teamb.symphoniacus.persistence.model.UserEntity;
-import at.fhv.teamb.symphoniacus.presentation.DutyScheduleController;
+import at.fhv.teamb.symphoniacus.persistence.model.IUserEntity;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
@@ -22,7 +21,7 @@ public class Musician {
 
     private final MusicianEntity entity;
     private final boolean isExternal;
-    private final UserEntity userEntity;
+    private final IUserEntity userEntity;
     private Points balancePoints;
     private Points debitPoints;
     private Points gainedPoints;
@@ -57,7 +56,7 @@ public class Musician {
     }
 
     /**
-     * Returns the full name of the {@link Musician} consisting of a {@link UserEntity}'s first
+     * Returns the full name of the {@link Musician} consisting of a {@link IUserEntity}'s first
      * name and last name.
      *
      * @return Full name of a musician

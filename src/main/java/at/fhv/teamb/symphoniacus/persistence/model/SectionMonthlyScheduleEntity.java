@@ -1,5 +1,9 @@
 package at.fhv.teamb.symphoniacus.persistence.model;
 
+import at.fhv.teamb.symphoniacus.persistence.model.interfaces.IDutyEntity;
+import at.fhv.teamb.symphoniacus.persistence.model.interfaces.IMonthlyScheduleEntity;
+import at.fhv.teamb.symphoniacus.persistence.model.interfaces.ISectionEntity;
+import at.fhv.teamb.symphoniacus.persistence.model.interfaces.ISectionMonthlyScheduleEntity;
 import java.util.LinkedList;
 import java.util.List;
 import javax.persistence.Column;
@@ -15,15 +19,15 @@ import javax.persistence.Table;
 
 @Entity
 @Table(name = "sectionMonthlySchedule")
-public class SectionMonthlyScheduleEntity {
+public class SectionMonthlyScheduleEntity implements ISectionMonthlyScheduleEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "sectionMonthlyScheduleId")
     private Integer sectionMonthlyScheduleId;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.LAZY, targetEntity = MonthlyScheduleEntity.class)
     @JoinColumn(name = "monthlyScheduleId")
-    private MonthlyScheduleEntity monthlySchedule;
+    private IMonthlyScheduleEntity monthlySchedule;
 
     @Column(name = "isReadyForDutyScheduler")
     private boolean isReadyForDutyScheduler;
@@ -34,12 +38,12 @@ public class SectionMonthlyScheduleEntity {
     @Column(name = "isPublished")
     private boolean isPublished;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.LAZY, targetEntity = SectionEntity.class)
     @JoinColumn(name = "sectionId")
-    private SectionEntity section;
+    private ISectionEntity section;
 
-    @ManyToMany(mappedBy = "sectionMonthlySchedules")
-    private List<DutyEntity> duties = new LinkedList<>();
+    @ManyToMany(mappedBy = "sectionMonthlySchedules", targetEntity = DutyEntity.class)
+    private List<IDutyEntity> duties = new LinkedList<>();
 
     public Integer getSectionMonthlyScheduleId() {
         return this.sectionMonthlyScheduleId;
@@ -49,11 +53,11 @@ public class SectionMonthlyScheduleEntity {
         this.sectionMonthlyScheduleId = sectionMonthlyScheduleId;
     }
 
-    public MonthlyScheduleEntity getMonthlySchedule() {
+    public IMonthlyScheduleEntity getMonthlySchedule() {
         return this.monthlySchedule;
     }
 
-    public void setMonthlySchedule(MonthlyScheduleEntity monthlySchedule) {
+    public void setMonthlySchedule(IMonthlyScheduleEntity monthlySchedule) {
         this.monthlySchedule = monthlySchedule;
     }
 
@@ -81,23 +85,23 @@ public class SectionMonthlyScheduleEntity {
         this.isPublished = published;
     }
 
-    public SectionEntity getSection() {
+    public ISectionEntity getSection() {
         return this.section;
     }
 
-    public void setSection(SectionEntity section) {
+    public void setSection(ISectionEntity section) {
         this.section = section;
     }
 
-    public List<DutyEntity> getDuties() {
-        return duties;
+    public List<IDutyEntity> getDuties() {
+        return this.duties;
     }
 
-    public void addDuty(DutyEntity duty) {
+    public void addDuty(IDutyEntity duty) {
         this.duties.add(duty);
     }
 
-    public void removeDuty(DutyEntity duty) {
+    public void removeDuty(IDutyEntity duty) {
         this.duties.remove(duty);
     }
 }
