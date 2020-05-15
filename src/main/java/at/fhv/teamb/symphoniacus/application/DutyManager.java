@@ -80,9 +80,9 @@ public class DutyManager {
      * @param entities The entities to convert
      * @return A List of Duty objects
      */
-    public static List<Duty> convertEntitiesToDomainObjects(List<DutyEntity> entities) {
+    public static List<Duty> convertEntitiesToDomainObjects(List<IDutyEntity> entities) {
         List<Duty> duties = new LinkedList<>();
-        for (DutyEntity entity : entities) {
+        for (IDutyEntity entity : entities) {
             duties.add(new Duty(entity));
         }
         return duties;
