@@ -113,6 +113,15 @@ public class PointsManager {
     }
 
     /**
+     * Gives the correct number of Points of a duty observing its startDate.
+     * @param duty given duty
+     * @return the correct number of Points of given Duty at a given Date
+     */
+    public Points getPointsOfDuty(DutyEntity duty) {
+        return Points.getPointsOfDuty(duty);
+    }
+
+    /**
      * Filters all duties to the given musician.
      * Utilizes local 'allDuties' attribute.
      *
