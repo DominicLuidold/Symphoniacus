@@ -1,3 +1,4 @@
+/*
 package at.fhv.teamb.symphoniacus.presentation;
 
 import at.fhv.teamb.symphoniacus.application.DutyCategoryManager;
@@ -55,6 +56,7 @@ import org.kordamp.ikonli.fontawesome.FontAwesome;
 import org.kordamp.ikonli.javafx.FontIcon;
 import shadow.org.codehaus.plexus.util.StringUtils;
 
+*/
 /**
  * GUI Controller responsible for creating a new Duty Entry.
  *
@@ -62,7 +64,8 @@ import shadow.org.codehaus.plexus.util.StringUtils;
  * @author Dominic Luidold
  * @author Danijel Antonijevic
  * @author Nino Heinzle
- */
+ *//*
+
 public class NewDutyEntryController implements Initializable, Parentable<TabPaneController> {
     private static final Logger LOG = LogManager.getLogger(NewDutyEntryController.class);
     private TabPaneController parentController;
@@ -143,9 +146,11 @@ public class NewDutyEntryController implements Initializable, Parentable<TabPane
         this.setEventHandlers();
     }
 
-    /**
+    */
+/**
      * Sets the event handlers on dutyPointsInput and seriesOfPerformancesSelect.
-     */
+     *//*
+
     private void setEventHandlers() {
         // Add event listener for updated points
         this.dutyPointsInput.textProperty().addListener(
@@ -169,9 +174,11 @@ public class NewDutyEntryController implements Initializable, Parentable<TabPane
         });
     }
 
-    /**
+    */
+/**
      * Sets the actions for all buttons of the new duty view.
-     */
+     *//*
+
     private void setButtonActions() {
         // Save button
         this.scheduleSaveBtn.setOnAction(event -> saveNewDutyEntry());
@@ -186,9 +193,12 @@ public class NewDutyEntryController implements Initializable, Parentable<TabPane
         this.newSeriesOfPerformancesBtn.setGraphic(addIcon);
     }
 
-    /**
+    */
+/**
      * Sets the validators required for the new duty view.
-     */
+     *//*
+
+
     private void setInputValidators() {
         // Validate Combobox dutyCategory
         this.dutyCategorySelect.valueProperty().addListener((observable, oldValue, newValue) -> {
@@ -232,9 +242,11 @@ public class NewDutyEntryController implements Initializable, Parentable<TabPane
         });
     }
 
-    /**
+    */
+/**
      * Initializes the {@link #seriesOfPerformancesSelect} combo box with data.
-     */
+     *//*
+
     private void initSeriesOfPerformancesComboBox() {
         List<SeriesOfPerformancesDto> seriesOfPerformancesList =
             this.seriesOfPerformancesManager.getAllSeries();
@@ -262,9 +274,11 @@ public class NewDutyEntryController implements Initializable, Parentable<TabPane
         });
     }
 
-    /**
+    */
+/**
      * Initializes the {@link #instrumentationsSelect} combo box with data.
-     */
+     *//*
+
     private void initInstrumentationsCheckComboBox() {
         this.instrumentationsSelect.getCheckModel().clearChecks();
         final ObservableSet<InstrumentationDto> observInstrumentations =
@@ -298,9 +312,11 @@ public class NewDutyEntryController implements Initializable, Parentable<TabPane
             });
     }
 
-    /**
+    */
+/**
      * Initializes the {@link #dutyCategorySelect} combo box with data.
-     */
+     *//*
+
     private void initCategoryComboBox() {
         List<DutyCategoryDto> dutyCategoryList = this.dutyCategoryManager.getDutyCategories();
         LOG.debug("Found {} duty categories", dutyCategoryList.size());
@@ -324,9 +340,11 @@ public class NewDutyEntryController implements Initializable, Parentable<TabPane
         });
     }
 
-    /**
+    */
+/**
      * Updates the {@link #dutyPointsInput} field based on currently selected/inserted data.
-     */
+     *//*
+
     private void updatePointsField() {
         // Check if a valid start date is set to calculate points
         if (this.validStartDate.get() && validCategory.get()) {
@@ -338,10 +356,12 @@ public class NewDutyEntryController implements Initializable, Parentable<TabPane
         }
     }
 
-    /**
+    */
+/**
      * Fills the {@link #dutyPointsInput} field with points matching the
      * selected {@link DutyCategory}.
-     */
+     *//*
+
     private void fillPointsField() {
         DutyCategoryChangelogEntity temp = null;
         int points = 0;
@@ -360,7 +380,8 @@ public class NewDutyEntryController implements Initializable, Parentable<TabPane
         this.userEditedPoints = false;
     }
 
-    /**
+    */
+/**
      * Validates whether the following conditions are met.
      *
      * <p>- The {@code description} has not more than 45 characters
@@ -368,7 +389,8 @@ public class NewDutyEntryController implements Initializable, Parentable<TabPane
      * - The date is within the time frame of the corresponding series of performances
      *
      * @return true when validation is successful, false oterwise
-     */
+     *//*
+
     private boolean validateInputs() {
         if (dutyDescriptionInput.getText().length() > 45) {
             MainController.showErrorAlert(
@@ -431,10 +453,12 @@ public class NewDutyEntryController implements Initializable, Parentable<TabPane
         }
     }
 
-    /**
+    */
+/**
      * Disables the {@link #scheduleSaveBtn} if not all requirements have been met.
      * Makes the button clickable otherwise.
-     */
+     *//*
+
     private void setSaveButtonStatus() {
         if (this.dutyCategorySelect.getSelectionModel().isEmpty()) {
             this.validCategory.set(false);
@@ -462,9 +486,11 @@ public class NewDutyEntryController implements Initializable, Parentable<TabPane
         }
     }
 
-    /**
+    */
+/**
      * Persists a new duty.
-     */
+     *//*
+
     private void saveNewDutyEntry() {
         if (validateInputs()) {
             // Delegate domain object creation to manager
@@ -512,9 +538,11 @@ public class NewDutyEntryController implements Initializable, Parentable<TabPane
         }
     }
 
-    /**
+    */
+/**
      * Closes the tab after confirming that the user really wants to do so.
-     */
+     *//*
+
     private void confirmTabClosure() {
         if (this.duty == null) {
             this.closeTab();
@@ -530,11 +558,13 @@ public class NewDutyEntryController implements Initializable, Parentable<TabPane
         this.parentController.selectTab(TabPaneEntry.ORG_OFFICER_CALENDAR_VIEW);
     }
 
-    /**
+    */
+/**
      * Force user to confirm that he wants to close without saving.
      *
      * @return The {@link ButtonType} that was pressed
-     */
+     *//*
+
     private ButtonType getConfirmation() {
         Label label = new Label();
         ButtonType buttonType = null;
@@ -558,14 +588,16 @@ public class NewDutyEntryController implements Initializable, Parentable<TabPane
         return buttonType;
     }
 
-    /**
+    */
+/**
      * Calculates the time of day String for a given time.
      *
      * <p>Possible times are {@code MORNING}, {@code AFTERNOON}, {@code EVENING}.
      *
      * @param startTime The start time
      * @return A String matching a predefined value for the start time
-     */
+     *//*
+
     private String calculateTimeOfDay(LocalTime startTime) {
         if (startTime.isBefore(LocalTime.of(10, 1))) {
             return "MORNING";
@@ -576,43 +608,54 @@ public class NewDutyEntryController implements Initializable, Parentable<TabPane
         return "EVENING";
     }
 
-    /**
+    */
+/**
      * Opens a new series of performances tab.
-     */
+     *//*
+
     private void openNewSopTab() {
         this.parentController.addTab(TabPaneEntry.ADD_SOP);
     }
 
-    /**
+    */
+/**
      * Closes the current tab.
-     */
+     *//*
+
     private void closeTab() {
         LOG.debug("Closing Add Duty");
         this.parentController.removeTab(TabPaneEntry.ADD_DUTY);
         this.parentController.selectTab(TabPaneEntry.ORG_OFFICER_CALENDAR_VIEW);
     }
 
-    /**
+    */
+/**
      * {@inheritDoc}
-     */
+     *//*
+
     @Override
     public TabPaneController getParentController() {
         return this.parentController;
     }
 
-    /**
+    */
+/**
      * {@inheritDoc}
-     */
+     *//*
+
     @Override
     public void setParentController(TabPaneController controller) {
         this.parentController = controller;
     }
 
-    /**
+    */
+/**
      * {@inheritDoc}
-     */
+     *//*
+
     @Override
     public void initializeWithParent() {
         // Intentionally empty - currently not needed
     }
 }
+*/

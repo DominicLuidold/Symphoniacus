@@ -10,9 +10,7 @@ import at.fhv.teamb.symphoniacus.persistence.model.DutyEntity;
 import at.fhv.teamb.symphoniacus.persistence.model.InstrumentationEntity;
 import at.fhv.teamb.symphoniacus.persistence.model.InstrumentationPositionEntity;
 import at.fhv.teamb.symphoniacus.persistence.model.MusicalPieceEntity;
-import at.fhv.teamb.symphoniacus.persistence.model.MusicianEntity;
 import at.fhv.teamb.symphoniacus.persistence.model.SeriesOfPerformancesEntity;
-import java.lang.instrument.Instrumentation;
 import java.time.LocalDate;
 import java.util.LinkedHashSet;
 import java.util.LinkedList;
@@ -51,16 +49,16 @@ public class SeriesOfPerformancesManager {
      */
     public boolean save(
         String name,
-        Set<MusicalPieceEntity> musicalPieces,
-        Set<InstrumentationEntity> instrumentations,
+        Set<MusicalPieceDto> musicalPieces,
+        Set<InstrumentationDto> instrumentations,
         LocalDate startDate,
         LocalDate endDate,
         boolean isTour
     ) {
         SeriesOfPerformancesEntity series = new SeriesOfPerformancesEntity();
         series.setDescription(name);
-        series.setMusicalPieces(musicalPieces);
-        series.setInstrumentations(instrumentations);
+        series.setMusicalPieces(convertMusicalPieceDtoToEntities(musicalPieces));
+        series.setInstrumentations(convertInstrumentationDtoToEntites(instrumentations));
         series.setStartDate(startDate);
         series.setEndDate(endDate);
         series.setIsTour(isTour);
@@ -68,6 +66,33 @@ public class SeriesOfPerformancesManager {
         Optional<SeriesOfPerformancesEntity> result = this.seriesOfPerformancesDao.persist(series);
         return result.isPresent();
     }
+
+    private Set<MusicalPieceEntity> convertMusicalPieceDtoToEntities(Set<MusicalPieceDto> dtos) {
+        Set<MusicalPieceEntity> entities = new LinkedHashSet<>();
+        for (MusicalPieceDto dto : dtos) {
+            MusicalPieceEntity entity = new MusicalPieceEntity();
+            entity.setMusicalPieceId(dto.getMusicalPieceId());
+            entity.setCategory(dto.getCategory());
+            entity.setName(dto.getName());
+            entity
+                .setInstrumentations(convertInstrumentationDtoToEntites(dto.getInstrumentations()));
+            entities.add(entity);
+        }
+        return entities;
+    }
+
+    private Set<InstrumentationEntity> convertInstrumentationDtoToEntites(
+        Set<InstrumentationDto> dtos) {
+        Set<InstrumentationEntity> entities = new LinkedHashSet<>();
+        for (InstrumentationDto dto : dtos) {
+            InstrumentationEntity entity = new InstrumentationEntity();
+            entity.setInstrumentationId(dto.getInstrumentationId());
+            entity.setName(dto.getName());
+            entities.add(entity);
+        }
+        return entities;
+    }
+
 
     /**
      * checks if the seriesOfPerformances exists with the given parameters or not.
@@ -118,7 +143,7 @@ public class SeriesOfPerformancesManager {
         List<SeriesOfPerformancesEntity> seriesList = seriesOfPerformancesDao.getAll();
 
         List<SeriesOfPerformancesDto> seriesDtoList = new LinkedList<>();
-        for (SeriesOfPerformancesEntity series: seriesList) {
+        for (SeriesOfPerformancesEntity series : seriesList) {
             SeriesOfPerformancesDto seriesDto =
                 new SeriesOfPerformancesDto
                     .SeriesOfPerformancesDtoBuilder(series.getSeriesOfPerformancesId())

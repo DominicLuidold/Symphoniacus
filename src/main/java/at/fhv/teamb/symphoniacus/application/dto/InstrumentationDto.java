@@ -1,5 +1,6 @@
 package at.fhv.teamb.symphoniacus.application.dto;
 
+import at.fhv.teamb.symphoniacus.persistence.model.InstrumentationEntity;
 import java.util.List;
 
 /**
@@ -12,19 +13,22 @@ public class InstrumentationDto {
     private final MusicalPieceDto musicalPiece;
     private final List<SeriesOfPerformancesDto> seriesOfPerformances;
     private final List<InstrumentationPositionDto> instPositions;
+    private final List<SectionInstrumentationDto> sectionInstrumentations;
 
     private InstrumentationDto(
         int instrumentationId,
         String name,
         MusicalPieceDto musicalPiece,
         List<SeriesOfPerformancesDto> seriesOfPerformances,
-        List<InstrumentationPositionDto> instPositions
+        List<InstrumentationPositionDto> instPositions,
+        List<SectionInstrumentationDto> sectionInstrumentations
     ) {
         this.instrumentationId = instrumentationId;
         this.name = name;
         this.musicalPiece = musicalPiece;
         this.seriesOfPerformances = seriesOfPerformances;
         this.instPositions = instPositions;
+        this.sectionInstrumentations = sectionInstrumentations;
     }
 
     public int getInstrumentationId() {
@@ -47,12 +51,17 @@ public class InstrumentationDto {
         return this.instPositions;
     }
 
+    public List<SectionInstrumentationDto> getSectionInstrumentations() {
+        return this.sectionInstrumentations;
+    }
+
     public static class InstrumentationDtoBuilder {
         private final int instrumentationId;
         private String name;
         private MusicalPieceDto musicalPiece;
         private List<SeriesOfPerformancesDto> seriesOfPerformances;
         private List<InstrumentationPositionDto> instrumentationPositions;
+        private List<SectionInstrumentationDto> sectionInstrumentations;
 
         public InstrumentationDtoBuilder(int instrumentationId) {
             this.instrumentationId = instrumentationId;
@@ -63,7 +72,7 @@ public class InstrumentationDto {
             return this;
         }
 
-        public InstrumentationDtoBuilder withMusicalPieces(MusicalPieceDto musicalPiece) {
+        public InstrumentationDtoBuilder withMusicalPiece(MusicalPieceDto musicalPiece) {
             this.musicalPiece = musicalPiece;
             return this;
         }
@@ -81,6 +90,12 @@ public class InstrumentationDto {
             return this;
         }
 
+        public InstrumentationDtoBuilder withSectionInstrumentations(
+            List<SectionInstrumentationDto> sectionInstrumentations) {
+            this.sectionInstrumentations = sectionInstrumentations;
+            return this;
+        }
+
         /**
          * Constructs a new InstrumentationDto with the previously set options in the builder.
          * @return Constructed InstrumentationDto.
@@ -91,7 +106,8 @@ public class InstrumentationDto {
                 this.name,
                 this.musicalPiece,
                 this.seriesOfPerformances,
-                this.instrumentationPositions
+                this.instrumentationPositions,
+                this.sectionInstrumentations
             );
         }
     }

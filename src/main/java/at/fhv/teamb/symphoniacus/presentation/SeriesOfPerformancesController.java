@@ -2,6 +2,9 @@ package at.fhv.teamb.symphoniacus.presentation;
 
 import at.fhv.teamb.symphoniacus.application.MusicalPieceManager;
 import at.fhv.teamb.symphoniacus.application.SeriesOfPerformancesManager;
+import at.fhv.teamb.symphoniacus.application.dto.InstrumentationDto;
+import at.fhv.teamb.symphoniacus.application.dto.MusicalPieceDto;
+import at.fhv.teamb.symphoniacus.application.dto.SectionInstrumentationDto;
 import at.fhv.teamb.symphoniacus.persistence.model.InstrumentationEntity;
 import at.fhv.teamb.symphoniacus.persistence.model.MusicalPieceEntity;
 import at.fhv.teamb.symphoniacus.persistence.model.SectionInstrumentationEntity;
@@ -67,10 +70,10 @@ public class SeriesOfPerformancesController
     private JFXTextField nameOfSeries;
 
     @FXML
-    private CheckComboBox<MusicalPieceEntity> musicalPieceCheckComboBox;
+    private CheckComboBox<MusicalPieceDto> musicalPieceCheckComboBox;
 
     @FXML
-    private CheckComboBox<InstrumentationEntity> instrumentationCheckComboBox;
+    private CheckComboBox<InstrumentationDto> instrumentationCheckComboBox;
 
     /*
     This one is and will not be implemented.
@@ -173,21 +176,21 @@ public class SeriesOfPerformancesController
      * loadInstrumentationsFromChosenMusicalPieces is called.
      */
     public void initMusicalPiecesCheckListView() {
-        final ObservableList<MusicalPieceEntity> musicalPieces =
+        final ObservableList<MusicalPieceDto> musicalPieces =
             FXCollections.observableArrayList();
-        Set<MusicalPieceEntity> mp = this.musicalPieceManager.getAllMusicalPieces();
+        Set<MusicalPieceDto> mp = this.musicalPieceManager.getAllMusicalPieces();
         musicalPieces.addAll(mp);
 
-        final StringConverter<MusicalPieceEntity> musicalConverter =
+        final StringConverter<MusicalPieceDto> musicalConverter =
             new StringConverter<>() {
                 @Override
-                public String toString(MusicalPieceEntity piece) {
+                public String toString(MusicalPieceDto piece) {
                     return piece.getName();
                 }
 
                 @Override
-                public MusicalPieceEntity fromString(String nameOfPiece) {
-                    Optional<MusicalPieceEntity> piece = musicalPieceManager.getByName(
+                public MusicalPieceDto fromString(String nameOfPiece) {
+                    Optional<MusicalPieceDto> piece = musicalPieceManager.getByName(
                         nameOfPiece
                     );
                     if (piece.isPresent()) {
@@ -210,7 +213,7 @@ public class SeriesOfPerformancesController
 
         // Changes boolean to avoid unnecessary select statements
         this.musicalPieceCheckComboBox.getCheckModel().getCheckedItems().addListener(
-            (ListChangeListener<MusicalPieceEntity>) c -> this.itemChanged = true);
+            (ListChangeListener<MusicalPieceDto>) c -> this.itemChanged = true);
 
         // Call init Instrumentations, when Musical Pieces have been chosen
         this.musicalPieceCheckComboBox.addEventHandler(ComboBoxBase.ON_HIDDEN, event -> {
@@ -229,37 +232,37 @@ public class SeriesOfPerformancesController
      * @param musicalPieces checked musicialPieces
      */
     private void loadInstrumentationsFromChosenMusicalPieces(
-        ObservableList<MusicalPieceEntity> musicalPieces
+        ObservableList<MusicalPieceDto> musicalPieces
     ) {
-        Set<MusicalPieceEntity> mp = new LinkedHashSet<>(musicalPieces);
+        Set<MusicalPieceDto> mp = new LinkedHashSet<>(musicalPieces);
 
-        Set<InstrumentationEntity> inst = this.musicalPieceManager.getInstrumentations(mp);
+        Set<InstrumentationDto> inst = this.musicalPieceManager.getInstrumentations(mp);
 
         // All Intrumentations of the checked musical pieces
-        ObservableSet<InstrumentationEntity> instrumentations = FXCollections.observableSet();
+        ObservableSet<InstrumentationDto> instrumentations = FXCollections.observableSet();
         instrumentations.addAll(inst);
 
-        final StringConverter<InstrumentationEntity> instrumentationConverter =
+        final StringConverter<InstrumentationDto> instrumentationConverter =
             new StringConverter<>() {
                 @Override
-                public String toString(InstrumentationEntity instrumentation) {
+                public String toString(InstrumentationDto instrumentation) {
                     return instrumentation.getName() + " - "
                         + instrumentation.getMusicalPiece().getName();
                 }
 
                 @Override
-                public InstrumentationEntity fromString(String nameOfPiece) {
+                public InstrumentationDto fromString(String nameOfPiece) {
                     LOG.error(
                         "Return NULL: SeriesOfPerformancesController fromString von instrumentation"
                             + " wurde aufgerufen -> ist aber garnicht implementiert");
                     return null;
                 }
             };
-        ObservableList<InstrumentationEntity> currentItems =
+        ObservableList<InstrumentationDto> currentItems =
             this.instrumentationCheckComboBox.getItems();
 
         // Füge neu dazugekommene Instrumentations in die currentlist
-        for (InstrumentationEntity instrumentation : instrumentations) {
+        for (InstrumentationDto instrumentation : instrumentations) {
             if (!(currentItems.contains(instrumentation))) {
                 this.instrumentationCheckComboBox.getItems().add(instrumentation);
             }
@@ -267,16 +270,16 @@ public class SeriesOfPerformancesController
 
         // Alle Instrumentations die nach dem Hinzufügen nicht in der "neuen" Liste vorhanden sind
         // werden gelöscht und handling der CheckIndeces
-        Iterator<InstrumentationEntity> iterator =
+        Iterator<InstrumentationDto> iterator =
             this.instrumentationCheckComboBox.getItems().iterator();
         while (iterator.hasNext()) {
-            InstrumentationEntity tempInst = iterator.next();
+            InstrumentationDto tempInst = iterator.next();
             if (!(instrumentations.contains(tempInst))) {
                 this.instrumentationCheckComboBox.getCheckModel().clearCheck(tempInst);
                 // Speichere aktuelle checks in zwischenliste
-                List<InstrumentationEntity> tmp = new LinkedList<>(
+                List<InstrumentationDto> tmp = new LinkedList<>(
                     this.instrumentationCheckComboBox.getCheckModel().getCheckedItems());
-                ObservableList<InstrumentationEntity> tempList =
+                ObservableList<InstrumentationDto> tempList =
                     FXCollections.observableArrayList(tmp);
 
                 this.instrumentationCheckComboBox.getCheckModel().clearChecks();
@@ -285,7 +288,7 @@ public class SeriesOfPerformancesController
 
                 // Durch remove wurde die size der liste verändert und somit sind alle
                 // checkIndices falsche -> deshalb werden nach dem clearen die checks neu gesetzt
-                for (InstrumentationEntity instrumentation : tempList) {
+                for (InstrumentationDto instrumentation : tempList) {
                     if (this.instrumentationCheckComboBox.getItems().contains(instrumentation)) {
                         this.instrumentationCheckComboBox.getCheckModel().check(instrumentation);
                     }
@@ -319,15 +322,15 @@ public class SeriesOfPerformancesController
      * InstrumentationCheckComboBox fand displays them in a list view.
      */
     private void loadSectionInstrumentationDescriptions() {
-        ObservableList<InstrumentationEntity> instrumentations =
+        ObservableList<InstrumentationDto> instrumentations =
             this.instrumentationCheckComboBox.getCheckModel().getCheckedItems();
 
         List<String> desc = new LinkedList<>();
         StringBuilder sb;
-        for (InstrumentationEntity instrumentation : instrumentations) {
+        for (InstrumentationDto instrumentation : instrumentations) {
             sb = new StringBuilder();
             String prefix = "";
-            for (SectionInstrumentationEntity sectionInstrumentation : instrumentation
+            for (SectionInstrumentationDto sectionInstrumentation : instrumentation
                 .getSectionInstrumentations()) {
                 sb.append(prefix);
                 sb.append(sectionInstrumentation.getPredefinedSectionInstrumentation());
@@ -350,9 +353,9 @@ public class SeriesOfPerformancesController
     private void save() {
         if (validateInputs()) {
             this.seriesManager.save(nameOfSeries.getText(),
-                new LinkedHashSet<>(
+                new LinkedHashSet<MusicalPieceDto>(
                     this.musicalPieceCheckComboBox.getCheckModel().getCheckedItems()),
-                new LinkedHashSet<>(
+                new LinkedHashSet<InstrumentationDto>(
                     this.instrumentationCheckComboBox.getCheckModel().getCheckedItems()),
                 this.startingDate.getValue(), endingDate.getValue(), isTour.isSelected()
             );
@@ -453,10 +456,10 @@ public class SeriesOfPerformancesController
     }
 
     private boolean isInstrumentationForMusicalPieceSelected() {
-        for (MusicalPieceEntity m : this.musicalPieceCheckComboBox
+        for (MusicalPieceDto m : this.musicalPieceCheckComboBox
             .getCheckModel().getCheckedItems()) {
             boolean isSelected = false;
-            for (InstrumentationEntity i : m.getInstrumentations()) {
+            for (InstrumentationDto i : m.getInstrumentations()) {
                 if (this.instrumentationCheckComboBox
                     .getCheckModel().getCheckedItems().contains(i)) {
                     isSelected = true;
