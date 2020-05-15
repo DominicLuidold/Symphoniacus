@@ -10,6 +10,8 @@ import java.util.Optional;
  */
 public class DutyPosition {
     private DutyPositionEntity entity;
+    private int positionNumber;
+    private String positionDescription;
 
     /**
      * Initializes the DutyPosition object based on provided {@link DutyPositionEntity}.
@@ -35,5 +37,21 @@ public class DutyPosition {
 
     public DutyPositionEntity getEntity() {
         return this.entity;
+    }
+
+    public int getPositionNumber() {
+        return this.positionNumber;
+    }
+
+    public void setPositionNumber(int positionNumber) {
+        this.positionNumber = positionNumber;
+    }
+
+    public String getPositionDescription() {
+        return this.positionDescription;
+    }
+
+    public void setPositionDescription(String positionDescription) {
+        this.positionDescription = positionDescription;
     }
 }

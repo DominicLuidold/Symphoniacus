@@ -20,6 +20,11 @@ public class DutyPositionMusicianTableModel {
         this.dutyPosition = dutyPosition;
     }
 
+    public int getNumber() {
+        return this.dutyPosition
+            .getPositionNumber();
+    }
+
     /**
      * Returns the position description.
      *
@@ -27,8 +32,6 @@ public class DutyPositionMusicianTableModel {
      */
     public String getRole() {
         return this.dutyPosition
-            .getEntity()
-            .getInstrumentationPosition()
             .getPositionDescription();
     }
 

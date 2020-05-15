@@ -104,7 +104,18 @@ public class DutyScheduleManager {
         // Create DutyPosition domain objects
         List<DutyPosition> dutyPositions = new LinkedList<>();
         for (DutyPositionEntity dpEntity : dutyPositionEntities) {
-            dutyPositions.add(new DutyPosition(dpEntity));
+            DutyPosition dp = new DutyPosition(dpEntity);
+
+            // #00 <TEXT>
+            String instPosDesc = dpEntity.getInstrumentationPosition().getPositionDescription();
+
+            int posNumber = Integer.parseInt(instPosDesc.substring(1, 3));
+            String posDescription = instPosDesc.substring(4);
+            posDescription = posDescription.trim();
+
+            dp.setPositionNumber(posNumber);
+            dp.setPositionDescription(posDescription);
+            dutyPositions.add(dp);
         }
 
         // Fill Duty with available information

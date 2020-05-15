@@ -2,12 +2,14 @@ package at.fhv.teamb.symphoniacus.presentation;
 
 import at.fhv.teamb.symphoniacus.application.DutyManager;
 import at.fhv.teamb.symphoniacus.application.DutyScheduleManager;
+import at.fhv.teamb.symphoniacus.application.PointsManager;
 import at.fhv.teamb.symphoniacus.application.dto.SectionDto;
 import at.fhv.teamb.symphoniacus.domain.ActualSectionInstrumentation;
 import at.fhv.teamb.symphoniacus.domain.Duty;
 import at.fhv.teamb.symphoniacus.domain.DutyPosition;
 import at.fhv.teamb.symphoniacus.domain.MusicalPiece;
 import at.fhv.teamb.symphoniacus.domain.Musician;
+import at.fhv.teamb.symphoniacus.domain.Points;
 import at.fhv.teamb.symphoniacus.persistence.PersistenceState;
 import at.fhv.teamb.symphoniacus.persistence.model.InstrumentationPositionEntity;
 import at.fhv.teamb.symphoniacus.presentation.internal.AlertHelper;
@@ -81,6 +83,7 @@ public class DutyScheduleController
     private SectionDto section;
     private DutyScheduleManager dutyScheduleManager;
     private DutyManager dutyManager;
+    private PointsManager pointsManager;
     private ActualSectionInstrumentation actualSectionInstrumentation;
     private HashMap<DutyPosition, Optional<Musician>> oldMusicianOnPosition = new HashMap<>();
     private DutyPosition selectedDutyPosition;
@@ -435,6 +438,8 @@ public class DutyScheduleController
                     SortedList<DutyPositionMusicianTableModel> sortedList = new SortedList<>(
                         filteredList
                     );
+
+                    sortedList.comparatorProperty().bind(this.positionsTable.comparatorProperty());
 
                     this.positionsTable.setItems(sortedList);
                     mc.showStatusBarLoaded();
@@ -1273,6 +1278,12 @@ public class DutyScheduleController
         }
         this.duty = d.get();
 
+        if (this.pointsManager == null) {
+            this.pointsManager = new PointsManager();
+        }
+        Points p = this.pointsManager.getPointsOfDuty(this.duty.getEntity());
+        LOG.debug("Calculated Points of duty: {}", p.getValue());
+
         LOG.debug("Binding duty title to: {}", this.duty.getTitle());
         this.dutyTitle.textProperty().bind(
             new SimpleStringProperty(
@@ -1285,7 +1296,7 @@ public class DutyScheduleController
                     + " - "
                     + duty.getTitle()
                     + " - "
-                    + duty.getEntity().getDutyCategory().getPoints()
+                    + p.getValue()
                     + " "
                     + this.resources.getString("tab.duty.schedule.table.musicians.points")
             )

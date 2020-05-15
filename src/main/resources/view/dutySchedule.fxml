@@ -35,13 +35,18 @@
          </ToolBar>
       </children>
    </AnchorPane>
-   <SplitPane fx:id="leftSplitPane" dividerPositions="0.3" orientation="HORIZONTAL" prefHeight="160.0" prefWidth="200.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="45.0">
+   <SplitPane fx:id="leftSplitPane" dividerPositions="0.35" orientation="HORIZONTAL" prefHeight="160.0" prefWidth="200.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="45.0">
        <padding>
            <Insets top="5" right="5" bottom="5" left="5" />
        </padding>
        <items>
             <TableView fx:id="positionsTable">
                 <columns>
+                    <TableColumn fx:id="number" prefWidth="35.0" text="%tab.duty.schedule.table.posnumber" >
+                        <cellValueFactory>
+                            <PropertyValueFactory property="number" />
+                        </cellValueFactory>
+                    </TableColumn>
                     <TableColumn fx:id="role" prefWidth="120.0" text="%tab.duty.schedule.table.role" >
                         <cellValueFactory>
                             <PropertyValueFactory property="role" />
