@@ -578,7 +578,7 @@ public class NewDutyEntryController implements Initializable, Parentable<Calenda
      * Opens a new series of performances tab.
      */
     private void openNewSopTab() {
-        this.getParentController().getParentController().addTab(TabPaneEntry.ADD_SOP, null);
+        this.getParentController().getParentController().addTab(TabPaneEntry.ADD_SOP);
     }
 
     /**

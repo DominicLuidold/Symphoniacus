@@ -59,6 +59,12 @@ public class TabPaneController implements Initializable, Parentable<MainControll
         removeTab(entry.getTitle());
     }
 
+
+
+    protected Optional<Parentable<TabPaneController>> addTab(TabPaneEntry entry) {
+        return addTab(entry, null);
+    }
+
     protected Optional<Parentable<TabPaneController>> addTab(
         TabPaneEntry entry,
         Parentable parent
