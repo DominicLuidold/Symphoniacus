@@ -305,7 +305,7 @@ public class DutyManager {
      *
      * @param duty The duty to save
      */
-    public void save(
+    public DutyDto save(
         DutyDto duty,
         boolean userPointsChanged,
         Integer points,
@@ -359,20 +359,34 @@ public class DutyManager {
             }
         }
 
+
         if (persistedDuty.isPresent()) {
-            duty.setPersistenceState(PersistenceState.PERSISTED);
             LOG.debug(
                 "Persisted duty {{}, '{}'}",
                 duty.getDutyId(),
-                duty.getTitle()
+                duty.getDescription()
             );
+             return fillNewDtoWithState(duty,PersistenceState.PERSISTED);
+
         } else {
             LOG.error(
                 "Could not persist duty {{}, '{}'}",
-                duty.getEntity().getDutyId(),
-                duty.getTitle()
+                duty.getDutyId(),
+                duty.getDescription()
             );
+            return fillNewDtoWithState(duty,PersistenceState.EDITED);
+
         }
+    }
+
+    private DutyDto fillNewDtoWithState(DutyDto duty, PersistenceState state) {
+            return new DutyDto.DutyDtoBuilder(duty.getDutyId())
+                .withDescription(duty.getDescription())
+                .withTimeOfDay(duty.getTimeOfDay())
+                .withStart(duty.getStart())
+                .withPersistenceState(state)
+                .build();
+
     }
 
     /**
@@ -420,8 +434,8 @@ public class DutyManager {
         LocalDateTime endingDate,
         DutyCategoryDto category) {
 
-        Optional<ISeriesOfPerformancesEntity> series = this.seriesDao
-            .find(seriesOfPerformances.getSeriesOfPerformancesId());
+        Optional<ISeriesOfPerformancesEntity> series = this.seriesDao.find(seriesOfPerformances
+            .getSeriesOfPerformancesId());
         DutyCategoryEntity dutyCat = new DutyCategoryEntity();
 
         //Convert DTO to Entity

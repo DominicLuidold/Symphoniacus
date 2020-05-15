@@ -37,7 +37,6 @@ import javafx.scene.control.ComboBox;
 import javafx.scene.control.ComboBoxBase;
 import javafx.scene.control.Label;
 import javafx.scene.image.ImageView;
-import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.Border;
 import javafx.scene.layout.BorderStroke;
 import javafx.scene.layout.BorderStrokeStyle;
@@ -76,9 +75,6 @@ public class NewDutyEntryController implements Initializable, Parentable<TabPane
     private AtomicBoolean validStartTime = new AtomicBoolean(false);
     private AtomicBoolean validEndTime = new AtomicBoolean(false);
     private boolean userEditedPoints;
-
-    @FXML
-    private AnchorPane newDutyEntryPane;
 
     @FXML
     private ComboBox<SeriesOfPerformancesDto> seriesOfPerformancesSelect;
@@ -501,7 +497,7 @@ public class NewDutyEntryController implements Initializable, Parentable<TabPane
                 this.instrumentationsSelect.getCheckModel().getCheckedItems()
             );
             // Delegate saving to manager
-            this.dutyManager.save(
+            this.duty = this.dutyManager.save(
                 this.duty,
                 this.userEditedPoints,
                 Integer.parseInt(this.dutyPointsInput.getText()),
@@ -510,25 +506,36 @@ public class NewDutyEntryController implements Initializable, Parentable<TabPane
                 this.dutyCategorySelect.getValue()
             );
 
-            // Show success alert
-            Alert successAlert = new Alert(Alert.AlertType.INFORMATION);
-            successAlert.setTitle(this.resources.getString("tab.duty.new.entry.success.title"));
-            successAlert.setContentText(
-                this.resources.getString("tab.duty.new.entry.success.dutySaved")
-            );
-            successAlert.getButtonTypes().setAll(
-                new ButtonType(this.resources.getString("global.button.ok"))
-            );
+            if (this.duty.getPersistenceState() != null) {
+                if (this.duty.getPersistenceState() == PersistenceState.PERSISTED) {
+                    // Show success alert
+                    Alert successAlert = new Alert(Alert.AlertType.INFORMATION);
+                    successAlert.setTitle(this.resources.getString("tab.duty.new.entry.success.title"));
+                    successAlert.setContentText(
+                        this.resources.getString("tab.duty.new.entry.success.dutySaved")
+                    );
+                    successAlert.getButtonTypes().setAll(
+                        new ButtonType(this.resources.getString("global.button.ok"))
+                    );
 
-            // Get custom success icon
-            ImageView icon = new ImageView("images/successIcon.png");
-            icon.setFitHeight(48);
-            icon.setFitWidth(48);
-            successAlert.setGraphic(icon);
-            successAlert.setHeaderText(
-                this.resources.getString("tab.duty.new.entry.success.header")
-            );
-            successAlert.show();
+                    // Get custom success icon
+                    ImageView icon = new ImageView("images/successIcon.png");
+                    icon.setFitHeight(48);
+                    icon.setFitWidth(48);
+                    successAlert.setGraphic(icon);
+                    successAlert.setHeaderText(
+                        this.resources.getString("tab.duty.new.entry.success.header")
+                    );
+                    successAlert.show();
+                } else {
+                    MainController.showErrorAlert(
+                        this.resources.getString("tab.duty.new.entry.error.title"),
+                        this.resources.getString("tab.duty.new.entry.error.notPossibleSave"),
+                        this.resources.getString("global.button.ok")
+                    );
+                }
+            }
+
         } else {
             LOG.error("New Duty could not be saved");
         }
