@@ -23,7 +23,7 @@ public class WeeklyScheduleDao extends BaseDao<IWeeklyScheduleEntity>
      * {@inheritDoc}
      */
     @Override
-    public Optional<WeeklyScheduleEntity> findForDayAndYear(LocalDate day, int year) {
+    public Optional<IWeeklyScheduleEntity> findForDayAndYear(LocalDate day, int year) {
         TypedQuery<WeeklyScheduleEntity> query = entityManager.createQuery(
             "SELECT w FROM WeeklyScheduleEntity w "
                 + "WHERE :day BETWEEN w.startDate AND w.endDate "

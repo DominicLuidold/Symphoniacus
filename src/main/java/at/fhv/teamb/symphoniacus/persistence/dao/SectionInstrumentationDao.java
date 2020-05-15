@@ -5,6 +5,7 @@ import at.fhv.teamb.symphoniacus.persistence.dao.interfaces.ISectionInstrumentat
 import at.fhv.teamb.symphoniacus.persistence.model.SectionInstrumentationEntity;
 import at.fhv.teamb.symphoniacus.persistence.model.interfaces.IInstrumentationEntity;
 import at.fhv.teamb.symphoniacus.persistence.model.interfaces.ISectionInstrumentationEntity;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Optional;
 import javax.persistence.TypedQuery;
@@ -16,7 +17,7 @@ public class SectionInstrumentationDao extends BaseDao<ISectionInstrumentationEn
      * {@inheritDoc}
      */
     @Override
-    public List<SectionInstrumentationEntity> getSectionInstrumentationToInstrumentation(
+    public List<ISectionInstrumentationEntity> getSectionInstrumentationToInstrumentation(
         IInstrumentationEntity instrumentation
     ) {
         TypedQuery<SectionInstrumentationEntity> query = entityManager.createQuery(
@@ -27,7 +28,7 @@ public class SectionInstrumentationDao extends BaseDao<ISectionInstrumentationEn
 
         query.setParameter("inst", instrumentation);
 
-        return query.getResultList();
+        return new LinkedList<>(query.getResultList());
     }
 
     /**

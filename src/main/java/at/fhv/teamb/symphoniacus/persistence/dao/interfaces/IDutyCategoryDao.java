@@ -12,7 +12,7 @@ public interface IDutyCategoryDao extends Dao<IDutyCategoryEntity> {
      *
      * @return A List of duty categories
      */
-    List<? extends IDutyCategoryEntity> getAll();
+    List<IDutyCategoryEntity> getAll();
 
     /**
      * searches all dutyCategories for a given name.
@@ -20,5 +20,5 @@ public interface IDutyCategoryDao extends Dao<IDutyCategoryEntity> {
      * @param type given name of a dutyCategories
      * @return the musical piece with the same name
      */
-    Optional<? extends IDutyCategoryEntity> getDutyCategoryFromName(String type);
+    Optional<IDutyCategoryEntity> getDutyCategoryFromName(String type);
 }

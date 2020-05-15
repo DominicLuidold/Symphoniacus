@@ -11,6 +11,8 @@ import at.fhv.teamb.symphoniacus.persistence.PersistenceState;
 import at.fhv.teamb.symphoniacus.persistence.dao.DutyDao;
 import at.fhv.teamb.symphoniacus.persistence.dao.DutyPositionDao;
 import at.fhv.teamb.symphoniacus.persistence.dao.MusicianDao;
+import at.fhv.teamb.symphoniacus.persistence.dao.interfaces.IDutyPositionDao;
+import at.fhv.teamb.symphoniacus.persistence.dao.interfaces.IMusicianDao;
 import at.fhv.teamb.symphoniacus.persistence.model.MusicianEntity;
 import at.fhv.teamb.symphoniacus.persistence.model.SectionEntity;
 import at.fhv.teamb.symphoniacus.persistence.model.interfaces.IDutyEntity;
@@ -37,8 +39,8 @@ import org.apache.logging.log4j.Logger;
 public class DutyScheduleManager {
     private static final Logger LOG = LogManager.getLogger(DutyScheduleManager.class);
     private final DutyDao dutyDao;
-    private final DutyPositionDao dutyPositionDao;
-    private final MusicianDao musicianDao;
+    private final IDutyPositionDao dutyPositionDao;
+    private final IMusicianDao musicianDao;
     private final PointsManager pointsManager;
     private final Set<Musician> setMusicians;
     private final Set<Musician> unsetMusicians;
@@ -233,7 +235,9 @@ public class DutyScheduleManager {
      * @param instrumentation The instrumentation to persist
      */
     public void persist(ActualSectionInstrumentation instrumentation) {
-        Optional<IDutyEntity> persisted = this.dutyDao.update(instrumentation.getDuty().getEntity());
+        Optional<IDutyEntity> persisted = this.dutyDao.update(
+            instrumentation.getDuty().getEntity()
+        );
 
         if (persisted.isPresent()) {
             instrumentation.getDuty().setPersistenceState(PersistenceState.PERSISTED);
@@ -269,14 +273,14 @@ public class DutyScheduleManager {
             this.externalMusicianEntities =
                 this.musicianDao.findExternalsWithSection(position.getEntity().getSection());
         }
-        this.sectionMusicianEntities.addAll(externalMusicianEntities);
+        this.sectionMusicianEntities.addAll(this.externalMusicianEntities);
     }
 
     /**
      * Adds Balance Points for a monnth to a musician.
      *
      * @param musician Musician to add points
-     * @param start Start of month
+     * @param start    Start of month
      */
     public void addBalancePointsToMusician(Musician musician, LocalDate start) {
         Points balancePoints = this.pointsManager.getBalanceFromMusician(
@@ -304,7 +308,7 @@ public class DutyScheduleManager {
      * Adds Gained Points for a month to a musician.
      *
      * @param musician Musician to add points
-     * @param start Start of month
+     * @param start    Start of month
      */
     public void addGainedPointsToMusician(Musician musician, LocalDate start) {
         Points gainedPoints = this.pointsManager.getGainedPointsForMonthFromMusician(

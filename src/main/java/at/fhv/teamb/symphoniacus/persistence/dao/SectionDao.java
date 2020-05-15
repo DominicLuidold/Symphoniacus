@@ -4,6 +4,7 @@ import at.fhv.teamb.symphoniacus.persistence.BaseDao;
 import at.fhv.teamb.symphoniacus.persistence.dao.interfaces.ISectionDao;
 import at.fhv.teamb.symphoniacus.persistence.model.SectionEntity;
 import at.fhv.teamb.symphoniacus.persistence.model.interfaces.ISectionEntity;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Optional;
 import javax.persistence.TypedQuery;
@@ -28,13 +29,13 @@ public class SectionDao extends BaseDao<ISectionEntity>
      * {@inheritDoc}
      */
     @Override
-    public List<SectionEntity> getAll() {
+    public List<ISectionEntity> getAll() {
         TypedQuery<SectionEntity> query = entityManager.createQuery(
             "SELECT s FROM SectionEntity s",
             SectionEntity.class
         );
 
-        return query.getResultList();
+        return new LinkedList<>(query.getResultList());
     }
 
     /**

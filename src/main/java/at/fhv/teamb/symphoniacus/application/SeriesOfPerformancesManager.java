@@ -7,6 +7,7 @@ import at.fhv.teamb.symphoniacus.application.dto.SeriesOfPerformancesDto;
 import at.fhv.teamb.symphoniacus.persistence.dao.InstrumentationDao;
 import at.fhv.teamb.symphoniacus.persistence.dao.SeriesOfPerformancesDao;
 import at.fhv.teamb.symphoniacus.persistence.dao.interfaces.IInstrumentationDao;
+import at.fhv.teamb.symphoniacus.persistence.dao.interfaces.ISeriesOfPerformancesDao;
 import at.fhv.teamb.symphoniacus.persistence.model.DutyEntity;
 import at.fhv.teamb.symphoniacus.persistence.model.InstrumentationEntity;
 import at.fhv.teamb.symphoniacus.persistence.model.InstrumentationPositionEntity;
@@ -30,7 +31,7 @@ import java.util.Set;
  */
 public class SeriesOfPerformancesManager {
     private final IInstrumentationDao instrumentationDao;
-    private final SeriesOfPerformancesDao seriesOfPerformancesDao;
+    private final ISeriesOfPerformancesDao seriesOfPerformancesDao;
 
     /**
      * Initialize the SeriesOfPerformancesManager.
@@ -144,7 +145,7 @@ public class SeriesOfPerformancesManager {
      * @return all Series of Performances
      */
     public List<SeriesOfPerformancesDto> getAllSeries() {
-        List<ISeriesOfPerformancesEntity> seriesList = seriesOfPerformancesDao.getAll();
+        List<ISeriesOfPerformancesEntity> seriesList = this.seriesOfPerformancesDao.getAll();
 
         List<SeriesOfPerformancesDto> seriesDtoList = new LinkedList<>();
         for (ISeriesOfPerformancesEntity series : seriesList) {

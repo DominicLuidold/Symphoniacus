@@ -2,6 +2,7 @@ package at.fhv.teamb.symphoniacus.application;
 
 import at.fhv.teamb.symphoniacus.application.dto.SectionDto;
 import at.fhv.teamb.symphoniacus.persistence.dao.SectionDao;
+import at.fhv.teamb.symphoniacus.persistence.dao.interfaces.ISectionDao;
 import at.fhv.teamb.symphoniacus.persistence.model.interfaces.ISectionEntity;
 import java.util.LinkedList;
 import java.util.List;
@@ -15,7 +16,7 @@ import org.apache.logging.log4j.Logger;
  */
 public class SectionManager {
     private static final Logger LOG = LogManager.getLogger(MusicianManager.class);
-    private SectionDao sectionDao;
+    private ISectionDao sectionDao;
 
     public SectionManager() {
         this.sectionDao = new SectionDao();

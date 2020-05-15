@@ -1,6 +1,7 @@
 package at.fhv.teamb.symphoniacus.application;
 
 import at.fhv.teamb.symphoniacus.persistence.dao.MonthlyScheduleDao;
+import at.fhv.teamb.symphoniacus.persistence.dao.interfaces.IMonthlyScheduleDao;
 import at.fhv.teamb.symphoniacus.persistence.model.MonthlyScheduleEntity;
 import at.fhv.teamb.symphoniacus.persistence.model.interfaces.IMonthlyScheduleEntity;
 import java.time.YearMonth;
@@ -10,7 +11,7 @@ import org.apache.logging.log4j.Logger;
 
 public class MonthlyScheduleManager {
     private static final Logger LOG = LogManager.getLogger(MonthlyScheduleManager.class);
-    private final MonthlyScheduleDao monthlyScheduleDao;
+    private final IMonthlyScheduleDao monthlyScheduleDao;
 
     public MonthlyScheduleManager() {
         this.monthlyScheduleDao = new MonthlyScheduleDao();

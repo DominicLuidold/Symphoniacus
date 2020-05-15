@@ -14,5 +14,5 @@ public interface IMonthlyScheduleDao extends Dao<IMonthlyScheduleEntity> {
      * @param year  The year to use
      * @return A monthly schedule, if any
      */
-    Optional<? extends IMonthlyScheduleEntity> findForMonthAndYear(int month, int year);
+    Optional<IMonthlyScheduleEntity> findForMonthAndYear(int month, int year);
 }

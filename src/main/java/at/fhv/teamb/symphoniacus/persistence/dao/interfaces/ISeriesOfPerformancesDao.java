@@ -13,7 +13,7 @@ public interface ISeriesOfPerformancesDao extends Dao<ISeriesOfPerformancesEntit
      *
      * @return A List of series of performances entities
      */
-    List<? extends ISeriesOfPerformancesEntity> getAll();
+    List<ISeriesOfPerformancesEntity> getAll();
 
     /**
      * Checks if a searched seriesOfPerformances already exists.

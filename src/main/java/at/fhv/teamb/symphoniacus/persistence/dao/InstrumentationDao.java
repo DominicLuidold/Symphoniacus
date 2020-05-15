@@ -47,7 +47,7 @@ public class InstrumentationDao extends BaseDao<IInstrumentationEntity>
      * {@inheritDoc}
      */
     @Override
-    public Set<InstrumentationEntity> getAllInstrumentationsToSeries(
+    public Set<IInstrumentationEntity> getAllInstrumentationsToSeries(
         ISeriesOfPerformancesEntity series
     ) {
         TypedQuery<InstrumentationEntity> query = entityManager.createQuery(
@@ -67,7 +67,7 @@ public class InstrumentationDao extends BaseDao<IInstrumentationEntity>
      * {@inheritDoc}
      */
     @Override
-    public Set<InstrumentationEntity> getInstrumentationsToMusicalPieces(
+    public Set<IInstrumentationEntity> getInstrumentationsToMusicalPieces(
         Set<IMusicalPieceEntity> musicalPieces
     ) {
         TypedQuery<InstrumentationEntity> query = entityManager.createQuery(

@@ -7,6 +7,7 @@ import at.fhv.teamb.symphoniacus.persistence.model.interfaces.ISectionEntity;
 import at.fhv.teamb.symphoniacus.persistence.model.interfaces.ISectionMonthlyScheduleEntity;
 import java.time.Month;
 import java.time.Year;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Optional;
 import javax.persistence.TypedQuery;
@@ -31,7 +32,7 @@ public class SectionMonthlyScheduleDao extends BaseDao<ISectionMonthlyScheduleEn
      * {@inheritDoc}
      */
     @Override
-    public List<SectionMonthlyScheduleEntity> findAllInYear(ISectionEntity section, Year year) {
+    public List<ISectionMonthlyScheduleEntity> findAllInYear(ISectionEntity section, Year year) {
         TypedQuery<SectionMonthlyScheduleEntity> query = entityManager.createQuery(
             "SELECT sms FROM SectionMonthlyScheduleEntity sms "
                 + "JOIN FETCH sms.monthlySchedule ms "
@@ -43,14 +44,14 @@ public class SectionMonthlyScheduleDao extends BaseDao<ISectionMonthlyScheduleEn
         query.setParameter("section", section);
         query.setParameter("year", year.getValue());
 
-        return query.getResultList();
+        return new LinkedList<>(query.getResultList());
     }
 
     /**
      * {@inheritDoc}
      */
     @Override
-    public List<SectionMonthlyScheduleEntity> findAllInYearAndMonth(Year year, Month month) {
+    public List<ISectionMonthlyScheduleEntity> findAllInYearAndMonth(Year year, Month month) {
         TypedQuery<SectionMonthlyScheduleEntity> query = entityManager.createQuery(
             "SELECT sms FROM SectionMonthlyScheduleEntity sms "
                 + "JOIN FETCH sms.monthlySchedule ms "
@@ -61,7 +62,7 @@ public class SectionMonthlyScheduleDao extends BaseDao<ISectionMonthlyScheduleEn
         query.setParameter("year", year.getValue());
         query.setParameter("month", month.getValue());
 
-        return query.getResultList();
+        return new LinkedList<>(query.getResultList());
     }
 
     @Override

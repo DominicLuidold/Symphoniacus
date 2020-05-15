@@ -6,6 +6,7 @@ import at.fhv.teamb.symphoniacus.persistence.model.MusicianEntity;
 import at.fhv.teamb.symphoniacus.persistence.model.interfaces.IMusicianEntity;
 import at.fhv.teamb.symphoniacus.persistence.model.interfaces.ISectionEntity;
 import java.time.LocalDate;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Optional;
 import javax.persistence.TypedQuery;
@@ -32,7 +33,7 @@ public class MusicianDao extends BaseDao<IMusicianEntity>
      * {@inheritDoc}
      */
     @Override
-    public List<MusicianEntity> findAllWithSectionAndActiveContract(ISectionEntity section) {
+    public List<IMusicianEntity> findAllWithSectionAndActiveContract(ISectionEntity section) {
         TypedQuery<MusicianEntity> query = entityManager.createQuery(
             "SELECT m FROM MusicianEntity m "
                 + "JOIN FETCH m.user "
@@ -47,14 +48,14 @@ public class MusicianDao extends BaseDao<IMusicianEntity>
         query.setParameter("startDate", LocalDate.now());
         query.setParameter("endDate", LocalDate.now());
 
-        return query.getResultList();
+        return new LinkedList<>(query.getResultList());
     }
 
     /**
      * {@inheritDoc}
      */
     @Override
-    public List<MusicianEntity> findExternalsWithSection(ISectionEntity section) {
+    public List<IMusicianEntity> findExternalsWithSection(ISectionEntity section) {
         TypedQuery<MusicianEntity> query = entityManager.createQuery(
             "SELECT m FROM MusicianEntity m "
                 + "JOIN FETCH m.user u "
@@ -67,7 +68,7 @@ public class MusicianDao extends BaseDao<IMusicianEntity>
         query.setParameter("firstName", "Extern");
         query.setParameter("section", section);
 
-        return query.getResultList();
+        return new LinkedList<>(query.getResultList());
     }
 
     /**

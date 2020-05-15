@@ -2,6 +2,7 @@ package at.fhv.teamb.symphoniacus.application;
 
 import at.fhv.teamb.symphoniacus.domain.AdministrativeAssistant;
 import at.fhv.teamb.symphoniacus.persistence.dao.AdministrativeAssistantDao;
+import at.fhv.teamb.symphoniacus.persistence.dao.interfaces.IAdministrativeAssistantDao;
 import at.fhv.teamb.symphoniacus.persistence.model.MusicianEntity;
 import at.fhv.teamb.symphoniacus.persistence.model.interfaces.IAdministrativeAssistantEntity;
 import at.fhv.teamb.symphoniacus.persistence.model.interfaces.IUserEntity;
@@ -17,7 +18,7 @@ import org.apache.logging.log4j.Logger;
  */
 public class AdministrativeAssistantManager {
     private static final Logger LOG = LogManager.getLogger(AdministrativeAssistantManager.class);
-    private AdministrativeAssistantDao aad;
+    private IAdministrativeAssistantDao aad;
 
     public AdministrativeAssistantManager() {
         this.aad = new AdministrativeAssistantDao();
@@ -41,6 +42,7 @@ public class AdministrativeAssistantManager {
 
     /**
      * Loads a {@link MusicianEntity} by its identifier.
+     *
      * @param userId The userId of this Musician (NOT musicianId!)
      * @return Optional which is filled when loading worked, else empty
      */

@@ -4,6 +4,7 @@ import at.fhv.teamb.symphoniacus.persistence.BaseDao;
 import at.fhv.teamb.symphoniacus.persistence.dao.interfaces.IDutyCategoryDao;
 import at.fhv.teamb.symphoniacus.persistence.model.DutyCategoryEntity;
 import at.fhv.teamb.symphoniacus.persistence.model.interfaces.IDutyCategoryEntity;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Optional;
 import javax.persistence.TypedQuery;
@@ -23,20 +24,20 @@ public class DutyCategoryDao extends BaseDao<IDutyCategoryEntity>
      * {@inheritDoc}
      */
     @Override
-    public List<DutyCategoryEntity> getAll() {
+    public List<IDutyCategoryEntity> getAll() {
         TypedQuery<DutyCategoryEntity> query = entityManager.createQuery(
             "SELECT dC FROM DutyCategoryEntity dC",
             DutyCategoryEntity.class
         );
 
-        return query.getResultList();
+        return new LinkedList<>(query.getResultList());
     }
 
     /**
      * {@inheritDoc}
      */
     @Override
-    public Optional<DutyCategoryEntity> getDutyCategoryFromName(String type) {
+    public Optional<IDutyCategoryEntity> getDutyCategoryFromName(String type) {
         TypedQuery<DutyCategoryEntity> query = entityManager.createQuery(
             "SELECT dc FROM DutyCategoryEntity dc "
                 + "WHERE dc.type = :nameOfCategory",

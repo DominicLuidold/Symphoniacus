@@ -7,6 +7,8 @@ import at.fhv.teamb.symphoniacus.persistence.PersistenceState;
 import at.fhv.teamb.symphoniacus.persistence.dao.DutyPositionDao;
 import at.fhv.teamb.symphoniacus.persistence.dao.SectionDao;
 import at.fhv.teamb.symphoniacus.persistence.dao.SectionMonthlyScheduleDao;
+import at.fhv.teamb.symphoniacus.persistence.dao.interfaces.IDutyPositionDao;
+import at.fhv.teamb.symphoniacus.persistence.dao.interfaces.ISectionDao;
 import at.fhv.teamb.symphoniacus.persistence.model.SectionEntity;
 import at.fhv.teamb.symphoniacus.persistence.model.SectionMonthlyScheduleEntity;
 import at.fhv.teamb.symphoniacus.persistence.model.interfaces.IMonthlyScheduleEntity;
@@ -29,8 +31,8 @@ import org.apache.logging.log4j.Logger;
  */
 public class SectionMonthlyScheduleManager {
     private static final Logger LOG = LogManager.getLogger(SectionMonthlyScheduleManager.class);
-    private final DutyPositionDao dutyPositionDao;
-    private final SectionDao sectionDao;
+    private final IDutyPositionDao dutyPositionDao;
+    private final ISectionDao sectionDao;
     private final SectionMonthlyScheduleDao smsDao;
 
     /**

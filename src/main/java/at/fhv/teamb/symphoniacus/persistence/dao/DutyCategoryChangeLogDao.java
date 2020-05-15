@@ -6,6 +6,7 @@ import at.fhv.teamb.symphoniacus.persistence.model.DutyCategoryChangelogEntity;
 import at.fhv.teamb.symphoniacus.persistence.model.interfaces.IDutyCategoryChangelogEntity;
 import at.fhv.teamb.symphoniacus.persistence.model.interfaces.IDutyCategoryEntity;
 import at.fhv.teamb.symphoniacus.persistence.model.interfaces.IDutyEntity;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Optional;
 import javax.persistence.TypedQuery;
@@ -51,7 +52,7 @@ public class DutyCategoryChangeLogDao extends BaseDao<IDutyCategoryChangelogEnti
      * {@inheritDoc}
      */
     @Override
-    public List<DutyCategoryChangelogEntity> getDutyCategoryChangelogs(
+    public List<IDutyCategoryChangelogEntity> getDutyCategoryChangelogs(
         IDutyCategoryEntity categoryEntity
     ) {
         TypedQuery<DutyCategoryChangelogEntity> query = entityManager.createQuery(
@@ -62,7 +63,7 @@ public class DutyCategoryChangeLogDao extends BaseDao<IDutyCategoryChangelogEnti
 
         query.setParameter("givenCategory", categoryEntity);
 
-        return query.getResultList();
+        return new LinkedList<>(query.getResultList());
     }
 
     /**
@@ -87,7 +88,7 @@ public class DutyCategoryChangeLogDao extends BaseDao<IDutyCategoryChangelogEnti
      * {@inheritDoc}
      */
     @Override
-    public Optional<DutyCategoryChangelogEntity> getChangelogByDetails(IDutyEntity duty) {
+    public Optional<IDutyCategoryChangelogEntity> getChangelogByDetails(IDutyEntity duty) {
         TypedQuery<DutyCategoryChangelogEntity> query = entityManager.createQuery(
             "SELECT changelog FROM DutyCategoryChangelogEntity changelog "
                 + "WHERE changelog.dutyCategory = :givenCategory "

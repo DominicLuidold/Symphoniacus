@@ -2,6 +2,7 @@ package at.fhv.teamb.symphoniacus.application;
 
 import at.fhv.teamb.symphoniacus.domain.Musician;
 import at.fhv.teamb.symphoniacus.persistence.dao.MusicianDao;
+import at.fhv.teamb.symphoniacus.persistence.dao.interfaces.IMusicianDao;
 import at.fhv.teamb.symphoniacus.persistence.model.interfaces.IMusicianEntity;
 import at.fhv.teamb.symphoniacus.persistence.model.interfaces.IUserEntity;
 import java.util.Optional;
@@ -16,7 +17,7 @@ import org.apache.logging.log4j.Logger;
  */
 public class MusicianManager {
     private static final Logger LOG = LogManager.getLogger(MusicianManager.class);
-    private MusicianDao musicianDao;
+    private IMusicianDao musicianDao;
 
     public MusicianManager() {
         this.musicianDao = new MusicianDao();

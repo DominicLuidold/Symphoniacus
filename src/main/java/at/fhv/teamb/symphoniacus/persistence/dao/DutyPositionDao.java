@@ -7,6 +7,7 @@ import at.fhv.teamb.symphoniacus.persistence.model.interfaces.IDutyEntity;
 import at.fhv.teamb.symphoniacus.persistence.model.interfaces.IDutyPositionEntity;
 import at.fhv.teamb.symphoniacus.persistence.model.interfaces.ISectionEntity;
 import at.fhv.teamb.symphoniacus.persistence.model.interfaces.ISectionMonthlyScheduleEntity;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Optional;
 import javax.persistence.TypedQuery;
@@ -31,7 +32,7 @@ public class DutyPositionDao extends BaseDao<IDutyPositionEntity>
      * {@inheritDoc}
      */
     @Override
-    public List<DutyPositionEntity> findCorrespondingPositions(
+    public List<IDutyPositionEntity> findCorrespondingPositions(
         IDutyEntity duty,
         ISectionEntity section
     ) {
@@ -47,7 +48,7 @@ public class DutyPositionDao extends BaseDao<IDutyPositionEntity>
         query.setParameter("duty", duty);
         query.setParameter("section", section);
 
-        return query.getResultList();
+        return new LinkedList<>(query.getResultList());
     }
 
     /**

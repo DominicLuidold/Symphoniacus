@@ -53,10 +53,10 @@ public class UserDao extends BaseDao<IUserEntity>
      * {@inheritDoc}
      */
     @Override
-    public Optional<UserEntity> loadUser(String userShortCut) {
+    public Optional<IUserEntity> loadUser(String userShortCut) {
         List<UserEntity> result = null;
         TypedQuery<UserEntity> query = entityManager.createQuery(
-            "SELECT u FROM IUserEntity u WHERE u.shortcut = :shortc",
+            "SELECT u FROM UserEntity u WHERE u.shortcut = :shortc",
             UserEntity.class
         );
         query.setParameter("shortc", userShortCut);
@@ -76,7 +76,7 @@ public class UserDao extends BaseDao<IUserEntity>
     @Override
     public boolean isLoginCorrect(String userShortCut, String inputPasswordHash) {
         TypedQuery<Long> query = entityManager.createQuery(
-            "SELECT COUNT(u) FROM IUserEntity u "
+            "SELECT COUNT(u) FROM UserEntity u "
                 + "WHERE u.shortcut = :userShortCut "
                 + "AND u.password = :inputPasswordHash",
             Long.class

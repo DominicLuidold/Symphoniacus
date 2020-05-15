@@ -22,7 +22,7 @@ public interface IDutyPositionDao extends Dao<IDutyPositionEntity> {
      * @param section The section to use
      * @return A List of corresponding DutyPosition entities
      */
-    List<? extends IDutyPositionEntity> findCorrespondingPositions(
+    List<IDutyPositionEntity> findCorrespondingPositions(
         IDutyEntity duty,
         ISectionEntity section
     );

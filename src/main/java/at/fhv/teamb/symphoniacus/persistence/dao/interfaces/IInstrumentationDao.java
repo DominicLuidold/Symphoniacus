@@ -17,7 +17,7 @@ public interface IInstrumentationDao extends Dao<IInstrumentationEntity> {
      * @param series The series of performances to use
      * @return A Set of instrumentation entities
      */
-    Set<? extends IInstrumentationEntity> getAllInstrumentationsToSeries(
+    Set<IInstrumentationEntity> getAllInstrumentationsToSeries(
         ISeriesOfPerformancesEntity series
     );
 
@@ -28,7 +28,7 @@ public interface IInstrumentationDao extends Dao<IInstrumentationEntity> {
      * @param musicalPieces given musicalPieces
      * @return A Set of all instrumentations to all given musicalPieces
      */
-    Set<? extends IInstrumentationEntity> getInstrumentationsToMusicalPieces(
+    Set<IInstrumentationEntity> getInstrumentationsToMusicalPieces(
         Set<IMusicalPieceEntity> musicalPieces
     );
 }

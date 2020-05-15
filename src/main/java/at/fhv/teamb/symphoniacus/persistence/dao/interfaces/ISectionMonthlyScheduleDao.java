@@ -19,7 +19,7 @@ public interface ISectionMonthlyScheduleDao extends Dao<ISectionMonthlyScheduleE
      * @param year    The year to use
      * @return A List of section monthly schedules
      */
-    List<? extends ISectionMonthlyScheduleEntity> findAllInYear(ISectionEntity section, Year year);
+    List<ISectionMonthlyScheduleEntity> findAllInYear(ISectionEntity section, Year year);
 
     /**
      * Finds a List of {@link SectionMonthlyScheduleEntity} objects based on
@@ -29,7 +29,7 @@ public interface ISectionMonthlyScheduleDao extends Dao<ISectionMonthlyScheduleE
      * @param month The month to use
      * @return A List of section monthly schedules
      */
-    List<? extends ISectionMonthlyScheduleEntity> findAllInYearAndMonth(Year year, Month month);
+    List<ISectionMonthlyScheduleEntity> findAllInYearAndMonth(Year year, Month month);
 
     /**
      * Finds a {@link SectionMonthlyScheduleEntity} object based on provided {@link Section}

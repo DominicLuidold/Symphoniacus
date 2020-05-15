@@ -13,6 +13,7 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.YearMonth;
 import java.util.LinkedHashSet;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
@@ -59,7 +60,7 @@ public class DutyDao extends BaseDao<IDutyEntity> implements IDutyDao {
      * {@inheritDoc}
      */
     @Override
-    public List<DutyEntity> findAllInWeek(LocalDateTime start) {
+    public List<IDutyEntity> findAllInWeek(LocalDateTime start) {
         return findAllInRange(start, start.plusDays(6));
     }
 
@@ -67,7 +68,7 @@ public class DutyDao extends BaseDao<IDutyEntity> implements IDutyDao {
      * {@inheritDoc}
      */
     @Override
-    public List<DutyEntity> findAllInRange(LocalDateTime start, LocalDateTime end) {
+    public List<IDutyEntity> findAllInRange(LocalDateTime start, LocalDateTime end) {
         TypedQuery<DutyEntity> query = entityManager.createQuery(
             "SELECT d FROM DutyEntity d "
                 + "JOIN FETCH d.dutyCategory dc "
@@ -81,14 +82,14 @@ public class DutyDao extends BaseDao<IDutyEntity> implements IDutyDao {
         query.setParameter("start", start);
         query.setParameter("end", end);
 
-        return query.getResultList();
+        return new LinkedList<>(query.getResultList());
     }
 
     /**
      * {@inheritDoc}
      */
     @Override
-    public List<DutyEntity> findAllInWeekWithSection(
+    public List<IDutyEntity> findAllInWeekWithSection(
         ISectionEntity section,
         LocalDateTime start,
         boolean isReadyForDutyScheduler,
@@ -109,7 +110,7 @@ public class DutyDao extends BaseDao<IDutyEntity> implements IDutyDao {
      * {@inheritDoc}
      */
     @Override
-    public List<DutyEntity> findAllInRangeWithSection(
+    public List<IDutyEntity> findAllInRangeWithSection(
         ISectionEntity section,
         LocalDateTime start,
         LocalDateTime end,
@@ -139,14 +140,14 @@ public class DutyDao extends BaseDao<IDutyEntity> implements IDutyDao {
         query.setParameter("isReadyForOrganisationManager", isReadyForOrganisationManager);
         query.setParameter("isPublished", isPublished);
 
-        return query.getResultList();
+        return new LinkedList<>(query.getResultList());
     }
 
     /**
      * {@inheritDoc}
      */
     @Override
-    public List<DutyEntity> getAllDutiesInRangeFromMusician(
+    public List<IDutyEntity> getAllDutiesInRangeFromMusician(
         IMusicianEntity musician,
         LocalDate month
     ) {
@@ -175,14 +176,14 @@ public class DutyDao extends BaseDao<IDutyEntity> implements IDutyDao {
         query.setParameter("end", endWithTime);
         query.setParameter("currentDate", LocalDate.now());
 
-        return query.getResultList();
+        return new LinkedList<>(query.getResultList());
     }
 
     /**
      * {@inheritDoc}
      */
     @Override
-    public Set<DutyEntity> getAllDutiesOfMusicians(
+    public Set<IDutyEntity> getAllDutiesOfMusicians(
         List<IMusicianEntity> musicians,
         LocalDate month
     ) {
@@ -212,7 +213,7 @@ public class DutyDao extends BaseDao<IDutyEntity> implements IDutyDao {
      * {@inheritDoc}
      */
     @Override
-    public List<DutyEntity> getOtherDutiesForSeriesOfPerformances(
+    public List<IDutyEntity> getOtherDutiesForSeriesOfPerformances(
         ISeriesOfPerformancesEntity sop,
         LocalDateTime dutyStart,
         Integer maxNumberOfDuties
@@ -229,14 +230,14 @@ public class DutyDao extends BaseDao<IDutyEntity> implements IDutyDao {
         query.setParameter("sopId", sop.getSeriesOfPerformancesId());
         query.setMaxResults(maxNumberOfDuties);
 
-        return query.getResultList();
+        return new LinkedList<>(query.getResultList());
     }
 
     /**
      * {@inheritDoc}
      */
     @Override
-    public List<DutyEntity> getOtherDutiesForSection(
+    public List<IDutyEntity> getOtherDutiesForSection(
         IDutyEntity duty,
         ISectionEntity section,
         Integer maxNumberOfDuties
@@ -253,7 +254,7 @@ public class DutyDao extends BaseDao<IDutyEntity> implements IDutyDao {
         query.setParameter("dutyCategoryId", duty.getDutyId());
         query.setMaxResults(maxNumberOfDuties);
 
-        return query.getResultList();
+        return new LinkedList<>(query.getResultList());
     }
 
     /**

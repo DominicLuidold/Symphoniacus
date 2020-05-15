@@ -4,6 +4,9 @@ import at.fhv.teamb.symphoniacus.domain.Points;
 import at.fhv.teamb.symphoniacus.persistence.dao.ContractualObligationDao;
 import at.fhv.teamb.symphoniacus.persistence.dao.DutyCategoryChangeLogDao;
 import at.fhv.teamb.symphoniacus.persistence.dao.DutyDao;
+import at.fhv.teamb.symphoniacus.persistence.dao.interfaces.IContractualObligationDao;
+import at.fhv.teamb.symphoniacus.persistence.dao.interfaces.IDutyCategoryChangeLogDao;
+import at.fhv.teamb.symphoniacus.persistence.dao.interfaces.IDutyDao;
 import at.fhv.teamb.symphoniacus.persistence.model.DutyCategoryEntity;
 import at.fhv.teamb.symphoniacus.persistence.model.DutyEntity;
 import at.fhv.teamb.symphoniacus.persistence.model.MusicianEntity;
@@ -28,9 +31,9 @@ import org.apache.logging.log4j.Logger;
  */
 public class PointsManager {
     private static final Logger LOG = LogManager.getLogger(PointsManager.class);
-    private final ContractualObligationDao conDao;
-    private final DutyCategoryChangeLogDao dutyCatChangeDao;
-    private final DutyDao dutyDao;
+    private final IContractualObligationDao conDao;
+    private final IDutyCategoryChangeLogDao dutyCatChangeDao;
+    private final IDutyDao dutyDao;
     private Set<IDutyEntity> allDuties;
 
     /**
@@ -94,7 +97,10 @@ public class PointsManager {
         } else {
             // Beware! If allDuties isn't loaded this method will load
             // the musicians individually from the DAO
-            List<IDutyEntity> listOfDutiesFromMusician = this.getDutiesFromMusician(musician, month);
+            List<IDutyEntity> listOfDutiesFromMusician = this.getDutiesFromMusician(
+                musician,
+                month
+            );
 
             // Return 0 points if musician has no duties
             if (listOfDutiesFromMusician.isEmpty()) {
@@ -151,7 +157,10 @@ public class PointsManager {
         } else {
             // Beware! If allDuties isn't loaded this method will load
             // the musicians individually from the DAO
-            List<IDutyEntity> listOfDutiesFromMusician = this.getDutiesFromMusician(musician, month);
+            List<IDutyEntity> listOfDutiesFromMusician = this.getDutiesFromMusician(
+                musician,
+                month
+            );
 
             // Return 0 points if musician has no duties
             if (listOfDutiesFromMusician.isEmpty()) {

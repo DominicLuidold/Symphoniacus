@@ -15,5 +15,5 @@ public interface IWeeklyScheduleDao extends Dao<IWeeklyScheduleEntity> {
      * @param year The year to use
      * @return A weekly schedule, if any
      */
-    Optional<? extends IWeeklyScheduleEntity> findForDayAndYear(LocalDate day, int year);
+    Optional<IWeeklyScheduleEntity> findForDayAndYear(LocalDate day, int year);
 }

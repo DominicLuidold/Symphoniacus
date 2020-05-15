@@ -13,7 +13,7 @@ public interface ISectionInstrumentationDao extends Dao<ISectionInstrumentationE
      * @param instrumentation given Instrumentation
      * @return a List of all SectionInstrumentations with the same InstrumentationId
      */
-    List<? extends ISectionInstrumentationEntity> getSectionInstrumentationToInstrumentation(
+    List<ISectionInstrumentationEntity> getSectionInstrumentationToInstrumentation(
         IInstrumentationEntity instrumentation
     );
 }

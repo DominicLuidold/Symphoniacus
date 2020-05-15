@@ -24,7 +24,7 @@ public class MusicalPieceDao extends BaseDao<IMusicalPieceEntity>
      * {@inheritDoc}
      */
     @Override
-    public Set<MusicalPieceEntity> getAll() {
+    public Set<IMusicalPieceEntity> getAll() {
         TypedQuery<MusicalPieceEntity> query = entityManager.createQuery(
             "SELECT mp FROM MusicalPieceEntity mp",
             MusicalPieceEntity.class
@@ -37,7 +37,7 @@ public class MusicalPieceDao extends BaseDao<IMusicalPieceEntity>
      * {@inheritDoc}
      */
     @Override
-    public Optional<MusicalPieceEntity> getMusicalPieceFromName(String name) {
+    public Optional<IMusicalPieceEntity> getMusicalPieceFromName(String name) {
         TypedQuery<MusicalPieceEntity> query = entityManager.createQuery(
             "SELECT mp FROM MusicalPieceEntity mp "
                 + "WHERE mp.name = :nameOfPiece",

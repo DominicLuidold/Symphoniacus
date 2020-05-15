@@ -5,6 +5,9 @@ import at.fhv.teamb.symphoniacus.domain.WishRequest;
 import at.fhv.teamb.symphoniacus.persistence.dao.NegativeDateWishDao;
 import at.fhv.teamb.symphoniacus.persistence.dao.NegativeDutyWishDao;
 import at.fhv.teamb.symphoniacus.persistence.dao.PositiveWishDao;
+import at.fhv.teamb.symphoniacus.persistence.dao.interfaces.INegativeDateWishDao;
+import at.fhv.teamb.symphoniacus.persistence.dao.interfaces.INegativeDutyWishDao;
+import at.fhv.teamb.symphoniacus.persistence.dao.interfaces.IPositiveWishDao;
 import at.fhv.teamb.symphoniacus.persistence.model.WishRequestable;
 import at.fhv.teamb.symphoniacus.persistence.model.interfaces.IDutyEntity;
 import java.util.LinkedHashSet;
@@ -18,9 +21,9 @@ import java.util.Set;
  * @author Nino Heinzle
  */
 public class WishRequestManager {
-    private final PositiveWishDao positiveWishDao;
-    private final NegativeDutyWishDao negDutyWishDao;
-    private final NegativeDateWishDao negDateWishDao;
+    private final IPositiveWishDao positiveWishDao;
+    private final INegativeDutyWishDao negDutyWishDao;
+    private final INegativeDateWishDao negDateWishDao;
     private Set<WishRequestable> allWishRequests;
 
     /**

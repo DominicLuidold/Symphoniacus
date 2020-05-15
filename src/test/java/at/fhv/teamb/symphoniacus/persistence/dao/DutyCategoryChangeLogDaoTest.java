@@ -3,6 +3,7 @@ package at.fhv.teamb.symphoniacus.persistence.dao;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
+import at.fhv.teamb.symphoniacus.persistence.dao.interfaces.IDutyCategoryChangeLogDao;
 import at.fhv.teamb.symphoniacus.persistence.model.DutyCategoryEntity;
 import at.fhv.teamb.symphoniacus.persistence.model.interfaces.IDutyCategoryChangelogEntity;
 import at.fhv.teamb.symphoniacus.persistence.model.interfaces.IDutyCategoryEntity;
@@ -21,7 +22,7 @@ import org.junit.jupiter.api.TestInstance;
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 class DutyCategoryChangeLogDaoTest {
     private static final Logger LOG = LogManager.getLogger(DutyCategoryChangeLogDaoTest.class);
-    private DutyCategoryChangeLogDao dao;
+    private IDutyCategoryChangeLogDao dao;
 
     @BeforeAll
     void initialize() {

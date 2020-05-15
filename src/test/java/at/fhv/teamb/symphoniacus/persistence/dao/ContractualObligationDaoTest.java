@@ -3,6 +3,7 @@ package at.fhv.teamb.symphoniacus.persistence.dao;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
+import at.fhv.teamb.symphoniacus.persistence.dao.interfaces.IContractualObligationDao;
 import at.fhv.teamb.symphoniacus.persistence.model.MusicianEntity;
 import at.fhv.teamb.symphoniacus.persistence.model.interfaces.IContractualObligationEntity;
 import org.apache.logging.log4j.LogManager;
@@ -19,7 +20,7 @@ import org.junit.jupiter.api.TestInstance;
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 class ContractualObligationDaoTest {
     private static final Logger LOG = LogManager.getLogger(ContractualObligationDaoTest.class);
-    private ContractualObligationDao dao;
+    private IContractualObligationDao dao;
 
     @BeforeAll
     void initialize() {

@@ -25,7 +25,7 @@ public class MonthlyScheduleDao extends BaseDao<IMonthlyScheduleEntity>
      * {@inheritDoc}
      */
     @Override
-    public Optional<MonthlyScheduleEntity> findForMonthAndYear(int month, int year) {
+    public Optional<IMonthlyScheduleEntity> findForMonthAndYear(int month, int year) {
         TypedQuery<MonthlyScheduleEntity> query = entityManager.createQuery(
             "SELECT m FROM MonthlyScheduleEntity m "
                 + "WHERE m.month = :month AND m.year = :year",

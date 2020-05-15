@@ -13,7 +13,7 @@ public interface IMusicalPieceDao extends Dao<IMusicalPieceEntity> {
      *
      * @return A Set of MusicalPieceEntity
      */
-    Set<? extends IMusicalPieceEntity> getAll();
+    Set<IMusicalPieceEntity> getAll();
 
     /**
      * Returns all {@link MusicalPieceEntity} objects for a given name.
@@ -21,5 +21,5 @@ public interface IMusicalPieceDao extends Dao<IMusicalPieceEntity> {
      * @param name The name to search for
      * @return A musical piece with the same name
      */
-    Optional<? extends IMusicalPieceEntity> getMusicalPieceFromName(String name);
+    Optional<IMusicalPieceEntity> getMusicalPieceFromName(String name);
 }

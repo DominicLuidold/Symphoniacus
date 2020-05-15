@@ -14,7 +14,7 @@ public interface IUserDao extends Dao<IUserEntity> {
      * @param userShortCut The shortcut to identify the user
      * @return A user matching provided credentials
      */
-    Optional<? extends IUserEntity> loadUser(String userShortCut);
+    Optional<IUserEntity> loadUser(String userShortCut);
 
     /**
      * Checks whether the given userShortcut + password hash are valid.

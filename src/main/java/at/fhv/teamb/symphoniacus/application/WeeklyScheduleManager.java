@@ -1,6 +1,7 @@
 package at.fhv.teamb.symphoniacus.application;
 
 import at.fhv.teamb.symphoniacus.persistence.dao.WeeklyScheduleDao;
+import at.fhv.teamb.symphoniacus.persistence.dao.interfaces.IWeeklyScheduleDao;
 import at.fhv.teamb.symphoniacus.persistence.model.WeeklyScheduleEntity;
 import at.fhv.teamb.symphoniacus.persistence.model.interfaces.IWeeklyScheduleEntity;
 import java.time.DayOfWeek;
@@ -11,7 +12,7 @@ import org.apache.logging.log4j.Logger;
 
 public class WeeklyScheduleManager {
     private static final Logger LOG = LogManager.getLogger(WeeklyScheduleManager.class);
-    private final WeeklyScheduleDao weeklyScheduleDao;
+    private final IWeeklyScheduleDao weeklyScheduleDao;
 
     public WeeklyScheduleManager() {
         this.weeklyScheduleDao = new WeeklyScheduleDao();

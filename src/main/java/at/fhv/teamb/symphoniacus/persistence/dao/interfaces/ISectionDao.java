@@ -12,5 +12,5 @@ public interface ISectionDao extends Dao<ISectionEntity> {
      *
      * @return A List of sections
      */
-    List<? extends ISectionEntity> getAll();
+    List<ISectionEntity> getAll();
 }

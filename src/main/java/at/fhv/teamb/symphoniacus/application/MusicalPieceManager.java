@@ -5,6 +5,8 @@ import at.fhv.teamb.symphoniacus.application.dto.MusicalPieceDto;
 import at.fhv.teamb.symphoniacus.application.dto.SectionInstrumentationDto;
 import at.fhv.teamb.symphoniacus.persistence.dao.InstrumentationDao;
 import at.fhv.teamb.symphoniacus.persistence.dao.MusicalPieceDao;
+import at.fhv.teamb.symphoniacus.persistence.dao.interfaces.IInstrumentationDao;
+import at.fhv.teamb.symphoniacus.persistence.dao.interfaces.IMusicalPieceDao;
 import at.fhv.teamb.symphoniacus.persistence.model.MusicalPieceEntity;
 import at.fhv.teamb.symphoniacus.persistence.model.interfaces.IInstrumentationEntity;
 import at.fhv.teamb.symphoniacus.persistence.model.interfaces.IMusicalPieceEntity;
@@ -16,8 +18,8 @@ import java.util.Optional;
 import java.util.Set;
 
 public class MusicalPieceManager {
-    private final InstrumentationDao instrumentationDao;
-    private final MusicalPieceDao musicalPieceDao;
+    private final IInstrumentationDao instrumentationDao;
+    private final IMusicalPieceDao musicalPieceDao;
 
     public MusicalPieceManager() {
         this.instrumentationDao = new InstrumentationDao();

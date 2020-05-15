@@ -13,6 +13,7 @@ import at.fhv.teamb.symphoniacus.persistence.dao.DutyCategoryDao;
 import at.fhv.teamb.symphoniacus.persistence.dao.DutyDao;
 import at.fhv.teamb.symphoniacus.persistence.dao.SeriesOfPerformancesDao;
 import at.fhv.teamb.symphoniacus.persistence.dao.interfaces.IDutyCategoryChangeLogDao;
+import at.fhv.teamb.symphoniacus.persistence.dao.interfaces.IDutyCategoryDao;
 import at.fhv.teamb.symphoniacus.persistence.dao.interfaces.IDutyDao;
 import at.fhv.teamb.symphoniacus.persistence.model.DutyCategoryChangelogEntity;
 import at.fhv.teamb.symphoniacus.persistence.model.DutyCategoryEntity;
@@ -56,7 +57,7 @@ public class DutyManager {
     private final WeeklyScheduleManager weeklyScheduleManager;
     private final IDutyCategoryChangeLogDao changeLogDao;
     private final SeriesOfPerformancesDao seriesDao;
-    private final DutyCategoryDao categoryDao;
+    private final IDutyCategoryDao categoryDao;
     protected IDutyDao dutyDao;
 
     /**
@@ -155,9 +156,9 @@ public class DutyManager {
     /**
      * Finds all duties in a specific range of time for a section.
      *
-     * @param section       The section of the current user
-     * @param start         A LocalDate that represents the start
-     * @param end           A LocalDate that represents the end
+     * @param section The section of the current user
+     * @param start   A LocalDate that represents the start
+     * @param end     A LocalDate that represents the end
      * @return A List of the matching duties
      */
     public List<Duty> findAllInRangeWithSection(
@@ -245,10 +246,10 @@ public class DutyManager {
     /**
      * Creates a new {@link Duty} domain object based on given data.
      *
-     * @param description  The description to use
-     * @param timeOfDay    The time of day description
-     * @param start        The start of the duty
-     * @param end          The end of the duty
+     * @param description The description to use
+     * @param timeOfDay   The time of day description
+     * @param start       The start of the duty
+     * @param end         The end of the duty
      * @return A duty domain object
      */
     public DutyDto createDuty(
@@ -366,7 +367,7 @@ public class DutyManager {
                 duty.getDutyId(),
                 duty.getDescription()
             );
-            return fillNewDtoWithState(duty,PersistenceState.PERSISTED);
+            return fillNewDtoWithState(duty, PersistenceState.PERSISTED);
 
         } else {
             LOG.error(
@@ -374,19 +375,18 @@ public class DutyManager {
                 duty.getDutyId(),
                 duty.getDescription()
             );
-            return fillNewDtoWithState(duty,PersistenceState.EDITED);
+            return fillNewDtoWithState(duty, PersistenceState.EDITED);
 
         }
     }
 
     private DutyDto fillNewDtoWithState(DutyDto duty, PersistenceState state) {
         return new DutyDto.DutyDtoBuilder(duty.getDutyId())
-                .withDescription(duty.getDescription())
-                .withTimeOfDay(duty.getTimeOfDay())
-                .withStart(duty.getStart())
-                .withPersistenceState(state)
-                .build();
-
+            .withDescription(duty.getDescription())
+            .withTimeOfDay(duty.getTimeOfDay())
+            .withStart(duty.getStart())
+            .withPersistenceState(state)
+            .build();
     }
 
     /**
@@ -416,7 +416,7 @@ public class DutyManager {
             );
         }
     }
-    
+
     /**
      * Checks whether a duty with the given parameters exists or not.
      *
@@ -434,8 +434,6 @@ public class DutyManager {
         LocalDateTime endingDate,
         DutyCategoryDto category) {
 
-        Optional<ISeriesOfPerformancesEntity> series = this.seriesDao.find(seriesOfPerformances
-            .getSeriesOfPerformancesId());
         DutyCategoryEntity dutyCat = new DutyCategoryEntity();
 
         //Convert DTO to Entity
@@ -452,6 +450,9 @@ public class DutyManager {
             inst.setName(i.getName());
         }
 
+        Optional<ISeriesOfPerformancesEntity> series = this.seriesDao.find(
+            seriesOfPerformances.getSeriesOfPerformancesId()
+        );
         if (series.isPresent()) {
             return this.dutyDao.doesDutyAlreadyExists(
                 series.get(),

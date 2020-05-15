@@ -19,7 +19,7 @@ public interface IDutyCategoryChangeLogDao extends Dao<IDutyCategoryChangelogEnt
      * @param categoryEntity The duty category to use
      * @return A List of DutyCategoryChangelogEntity objects
      */
-    List<? extends IDutyCategoryChangelogEntity> getDutyCategoryChangelogs(
+    List<IDutyCategoryChangelogEntity> getDutyCategoryChangelogs(
         IDutyCategoryEntity categoryEntity
     );
 
@@ -38,5 +38,5 @@ public interface IDutyCategoryChangeLogDao extends Dao<IDutyCategoryChangelogEnt
      * @param duty The duty to use
      * @return A List of duty category changelog entities
      */
-    Optional<? extends IDutyCategoryChangelogEntity> getChangelogByDetails(IDutyEntity duty);
+    Optional<IDutyCategoryChangelogEntity> getChangelogByDetails(IDutyEntity duty);
 }

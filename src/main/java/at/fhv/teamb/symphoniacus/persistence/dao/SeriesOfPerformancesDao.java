@@ -5,6 +5,7 @@ import at.fhv.teamb.symphoniacus.persistence.dao.interfaces.ISeriesOfPerformance
 import at.fhv.teamb.symphoniacus.persistence.model.SeriesOfPerformancesEntity;
 import at.fhv.teamb.symphoniacus.persistence.model.interfaces.ISeriesOfPerformancesEntity;
 import java.time.LocalDate;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Optional;
 import javax.persistence.TypedQuery;
@@ -23,13 +24,13 @@ public class SeriesOfPerformancesDao extends BaseDao<ISeriesOfPerformancesEntity
     /**
      * {@inheritDoc}
      */
-    public List<SeriesOfPerformancesEntity> getAll() {
+    public List<ISeriesOfPerformancesEntity> getAll() {
         TypedQuery<SeriesOfPerformancesEntity> query = entityManager.createQuery(
             "SELECT sop FROM SeriesOfPerformancesEntity sop",
             SeriesOfPerformancesEntity.class
         );
 
-        return query.getResultList();
+        return new LinkedList<>(query.getResultList());
     }
 
     /**

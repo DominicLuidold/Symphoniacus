@@ -4,6 +4,7 @@ import at.fhv.teamb.symphoniacus.application.dto.LoginUserDto;
 import at.fhv.teamb.symphoniacus.application.type.DomainUserType;
 import at.fhv.teamb.symphoniacus.domain.User;
 import at.fhv.teamb.symphoniacus.persistence.dao.UserDao;
+import at.fhv.teamb.symphoniacus.persistence.dao.interfaces.IUserDao;
 import at.fhv.teamb.symphoniacus.persistence.model.interfaces.IUserEntity;
 import java.security.NoSuchAlgorithmException;
 import java.util.Optional;
@@ -17,7 +18,7 @@ import org.apache.logging.log4j.Logger;
  */
 public class LoginManager {
     private static final Logger LOG = LogManager.getLogger(LoginManager.class);
-    protected UserDao userDao;
+    protected IUserDao userDao;
     protected User currentLoggedInUser;
 
     public LoginManager() {

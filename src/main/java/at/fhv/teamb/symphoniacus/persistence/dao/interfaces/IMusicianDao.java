@@ -17,7 +17,7 @@ public interface IMusicianDao extends Dao<IMusicianEntity> {
      * @param section The section to use
      * @return A List of active musicians belonging to the section
      */
-    List<? extends IMusicianEntity> findAllWithSectionAndActiveContract(ISectionEntity section);
+    List<IMusicianEntity> findAllWithSectionAndActiveContract(ISectionEntity section);
 
     /**
      * Finds all {@link MusicianEntity} objects that represent an external musician placeholder
@@ -26,5 +26,5 @@ public interface IMusicianDao extends Dao<IMusicianEntity> {
      * @param section The section to use
      * @return A List of external musicians belonging to the section
      */
-    List<? extends IMusicianEntity> findExternalsWithSection(ISectionEntity section);
+    List<IMusicianEntity> findExternalsWithSection(ISectionEntity section);
 }

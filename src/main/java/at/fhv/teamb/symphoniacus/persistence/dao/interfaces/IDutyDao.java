@@ -22,7 +22,7 @@ public interface IDutyDao extends Dao<IDutyEntity> {
      * @return A List of the corresponding duties that were found
      * @see #findAllInRange(LocalDateTime, LocalDateTime)
      */
-    List<? extends IDutyEntity> findAllInWeek(LocalDateTime start);
+    List<IDutyEntity> findAllInWeek(LocalDateTime start);
 
     /**
      * Returns all duties that are in the week of the given start and end date.
@@ -31,7 +31,7 @@ public interface IDutyDao extends Dao<IDutyEntity> {
      * @param end   A LocalDateTime that represents the end
      * @return A List of all Duties that have the date between the given start and end dates
      */
-    List<? extends IDutyEntity> findAllInRange(LocalDateTime start, LocalDateTime end);
+    List<IDutyEntity> findAllInRange(LocalDateTime start, LocalDateTime end);
 
     /**
      * Finds all duties in a week.
@@ -42,7 +42,7 @@ public interface IDutyDao extends Dao<IDutyEntity> {
      * @see #findAllInRangeWithSection
      * (Section, LocalDateTime, LocalDateTime, boolean, boolean, boolean)
      */
-    List<? extends IDutyEntity> findAllInWeekWithSection(
+    List<IDutyEntity> findAllInWeekWithSection(
         ISectionEntity section,
         LocalDateTime start,
         boolean isReadyForDutyScheduler,
@@ -60,7 +60,7 @@ public interface IDutyDao extends Dao<IDutyEntity> {
      * @param end     A LocalDateTime that represents the end
      * @return A List of the corresponding duties that were found
      */
-    List<? extends IDutyEntity> findAllInRangeWithSection(
+    List<IDutyEntity> findAllInRangeWithSection(
         ISectionEntity section,
         LocalDateTime start,
         LocalDateTime end,
@@ -76,7 +76,7 @@ public interface IDutyDao extends Dao<IDutyEntity> {
      * @param month    A LocalDateTime that represents the month
      * @return A List of the corresponding duties that were found
      */
-    List<? extends IDutyEntity> getAllDutiesInRangeFromMusician(
+    List<IDutyEntity> getAllDutiesInRangeFromMusician(
         IMusicianEntity musician,
         LocalDate month
     );
@@ -88,7 +88,7 @@ public interface IDutyDao extends Dao<IDutyEntity> {
      * @param month     LocalDate any day of a month represents the whole month
      * @return A set uf DutyEntities, because duplicates of duties are unnecessary
      */
-    Set<? extends IDutyEntity> getAllDutiesOfMusicians(
+    Set<IDutyEntity> getAllDutiesOfMusicians(
         List<IMusicianEntity> musicians,
         LocalDate month
     );
@@ -102,7 +102,7 @@ public interface IDutyDao extends Dao<IDutyEntity> {
      * @param maxNumberOfDuties The amount of duties to return
      * @return A List of duties
      */
-    List<? extends IDutyEntity> getOtherDutiesForSeriesOfPerformances(
+    List<IDutyEntity> getOtherDutiesForSeriesOfPerformances(
         ISeriesOfPerformancesEntity sop,
         LocalDateTime dutyStart,
         Integer maxNumberOfDuties
@@ -117,7 +117,7 @@ public interface IDutyDao extends Dao<IDutyEntity> {
      * @param maxNumberOfDuties The amount of duties to return
      * @return A List of duties
      */
-    List<? extends IDutyEntity> getOtherDutiesForSection(
+    List<IDutyEntity> getOtherDutiesForSection(
         IDutyEntity duty,
         ISectionEntity section,
         Integer maxNumberOfDuties
