@@ -31,7 +31,7 @@ public class MusicalPieceManager {
      */
     public Set<MusicalPieceDto> getAllMusicalPieces() {
         Set<MusicalPieceDto> pieces = new LinkedHashSet<>();
-        for (MusicalPieceEntity piece : this.musicalPieceDao.getAll()) {
+        for (IMusicalPieceEntity piece : this.musicalPieceDao.getAll()) {
             pieces.add(convertMusicalPieceToDto(piece));
         }
         return pieces;
