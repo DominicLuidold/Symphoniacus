@@ -141,6 +141,5 @@ public class SeriesOfPerformancesDto {
                 this.duties
             );
         }
-
     }
 }

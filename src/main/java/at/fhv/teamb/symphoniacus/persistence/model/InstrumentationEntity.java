@@ -1,5 +1,8 @@
 package at.fhv.teamb.symphoniacus.persistence.model;
 
+import at.fhv.teamb.symphoniacus.domain.InstrumentationPosition;
+import at.fhv.teamb.symphoniacus.persistence.model.interfaces.IInstrumentationEntity;
+import at.fhv.teamb.symphoniacus.persistence.model.interfaces.IInstrumentationPositionEntity;
 import java.util.LinkedList;
 import java.util.List;
 import javax.persistence.Column;
@@ -16,7 +19,7 @@ import javax.persistence.Table;
 
 @Entity
 @Table(name = "instrumentation")
-public class InstrumentationEntity {
+public class InstrumentationEntity implements IInstrumentationEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "instrumentationId")
@@ -35,8 +38,8 @@ public class InstrumentationEntity {
     @OneToMany(mappedBy = "instrumentation", fetch = FetchType.LAZY)
     private List<SectionInstrumentationEntity> sectionInstrumentations = new LinkedList<>();
 
-    @OneToMany(mappedBy = "instrumentation", orphanRemoval = true)
-    private List<InstrumentationPositionEntity> instrumentationPositions = new LinkedList<>();
+    @OneToMany(mappedBy = "instrumentation", orphanRemoval = true, targetEntity = InstrumentationPositionEntity.class)
+    private List<IInstrumentationPositionEntity> instrumentationPositions = new LinkedList<>();
 
     public Integer getInstrumentationId() {
         return this.instrumentationId;
@@ -80,7 +83,7 @@ public class InstrumentationEntity {
         sectionInstrumentation.setInstrumentation(null);
     }
 
-    public List<InstrumentationPositionEntity> getInstrumentationPositions() {
+    public List<IInstrumentationPositionEntity> getInstrumentationPositions() { //TODO: find out how the fuck this works
         return this.instrumentationPositions;
     }
 

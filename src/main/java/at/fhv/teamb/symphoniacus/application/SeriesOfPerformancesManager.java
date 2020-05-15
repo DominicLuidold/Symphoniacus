@@ -7,10 +7,13 @@ import at.fhv.teamb.symphoniacus.application.dto.SeriesOfPerformancesDto;
 import at.fhv.teamb.symphoniacus.persistence.dao.InstrumentationDao;
 import at.fhv.teamb.symphoniacus.persistence.dao.SeriesOfPerformancesDao;
 import at.fhv.teamb.symphoniacus.persistence.model.DutyEntity;
+import at.fhv.teamb.symphoniacus.persistence.dao.interfaces.IInstrumentationDao;
 import at.fhv.teamb.symphoniacus.persistence.model.InstrumentationEntity;
 import at.fhv.teamb.symphoniacus.persistence.model.InstrumentationPositionEntity;
 import at.fhv.teamb.symphoniacus.persistence.model.MusicalPieceEntity;
 import at.fhv.teamb.symphoniacus.persistence.model.SeriesOfPerformancesEntity;
+import at.fhv.teamb.symphoniacus.persistence.model.interfaces.IInstrumentationEntity;
+import at.fhv.teamb.symphoniacus.persistence.model.interfaces.ISeriesOfPerformancesEntity;
 import java.time.LocalDate;
 import java.util.LinkedHashSet;
 import java.util.LinkedList;
@@ -25,7 +28,7 @@ import java.util.Set;
  * @author Danijel Antonijevic
  */
 public class SeriesOfPerformancesManager {
-    private final InstrumentationDao instrumentationDao;
+    private final IInstrumentationDao instrumentationDao;
     private final SeriesOfPerformancesDao seriesOfPerformancesDao;
 
     /**
@@ -63,7 +66,7 @@ public class SeriesOfPerformancesManager {
         series.setEndDate(endDate);
         series.setIsTour(isTour);
 
-        Optional<SeriesOfPerformancesEntity> result = this.seriesOfPerformancesDao.persist(series);
+        Optional<ISeriesOfPerformancesEntity> result = this.seriesOfPerformancesDao.persist(series);
         return result.isPresent();
     }
 
@@ -121,11 +124,11 @@ public class SeriesOfPerformancesManager {
         SeriesOfPerformancesDto series
     ) {
 
-        Optional<SeriesOfPerformancesEntity> seriesOfPerf = this.seriesOfPerformancesDao
+        Optional<ISeriesOfPerformancesEntity> seriesOfPerf = this.seriesOfPerformancesDao
             .find(series.getSeriesOfPerformancesId());
 
         if (seriesOfPerf.isPresent()) {
-            Set<InstrumentationEntity> instrumentations = this.instrumentationDao
+            Set<IInstrumentationEntity> instrumentations = this.instrumentationDao
                 .getAllInstrumentationsToSeries(seriesOfPerf.get());
             return convertInstrumentationsToDto(instrumentations);
         } else {
@@ -168,9 +171,9 @@ public class SeriesOfPerformancesManager {
         return dutyDtos;
     }
 
-    private Set<InstrumentationDto> convertInstrumentationsToDto(Set<InstrumentationEntity> inst) {
+    private Set<InstrumentationDto> convertInstrumentationsToDto(Set<IInstrumentationEntity> inst) {
         Set<InstrumentationDto> instrumentations = new LinkedHashSet<>();
-        for (InstrumentationEntity i : inst) {
+        for (IInstrumentationEntity i : inst) {
             InstrumentationDto instDto = new InstrumentationDto
                 .InstrumentationDtoBuilder(i.getInstrumentationId()).build();
             instrumentations.add(instDto);

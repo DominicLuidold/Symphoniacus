@@ -18,13 +18,16 @@ public class DutyDto {
     private final LocalDateTime end;
     private final SeriesOfPerformancesDto seriesOfPerformances;
 
-    private DutyDto(int dutyId,
-                    String description,
-                    String timeOfDay,
-                    DutyCategoryDto dutyCategory,
-                    LocalDateTime start,
-                    LocalDateTime end,
-                    SeriesOfPerformancesDto seriesOfPerformances) {
+    // so machen wir das!
+    private DutyDto(
+        int dutyId,
+        String description,
+        String timeOfDay,
+        DutyCategoryDto dutyCategory,
+        LocalDateTime start,
+        LocalDateTime end,
+        SeriesOfPerformancesDto seriesOfPerformances
+    ) {
         this.dutyId = dutyId;
         this.description = description;
         this.timeOfDay = timeOfDay;

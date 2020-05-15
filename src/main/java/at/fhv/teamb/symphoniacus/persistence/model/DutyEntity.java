@@ -1,5 +1,8 @@
 package at.fhv.teamb.symphoniacus.persistence.model;
 
+import at.fhv.teamb.symphoniacus.persistence.model.interfaces.IDutyCategoryEntity;
+import at.fhv.teamb.symphoniacus.persistence.model.interfaces.IDutyEntity;
+import at.fhv.teamb.symphoniacus.persistence.model.interfaces.ISeriesOfPerformancesEntity;
 import java.time.LocalDateTime;
 import java.util.HashSet;
 import java.util.Set;
@@ -19,7 +22,7 @@ import javax.persistence.Table;
 
 @Entity
 @Table(name = "duty")
-public class DutyEntity {
+public class DutyEntity implements IDutyEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "dutyId")
@@ -29,9 +32,9 @@ public class DutyEntity {
     @JoinColumn(name = "weeklyScheduleId")
     private WeeklyScheduleEntity weeklySchedule;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.LAZY, targetEntity = DutyCategoryEntity.class)
     @JoinColumn(name = "dutyCategoryId")
-    private DutyCategoryEntity dutyCategory;
+    private IDutyCategoryEntity dutyCategory;
 
     @Column(name = "description")
     private String description;
@@ -85,7 +88,7 @@ public class DutyEntity {
         this.weeklySchedule = weeklySchedule;
     }
 
-    public DutyCategoryEntity getDutyCategory() {
+    public IDutyCategoryEntity getDutyCategory() {
         return this.dutyCategory;
     }
 
@@ -125,7 +128,7 @@ public class DutyEntity {
         this.end = end;
     }
 
-    public SeriesOfPerformancesEntity getSeriesOfPerformances() {
+    public ISeriesOfPerformancesEntity getSeriesOfPerformances() {
         return seriesOfPerformances;
     }
 

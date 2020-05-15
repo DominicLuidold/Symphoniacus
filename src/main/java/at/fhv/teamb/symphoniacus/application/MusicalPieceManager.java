@@ -1,16 +1,15 @@
 package at.fhv.teamb.symphoniacus.application;
 
-import at.fhv.teamb.symphoniacus.application.dto.InstrumentationDto;
 import at.fhv.teamb.symphoniacus.application.dto.MusicalPieceDto;
 import at.fhv.teamb.symphoniacus.application.dto.SectionInstrumentationDto;
-import at.fhv.teamb.symphoniacus.persistence.dao.InstrumentationDao;
+import at.fhv.teamb.symphoniacus.application.dto.MusicalPieceDto;
 import at.fhv.teamb.symphoniacus.persistence.dao.MusicalPieceDao;
-import at.fhv.teamb.symphoniacus.persistence.model.InstrumentationEntity;
 import at.fhv.teamb.symphoniacus.persistence.model.MusicalPieceEntity;
 import at.fhv.teamb.symphoniacus.persistence.model.SectionInstrumentationEntity;
 import java.util.LinkedHashSet;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.LinkedHashSet;
 import java.util.Optional;
 import java.util.Set;
 
@@ -43,8 +42,8 @@ public class MusicalPieceManager {
             .build();
     }
 
-    private Set<InstrumentationDto> convertInstrumentationToDto(
-        Set<InstrumentationEntity> entities) {
+    private Set<IInstrumentationDto> convertInstrumentationToDto(
+        Set<IInstrumentationEntity> entities) {
         Set<InstrumentationDto> instrumentationDtos = new LinkedHashSet<>();
         for (InstrumentationEntity entity : entities) {
             instrumentationDtos.add(

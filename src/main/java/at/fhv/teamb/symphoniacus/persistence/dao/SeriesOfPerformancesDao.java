@@ -1,32 +1,34 @@
 package at.fhv.teamb.symphoniacus.persistence.dao;
 
 import at.fhv.teamb.symphoniacus.persistence.BaseDao;
+import at.fhv.teamb.symphoniacus.persistence.dao.interfaces.IDutyDao;
+import at.fhv.teamb.symphoniacus.persistence.dao.interfaces.ISeriesOfPerformancesDao;
 import at.fhv.teamb.symphoniacus.persistence.model.DutyCategoryEntity;
 import at.fhv.teamb.symphoniacus.persistence.model.SeriesOfPerformancesEntity;
+import at.fhv.teamb.symphoniacus.persistence.model.interfaces.ISeriesOfPerformancesEntity;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 import javax.persistence.TypedQuery;
 
-public class SeriesOfPerformancesDao extends BaseDao<SeriesOfPerformancesEntity> {
+public class SeriesOfPerformancesDao extends BaseDao<ISeriesOfPerformancesEntity> implements
+    ISeriesOfPerformancesDao {
 
     /**
      * {@inheritDoc}
      */
     @Override
-    public Optional<SeriesOfPerformancesEntity> find(Integer key) {
-        return this.find(SeriesOfPerformancesEntity.class, key);
+    public Optional<ISeriesOfPerformancesEntity> find(Integer key) {
+        return this.find(ISeriesOfPerformancesEntity.class, key);
     }
 
     /**
-     * Returns all {@link SeriesOfPerformancesEntity} objects.
-     *
-     * @return A List of series of performances entities
+     * {@inheritDoc}
      */
-    public List<SeriesOfPerformancesEntity> getAll() {
-        TypedQuery<SeriesOfPerformancesEntity> query = entityManager.createQuery(
+    public List<ISeriesOfPerformancesEntity> getAll() {
+        TypedQuery<ISeriesOfPerformancesEntity> query = entityManager.createQuery(
             "SELECT sop FROM SeriesOfPerformancesEntity sop",
-            SeriesOfPerformancesEntity.class
+            ISeriesOfPerformancesEntity.class
         );
 
         return query.getResultList();
@@ -36,20 +38,20 @@ public class SeriesOfPerformancesDao extends BaseDao<SeriesOfPerformancesEntity>
      * {@inheritDoc}
      */
     @Override
-    public Optional<SeriesOfPerformancesEntity> persist(SeriesOfPerformancesEntity elem) {
-        return this.persist(SeriesOfPerformancesEntity.class, elem);
+    public Optional<ISeriesOfPerformancesEntity> persist(ISeriesOfPerformancesEntity elem) {
+        return this.persist(ISeriesOfPerformancesEntity.class, elem);
     }
 
     /**
      * {@inheritDoc}
      */
     @Override
-    public Optional<SeriesOfPerformancesEntity> update(SeriesOfPerformancesEntity elem) {
-        return this.update(SeriesOfPerformancesEntity.class, elem);
+    public Optional<ISeriesOfPerformancesEntity> update(ISeriesOfPerformancesEntity elem) {
+        return this.update(ISeriesOfPerformancesEntity.class, elem);
     }
 
     @Override
-    public boolean remove(SeriesOfPerformancesEntity elem) {
+    public boolean remove(ISeriesOfPerformancesEntity elem) {
         return false;
     }
 
