@@ -2,6 +2,7 @@ package at.fhv.teamb.symphoniacus.application;
 
 import at.fhv.teamb.symphoniacus.persistence.dao.MonthlyScheduleDao;
 import at.fhv.teamb.symphoniacus.persistence.model.MonthlyScheduleEntity;
+import at.fhv.teamb.symphoniacus.persistence.model.interfaces.IMonthlyScheduleEntity;
 import java.time.YearMonth;
 import java.util.Optional;
 import org.apache.logging.log4j.LogManager;
@@ -22,12 +23,12 @@ public class MonthlyScheduleManager {
      * @param yearMonth The year and month to use
      * @return A monthly schedule entity
      */
-    public MonthlyScheduleEntity createIfNotExists(YearMonth yearMonth) {
+    public IMonthlyScheduleEntity createIfNotExists(YearMonth yearMonth) {
         int month = yearMonth.getMonthValue();
         int year = yearMonth.getYear();
 
         // Fetch monthly schedule from database
-        Optional<MonthlyScheduleEntity> optional =
+        Optional<IMonthlyScheduleEntity> optional =
             this.monthlyScheduleDao.findForMonthAndYear(month, year);
         if (optional.isPresent()) {
             // Return monthly schedule if present
