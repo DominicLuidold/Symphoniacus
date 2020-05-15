@@ -260,6 +260,9 @@ public class SeriesOfPerformancesController
 
         // Füge neu dazugekommene Instrumentations in die currentlist
         for (InstrumentationDto instrumentation : instrumentations) {
+            for (InstrumentationDto curr : currentItems) {
+
+            }
             if (!(currentItems.contains(instrumentation))) {
                 this.instrumentationCheckComboBox.getItems().add(instrumentation);
             }
@@ -456,10 +459,14 @@ public class SeriesOfPerformancesController
         for (MusicalPieceDto m : this.musicalPieceCheckComboBox
             .getCheckModel().getCheckedItems()) {
             boolean isSelected = false;
+
             for (InstrumentationDto i : m.getInstrumentations()) {
-                if (this.instrumentationCheckComboBox
-                    .getCheckModel().getCheckedItems().contains(i)) {
-                    isSelected = true;
+                for (InstrumentationDto instDto : this.instrumentationCheckComboBox
+                    .getCheckModel().getCheckedItems()) {
+                    if (instDto.getInstrumentationId() == (i.getInstrumentationId())) {
+                        isSelected = true;
+                        break;
+                    }
                 }
             }
             if (!isSelected) {

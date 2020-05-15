@@ -1,7 +1,7 @@
 package at.fhv.teamb.symphoniacus.application.dto;
 
-import at.fhv.teamb.symphoniacus.persistence.model.InstrumentationEntity;
 import java.util.List;
+import java.util.Objects;
 
 /**
  * Dto for Instrumentation.
@@ -53,6 +53,26 @@ public class InstrumentationDto {
 
     public List<SectionInstrumentationDto> getSectionInstrumentations() {
         return this.sectionInstrumentations;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
+        InstrumentationDto that = (InstrumentationDto) o;
+        return instrumentationId == that.instrumentationId
+            && Objects.equals(name, that.name)
+            && Objects.equals(musicalPiece.getMusicalPieceId(), that.musicalPiece.getMusicalPieceId());
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects
+            .hash(instrumentationId, name);
     }
 
     public static class InstrumentationDtoBuilder {
