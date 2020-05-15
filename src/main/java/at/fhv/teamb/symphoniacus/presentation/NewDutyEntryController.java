@@ -237,7 +237,7 @@ public class NewDutyEntryController implements Initializable, Parentable<TabPane
      */
     private void initSeriesOfPerformancesComboBox() {
         List<SeriesOfPerformancesDto> seriesOfPerformancesList =
-            this.seriesOfPerformancesManager.getAllSerieses();
+            this.seriesOfPerformancesManager.getAllSeries();
         LOG.debug("Found {} series of performances", seriesOfPerformancesList.size());
 
         final ObservableList<SeriesOfPerformancesDto> observableList =
@@ -288,7 +288,7 @@ public class NewDutyEntryController implements Initializable, Parentable<TabPane
                 }
 
                 @Override
-                public InstrumentationEntity fromString(String nameOfInst) {
+                public InstrumentationDto fromString(String nameOfInst) {
                     LOG.error(
                         "Somehow the instrumentation couldn't get found by its"
                             + " name in the NewDutyEntryController");
@@ -302,23 +302,23 @@ public class NewDutyEntryController implements Initializable, Parentable<TabPane
      * Initializes the {@link #dutyCategorySelect} combo box with data.
      */
     private void initCategoryComboBox() {
-        List<DutyCategory> dutyCategoryList = this.dutyCategoryManager.getDutyCategories();
+        List<DutyCategoryDto> dutyCategoryList = this.dutyCategoryManager.getDutyCategories();
         LOG.debug("Found {} duty categories", dutyCategoryList.size());
 
         this.dutyCategorySelect.getItems().setAll(dutyCategoryList);
         this.dutyCategorySelect.setConverter(new StringConverter<>() {
             @Override
-            public String toString(DutyCategory dutyCategory) {
-                return dutyCategory.getEntity().getType();
+            public String toString(DutyCategoryDto dutyCategory) {
+                return dutyCategory.getType();
             }
 
             @Override
-            public DutyCategory fromString(String title) {
-                DutyCategory result = dutyCategoryList.stream()
-                    .filter(item -> item.getEntity().getType().equals(title))
+            public DutyCategoryDto fromString(String title) {
+                DutyCategoryDto result = dutyCategoryList.stream()
+                    .filter(item -> item.getType().equals(title))
                     .collect(Collectors.toList()).get(0);
                 LOG.debug("Category Combobox from String -> {}",
-                    result.getEntity().getDutyCategoryId());
+                    result.getDutyCategoryId());
                 return result;
             }
         });

@@ -1,13 +1,21 @@
 package at.fhv.teamb.symphoniacus.application;
 
+import at.fhv.teamb.symphoniacus.application.dto.DutyDto;
+import at.fhv.teamb.symphoniacus.application.dto.InstrumentationDto;
+import at.fhv.teamb.symphoniacus.application.dto.MusicalPieceDto;
 import at.fhv.teamb.symphoniacus.application.dto.SeriesOfPerformancesDto;
 import at.fhv.teamb.symphoniacus.persistence.dao.InstrumentationDao;
 import at.fhv.teamb.symphoniacus.persistence.dao.SeriesOfPerformancesDao;
+import at.fhv.teamb.symphoniacus.persistence.model.DutyEntity;
 import at.fhv.teamb.symphoniacus.persistence.model.InstrumentationEntity;
 import at.fhv.teamb.symphoniacus.persistence.model.InstrumentationPositionEntity;
 import at.fhv.teamb.symphoniacus.persistence.model.MusicalPieceEntity;
+import at.fhv.teamb.symphoniacus.persistence.model.MusicianEntity;
 import at.fhv.teamb.symphoniacus.persistence.model.SeriesOfPerformancesEntity;
+import java.lang.instrument.Instrumentation;
 import java.time.LocalDate;
+import java.util.LinkedHashSet;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
@@ -84,33 +92,66 @@ public class SeriesOfPerformancesManager {
      * @param series The series of performances to use
      * @return A Set of instrumentation entities
      */
-    public Set<InstrumentationEntity> getAllInstrumentations(
-        SeriesOfPerformancesEntity series
+    public Set<InstrumentationDto> getAllInstrumentations(
+        SeriesOfPerformancesDto series
     ) {
-        return this.instrumentationDao.getAllInstrumentationsToSeries(series);
+
+        Optional<SeriesOfPerformancesEntity> seriesOfPerf = this.seriesOfPerformancesDao
+            .find(series.getSeriesOfPerformancesId());
+
+        if (seriesOfPerf.isPresent()) {
+            Set<InstrumentationEntity> instrumentations = this.instrumentationDao
+                .getAllInstrumentationsToSeries(seriesOfPerf.get());
+            return convertInstrumentationsToDto(instrumentations);
+        } else {
+            return new LinkedHashSet<>();
+        }
+
     }
 
     /**
+     * Returns all Series of Performances Objects.
      *
-     * @return
+     * @return all Series of Performances
      */
-    public List<SeriesOfPerformancesDto> getAllSerieses() {
-        List<ISeriesOfPerformancesEntity> serieses = seriesOfPerformancesDao.getAll();
+    public List<SeriesOfPerformancesDto> getAllSeries() {
+        List<SeriesOfPerformancesEntity> seriesList = seriesOfPerformancesDao.getAll();
 
         List<SeriesOfPerformancesDto> seriesDtoList = new LinkedList<>();
-        for (ISeriesOfPerformancesEntity series: serieses) {
+        for (SeriesOfPerformancesEntity series: seriesList) {
             SeriesOfPerformancesDto seriesDto =
                 new SeriesOfPerformancesDto
                     .SeriesOfPerformancesDtoBuilder(series.getSeriesOfPerformancesId())
                     .withDescription(series.getDescription())
-                    .withDuties(series.getDuties())
                     .withStartDate(series.getStartDate())
                     .withEndDate(series.getEndDate())
-                    .withMusicalPieces(series.getMusicalPieces())
-                    .withInstrumentations(series.getInstrumentations())
-                    .withIsTour(series.getIsTour()).build();
+                    .build();
             seriesDtoList.add(seriesDto);
         }
         return seriesDtoList;
     }
+
+    private Set<DutyDto> convertDutyToDto(Set<DutyEntity> duties) {
+        Set<DutyDto> dutyDtos = new LinkedHashSet<>();
+        for (DutyEntity d : duties) {
+            DutyDto dt = new DutyDto.DutyDtoBuilder(d.getDutyId())
+                .withDescription(d.getDescription())
+                .withStart(d.getStart())
+                .withEnd(d.getEnd()).build();
+            dutyDtos.add(dt);
+        }
+        return dutyDtos;
+    }
+
+    private Set<InstrumentationDto> convertInstrumentationsToDto(Set<InstrumentationEntity> inst) {
+        Set<InstrumentationDto> instrumentations = new LinkedHashSet<>();
+        for (InstrumentationEntity i : inst) {
+            InstrumentationDto instDto = new InstrumentationDto
+                .InstrumentationDtoBuilder(i.getInstrumentationId()).build();
+            instrumentations.add(instDto);
+        }
+        return instrumentations;
+    }
+
+
 }

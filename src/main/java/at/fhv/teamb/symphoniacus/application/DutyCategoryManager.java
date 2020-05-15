@@ -1,14 +1,19 @@
 package at.fhv.teamb.symphoniacus.application;
 
+import at.fhv.teamb.symphoniacus.application.dto.DutyCategoryDto;
+import at.fhv.teamb.symphoniacus.application.dto.DutyDto;
 import at.fhv.teamb.symphoniacus.domain.DutyCategory;
 import at.fhv.teamb.symphoniacus.domain.DutyCategoryChangelog;
 import at.fhv.teamb.symphoniacus.persistence.PersistenceState;
 import at.fhv.teamb.symphoniacus.persistence.dao.DutyCategoryDao;
 import at.fhv.teamb.symphoniacus.persistence.model.DutyCategoryChangelogEntity;
 import at.fhv.teamb.symphoniacus.persistence.model.DutyCategoryEntity;
+import at.fhv.teamb.symphoniacus.persistence.model.DutyEntity;
+import java.util.LinkedHashSet;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -27,7 +32,7 @@ public class DutyCategoryManager {
      *
      * @return A List of duty category objects
      */
-    public List<DutyCategory> getDutyCategories() {
+    public List<DutyCategoryDto> getDutyCategories() {
         // Fetch duty categories from database if not present
         if (this.dutyCategories == null) {
             // Get duty category entities from database
@@ -50,7 +55,18 @@ public class DutyCategoryManager {
                 this.dutyCategories.add(new DutyCategory(entity, changelogList));
             }
         }
-        return this.dutyCategories;
+        return convertCategoriesToDto(this.dutyCategories);
+    }
+
+    private List<DutyCategoryDto> convertCategoriesToDto(List<DutyCategory> cats) {
+        List<DutyCategoryDto> dutyCategoryDtos = new LinkedList<>();
+        for (DutyCategory d : cats) {
+            DutyCategoryDto dc = new DutyCategoryDto
+                .DutyCategoryDtoBuilder(d.getEntity().getDutyCategoryId())
+                .withType(d.getEntity().getType()).build();
+            dutyCategoryDtos.add(dc);
+        }
+        return dutyCategoryDtos;
     }
 
     /**

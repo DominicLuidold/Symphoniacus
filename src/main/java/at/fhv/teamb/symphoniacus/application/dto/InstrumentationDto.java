@@ -9,20 +9,20 @@ import java.util.List;
 public class InstrumentationDto {
     private final int instrumentationId;
     private final String name;
-    private final List<MusicalPieceDto> musicalPieces;
+    private final MusicalPieceDto musicalPiece;
     private final List<SeriesOfPerformancesDto> seriesOfPerformances;
     private final List<InstrumentationPositionDto> instPositions;
 
     private InstrumentationDto(
         int instrumentationId,
         String name,
-        List<MusicalPieceDto> musicalPieces,
+        MusicalPieceDto musicalPiece,
         List<SeriesOfPerformancesDto> seriesOfPerformances,
         List<InstrumentationPositionDto> instPositions
     ) {
         this.instrumentationId = instrumentationId;
         this.name = name;
-        this.musicalPieces = musicalPieces;
+        this.musicalPiece = musicalPiece;
         this.seriesOfPerformances = seriesOfPerformances;
         this.instPositions = instPositions;
     }
@@ -35,8 +35,8 @@ public class InstrumentationDto {
         return this.name;
     }
 
-    public List<MusicalPieceDto> getMusicalPieces() {
-        return this.musicalPieces;
+    public MusicalPieceDto getMusicalPiece() {
+        return this.musicalPiece;
     }
 
     public List<SeriesOfPerformancesDto> getSeriesOfPerformances() {
@@ -50,7 +50,7 @@ public class InstrumentationDto {
     public static class InstrumentationDtoBuilder {
         private final int instrumentationId;
         private String name;
-        private List<MusicalPieceDto> musicalPieces;
+        private MusicalPieceDto musicalPiece;
         private List<SeriesOfPerformancesDto> seriesOfPerformances;
         private List<InstrumentationPositionDto> instrumentationPositions;
 
@@ -63,8 +63,8 @@ public class InstrumentationDto {
             return this;
         }
 
-        public InstrumentationDtoBuilder withMusicalPieces(List<MusicalPieceDto> musicalPieces) {
-            this.musicalPieces = musicalPieces;
+        public InstrumentationDtoBuilder withMusicalPieces(MusicalPieceDto musicalPiece) {
+            this.musicalPiece = musicalPiece;
             return this;
         }
 
@@ -89,7 +89,7 @@ public class InstrumentationDto {
             return new InstrumentationDto(
                 this.instrumentationId,
                 this.name,
-                this.musicalPieces,
+                this.musicalPiece,
                 this.seriesOfPerformances,
                 this.instrumentationPositions
             );

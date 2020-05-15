@@ -1,5 +1,6 @@
 package at.fhv.teamb.symphoniacus.application.dto;
 
+import at.fhv.teamb.symphoniacus.persistence.model.DutyEntity;
 import java.time.LocalDate;
 import java.util.Set;
 
@@ -112,7 +113,9 @@ public class SeriesOfPerformancesDto {
             return this;
         }
 
-        public SeriesOfPerformancesDtoBuilder withMusicalPieces(Set<MusicalPieceDto> musicalPieces) {
+        public SeriesOfPerformancesDtoBuilder withMusicalPieces(
+            Set<MusicalPieceDto> musicalPieces
+        ) {
             this.musicalPieces = musicalPieces;
             return this;
         }

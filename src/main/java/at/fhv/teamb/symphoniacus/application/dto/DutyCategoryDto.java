@@ -28,6 +28,26 @@ public class DutyCategoryDto {
         this.duties = duties;
     }
 
+    public int getDutyCategoryId() {
+        return this.dutyCategoryId;
+    }
+
+    public String getType() {
+        return type;
+    }
+
+    public int getPoints() {
+        return this.points;
+    }
+
+    public List<DutyCategoryChangeLogDto> getChangeLogs() {
+        return this.changeLogs;
+    }
+
+    public List<DutyDto> getDuties() {
+        return this.duties;
+    }
+
     public static class DutyCategoryDtoBuilder {
         private final int dutyCategoryId;
         private String type;
