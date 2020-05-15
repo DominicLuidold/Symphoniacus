@@ -60,9 +60,9 @@ import shadow.org.codehaus.plexus.util.StringUtils;
  * @author Danijel Antonijevic
  * @author Nino Heinzle
  */
-public class NewDutyEntryController implements Initializable, Parentable<TabPaneController> {
+public class NewDutyEntryController implements Initializable, Parentable<CalendarController> {
     private static final Logger LOG = LogManager.getLogger(NewDutyEntryController.class);
-    private TabPaneController parentController;
+    private Parentable parentController;
     private ResourceBundle resources;
     private Duty duty;
     private DutyManager dutyManager;
@@ -484,7 +484,7 @@ public class NewDutyEntryController implements Initializable, Parentable<TabPane
                 Integer.parseInt(this.dutyPointsInput.getText()),
                 instrumentations
             );
-
+            this.getParentController().addDuty(this.duty);
             // Show success alert
             Alert successAlert = new Alert(Alert.AlertType.INFORMATION);
             successAlert.setTitle(this.resources.getString("tab.duty.new.entry.success.title"));
@@ -523,8 +523,9 @@ public class NewDutyEntryController implements Initializable, Parentable<TabPane
             }
         }
         LOG.debug("Closing 'New Duty' tab");
-        this.parentController.removeTab(TabPaneEntry.ADD_DUTY);
-        this.parentController.selectTab(TabPaneEntry.ORG_OFFICER_CALENDAR_VIEW);
+        this.getParentController().getParentController().removeTab(TabPaneEntry.ADD_DUTY);
+        this.getParentController().getParentController()
+            .selectTab(TabPaneEntry.ORG_OFFICER_CALENDAR_VIEW);
     }
 
     /**
@@ -577,7 +578,7 @@ public class NewDutyEntryController implements Initializable, Parentable<TabPane
      * Opens a new series of performances tab.
      */
     private void openNewSopTab() {
-        this.parentController.addTab(TabPaneEntry.ADD_SOP);
+        this.getParentController().getParentController().addTab(TabPaneEntry.ADD_SOP);
     }
 
     /**
@@ -585,24 +586,26 @@ public class NewDutyEntryController implements Initializable, Parentable<TabPane
      */
     private void closeTab() {
         LOG.debug("Closing Add Duty");
-        this.parentController.removeTab(TabPaneEntry.ADD_DUTY);
-        this.parentController.selectTab(TabPaneEntry.ORG_OFFICER_CALENDAR_VIEW);
+        this.getParentController().getParentController().removeTab(TabPaneEntry.ADD_DUTY);
+        this.getParentController().getParentController()
+            .selectTab(TabPaneEntry.ORG_OFFICER_CALENDAR_VIEW);
     }
 
     /**
      * {@inheritDoc}
      */
     @Override
-    public TabPaneController getParentController() {
-        return this.parentController;
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public void setParentController(TabPaneController controller) {
+    public void setParentController(CalendarController controller) {
         this.parentController = controller;
+    }
+
+    /**
+     * {@inheritDoc}
+     * @return
+     */
+    @Override
+    public CalendarController getParentController() {
+        return (CalendarController) this.parentController;
     }
 
     /**

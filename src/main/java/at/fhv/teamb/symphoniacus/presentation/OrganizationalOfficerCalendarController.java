@@ -2,7 +2,6 @@ package at.fhv.teamb.symphoniacus.presentation;
 
 import at.fhv.teamb.symphoniacus.application.type.DomainUserType;
 import at.fhv.teamb.symphoniacus.domain.AdministrativeAssistant;
-import at.fhv.teamb.symphoniacus.domain.Duty;
 import at.fhv.teamb.symphoniacus.presentation.internal.CustomCalendarButtonEvent;
 import at.fhv.teamb.symphoniacus.presentation.internal.TabPaneEntry;
 import at.fhv.teamb.symphoniacus.presentation.internal.popover.CustomDutyPopoverNode;
@@ -68,7 +67,7 @@ public class OrganizationalOfficerCalendarController extends CalendarController 
             );
             this.calendarView.addEventHandler(
                 CustomCalendarButtonEvent.ADD_DUTY,
-                addDutyEvent -> this.parentController.addTab(TabPaneEntry.ADD_DUTY)
+                addDutyEvent -> this.parentController.addTab(TabPaneEntry.ADD_DUTY, this)
             );
             LOG.debug("Initialized OrganizationalOfficerCalendarController with parent");
         });
