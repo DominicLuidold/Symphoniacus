@@ -88,7 +88,6 @@ public class DutyScheduleManager {
         sectionEntity.setSectionShortcut(section.getSectionShortcut());
         sectionEntity.setDescription(section.getDescription());
 
-
         // Get all DutyPosition entities from database
         List<DutyPositionEntity> dutyPositionEntities =
             this.dutyPositionDao.findCorrespondingPositions(duty.getEntity(), sectionEntity);
@@ -107,8 +106,6 @@ public class DutyScheduleManager {
         for (DutyPositionEntity dpEntity : dutyPositionEntities) {
             dutyPositions.add(new DutyPosition(dpEntity));
         }
-
-
 
         // Fill Duty with available information
         Duty dutyWithInformation = new Duty(duty.getEntity(), dutyPositions, musicalPiecesDomain);
