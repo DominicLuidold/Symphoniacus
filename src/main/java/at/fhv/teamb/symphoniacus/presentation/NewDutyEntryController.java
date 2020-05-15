@@ -1,4 +1,3 @@
-/*
 package at.fhv.teamb.symphoniacus.presentation;
 
 import at.fhv.teamb.symphoniacus.application.DutyCategoryManager;
@@ -9,13 +8,8 @@ import at.fhv.teamb.symphoniacus.application.dto.DutyCategoryDto;
 import at.fhv.teamb.symphoniacus.application.dto.DutyDto;
 import at.fhv.teamb.symphoniacus.application.dto.InstrumentationDto;
 import at.fhv.teamb.symphoniacus.application.dto.SeriesOfPerformancesDto;
-import at.fhv.teamb.symphoniacus.domain.Duty;
 import at.fhv.teamb.symphoniacus.domain.DutyCategory;
 import at.fhv.teamb.symphoniacus.persistence.PersistenceState;
-import at.fhv.teamb.symphoniacus.persistence.dao.SeriesOfPerformancesDao;
-import at.fhv.teamb.symphoniacus.persistence.model.DutyCategoryChangelogEntity;
-import at.fhv.teamb.symphoniacus.persistence.model.InstrumentationEntity;
-import at.fhv.teamb.symphoniacus.persistence.model.SeriesOfPerformancesEntity;
 import at.fhv.teamb.symphoniacus.presentation.internal.Parentable;
 import at.fhv.teamb.symphoniacus.presentation.internal.TabPaneEntry;
 import com.jfoenix.controls.JFXDatePicker;
@@ -42,7 +36,6 @@ import javafx.scene.control.ButtonType;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.ComboBoxBase;
 import javafx.scene.control.Label;
-import javafx.scene.image.ImageView;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.Border;
 import javafx.scene.layout.BorderStroke;
@@ -56,9 +49,8 @@ import org.apache.logging.log4j.Logger;
 import org.controlsfx.control.CheckComboBox;
 import org.kordamp.ikonli.fontawesome.FontAwesome;
 import org.kordamp.ikonli.javafx.FontIcon;
-import shadow.org.codehaus.plexus.util.StringUtils;
 
-*/
+
 /**
  * GUI Controller responsible for creating a new Duty Entry.
  *
@@ -66,7 +58,7 @@ import shadow.org.codehaus.plexus.util.StringUtils;
  * @author Dominic Luidold
  * @author Danijel Antonijevic
  * @author Nino Heinzle
- *//*
+ */
 
 public class NewDutyEntryController implements Initializable, Parentable<TabPaneController> {
     private static final Logger LOG = LogManager.getLogger(NewDutyEntryController.class);
@@ -148,10 +140,10 @@ public class NewDutyEntryController implements Initializable, Parentable<TabPane
         this.setEventHandlers();
     }
 
-    */
-/**
+
+    /**
      * Sets the event handlers on dutyPointsInput and seriesOfPerformancesSelect.
-     *//*
+     */
 
     private void setEventHandlers() {
         // Add event listener for updated points
@@ -176,10 +168,10 @@ public class NewDutyEntryController implements Initializable, Parentable<TabPane
         });
     }
 
-    */
-/**
+
+    /**
      * Sets the actions for all buttons of the new duty view.
-     *//*
+     */
 
     private void setButtonActions() {
         // Save button
@@ -195,10 +187,10 @@ public class NewDutyEntryController implements Initializable, Parentable<TabPane
         this.newSeriesOfPerformancesBtn.setGraphic(addIcon);
     }
 
-    */
-/**
+
+    /**
      * Sets the validators required for the new duty view.
-     *//*
+     */
 
 
     private void setInputValidators() {
@@ -244,10 +236,10 @@ public class NewDutyEntryController implements Initializable, Parentable<TabPane
         });
     }
 
-    */
-/**
+
+    /**
      * Initializes the {@link #seriesOfPerformancesSelect} combo box with data.
-     *//*
+     */
 
     private void initSeriesOfPerformancesComboBox() {
         List<SeriesOfPerformancesDto> seriesOfPerformancesList =
@@ -276,10 +268,10 @@ public class NewDutyEntryController implements Initializable, Parentable<TabPane
         });
     }
 
-    */
-/**
+
+    /**
      * Initializes the {@link #instrumentationsSelect} combo box with data.
-     *//*
+     */
 
     private void initInstrumentationsCheckComboBox() {
         this.instrumentationsSelect.getCheckModel().clearChecks();
@@ -314,10 +306,10 @@ public class NewDutyEntryController implements Initializable, Parentable<TabPane
             });
     }
 
-    */
-/**
+
+    /**
      * Initializes the {@link #dutyCategorySelect} combo box with data.
-     *//*
+     */
 
     private void initCategoryComboBox() {
         List<DutyCategoryDto> dutyCategoryList = this.dutyCategoryManager.getDutyCategories();
@@ -342,10 +334,10 @@ public class NewDutyEntryController implements Initializable, Parentable<TabPane
         });
     }
 
-    */
-/**
+
+    /**
      * Updates the {@link #dutyPointsInput} field based on currently selected/inserted data.
-     *//*
+     */
 
     private void updatePointsField() {
         // Check if a valid start date is set to calculate points
@@ -358,11 +350,11 @@ public class NewDutyEntryController implements Initializable, Parentable<TabPane
         }
     }
 
-    */
-/**
+
+    /**
      * Fills the {@link #dutyPointsInput} field with points matching the
      * selected {@link DutyCategory}.
-     *//*
+     */
 
     private void fillPointsField() {
         DutyCategoryChangeLogDto temp = null;
@@ -382,8 +374,8 @@ public class NewDutyEntryController implements Initializable, Parentable<TabPane
         this.userEditedPoints = false;
     }
 
-    */
-/**
+
+    /**
      * Validates whether the following conditions are met.
      *
      * <p>- The {@code description} has not more than 45 characters
@@ -391,7 +383,7 @@ public class NewDutyEntryController implements Initializable, Parentable<TabPane
      * - The date is within the time frame of the corresponding series of performances
      *
      * @return true when validation is successful, false oterwise
-     *//*
+     */
 
     private boolean validateInputs() {
         if (dutyDescriptionInput.getText().length() > 45) {
@@ -455,11 +447,11 @@ public class NewDutyEntryController implements Initializable, Parentable<TabPane
         }
     }
 
-    */
-/**
+
+    /**
      * Disables the {@link #scheduleSaveBtn} if not all requirements have been met.
      * Makes the button clickable otherwise.
-     *//*
+     */
 
     private void setSaveButtonStatus() {
         if (this.dutyCategorySelect.getSelectionModel().isEmpty()) {
@@ -488,21 +480,19 @@ public class NewDutyEntryController implements Initializable, Parentable<TabPane
         }
     }
 
-    */
-/**
+
+    /**
      * Persists a new duty.
-     *//*
+     */
 
     private void saveNewDutyEntry() {
         if (validateInputs()) {
             // Delegate domain object creation to manager
             this.duty = this.dutyManager.createDuty(
-                this.dutyCategorySelect.getValue(),
                 this.dutyDescriptionInput.getText(),
                 this.calculateTimeOfDay(this.dutyStartTimeInput.getValue()),
                 this.dutyStartDateInput.getValue().atTime(this.dutyStartTimeInput.getValue()),
-                this.dutyEndDateInput.getValue().atTime(this.dutyEndTimeInput.getValue()),
-                this.seriesOfPerformancesSelect.getValue()
+                this.dutyEndDateInput.getValue().atTime(this.dutyEndTimeInput.getValue())
             );
 
             Set<InstrumentationDto> instrumentations = new LinkedHashSet<>(
@@ -513,7 +503,9 @@ public class NewDutyEntryController implements Initializable, Parentable<TabPane
                 this.duty,
                 this.userEditedPoints,
                 Integer.parseInt(this.dutyPointsInput.getText()),
-                instrumentations
+                instrumentations,
+                this.seriesOfPerformancesSelect.getValue(),
+                this.dutyCategorySelect.getValue()
             );
 
             // Show success alert
@@ -540,10 +532,10 @@ public class NewDutyEntryController implements Initializable, Parentable<TabPane
         }
     }
 
-    */
-/**
+
+    /**
      * Closes the tab after confirming that the user really wants to do so.
-     *//*
+     */
 
     private void confirmTabClosure() {
         if (this.duty == null) {
@@ -560,12 +552,12 @@ public class NewDutyEntryController implements Initializable, Parentable<TabPane
         this.parentController.selectTab(TabPaneEntry.ORG_OFFICER_CALENDAR_VIEW);
     }
 
-    */
-/**
+
+    /**
      * Force user to confirm that he wants to close without saving.
      *
      * @return The {@link ButtonType} that was pressed
-     *//*
+     */
 
     private ButtonType getConfirmation() {
         Label label = new Label();
@@ -590,15 +582,15 @@ public class NewDutyEntryController implements Initializable, Parentable<TabPane
         return buttonType;
     }
 
-    */
-/**
+
+    /**
      * Calculates the time of day String for a given time.
      *
      * <p>Possible times are {@code MORNING}, {@code AFTERNOON}, {@code EVENING}.
      *
      * @param startTime The start time
      * @return A String matching a predefined value for the start time
-     *//*
+     */
 
     private String calculateTimeOfDay(LocalTime startTime) {
         if (startTime.isBefore(LocalTime.of(10, 1))) {
@@ -610,19 +602,19 @@ public class NewDutyEntryController implements Initializable, Parentable<TabPane
         return "EVENING";
     }
 
-    */
-/**
+
+    /**
      * Opens a new series of performances tab.
-     *//*
+     */
 
     private void openNewSopTab() {
         this.parentController.addTab(TabPaneEntry.ADD_SOP);
     }
 
-    */
-/**
+
+    /**
      * Closes the current tab.
-     *//*
+     */
 
     private void closeTab() {
         LOG.debug("Closing Add Duty");
@@ -630,34 +622,34 @@ public class NewDutyEntryController implements Initializable, Parentable<TabPane
         this.parentController.selectTab(TabPaneEntry.ORG_OFFICER_CALENDAR_VIEW);
     }
 
-    */
-/**
-     * {@inheritDoc}
-     *//*
+
+    /**
+     * {@inheritDoc}.
+     */
 
     @Override
     public TabPaneController getParentController() {
         return this.parentController;
     }
 
-    */
-/**
-     * {@inheritDoc}
-     *//*
+
+    /**
+     * {@inheritDoc}.
+     */
 
     @Override
     public void setParentController(TabPaneController controller) {
         this.parentController = controller;
     }
 
-    */
-/**
-     * {@inheritDoc}
-     *//*
+
+    /**
+     * {@inheritDoc}.
+     */
 
     @Override
     public void initializeWithParent() {
         // Intentionally empty - currently not needed
     }
 }
-*/
+

@@ -176,7 +176,9 @@ public class SeriesOfPerformancesManager {
         Set<InstrumentationDto> instrumentations = new LinkedHashSet<>();
         for (IInstrumentationEntity i : inst) {
             InstrumentationDto instDto = new InstrumentationDto
-                .InstrumentationDtoBuilder(i.getInstrumentationId()).build();
+                .InstrumentationDtoBuilder(i.getInstrumentationId())
+                .withName(i.getName())
+                .build();
             instrumentations.add(instDto);
         }
         return instrumentations;
