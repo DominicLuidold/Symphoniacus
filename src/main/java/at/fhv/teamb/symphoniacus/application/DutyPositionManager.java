@@ -4,6 +4,10 @@ import at.fhv.teamb.symphoniacus.persistence.model.DutyEntity;
 import at.fhv.teamb.symphoniacus.persistence.model.DutyPositionEntity;
 import at.fhv.teamb.symphoniacus.persistence.model.InstrumentationEntity;
 import at.fhv.teamb.symphoniacus.persistence.model.InstrumentationPositionEntity;
+import at.fhv.teamb.symphoniacus.persistence.model.interfaces.IDutyEntity;
+import at.fhv.teamb.symphoniacus.persistence.model.interfaces.IDutyPositionEntity;
+import at.fhv.teamb.symphoniacus.persistence.model.interfaces.IInstrumentationEntity;
+import at.fhv.teamb.symphoniacus.persistence.model.interfaces.IInstrumentationPositionEntity;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
@@ -18,15 +22,15 @@ public class DutyPositionManager {
      * @param duty             The duty to use
      * @return A List of duty position entities
      */
-    public List<DutyPositionEntity> createDutyPositions(
-        Set<InstrumentationEntity> instrumentations,
-        DutyEntity duty
+    public List<IDutyPositionEntity> createDutyPositions(
+        Set<IInstrumentationEntity> instrumentations,
+        IDutyEntity duty
     ) {
-        List<DutyPositionEntity> dutyPositions = new LinkedList<>();
+        List<IDutyPositionEntity> dutyPositions = new LinkedList<>();
 
         // Create duty position for each instrumentation position
-        for (InstrumentationEntity inst : instrumentations) {
-            for (InstrumentationPositionEntity instPosition : inst.getInstrumentationPositions()) {
+        for (IInstrumentationEntity inst : instrumentations) {
+            for (IInstrumentationPositionEntity instPosition : inst.getInstrumentationPositions()) {
                 // Fill domain object
                 DutyPositionEntity pos = new DutyPositionEntity();
                 pos.setMusician(null);

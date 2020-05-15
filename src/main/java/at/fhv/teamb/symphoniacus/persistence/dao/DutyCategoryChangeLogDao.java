@@ -1,9 +1,12 @@
 package at.fhv.teamb.symphoniacus.persistence.dao;
 
 import at.fhv.teamb.symphoniacus.persistence.BaseDao;
+import at.fhv.teamb.symphoniacus.persistence.dao.interfaces.IDutyCategoryChangeLogDao;
 import at.fhv.teamb.symphoniacus.persistence.model.DutyCategoryChangelogEntity;
 import at.fhv.teamb.symphoniacus.persistence.model.DutyCategoryEntity;
 import at.fhv.teamb.symphoniacus.persistence.model.DutyEntity;
+import at.fhv.teamb.symphoniacus.persistence.model.interfaces.IDutyCategoryChangelogEntity;
+import at.fhv.teamb.symphoniacus.persistence.model.interfaces.IDutyEntity;
 import java.util.List;
 import java.util.Optional;
 import javax.persistence.TypedQuery;
@@ -13,34 +16,35 @@ import javax.persistence.TypedQuery;
  *
  * @author Nino Heinzle
  */
-public class DutyCategoryChangeLogDao extends BaseDao<DutyCategoryChangelogEntity> {
+public class DutyCategoryChangeLogDao extends BaseDao<IDutyCategoryChangelogEntity> implements
+    IDutyCategoryChangeLogDao {
 
     /**
      * {@inheritDoc}
      */
     @Override
-    public Optional<DutyCategoryChangelogEntity> find(Integer key) {
-        return this.find(DutyCategoryChangelogEntity.class, key);
+    public Optional<IDutyCategoryChangelogEntity> find(Integer key) {
+        return this.find(IDutyCategoryChangelogEntity.class, key);
     }
 
     /**
      * {@inheritDoc}
      */
     @Override
-    public Optional<DutyCategoryChangelogEntity> persist(DutyCategoryChangelogEntity elem) {
-        return this.persist(DutyCategoryChangelogEntity.class, elem);
+    public Optional<IDutyCategoryChangelogEntity> persist(IDutyCategoryChangelogEntity elem) {
+        return this.persist(IDutyCategoryChangelogEntity.class, elem);
     }
 
     /**
      * {@inheritDoc}
      */
     @Override
-    public Optional<DutyCategoryChangelogEntity> update(DutyCategoryChangelogEntity elem) {
-        return this.update(DutyCategoryChangelogEntity.class, elem);
+    public Optional<IDutyCategoryChangelogEntity> update(IDutyCategoryChangelogEntity elem) {
+        return this.update(IDutyCategoryChangelogEntity.class, elem);
     }
 
     @Override
-    public boolean remove(DutyCategoryChangelogEntity elem) {
+    public boolean remove(IDutyCategoryChangelogEntity elem) {
         return false;
     }
 
@@ -66,12 +70,9 @@ public class DutyCategoryChangeLogDao extends BaseDao<DutyCategoryChangelogEntit
     }
 
     /**
-     * Checks whether a {@link DutyCategoryChangelogEntity} exists for a {@link DutyEntity}.
-     *
-     * @param duty The duty to use
-     * @return true if a changelog entity exists, false oterwhise
+     * {@inheritDoc}
      */
-    public boolean doesLogAlreadyExists(DutyEntity duty) {
+    public boolean doesLogAlreadyExists(IDutyEntity duty) {
         TypedQuery<Long> query = entityManager.createQuery(
             "SELECT COUNT(changelog) FROM DutyCategoryChangelogEntity changelog "
                 + "WHERE changelog.dutyCategory = :givenCategory "
@@ -86,18 +87,14 @@ public class DutyCategoryChangeLogDao extends BaseDao<DutyCategoryChangelogEntit
     }
 
     /**
-     * Returns all {@link DutyCategoryChangelogEntity} objects based on
-     * {@link DutyCategoryEntity} and start date information saved in a {@link DutyEntity}.
-     *
-     * @param duty The duty to use
-     * @return A List of duty category changelog entities
+     * {@inheritDoc}
      */
-    public Optional<DutyCategoryChangelogEntity> getChangelogByDetails(DutyEntity duty) {
-        TypedQuery<DutyCategoryChangelogEntity> query = entityManager.createQuery(
+    public Optional<IDutyCategoryChangelogEntity> getChangelogByDetails(IDutyEntity duty) {
+        TypedQuery<IDutyCategoryChangelogEntity> query = entityManager.createQuery(
             "SELECT changelog FROM DutyCategoryChangelogEntity changelog "
                 + "WHERE changelog.dutyCategory = :givenCategory "
                 + "AND changelog.startDate = :givenStartDate ",
-            DutyCategoryChangelogEntity.class
+            IDutyCategoryChangelogEntity.class
         );
 
         query.setParameter("givenCategory", duty.getDutyCategory());

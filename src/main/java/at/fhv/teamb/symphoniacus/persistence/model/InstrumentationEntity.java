@@ -1,7 +1,7 @@
 package at.fhv.teamb.symphoniacus.persistence.model;
 
 import at.fhv.teamb.symphoniacus.persistence.model.interfaces.IInstrumentationEntity;
-import at.fhv.teamb.symphoniacus.persistence.model.interfaces.IMusicalPieceEntity;
+import at.fhv.teamb.symphoniacus.persistence.model.interfaces.IInstrumentationPositionEntity;
 import java.util.LinkedList;
 import java.util.List;
 import javax.persistence.Column;
@@ -56,7 +56,7 @@ public class InstrumentationEntity implements IInstrumentationEntity {
         this.name = name;
     }
 
-    public IMusicalPieceEntity getMusicalPiece() {
+    public MusicalPieceEntity getMusicalPiece() {
         return this.musicalPiece;
     }
 
@@ -82,7 +82,7 @@ public class InstrumentationEntity implements IInstrumentationEntity {
         sectionInstrumentation.setInstrumentation(null);
     }
 
-    public List<InstrumentationPositionEntity> getInstrumentationPositions() {
+    public List<IInstrumentationPositionEntity> getInstrumentationPositions() { //TODO: find out how the fuck this works
         return this.instrumentationPositions;
     }
 

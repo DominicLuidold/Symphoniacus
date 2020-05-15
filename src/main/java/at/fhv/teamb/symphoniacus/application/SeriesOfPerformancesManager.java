@@ -58,7 +58,7 @@ public class SeriesOfPerformancesManager {
         series.setEndDate(endDate);
         series.setIsTour(isTour);
 
-        Optional<SeriesOfPerformancesEntity> result = this.seriesOfPerformancesDao.persist(series);
+        Optional<ISeriesOfPerformancesEntity> result = this.seriesOfPerformancesDao.persist(series);
         return result.isPresent();
     }
 

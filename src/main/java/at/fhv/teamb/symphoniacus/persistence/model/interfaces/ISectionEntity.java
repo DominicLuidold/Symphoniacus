@@ -1,10 +1,10 @@
 package at.fhv.teamb.symphoniacus.persistence.model.interfaces;
 
 /**
- * Interface for MusicalPieceEntity class.
+ * Interface for SectionEntity class.
  *
  * @author Theresa Gierer
  */
-public interface IMusicalPieceEntity {
-    String getName();
+public interface ISectionEntity {
+    Integer getSectionId();
 }

@@ -2,6 +2,7 @@ package at.fhv.teamb.symphoniacus.persistence.model;
 
 import at.fhv.teamb.symphoniacus.persistence.model.interfaces.IDutyCategoryEntity;
 import at.fhv.teamb.symphoniacus.persistence.model.interfaces.IDutyEntity;
+import at.fhv.teamb.symphoniacus.persistence.model.interfaces.ISeriesOfPerformancesEntity;
 import java.time.LocalDateTime;
 import java.util.HashSet;
 import java.util.Set;
@@ -127,7 +128,7 @@ public class DutyEntity implements IDutyEntity {
         this.end = end;
     }
 
-    public SeriesOfPerformancesEntity getSeriesOfPerformances() {
+    public ISeriesOfPerformancesEntity getSeriesOfPerformances() {
         return seriesOfPerformances;
     }
 

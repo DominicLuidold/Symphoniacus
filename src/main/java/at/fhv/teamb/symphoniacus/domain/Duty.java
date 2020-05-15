@@ -2,6 +2,7 @@ package at.fhv.teamb.symphoniacus.domain;
 
 import at.fhv.teamb.symphoniacus.persistence.PersistenceState;
 import at.fhv.teamb.symphoniacus.persistence.model.DutyEntity;
+import at.fhv.teamb.symphoniacus.persistence.model.interfaces.IDutyEntity;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.LinkedList;
@@ -21,12 +22,12 @@ import org.apache.logging.log4j.Logger;
  */
 public class Duty {
     private static final Logger LOG = LogManager.getLogger(Duty.class);
-    private DutyEntity entity;
+    private IDutyEntity entity;
     private List<DutyPosition> dutyPositions;
     private String title;
     private PersistenceState persistenceState;
 
-    public Duty(DutyEntity entity) {
+    public Duty(IDutyEntity entity) {
         this(entity, null);
     }
 
@@ -37,7 +38,7 @@ public class Duty {
      * @param entity        The entity to use
      * @param dutyPositions The List of DutyPositions to use
      */
-    public Duty(DutyEntity entity, List<DutyPosition> dutyPositions) {
+    public Duty(IDutyEntity entity, List<DutyPosition> dutyPositions) {
         this.entity = entity;
         if (dutyPositions != null) {
             this.dutyPositions = Collections.unmodifiableList(dutyPositions);
@@ -153,7 +154,7 @@ public class Duty {
         return Objects.requireNonNullElseGet(this.dutyPositions, LinkedList::new);
     }
 
-    public DutyEntity getEntity() {
+    public IDutyEntity getEntity() {
         return this.entity;
     }
 
