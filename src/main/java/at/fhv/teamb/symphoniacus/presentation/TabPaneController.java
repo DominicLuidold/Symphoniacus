@@ -59,7 +59,10 @@ public class TabPaneController implements Initializable, Parentable<MainControll
         removeTab(entry.getTitle());
     }
 
-    protected Optional<Parentable<TabPaneController>> addTab(TabPaneEntry entry) {
+    protected Optional<Parentable<TabPaneController>> addTab(
+        TabPaneEntry entry,
+        Parentable parent
+    ) {
         LOG.debug("Adding tab");
         // Make sure we add dynamic tabs only once
         for (Tab t : this.tabPane.getTabs()) {
@@ -75,14 +78,16 @@ public class TabPaneController implements Initializable, Parentable<MainControll
             this.bundle
         );
 
-        Parentable<TabPaneController> controller;
+        Parentable controller;
         try {
             Parent p = loader.load();
             tab.setContent(p);
             controller = loader.getController();
             // Set parent controller
             if (controller != null) {
-                if (controller.getParentController() == null) {
+                if (parent != null) {
+                    controller.setParentController(parent);
+                } else if (controller.getParentController() == null && parent == null) {
                     controller.setParentController(this);
                 }
                 controller.initializeWithParent();
@@ -137,7 +142,7 @@ public class TabPaneController implements Initializable, Parentable<MainControll
             TabPaneEntry entry = tabs.poll();
             LOG.debug("Adding tab {}", entry.getTitle());
 
-            addTab(entry);
+            addTab(entry, null);
         }
     }
 
