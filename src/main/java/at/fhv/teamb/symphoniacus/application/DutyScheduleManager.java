@@ -11,10 +11,11 @@ import at.fhv.teamb.symphoniacus.persistence.PersistenceState;
 import at.fhv.teamb.symphoniacus.persistence.dao.DutyDao;
 import at.fhv.teamb.symphoniacus.persistence.dao.DutyPositionDao;
 import at.fhv.teamb.symphoniacus.persistence.dao.MusicianDao;
-import at.fhv.teamb.symphoniacus.persistence.model.DutyEntity;
 import at.fhv.teamb.symphoniacus.persistence.model.MusicianEntity;
 import at.fhv.teamb.symphoniacus.persistence.model.SectionEntity;
+import at.fhv.teamb.symphoniacus.persistence.model.interfaces.IDutyEntity;
 import at.fhv.teamb.symphoniacus.persistence.model.interfaces.IDutyPositionEntity;
+import at.fhv.teamb.symphoniacus.persistence.model.interfaces.IMusicianEntity;
 import at.fhv.teamb.symphoniacus.persistence.model.interfaces.ISectionEntity;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -43,8 +44,8 @@ public class DutyScheduleManager {
     private final Set<Musician> unsetMusicians;
     private final WishRequestManager wishRequestManager;
     private List<Duty> dutiesOfThisDay;
-    private List<MusicianEntity> externalMusicianEntities;
-    private List<MusicianEntity> sectionMusicianEntities;
+    private List<IMusicianEntity> externalMusicianEntities;
+    private List<IMusicianEntity> sectionMusicianEntities;
     private Set<Musician> sectionMusicians;
 
     /**
@@ -232,7 +233,7 @@ public class DutyScheduleManager {
      * @param instrumentation The instrumentation to persist
      */
     public void persist(ActualSectionInstrumentation instrumentation) {
-        Optional<DutyEntity> persisted = this.dutyDao.update(instrumentation.getDuty().getEntity());
+        Optional<IDutyEntity> persisted = this.dutyDao.update(instrumentation.getDuty().getEntity());
 
         if (persisted.isPresent()) {
             instrumentation.getDuty().setPersistenceState(PersistenceState.PERSISTED);
@@ -320,7 +321,7 @@ public class DutyScheduleManager {
      * @param duty The duty to use
      */
     private void convertMusicianEntitiesToDomainObjects(Duty duty) {
-        for (MusicianEntity entity : this.sectionMusicianEntities) {
+        for (IMusicianEntity entity : this.sectionMusicianEntities) {
             // Get balancePoints for musician
 
             // Create domain object

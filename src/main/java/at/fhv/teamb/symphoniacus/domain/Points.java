@@ -1,9 +1,9 @@
 package at.fhv.teamb.symphoniacus.domain;
 
-import at.fhv.teamb.symphoniacus.persistence.model.DutyEntity;
 import at.fhv.teamb.symphoniacus.persistence.model.interfaces.IContractualObligationEntity;
 import at.fhv.teamb.symphoniacus.persistence.model.interfaces.IDutyCategoryChangelogEntity;
 import at.fhv.teamb.symphoniacus.persistence.model.interfaces.IDutyCategoryEntity;
+import at.fhv.teamb.symphoniacus.persistence.model.interfaces.IDutyEntity;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
@@ -49,7 +49,7 @@ public class Points {
      * @return Points
      */
     public static Points calcGainedPoints(
-        List<DutyEntity> duties,
+        List<IDutyEntity> duties,
         List<IDutyCategoryChangelogEntity> catChangeLogs
     ) {
         if (duties.isEmpty()) {
@@ -57,7 +57,7 @@ public class Points {
             return new Points(0);
         }
         int points = 0;
-        for (DutyEntity duty : duties) {
+        for (IDutyEntity duty : duties) {
             if (duty.getStart().isBefore(LocalDateTime.now())
                 || duty.getStart().isEqual(LocalDateTime.now())
             ) {
@@ -76,7 +76,7 @@ public class Points {
      * @return Points
      */
     public static Points calcBalancePoints(
-        List<DutyEntity> duties,
+        List<IDutyEntity> duties,
         Set<IDutyCategoryEntity> dutyCategories
     ) {
         if (duties.isEmpty()) {
@@ -102,7 +102,7 @@ public class Points {
      * @return The number of relevant/correct points at the time of the duty
      */
     private static int giveChangeLogPointsOfDuty(
-        DutyEntity duty,
+        IDutyEntity duty,
         List<IDutyCategoryChangelogEntity> catChangeLogs
     ) {
         int points = 0;
@@ -163,12 +163,12 @@ public class Points {
      * @return Calculated points
      */
     private static Points calcBalancePointsForCurrentMonth(
-        List<DutyEntity> duties,
+        List<IDutyEntity> duties,
         Set<IDutyCategoryEntity> dutyCategories
     ) {
         int points = 0;
         // Iterate every duty from current month
-        for (DutyEntity duty : duties) {
+        for (IDutyEntity duty : duties) {
             if (duty.getStart().isAfter(LocalDateTime.now())) {
                 // Iterate every dutyCategory and find match to duty -> count points
                 // and break from iterator
@@ -193,11 +193,11 @@ public class Points {
      * @return Calculated points
      */
     private static Points calcBalancePointsForMonthAfterCurrent(
-        List<DutyEntity> duties,
+        List<IDutyEntity> duties,
         Set<IDutyCategoryEntity> dutyCategories
     ) {
         int points = 0;
-        for (DutyEntity duty : duties) {
+        for (IDutyEntity duty : duties) {
             for (IDutyCategoryEntity cat : dutyCategories) {
                 if (duty.getDutyCategory().getDutyCategoryId().equals(cat.getDutyCategoryId())) {
                     points = points + cat.getPoints();

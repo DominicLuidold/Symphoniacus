@@ -152,7 +152,7 @@ public class DutyDao extends BaseDao<IDutyEntity> implements IDutyDao {
      * @return A List of the corresponding duties that were found
      */
     public List<IDutyEntity> getAllDutiesInRangeFromMusician(
-        MusicianEntity musician,
+        IMusicianEntity musician,
         LocalDate month
     ) {
         YearMonth yearMonth = YearMonth.from(month);

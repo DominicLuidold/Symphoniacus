@@ -5,8 +5,8 @@ import at.fhv.teamb.symphoniacus.domain.WishRequest;
 import at.fhv.teamb.symphoniacus.persistence.dao.NegativeDateWishDao;
 import at.fhv.teamb.symphoniacus.persistence.dao.NegativeDutyWishDao;
 import at.fhv.teamb.symphoniacus.persistence.dao.PositiveWishDao;
-import at.fhv.teamb.symphoniacus.persistence.model.DutyEntity;
 import at.fhv.teamb.symphoniacus.persistence.model.WishRequestable;
+import at.fhv.teamb.symphoniacus.persistence.model.interfaces.IDutyEntity;
 import java.util.LinkedHashSet;
 import java.util.Optional;
 import java.util.Set;
@@ -37,7 +37,7 @@ public class WishRequestManager {
      *
      * @param duty duty
      */
-    public void loadAllWishRequests(DutyEntity duty) {
+    public void loadAllWishRequests(IDutyEntity duty) {
         allWishRequests = new LinkedHashSet<>();
         this.allWishRequests.addAll(positiveWishDao.getAllPositiveWishes(duty));
         this.allWishRequests.addAll(negDateWishDao.getAllNegativeDateWishes(duty));
@@ -50,7 +50,7 @@ public class WishRequestManager {
      * @param musician given musician domain object
      * @return the same musician
      */
-    public Musician setMusicianWishRequest(Musician musician, DutyEntity duty) {
+    public Musician setMusicianWishRequest(Musician musician, IDutyEntity duty) {
         // Beware! if allWish isn't loaded this method will load
         // the wishes individually from the DAO
         if (this.allWishRequests == null) {

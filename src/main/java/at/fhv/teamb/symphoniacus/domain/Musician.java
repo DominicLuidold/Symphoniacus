@@ -3,6 +3,7 @@ package at.fhv.teamb.symphoniacus.domain;
 import at.fhv.teamb.symphoniacus.domain.exception.PointsNotCalculatedException;
 import at.fhv.teamb.symphoniacus.persistence.model.MusicianEntity;
 import at.fhv.teamb.symphoniacus.persistence.model.interfaces.IDutyPositionEntity;
+import at.fhv.teamb.symphoniacus.persistence.model.interfaces.IMusicianEntity;
 import at.fhv.teamb.symphoniacus.persistence.model.interfaces.IUserEntity;
 import java.util.List;
 import java.util.Objects;
@@ -19,7 +20,7 @@ import org.apache.logging.log4j.Logger;
 public class Musician {
     private static final Logger LOG = LogManager.getLogger(Musician.class);
 
-    private final MusicianEntity entity;
+    private final IMusicianEntity entity;
     private final boolean isExternal;
     private final IUserEntity userEntity;
     private Points balancePoints;
@@ -28,7 +29,7 @@ public class Musician {
     private WishRequest wishRequest;
     private Section section;
 
-    public Musician(MusicianEntity entity) {
+    public Musician(IMusicianEntity entity) {
         this(entity, null, null, null);
     }
 
@@ -40,7 +41,7 @@ public class Musician {
      * @param balancePoints The balancePoints of the musician
      */
     public Musician(
-        MusicianEntity entity,
+        IMusicianEntity entity,
         Points balancePoints,
         Points debitPoints,
         Points gainedPoints
@@ -144,7 +145,7 @@ public class Musician {
         this.wishRequest = wishRequest;
     }
 
-    public MusicianEntity getEntity() {
+    public IMusicianEntity getEntity() {
         return this.entity;
     }
 
