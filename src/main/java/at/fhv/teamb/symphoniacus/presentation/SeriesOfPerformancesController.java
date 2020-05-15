@@ -2,6 +2,7 @@ package at.fhv.teamb.symphoniacus.presentation;
 
 import at.fhv.teamb.symphoniacus.application.MusicalPieceManager;
 import at.fhv.teamb.symphoniacus.application.SeriesOfPerformancesManager;
+import at.fhv.teamb.symphoniacus.application.dto.MusicalPieceDto;
 import at.fhv.teamb.symphoniacus.persistence.model.InstrumentationEntity;
 import at.fhv.teamb.symphoniacus.persistence.model.MusicalPieceEntity;
 import at.fhv.teamb.symphoniacus.persistence.model.SectionInstrumentationEntity;
@@ -173,9 +174,9 @@ public class SeriesOfPerformancesController
      * loadInstrumentationsFromChosenMusicalPieces is called.
      */
     public void initMusicalPiecesCheckListView() {
-        final ObservableList<MusicalPieceEntity> musicalPieces =
+        final ObservableList<MusicalPieceDto> musicalPieces =
             FXCollections.observableArrayList();
-        Set<MusicalPieceEntity> mp = this.musicalPieceManager.getAllMusicalPieces();
+        Set<MusicalPieceDto> mp = this.musicalPieceManager.getAllMusicalPieces();
         musicalPieces.addAll(mp);
 
         final StringConverter<MusicalPieceEntity> musicalConverter =

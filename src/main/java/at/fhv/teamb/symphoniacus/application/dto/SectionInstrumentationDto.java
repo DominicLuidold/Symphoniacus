@@ -1,7 +1,7 @@
 package at.fhv.teamb.symphoniacus.application.dto;
 
 /**
- * DTO for Duties.
+ * DTO for SectionInstrumentations.
  * @author Nino Heinzle
  * @created : 15.05.20, Fr.
  **/
