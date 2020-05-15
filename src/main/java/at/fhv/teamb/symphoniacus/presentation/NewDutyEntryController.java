@@ -290,7 +290,7 @@ public class NewDutyEntryController implements Initializable, Parentable<TabPane
                 @Override
                 public String toString(InstrumentationDto inst) {
                     return (inst.getName() + " - "
-                        + inst.getMusicalPiece().getName());
+                        + inst.getMusicalPiece().getName()); //TODO Nullpointer
                 }
 
                 @Override
@@ -485,26 +485,24 @@ public class NewDutyEntryController implements Initializable, Parentable<TabPane
 
     private void saveNewDutyEntry() {
         if (validateInputs()) {
+
+            Set<InstrumentationDto> instrumentations = new LinkedHashSet<>(
+                this.instrumentationsSelect.getCheckModel().getCheckedItems()
+            );
+
             // Delegate domain object creation to manager
-            this.duty = this.dutyManager.createDuty(
+            this.duty = this.dutyManager.save(
+                this.userEditedPoints,
+                Integer.parseInt(this.dutyPointsInput.getText()),
+                instrumentations,
+                this.seriesOfPerformancesSelect.getValue(),
+                this.dutyCategorySelect.getValue(),
                 this.dutyDescriptionInput.getText(),
                 this.calculateTimeOfDay(this.dutyStartTimeInput.getValue()),
                 this.dutyStartDateInput.getValue().atTime(this.dutyStartTimeInput.getValue()),
                 this.dutyEndDateInput.getValue().atTime(this.dutyEndTimeInput.getValue())
             );
 
-            Set<InstrumentationDto> instrumentations = new LinkedHashSet<>(
-                this.instrumentationsSelect.getCheckModel().getCheckedItems()
-            );
-            // Delegate saving to manager
-            this.duty = this.dutyManager.save(
-                this.duty,
-                this.userEditedPoints,
-                Integer.parseInt(this.dutyPointsInput.getText()),
-                instrumentations,
-                this.seriesOfPerformancesSelect.getValue(),
-                this.dutyCategorySelect.getValue()
-            );
 
             if (this.duty.getPersistenceState() != null) {
                 if (this.duty.getPersistenceState() == PersistenceState.PERSISTED) {

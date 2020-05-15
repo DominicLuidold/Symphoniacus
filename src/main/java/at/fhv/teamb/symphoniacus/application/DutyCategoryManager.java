@@ -76,6 +76,7 @@ public class DutyCategoryManager {
                 .DutyCategoryChangeLogDtoBuilder(cl.getEntity().getDutyCategoryChangelogId())
                 .withPoints(cl.getEntity().getPoints())
                 .withDutyCategory(convertCategoryEntityToDto(cl.getEntity().getDutyCategory()))
+                .withStartDate(cl.getEntity().getStartDate())
                 .build();
             changeLog.add(clDto);
         }

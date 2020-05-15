@@ -20,7 +20,6 @@ import at.fhv.teamb.symphoniacus.persistence.model.DutyCategoryEntity;
 import at.fhv.teamb.symphoniacus.persistence.model.DutyEntity;
 import at.fhv.teamb.symphoniacus.persistence.model.InstrumentationEntity;
 import at.fhv.teamb.symphoniacus.persistence.model.SectionEntity;
-import at.fhv.teamb.symphoniacus.persistence.model.SeriesOfPerformancesEntity;
 import at.fhv.teamb.symphoniacus.persistence.model.interfaces.IDutyCategoryChangelogEntity;
 import at.fhv.teamb.symphoniacus.persistence.model.interfaces.IDutyCategoryEntity;
 import at.fhv.teamb.symphoniacus.persistence.model.interfaces.IDutyEntity;
@@ -58,6 +57,7 @@ public class DutyManager {
     private final IDutyCategoryChangeLogDao changeLogDao;
     private final SeriesOfPerformancesDao seriesDao;
     private final IDutyCategoryDao categoryDao;
+    private final DutyCategoryDao dutyCategoryDao;
     protected IDutyDao dutyDao;
 
     /**
@@ -72,6 +72,7 @@ public class DutyManager {
         this.dutyDao = new DutyDao();
         this.seriesDao = new SeriesOfPerformancesDao();
         this.categoryDao = new DutyCategoryDao();
+        this.dutyCategoryDao = new DutyCategoryDao();
     }
 
     /**
@@ -252,7 +253,7 @@ public class DutyManager {
      * @param end         The end of the duty
      * @return A duty domain object
      */
-    public DutyDto createDuty(
+    private IDutyEntity createDuty(
         String description,
         String timeOfDay,
         LocalDateTime start,
@@ -290,11 +291,7 @@ public class DutyManager {
         }
 
         // Return domain object
-        return new DutyDto.DutyDtoBuilder(dutyEntity.getDutyId())
-            .withDescription(dutyEntity.getDescription())
-            .withTimeOfDay(dutyEntity.getTimeOfDay())
-            .withStart(dutyEntity.getStart())
-            .build();
+        return dutyEntity;
     }
 
     /**
@@ -304,47 +301,41 @@ public class DutyManager {
      * from {@link PersistenceState#EDITED} to {@link PersistenceState#PERSISTED}, provided
      * that the database update was successful.
      *
-     * @param duty The duty to save
      */
     public DutyDto save(
-        DutyDto duty,
         boolean userPointsChanged,
         Integer points,
         Set<InstrumentationDto> instrumentations,
         SeriesOfPerformancesDto seriesOfPerformances,
-        DutyCategoryDto dutyCategory
+        DutyCategoryDto dutyCategory,
+        String description,
+        String timeOfDay,
+        LocalDateTime start,
+        LocalDateTime end
     ) {
-        //TODO private methods
-        //Convert SeriesDto to Entity
-        ISeriesOfPerformancesEntity series = new SeriesOfPerformancesEntity();
-        series.setStartDate(seriesOfPerformances.getStartDate());
-        series.setEndDate(seriesOfPerformances.getEndDate());
-        series.setSeriesOfPerformancesId(seriesOfPerformances.getSeriesOfPerformancesId());
-        series.setDescription(seriesOfPerformances.getDescription());
 
-        //Convert DutyCategory to Entity
-        IDutyCategoryEntity dutyCat = new DutyCategoryEntity();
-        dutyCat.setDutyCategoryId(dutyCategory.getDutyCategoryId());
-        dutyCat.setPoints(dutyCategory.getPoints());
-        dutyCat.setType(dutyCategory.getType());
+        IDutyEntity duty = createDuty(description,timeOfDay,start,end);
 
-        IDutyEntity newDuty = new DutyEntity();
-        newDuty.setDescription(duty.getDescription());
-        newDuty.setStart(duty.getStart());
-        newDuty.setEnd(duty.getEnd());
-        newDuty.setSeriesOfPerformances(series);
-        newDuty.setDutyCategory(dutyCat);
 
-        this.dutyPositionManager.createDutyPositions(
+        Optional<ISeriesOfPerformancesEntity> newSeries = this.seriesDao
+            .find(seriesOfPerformances.getSeriesOfPerformancesId());
+        Optional<IDutyCategoryEntity> newCategory = this.dutyCategoryDao
+            .find(dutyCategory.getDutyCategoryId());
+        if (newSeries.isPresent() && newCategory.isPresent()) {
+            duty.setSeriesOfPerformances(newSeries.get());
+            duty.setDutyCategory(newCategory.get());
+        }
+
+        duty.getDutyPositions().addAll(this.dutyPositionManager.createDutyPositions(
             convertInstrumentationToEntity(instrumentations),
-            newDuty
-        );
-        Optional<IDutyEntity> persistedDuty = this.dutyDao.persist(newDuty);
+            duty
+        ));
+        Optional<IDutyEntity> persistedDuty = this.dutyDao.persist(duty);
 
         if (userPointsChanged) {
-            if (this.changeLogDao.doesLogAlreadyExists(newDuty)) {
+            if (this.changeLogDao.doesLogAlreadyExists(duty)) {
                 Optional<IDutyCategoryChangelogEntity> changeLog =
-                    this.changeLogDao.getChangelogByDetails(newDuty);
+                    this.changeLogDao.getChangelogByDetails(duty);
                 if (changeLog.isPresent()) {
                     changeLog.get().setPoints(points);
                     changeLogDao.update(changeLog.get());
@@ -353,12 +344,20 @@ public class DutyManager {
                 }
             } else {
                 IDutyCategoryChangelogEntity changeLog = new DutyCategoryChangelogEntity();
-                changeLog.setDutyCategory(newDuty.getDutyCategory());
+                changeLog.setDutyCategory(duty.getDutyCategory());
                 changeLog.setPoints(points);
-                changeLog.setStartDate(newDuty.getStart().toLocalDate());
+                changeLog.setStartDate(duty.getStart().toLocalDate());
                 changeLogDao.persist(changeLog);
             }
         }
+
+        DutyDto dutyDto = new DutyDto.DutyDtoBuilder()
+            .withDutyId(duty.getDutyId())
+            .withStart(duty.getStart())
+            .withEnd(duty.getEnd())
+            .withTimeOfDay(duty.getTimeOfDay())
+            .withDescription(duty.getDescription())
+            .build();
 
 
         if (persistedDuty.isPresent()) {
@@ -367,7 +366,7 @@ public class DutyManager {
                 duty.getDutyId(),
                 duty.getDescription()
             );
-            return fillNewDtoWithState(duty, PersistenceState.PERSISTED);
+            return fillNewDtoWithState(dutyDto, PersistenceState.PERSISTED);
 
         } else {
             LOG.error(
@@ -375,13 +374,13 @@ public class DutyManager {
                 duty.getDutyId(),
                 duty.getDescription()
             );
-            return fillNewDtoWithState(duty, PersistenceState.EDITED);
+            return fillNewDtoWithState(dutyDto, PersistenceState.EDITED);
 
         }
     }
 
     private DutyDto fillNewDtoWithState(DutyDto duty, PersistenceState state) {
-        return new DutyDto.DutyDtoBuilder(duty.getDutyId())
+        return new DutyDto.DutyDtoBuilder()
             .withDescription(duty.getDescription())
             .withTimeOfDay(duty.getTimeOfDay())
             .withStart(duty.getStart())

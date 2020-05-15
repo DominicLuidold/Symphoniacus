@@ -72,7 +72,7 @@ public class DutyDto {
     }
 
     public static class DutyDtoBuilder {
-        private final int dutyId;
+        private int dutyId;
         private String description;
         private String timeOfDay;
         private DutyCategoryDto dutyCategory;
@@ -81,8 +81,9 @@ public class DutyDto {
         private SeriesOfPerformancesDto seriesOfPerformances;
         private PersistenceState persistenceState;
 
-        public DutyDtoBuilder(int dutyId) {
+        public DutyDtoBuilder withDutyId(int dutyId) {
             this.dutyId = dutyId;
+            return this;
         }
 
         public DutyDtoBuilder withDescription(String description) {

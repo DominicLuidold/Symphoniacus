@@ -155,16 +155,28 @@ public class SeriesOfPerformancesManager {
                     .withDescription(series.getDescription())
                     .withStartDate(series.getStartDate())
                     .withEndDate(series.getEndDate())
+                    .withMusicalPieces(convertMusicalPiecesToDto(series.getMusicalPieces()))
                     .build();
             seriesDtoList.add(seriesDto);
         }
         return seriesDtoList;
     }
 
+    private Set<MusicalPieceDto> convertMusicalPiecesToDto(Set<IMusicalPieceEntity> mp) {
+        Set<MusicalPieceDto> musicalPieces = new LinkedHashSet<>();
+        for (IMusicalPieceEntity m : mp) {
+            MusicalPieceDto musicalPieceDto = new MusicalPieceDto
+                .MusicalPieceDtoBuilder(m.getMusicalPieceId())
+                .withName(m.getName()).build();
+            musicalPieces.add(musicalPieceDto);
+        }
+        return musicalPieces;
+    }
+
     private Set<DutyDto> convertDutyToDto(Set<DutyEntity> duties) {
         Set<DutyDto> dutyDtos = new LinkedHashSet<>();
         for (DutyEntity d : duties) {
-            DutyDto dt = new DutyDto.DutyDtoBuilder(d.getDutyId())
+            DutyDto dt = new DutyDto.DutyDtoBuilder()
                 .withDescription(d.getDescription())
                 .withStart(d.getStart())
                 .withEnd(d.getEnd()).build();
@@ -179,11 +191,18 @@ public class SeriesOfPerformancesManager {
             InstrumentationDto instDto = new InstrumentationDto
                 .InstrumentationDtoBuilder(i.getInstrumentationId())
                 .withName(i.getName())
+                .withMusicalPiece(new MusicalPieceDto
+                    .MusicalPieceDtoBuilder(i.getMusicalPiece().getMusicalPieceId())
+                    .withName(i.getMusicalPiece().getName())
+                    .build()
+                )
                 .build();
             instrumentations.add(instDto);
         }
         return instrumentations;
     }
+
+
 
 
 }
