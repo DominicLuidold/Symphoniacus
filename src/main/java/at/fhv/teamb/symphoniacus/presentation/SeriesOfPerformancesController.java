@@ -115,6 +115,7 @@ public class SeriesOfPerformancesController
         this.instrumentationCheckComboBox.setTitle(
             resources.getString("seriesOfPerformances.instrumentations.placeholder")
         );
+        this.instrumentationCheckComboBox.setDisable(true);
         initMusicalPiecesCheckListView();
 
         RequiredFieldValidator fieldValidator = new RequiredFieldValidator();
@@ -219,6 +220,11 @@ public class SeriesOfPerformancesController
                     this.musicalPieceCheckComboBox.getCheckModel().getCheckedItems());
                 this.itemChanged = false;
             }
+            if (!this.musicalPieceCheckComboBox.getCheckModel().getCheckedItems().isEmpty()) {
+                this.instrumentationCheckComboBox.setDisable(false);
+            } else {
+                this.instrumentationCheckComboBox.setDisable(true);
+            }
         });
     }
 
@@ -236,8 +242,7 @@ public class SeriesOfPerformancesController
         Set<InstrumentationDto> inst = this.musicalPieceManager.getInstrumentations(mp);
 
         // All Intrumentations of the checked musical pieces
-        ObservableSet<InstrumentationDto> instrumentations = FXCollections.observableSet();
-        instrumentations.addAll(inst);
+        ObservableSet<InstrumentationDto> instrumentations = FXCollections.observableSet(inst);
 
         final StringConverter<InstrumentationDto> instrumentationConverter =
             new StringConverter<>() {
@@ -260,9 +265,6 @@ public class SeriesOfPerformancesController
 
         // Füge neu dazugekommene Instrumentations in die currentlist
         for (InstrumentationDto instrumentation : instrumentations) {
-            for (InstrumentationDto curr : currentItems) {
-
-            }
             if (!(currentItems.contains(instrumentation))) {
                 this.instrumentationCheckComboBox.getItems().add(instrumentation);
             }

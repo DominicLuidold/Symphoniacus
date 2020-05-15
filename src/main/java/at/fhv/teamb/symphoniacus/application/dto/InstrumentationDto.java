@@ -5,7 +5,9 @@ import java.util.Objects;
 
 /**
  * Dto for Instrumentation.
+ *
  * @author : Danijel Antonijevic
+ * @author Nino Heinzle
  **/
 public class InstrumentationDto {
     private final int instrumentationId;
@@ -66,7 +68,8 @@ public class InstrumentationDto {
         InstrumentationDto that = (InstrumentationDto) o;
         return instrumentationId == that.instrumentationId
             && Objects.equals(name, that.name)
-            && Objects.equals(musicalPiece.getMusicalPieceId(), that.musicalPiece.getMusicalPieceId());
+            &&
+            Objects.equals(musicalPiece.getMusicalPieceId(), that.musicalPiece.getMusicalPieceId());
     }
 
     @Override
@@ -118,6 +121,7 @@ public class InstrumentationDto {
 
         /**
          * Constructs a new InstrumentationDto with the previously set options in the builder.
+         *
          * @return Constructed InstrumentationDto.
          */
         public InstrumentationDto build() {

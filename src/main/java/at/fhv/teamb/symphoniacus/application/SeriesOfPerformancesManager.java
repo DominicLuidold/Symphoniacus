@@ -201,8 +201,4 @@ public class SeriesOfPerformancesManager {
         }
         return instrumentations;
     }
-
-
-
-
 }
