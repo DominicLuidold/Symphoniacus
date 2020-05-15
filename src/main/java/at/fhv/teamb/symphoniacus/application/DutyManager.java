@@ -317,7 +317,7 @@ public class DutyManager {
         //Convert SeriesDto to Entity
         ISeriesOfPerformancesEntity series = new SeriesOfPerformancesEntity();
         series.setStartDate(seriesOfPerformances.getStartDate());
-        series.setEndDate(seriesOfPerformances.getEndDate());;
+        series.setEndDate(seriesOfPerformances.getEndDate());
         series.setSeriesOfPerformancesId(seriesOfPerformances.getSeriesOfPerformancesId());
         series.setDescription(seriesOfPerformances.getDescription());
 
@@ -366,7 +366,7 @@ public class DutyManager {
                 duty.getDutyId(),
                 duty.getDescription()
             );
-             return fillNewDtoWithState(duty,PersistenceState.PERSISTED);
+            return fillNewDtoWithState(duty,PersistenceState.PERSISTED);
 
         } else {
             LOG.error(
@@ -380,7 +380,7 @@ public class DutyManager {
     }
 
     private DutyDto fillNewDtoWithState(DutyDto duty, PersistenceState state) {
-            return new DutyDto.DutyDtoBuilder(duty.getDutyId())
+        return new DutyDto.DutyDtoBuilder(duty.getDutyId())
                 .withDescription(duty.getDescription())
                 .withTimeOfDay(duty.getTimeOfDay())
                 .withStart(duty.getStart())
