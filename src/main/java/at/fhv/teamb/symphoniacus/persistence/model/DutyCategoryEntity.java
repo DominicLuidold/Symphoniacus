@@ -2,6 +2,7 @@ package at.fhv.teamb.symphoniacus.persistence.model;
 
 import at.fhv.teamb.symphoniacus.persistence.model.interfaces.IDutyCategoryChangelogEntity;
 import at.fhv.teamb.symphoniacus.persistence.model.interfaces.IDutyCategoryEntity;
+import at.fhv.teamb.symphoniacus.persistence.model.interfaces.IDutyEntity;
 import java.util.LinkedList;
 import java.util.List;
 import javax.persistence.Column;
@@ -29,11 +30,15 @@ public class DutyCategoryEntity implements IDutyCategoryEntity {
     @Column(name = "points")
     private Integer points;
 
-    @OneToMany(mappedBy = "dutyCategory", orphanRemoval = true)
+    @OneToMany(
+        mappedBy = "dutyCategory",
+        orphanRemoval = true,
+        targetEntity = DutyCategoryChangelogEntity.class
+    )
     private List<IDutyCategoryChangelogEntity> dutyCategoryChangelogs = new LinkedList<>();
 
-    @OneToMany(mappedBy = "dutyCategory", orphanRemoval = true)
-    private List<DutyEntity> duties = new LinkedList<>();
+    @OneToMany(mappedBy = "dutyCategory", orphanRemoval = true, targetEntity = DutyEntity.class)
+    private List<IDutyEntity> duties = new LinkedList<>();
 
     @Override
     public Integer getDutyCategoryId() {
@@ -93,18 +98,18 @@ public class DutyCategoryEntity implements IDutyCategoryEntity {
     }
 
     @Override
-    public List<DutyEntity> getDuties() {
+    public List<IDutyEntity> getDuties() {
         return this.duties;
     }
 
     @Override
-    public void addDuty(DutyEntity duty) {
+    public void addDuty(IDutyEntity duty) {
         this.duties.add(duty);
         duty.setDutyCategory(this);
     }
 
     @Override
-    public void removeDuty(DutyEntity duty) {
+    public void removeDuty(IDutyEntity duty) {
         this.duties.remove(duty);
         duty.setDutyCategory(null);
     }

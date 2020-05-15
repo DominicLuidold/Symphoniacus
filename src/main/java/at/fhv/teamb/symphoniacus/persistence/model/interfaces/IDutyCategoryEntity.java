@@ -1,6 +1,5 @@
 package at.fhv.teamb.symphoniacus.persistence.model.interfaces;
 
-import at.fhv.teamb.symphoniacus.persistence.model.DutyEntity;
 import java.util.List;
 
 public interface IDutyCategoryEntity {
@@ -26,9 +25,9 @@ public interface IDutyCategoryEntity {
 
     void removeDutyCategoryChangelog(IDutyCategoryChangelogEntity dutyCategoryChangelog);
 
-    List<DutyEntity> getDuties();
+    List<IDutyEntity> getDuties();
 
-    void addDuty(DutyEntity duty);
+    void addDuty(IDutyEntity duty);
 
-    void removeDuty(DutyEntity duty);
+    void removeDuty(IDutyEntity duty);
 }

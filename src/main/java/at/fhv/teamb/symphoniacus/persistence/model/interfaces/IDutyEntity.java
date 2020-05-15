@@ -1,6 +1,5 @@
 package at.fhv.teamb.symphoniacus.persistence.model.interfaces;
 
-import at.fhv.teamb.symphoniacus.persistence.model.DutyCategoryEntity;
 import java.time.LocalDateTime;
 import java.util.Set;
 
@@ -15,7 +14,7 @@ public interface IDutyEntity {
 
     IDutyCategoryEntity getDutyCategory();
 
-    void setDutyCategory(DutyCategoryEntity dutyCategory);
+    void setDutyCategory(IDutyCategoryEntity dutyCategory);
 
     String getDescription();
 
@@ -35,9 +34,7 @@ public interface IDutyEntity {
 
     ISeriesOfPerformancesEntity getSeriesOfPerformances();
 
-    void setSeriesOfPerformances(
-        ISeriesOfPerformancesEntity seriesOfPerformances
-    );
+    void setSeriesOfPerformances(ISeriesOfPerformancesEntity seriesOfPerformances);
 
     Set<IDutyPositionEntity> getDutyPositions();
 
@@ -51,6 +48,5 @@ public interface IDutyEntity {
 
     void removeSectionMonthlySchedule(ISectionMonthlyScheduleEntity sms);
 
-    void setSectionMonthlySchedules(
-        Set<ISectionMonthlyScheduleEntity> sectionMonthlySchedules);
+    void setSectionMonthlySchedules(Set<ISectionMonthlyScheduleEntity> sectionMonthlySchedules);
 }

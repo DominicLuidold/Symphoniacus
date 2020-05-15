@@ -2,6 +2,7 @@ package at.fhv.teamb.symphoniacus.persistence.model;
 
 import at.fhv.teamb.symphoniacus.persistence.model.interfaces.IContractualObligationEntity;
 import at.fhv.teamb.symphoniacus.persistence.model.interfaces.IInstrumentCategoryEntity;
+import at.fhv.teamb.symphoniacus.persistence.model.interfaces.IMusicianEntity;
 import java.time.LocalDate;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -33,11 +34,11 @@ public class ContractualObligationEntity implements IContractualObligationEntity
     @Column(name = "endDate")
     private LocalDate endDate;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.LAZY, targetEntity = MusicianEntity.class)
     @JoinColumn(name = "musicianId")
-    private MusicianEntity musician;
+    private IMusicianEntity musician;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.LAZY, targetEntity = InstrumentCategoryEntity.class)
     @JoinColumn(name = "instrumentCategoryId")
     private IInstrumentCategoryEntity instrumentCategory;
 
@@ -92,12 +93,12 @@ public class ContractualObligationEntity implements IContractualObligationEntity
     }
 
     @Override
-    public MusicianEntity getMusician() {
+    public IMusicianEntity getMusician() {
         return this.musician;
     }
 
     @Override
-    public void setMusician(MusicianEntity musician) {
+    public void setMusician(IMusicianEntity musician) {
         this.musician = musician;
     }
 
@@ -107,9 +108,7 @@ public class ContractualObligationEntity implements IContractualObligationEntity
     }
 
     @Override
-    public void setInstrumentCategory(
-        IInstrumentCategoryEntity instrumentCategory
-    ) {
+    public void setInstrumentCategory(IInstrumentCategoryEntity instrumentCategory) {
         this.instrumentCategory = instrumentCategory;
     }
 }

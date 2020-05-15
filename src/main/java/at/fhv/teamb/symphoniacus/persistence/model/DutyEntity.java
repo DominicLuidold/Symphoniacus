@@ -31,7 +31,11 @@ public class DutyEntity implements IDutyEntity {
     @Column(name = "dutyId")
     private Integer dutyId;
 
-    @ManyToOne(fetch = FetchType.LAZY, cascade = {CascadeType.PERSIST, CascadeType.MERGE})
+    @ManyToOne(
+        fetch = FetchType.LAZY,
+        cascade = {CascadeType.PERSIST, CascadeType.MERGE},
+        targetEntity = WeeklyScheduleEntity.class
+    )
     @JoinColumn(name = "weeklyScheduleId")
     private IWeeklyScheduleEntity weeklySchedule;
 
@@ -51,8 +55,11 @@ public class DutyEntity implements IDutyEntity {
     @Column(name = "end")
     private LocalDateTime end;
 
-    @ManyToOne(fetch = FetchType.LAZY, cascade = {CascadeType.PERSIST,
-        CascadeType.MERGE}, targetEntity = SeriesOfPerformancesEntity.class)
+    @ManyToOne(
+        fetch = FetchType.LAZY,
+        cascade = {CascadeType.PERSIST, CascadeType.MERGE},
+        targetEntity = SeriesOfPerformancesEntity.class
+    )
     @JoinColumn(name = "seriesOfPerformancesId")
     private ISeriesOfPerformancesEntity seriesOfPerformances;
 
@@ -60,7 +67,8 @@ public class DutyEntity implements IDutyEntity {
         fetch = FetchType.LAZY,
         cascade = {CascadeType.PERSIST, CascadeType.MERGE},
         mappedBy = "duty",
-        orphanRemoval = true
+        orphanRemoval = true,
+        targetEntity = DutyPositionEntity.class
     )
     private Set<IDutyPositionEntity> dutyPositions = new HashSet<>();
 
@@ -102,7 +110,7 @@ public class DutyEntity implements IDutyEntity {
     }
 
     @Override
-    public void setDutyCategory(DutyCategoryEntity dutyCategory) {
+    public void setDutyCategory(IDutyCategoryEntity dutyCategory) {
         this.dutyCategory = dutyCategory;
     }
 
@@ -152,9 +160,7 @@ public class DutyEntity implements IDutyEntity {
     }
 
     @Override
-    public void setSeriesOfPerformances(
-        ISeriesOfPerformancesEntity seriesOfPerformances
-    ) {
+    public void setSeriesOfPerformances(ISeriesOfPerformancesEntity seriesOfPerformances) {
         this.seriesOfPerformances = seriesOfPerformances;
     }
 

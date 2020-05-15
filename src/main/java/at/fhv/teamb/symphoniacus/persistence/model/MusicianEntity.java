@@ -45,18 +45,18 @@ public class MusicianEntity implements IMusicianEntity {
     @Column(name = "musicianId")
     private Integer musicianId;
 
-    @OneToOne(fetch = FetchType.LAZY)
+    @OneToOne(fetch = FetchType.LAZY, targetEntity = UserEntity.class)
     @JoinColumn(name = "userId")
     private IUserEntity user;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.LAZY, targetEntity = SectionEntity.class)
     @JoinColumn(name = "sectionId")
     private ISectionEntity section;
 
-    @OneToMany(mappedBy = "musician")
+    @OneToMany(mappedBy = "musician", targetEntity = ContractualObligationEntity.class)
     private List<IContractualObligationEntity> contractualObligations = new LinkedList<>();
 
-    @ManyToMany
+    @ManyToMany(targetEntity = MusicianRole.class)
     @JoinTable(
         name = "musicianRole_musician",
         joinColumns = {
@@ -68,19 +68,23 @@ public class MusicianEntity implements IMusicianEntity {
     )
     private List<IMusicianRole> musicianRoles = new LinkedList<>();
 
-    @OneToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE}, mappedBy = "musician")
+    @OneToMany(
+        mappedBy = "musician",
+        cascade = {CascadeType.PERSIST, CascadeType.MERGE},
+        targetEntity = DutyPositionEntity.class
+    )
     private List<IDutyPositionEntity> dutyPositions = new LinkedList<>();
 
-    @OneToMany(mappedBy = "musician")
+    @OneToMany(mappedBy = "musician", targetEntity = PositiveWishEntity.class)
     private List<IPositiveWishEntity> positiveWishes = new LinkedList<>();
 
-    @OneToMany(mappedBy = "musician")
+    @OneToMany(mappedBy = "musician", targetEntity = NegativeDutyWishEntity.class)
     private List<INegativeDutyWishEntity> negativeDutyWishes = new LinkedList<>();
 
-    @OneToMany(mappedBy = "musician")
+    @OneToMany(mappedBy = "musician", targetEntity = VacationEntity.class)
     private List<IVacationEntity> vacations = new LinkedList<>();
 
-    @OneToMany(mappedBy = "musician")
+    @OneToMany(mappedBy = "musician", targetEntity = NegativeDateWishEntity.class)
     private List<INegativeDateWishEntity> negativeDateWishes = new LinkedList<>();
 
     @Override
@@ -121,7 +125,8 @@ public class MusicianEntity implements IMusicianEntity {
 
     @Override
     public void setContractualObligations(
-        List<IContractualObligationEntity> contractualObligations) {
+        List<IContractualObligationEntity> contractualObligations
+    ) {
         this.contractualObligations = contractualObligations;
     }
 
@@ -131,20 +136,17 @@ public class MusicianEntity implements IMusicianEntity {
     }
 
     @Override
-    public void setNegativeDutyWishes(
-        List<INegativeDutyWishEntity> negativeDutyWishes) {
+    public void setNegativeDutyWishes(List<INegativeDutyWishEntity> negativeDutyWishes) {
         this.negativeDutyWishes = negativeDutyWishes;
     }
 
     @Override
-    public void setMusicianRoles(
-        List<IMusicianRole> musicianRoles) {
+    public void setMusicianRoles(List<IMusicianRole> musicianRoles) {
         this.musicianRoles = musicianRoles;
     }
 
     @Override
-    public void setDutyPositions(
-        List<IDutyPositionEntity> dutyPositions) {
+    public void setDutyPositions(List<IDutyPositionEntity> dutyPositions) {
         this.dutyPositions = dutyPositions;
     }
 
@@ -154,15 +156,13 @@ public class MusicianEntity implements IMusicianEntity {
     }
 
     @Override
-    public void setPositiveWishes(
-        List<IPositiveWishEntity> positiveWishes) {
+    public void setPositiveWishes(List<IPositiveWishEntity> positiveWishes) {
         this.positiveWishes = positiveWishes;
     }
 
 
     @Override
-    public void setVacations(
-        List<IVacationEntity> vacations) {
+    public void setVacations(List<IVacationEntity> vacations) {
         this.vacations = vacations;
     }
 

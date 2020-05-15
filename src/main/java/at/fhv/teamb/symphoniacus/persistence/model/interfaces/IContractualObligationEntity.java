@@ -1,6 +1,5 @@
 package at.fhv.teamb.symphoniacus.persistence.model.interfaces;
 
-import at.fhv.teamb.symphoniacus.persistence.model.MusicianEntity;
 import java.time.LocalDate;
 
 public interface IContractualObligationEntity {
@@ -24,13 +23,11 @@ public interface IContractualObligationEntity {
 
     void setEndDate(LocalDate endDate);
 
-    MusicianEntity getMusician();
+    IMusicianEntity getMusician();
 
-    void setMusician(MusicianEntity musician);
+    void setMusician(IMusicianEntity musician);
 
     IInstrumentCategoryEntity getInstrumentCategory();
 
-    void setInstrumentCategory(
-        IInstrumentCategoryEntity instrumentCategory
-    );
+    void setInstrumentCategory(IInstrumentCategoryEntity instrumentCategory);
 }

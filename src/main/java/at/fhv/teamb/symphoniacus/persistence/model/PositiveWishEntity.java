@@ -1,6 +1,8 @@
 package at.fhv.teamb.symphoniacus.persistence.model;
 
+import at.fhv.teamb.symphoniacus.persistence.model.interfaces.IMusicianEntity;
 import at.fhv.teamb.symphoniacus.persistence.model.interfaces.IPositiveWishEntity;
+import at.fhv.teamb.symphoniacus.persistence.model.interfaces.ISeriesOfPerformancesEntity;
 import java.time.LocalDate;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -20,35 +22,34 @@ public class PositiveWishEntity implements IPositiveWishEntity, WishRequestable 
     @Column(name = "positiveWishId")
     private Integer positiveWishId;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.LAZY, targetEntity = MusicianEntity.class)
     @JoinColumn(name = "musicianId")
-    private MusicianEntity musician;
+    private IMusicianEntity musician;
 
     @Column(name = "description")
     private String description;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.LAZY, targetEntity = SeriesOfPerformancesEntity.class)
     @JoinColumn(name = "seriesOfPerformancesId")
-    private SeriesOfPerformancesEntity seriesOfPerformances;
+    private ISeriesOfPerformancesEntity seriesOfPerformances;
 
     @Override
-    public MusicianEntity getMusician() {
+    public IMusicianEntity getMusician() {
         return musician;
     }
 
     @Override
-    public void setMusician(MusicianEntity musician) {
+    public void setMusician(IMusicianEntity musician) {
         this.musician = musician;
     }
 
     @Override
-    public SeriesOfPerformancesEntity getSeriesOfPerformances() {
+    public ISeriesOfPerformancesEntity getSeriesOfPerformances() {
         return seriesOfPerformances;
     }
 
     @Override
-    public void setSeriesOfPerformances(
-        SeriesOfPerformancesEntity seriesOfPerformances) {
+    public void setSeriesOfPerformances(ISeriesOfPerformancesEntity seriesOfPerformances) {
         this.seriesOfPerformances = seriesOfPerformances;
     }
 

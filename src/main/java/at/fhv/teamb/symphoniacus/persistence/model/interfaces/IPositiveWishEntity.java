@@ -1,19 +1,15 @@
 package at.fhv.teamb.symphoniacus.persistence.model.interfaces;
 
-import at.fhv.teamb.symphoniacus.persistence.model.MusicianEntity;
-import at.fhv.teamb.symphoniacus.persistence.model.SeriesOfPerformancesEntity;
-import at.fhv.teamb.symphoniacus.persistence.model.WishRequestable;
 import java.time.LocalDate;
 
 public interface IPositiveWishEntity {
-    MusicianEntity getMusician();
+    IMusicianEntity getMusician();
 
-    void setMusician(MusicianEntity musician);
+    void setMusician(IMusicianEntity musician);
 
-    SeriesOfPerformancesEntity getSeriesOfPerformances();
+    ISeriesOfPerformancesEntity getSeriesOfPerformances();
 
-    void setSeriesOfPerformances(
-        SeriesOfPerformancesEntity seriesOfPerformances);
+    void setSeriesOfPerformances(ISeriesOfPerformancesEntity seriesOfPerformances);
 
     Integer getPositiveWishId();
 

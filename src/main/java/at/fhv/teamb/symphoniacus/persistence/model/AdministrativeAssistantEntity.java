@@ -2,6 +2,7 @@ package at.fhv.teamb.symphoniacus.persistence.model;
 
 import at.fhv.teamb.symphoniacus.application.type.AdministrativeAssistantType;
 import at.fhv.teamb.symphoniacus.persistence.model.interfaces.IAdministrativeAssistantEntity;
+import at.fhv.teamb.symphoniacus.persistence.model.interfaces.IUserEntity;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
@@ -19,22 +20,22 @@ public class AdministrativeAssistantEntity implements IAdministrativeAssistantEn
     @Id
     private int userId;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.LAZY, targetEntity = UserEntity.class)
     @MapsId
     @JoinColumn(name = "userId")
-    private UserEntity user;
+    private IUserEntity user;
 
     @Enumerated(EnumType.STRING)
     @Column(name = "description")
     private AdministrativeAssistantType description;
 
     @Override
-    public UserEntity getUser() {
+    public IUserEntity getUser() {
         return this.user;
     }
 
     @Override
-    public void setUser(UserEntity user) {
+    public void setUser(IUserEntity user) {
         this.user = user;
     }
 

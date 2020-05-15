@@ -1,5 +1,7 @@
 package at.fhv.teamb.symphoniacus.persistence.model;
 
+import at.fhv.teamb.symphoniacus.persistence.model.interfaces.IMonthlyScheduleEntity;
+import at.fhv.teamb.symphoniacus.persistence.model.interfaces.IMusicianEntity;
 import at.fhv.teamb.symphoniacus.persistence.model.interfaces.INegativeDateWishEntity;
 import java.time.LocalDate;
 import java.util.LinkedList;
@@ -24,9 +26,9 @@ public class NegativeDateWishEntity implements INegativeDateWishEntity, WishRequ
     @Column(name = "negativeDateId")
     private Integer negativeDateId;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.LAZY, targetEntity = MusicianEntity.class)
     @JoinColumn(name = "musicianId")
-    private MusicianEntity musician;
+    private IMusicianEntity musician;
 
     @Column(name = "description")
     private String description;
@@ -42,20 +44,22 @@ public class NegativeDateWishEntity implements INegativeDateWishEntity, WishRequ
         return this.negativeDateId;
     }
 
-    @ManyToMany
-    @JoinTable(name = "negativeDate_monthlySchedule",
+    @ManyToMany(targetEntity = MonthlyScheduleEntity.class)
+    @JoinTable(
+        name = "negativeDate_monthlySchedule",
         joinColumns = @JoinColumn(name = "negativeDateId"),
-        inverseJoinColumns = @JoinColumn(name = "monthlyScheduleId"))
-    private List<MonthlyScheduleEntity> monthlySchedules = new LinkedList<>();
+        inverseJoinColumns = @JoinColumn(name = "monthlyScheduleId")
+    )
+    private List<IMonthlyScheduleEntity> monthlySchedules = new LinkedList<>();
 
     @Override
-    public void addMonthlySchedule(MonthlyScheduleEntity monthlyScheduleEntity) {
+    public void addMonthlySchedule(IMonthlyScheduleEntity monthlyScheduleEntity) {
         this.monthlySchedules.add(monthlyScheduleEntity);
         monthlyScheduleEntity.getNegativeDateWishes().add(this);
     }
 
     @Override
-    public void removeMonthlySchedule(MonthlyScheduleEntity monthlyScheduleEntity) {
+    public void removeMonthlySchedule(IMonthlyScheduleEntity monthlyScheduleEntity) {
         this.monthlySchedules.remove(monthlyScheduleEntity);
         monthlyScheduleEntity.getNegativeDateWishes().remove(this);
     }
@@ -96,23 +100,22 @@ public class NegativeDateWishEntity implements INegativeDateWishEntity, WishRequ
     }
 
     @Override
-    public List<MonthlyScheduleEntity> getMonthlySchedules() {
+    public List<IMonthlyScheduleEntity> getMonthlySchedules() {
         return monthlySchedules;
     }
 
     @Override
-    public void setMonthlySchedules(
-        List<MonthlyScheduleEntity> monthlySchedules) {
+    public void setMonthlySchedules(List<IMonthlyScheduleEntity> monthlySchedules) {
         this.monthlySchedules = monthlySchedules;
     }
 
     @Override
-    public MusicianEntity getMusician() {
+    public IMusicianEntity getMusician() {
         return musician;
     }
 
     @Override
-    public void setMusician(MusicianEntity musician) {
+    public void setMusician(IMusicianEntity musician) {
         this.musician = musician;
     }
 }

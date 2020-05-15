@@ -1,6 +1,5 @@
 package at.fhv.teamb.symphoniacus.persistence.model.interfaces;
 
-import at.fhv.teamb.symphoniacus.persistence.model.MusicianEntity;
 import java.util.List;
 
 public interface ISectionEntity {
@@ -22,11 +21,11 @@ public interface ISectionEntity {
 
     void removeSectionMonthlySchedule(ISectionMonthlyScheduleEntity sectionMonthlySchedule);
 
-    List<MusicianEntity> getMusicians();
+    List<IMusicianEntity> getMusicians();
 
-    void addMusician(MusicianEntity musician);
+    void addMusician(IMusicianEntity musician);
 
-    void removeMusician(MusicianEntity musician);
+    void removeMusician(IMusicianEntity musician);
 
     List<IDutyPositionEntity> getDutyPositions();
 

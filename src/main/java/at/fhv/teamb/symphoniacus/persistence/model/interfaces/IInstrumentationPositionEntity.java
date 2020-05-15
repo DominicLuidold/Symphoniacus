@@ -9,14 +9,11 @@ public interface IInstrumentationPositionEntity {
 
     ISectionInstrumentationEntity getSectionInstrumentation();
 
-    void setSectionInstrumentation(
-        ISectionInstrumentationEntity sectionInstrumentation);
+    void setSectionInstrumentation(ISectionInstrumentationEntity sectionInstrumentation);
 
     IInstrumentationEntity getInstrumentation();
 
-    void setInstrumentation(
-        IInstrumentationEntity instrumentation
-    );
+    void setInstrumentation(IInstrumentationEntity instrumentation);
 
     String getPositionDescription();
 

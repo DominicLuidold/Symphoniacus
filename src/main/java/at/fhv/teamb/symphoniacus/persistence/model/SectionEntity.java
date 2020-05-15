@@ -1,6 +1,7 @@
 package at.fhv.teamb.symphoniacus.persistence.model;
 
 import at.fhv.teamb.symphoniacus.persistence.model.interfaces.IDutyPositionEntity;
+import at.fhv.teamb.symphoniacus.persistence.model.interfaces.IMusicianEntity;
 import at.fhv.teamb.symphoniacus.persistence.model.interfaces.ISectionEntity;
 import at.fhv.teamb.symphoniacus.persistence.model.interfaces.ISectionInstrumentationEntity;
 import at.fhv.teamb.symphoniacus.persistence.model.interfaces.ISectionMonthlyScheduleEntity;
@@ -28,16 +29,24 @@ public class SectionEntity implements ISectionEntity {
     @Column(name = "description")
     private String description;
 
-    @OneToMany(mappedBy = "section", orphanRemoval = true)
+    @OneToMany(
+        mappedBy = "section",
+        orphanRemoval = true,
+        targetEntity = SectionMonthlyScheduleEntity.class
+    )
     private List<ISectionMonthlyScheduleEntity> sectionMonthlySchedules = new LinkedList<>();
 
-    @OneToMany(mappedBy = "section", orphanRemoval = true)
-    private List<MusicianEntity> musicians = new LinkedList<>();
+    @OneToMany(mappedBy = "section", orphanRemoval = true, targetEntity = MusicianEntity.class)
+    private List<IMusicianEntity> musicians = new LinkedList<>();
 
-    @OneToMany(mappedBy = "section", orphanRemoval = true)
+    @OneToMany(mappedBy = "section", orphanRemoval = true, targetEntity = DutyPositionEntity.class)
     private List<IDutyPositionEntity> dutyPositions = new LinkedList<>();
 
-    @OneToMany(mappedBy = "section", orphanRemoval = true)
+    @OneToMany(
+        mappedBy = "section",
+        orphanRemoval = true,
+        targetEntity = SectionInstrumentationEntity.class
+    )
     private List<ISectionInstrumentationEntity> sectionInstrumentations = new LinkedList<>();
 
     @Override
@@ -88,18 +97,18 @@ public class SectionEntity implements ISectionEntity {
     }
 
     @Override
-    public List<MusicianEntity> getMusicians() {
+    public List<IMusicianEntity> getMusicians() {
         return this.musicians;
     }
 
     @Override
-    public void addMusician(MusicianEntity musician) {
+    public void addMusician(IMusicianEntity musician) {
         this.musicians.add(musician);
         musician.setSection(this);
     }
 
     @Override
-    public void removeMusician(MusicianEntity musician) {
+    public void removeMusician(IMusicianEntity musician) {
         this.musicians.remove(musician);
         musician.setSection(null);
     }

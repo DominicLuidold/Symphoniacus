@@ -23,7 +23,7 @@ public class InstrumentCategoryEntity implements IInstrumentCategoryEntity {
     @Column(name = "description")
     private String description;
 
-    @OneToMany(mappedBy = "instrumentCategory")
+    @OneToMany(mappedBy = "instrumentCategory", targetEntity = ContractualObligationEntity.class)
     private List<IContractualObligationEntity> contractualObligations = new LinkedList<>();
 
     // TODO - @ManyToMany InstrumentationCategory - InstrumentationCategory_Musician - Musician

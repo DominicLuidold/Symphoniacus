@@ -44,13 +44,17 @@ public class MonthlyScheduleEntity implements IMonthlyScheduleEntity {
     @Column(name = "endWish")
     private LocalDate endWish;
 
-    @OneToMany(mappedBy = "monthlySchedule", orphanRemoval = true, targetEntity = SectionMonthlyScheduleEntity.class)
+    @OneToMany(
+        mappedBy = "monthlySchedule",
+        orphanRemoval = true,
+        targetEntity = SectionMonthlyScheduleEntity.class
+    )
     private Set<ISectionMonthlyScheduleEntity> sectionMonthlySchedules = new HashSet<>();
 
-    @ManyToMany(mappedBy = "monthlySchedules")
+    @ManyToMany(mappedBy = "monthlySchedules", targetEntity = NegativeDateWishEntity.class)
     private List<INegativeDateWishEntity> negativeDateWishes = new LinkedList<>();
 
-    @OneToMany(mappedBy = "monthlySchedule")
+    @OneToMany(mappedBy = "monthlySchedule", targetEntity = WeeklyScheduleEntity.class)
     private List<IWeeklyScheduleEntity> weeklySchedules = new LinkedList<>();
 
     @Override

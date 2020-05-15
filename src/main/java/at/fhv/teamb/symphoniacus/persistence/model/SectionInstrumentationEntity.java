@@ -25,18 +25,22 @@ public class SectionInstrumentationEntity implements ISectionInstrumentationEnti
     @Column(name = "sectionInstrumentationId")
     private Integer sectionInstrumentationId;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.LAZY, targetEntity = InstrumentationEntity.class)
     @JoinColumn(name = "instrumentationId")
     private IInstrumentationEntity instrumentation;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.LAZY, targetEntity = SectionEntity.class)
     @JoinColumn(name = "sectionId")
     private ISectionEntity section;
 
     @Column(name = "predefinedSectionInstrumentation")
     private String predefinedSectionInstrumentation;
 
-    @OneToMany(mappedBy = "sectionInstrumentation", orphanRemoval = true)
+    @OneToMany(
+        mappedBy = "sectionInstrumentation",
+        orphanRemoval = true,
+        targetEntity = InstrumentationPositionEntity.class
+    )
     private List<IInstrumentationPositionEntity> instrumentationPositions = new LinkedList<>();
 
     @Override

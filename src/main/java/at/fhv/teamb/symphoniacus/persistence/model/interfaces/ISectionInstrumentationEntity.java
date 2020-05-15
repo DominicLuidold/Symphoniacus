@@ -9,8 +9,7 @@ public interface ISectionInstrumentationEntity {
 
     IInstrumentationEntity getInstrumentation();
 
-    void setInstrumentation(
-        IInstrumentationEntity instrumentation);
+    void setInstrumentation(IInstrumentationEntity instrumentation);
 
     ISectionEntity getSection();
 
@@ -24,7 +23,5 @@ public interface ISectionInstrumentationEntity {
 
     void addInstrumentationPosition(IInstrumentationPositionEntity instrumentationPosition);
 
-    void removeInstrumentationPosition(
-        IInstrumentationPositionEntity instrumentationPosition
-    );
+    void removeInstrumentationPosition(IInstrumentationPositionEntity instrumentationPosition);
 }

@@ -1,6 +1,5 @@
 package at.fhv.teamb.symphoniacus.persistence.model.interfaces;
 
-import at.fhv.teamb.symphoniacus.persistence.model.DutyEntity;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Set;
@@ -18,15 +17,13 @@ public interface ISeriesOfPerformancesEntity {
 
     void setTour(boolean tour);
 
-    Set<DutyEntity> getDutyEntities();
+    Set<IDutyEntity> getDutyEntities();
 
-    void setDutyEntities(
-        Set<DutyEntity> dutyEntities);
+    void setDutyEntities(Set<IDutyEntity> dutyEntities);
 
     List<IPositiveWishEntity> getPositiveWishes();
 
-    void setPositiveWishes(
-        List<IPositiveWishEntity> positiveWishes);
+    void setPositiveWishes(List<IPositiveWishEntity> positiveWishes);
 
     Integer getSeriesOfPerformancesId();
 
@@ -48,19 +45,17 @@ public interface ISeriesOfPerformancesEntity {
 
     void setIsTour(boolean isTour);
 
-    void addDuty(DutyEntity dutyEntity);
+    void addDuty(IDutyEntity dutyEntity);
 
-    void removeDuty(DutyEntity dutyEntity);
+    void removeDuty(IDutyEntity dutyEntity);
 
     List<INegativeDutyWishEntity> getNegativeDutyWishes();
 
-    void setNegativeDutyWishes(
-        List<INegativeDutyWishEntity> negativeDutyWishes);
+    void setNegativeDutyWishes(List<INegativeDutyWishEntity> negativeDutyWishes);
 
     Set<IInstrumentationEntity> getInstrumentations();
 
-    void setInstrumentations(
-        Set<IInstrumentationEntity> instrumentations);
+    void setInstrumentations(Set<IInstrumentationEntity> instrumentations);
 
     void addInstrumentation(IInstrumentationEntity instrumentationEntity);
 
@@ -68,8 +63,7 @@ public interface ISeriesOfPerformancesEntity {
 
     Set<IMusicalPieceEntity> getMusicalPieces();
 
-    void setMusicalPieces(
-        Set<IMusicalPieceEntity> musicalPieces);
+    void setMusicalPieces(Set<IMusicalPieceEntity> musicalPieces);
 
     void addMusicalPiece(IMusicalPieceEntity musicalPiece);
 

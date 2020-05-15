@@ -36,7 +36,11 @@ public class InstrumentationPositionEntity implements IInstrumentationPositionEn
     @Column(name = "positionDescription")
     private String positionDescription;
 
-    @OneToMany(mappedBy = "instrumentationPosition", orphanRemoval = true, targetEntity = DutyPositionEntity.class)
+    @OneToMany(
+        mappedBy = "instrumentationPosition",
+        orphanRemoval = true,
+        targetEntity = DutyPositionEntity.class
+    )
     private List<IDutyPositionEntity> dutyPositions = new LinkedList<>();
 
     @Override
@@ -66,9 +70,7 @@ public class InstrumentationPositionEntity implements IInstrumentationPositionEn
     }
 
     @Override
-    public void setInstrumentation(
-        IInstrumentationEntity instrumentation
-    ) {
+    public void setInstrumentation(IInstrumentationEntity instrumentation) {
         this.instrumentation = instrumentation;
     }
 

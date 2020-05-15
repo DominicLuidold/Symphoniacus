@@ -38,10 +38,18 @@ public class InstrumentationEntity implements IInstrumentationEntity {
     @ManyToMany(mappedBy = "instrumentations", targetEntity = SeriesOfPerformancesEntity.class)
     private List<ISeriesOfPerformancesEntity> seriesOfPerformances = new LinkedList<>();
 
-    @OneToMany(mappedBy = "instrumentation", fetch = FetchType.LAZY, targetEntity = SectionInstrumentationEntity.class)
+    @OneToMany(
+        mappedBy = "instrumentation",
+        fetch = FetchType.LAZY,
+        targetEntity = SectionInstrumentationEntity.class
+    )
     private List<ISectionInstrumentationEntity> sectionInstrumentations = new LinkedList<>();
 
-    @OneToMany(mappedBy = "instrumentation", orphanRemoval = true, targetEntity = InstrumentationPositionEntity.class)
+    @OneToMany(
+        mappedBy = "instrumentation",
+        orphanRemoval = true,
+        targetEntity = InstrumentationPositionEntity.class
+    )
     private List<IInstrumentationPositionEntity> instrumentationPositions = new LinkedList<>();
 
     @Override
@@ -80,30 +88,24 @@ public class InstrumentationEntity implements IInstrumentationEntity {
     }
 
     @Override
-    public void addSectionInstrumentation(
-        ISectionInstrumentationEntity sectionInstrumentation
-    ) {
+    public void addSectionInstrumentation(ISectionInstrumentationEntity sectionInstrumentation) {
         this.sectionInstrumentations.add(sectionInstrumentation);
         sectionInstrumentation.setInstrumentation(this);
     }
 
     @Override
-    public void removeSectionInstrumentation(
-        ISectionInstrumentationEntity sectionInstrumentation
-    ) {
+    public void removeSectionInstrumentation(ISectionInstrumentationEntity sectionInstrumentation) {
         this.sectionInstrumentations.remove(sectionInstrumentation);
         sectionInstrumentation.setInstrumentation(null);
     }
 
     @Override
-    public List<IInstrumentationPositionEntity> getInstrumentationPositions() { //TODO: find out how the fuck this works
+    public List<IInstrumentationPositionEntity> getInstrumentationPositions() {
         return this.instrumentationPositions;
     }
 
     @Override
-    public void addInstrumentationPosition(
-        IInstrumentationPositionEntity instrumentationPosition
-    ) {
+    public void addInstrumentationPosition(IInstrumentationPositionEntity instrumentationPosition) {
         this.instrumentationPositions.add(instrumentationPosition);
         instrumentationPosition.setInstrumentation(this);
     }
@@ -122,8 +124,7 @@ public class InstrumentationEntity implements IInstrumentationEntity {
     }
 
     @Override
-    public void setSeriesOfPerformances(
-        List<ISeriesOfPerformancesEntity> seriesOfPerformances) {
+    public void setSeriesOfPerformances(List<ISeriesOfPerformancesEntity> seriesOfPerformances) {
         this.seriesOfPerformances = seriesOfPerformances;
     }
 

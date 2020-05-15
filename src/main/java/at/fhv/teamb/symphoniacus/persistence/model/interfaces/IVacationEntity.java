@@ -1,6 +1,5 @@
 package at.fhv.teamb.symphoniacus.persistence.model.interfaces;
 
-import at.fhv.teamb.symphoniacus.persistence.model.MusicianEntity;
 import java.time.LocalDate;
 
 public interface IVacationEntity {
@@ -8,9 +7,9 @@ public interface IVacationEntity {
 
     void setVacationId(Integer vacationId);
 
-    MusicianEntity getMusician();
+    IMusicianEntity getMusician();
 
-    void setMusician(MusicianEntity musician);
+    void setMusician(IMusicianEntity musician);
 
     LocalDate getStartDate();
 

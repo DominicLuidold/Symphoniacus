@@ -1,6 +1,5 @@
 package at.fhv.teamb.symphoniacus.persistence.model.interfaces;
 
-import at.fhv.teamb.symphoniacus.persistence.model.SeriesOfPerformancesEntity;
 import java.util.List;
 import java.util.Set;
 
@@ -29,12 +28,11 @@ public interface IMusicalPieceEntity {
 
     void removeInstrumentation(IInstrumentationEntity instrumentation);
 
-    List<SeriesOfPerformancesEntity> getSeriesOfPerformances();
+    List<ISeriesOfPerformancesEntity> getSeriesOfPerformances();
 
-    void setSeriesOfPerformances(
-        List<SeriesOfPerformancesEntity> seriesOfPerformances);
+    void setSeriesOfPerformances(List<ISeriesOfPerformancesEntity> seriesOfPerformances);
 
-    void addSeriesOfPerformance(SeriesOfPerformancesEntity seriesOfPerformancesEntity);
+    void addSeriesOfPerformance(ISeriesOfPerformancesEntity seriesOfPerformancesEntity);
 
-    void removeSeriesOfPerformance(SeriesOfPerformancesEntity seriesOfPerformancesEntity);
+    void removeSeriesOfPerformance(ISeriesOfPerformancesEntity seriesOfPerformancesEntity);
 }

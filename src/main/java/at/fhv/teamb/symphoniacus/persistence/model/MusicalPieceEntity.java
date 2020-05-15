@@ -2,6 +2,7 @@ package at.fhv.teamb.symphoniacus.persistence.model;
 
 import at.fhv.teamb.symphoniacus.persistence.model.interfaces.IInstrumentationEntity;
 import at.fhv.teamb.symphoniacus.persistence.model.interfaces.IMusicalPieceEntity;
+import at.fhv.teamb.symphoniacus.persistence.model.interfaces.ISeriesOfPerformancesEntity;
 import java.util.LinkedHashSet;
 import java.util.LinkedList;
 import java.util.List;
@@ -36,8 +37,8 @@ public class MusicalPieceEntity implements IMusicalPieceEntity {
     @OneToMany(mappedBy = "musicalPiece", targetEntity = InstrumentationEntity.class)
     private Set<IInstrumentationEntity> instrumentations = new LinkedHashSet<>();
 
-    @ManyToMany(mappedBy = "musicalPieces")
-    private List<SeriesOfPerformancesEntity> seriesOfPerformances = new LinkedList<>();
+    @ManyToMany(mappedBy = "musicalPieces", targetEntity = SeriesOfPerformancesEntity.class)
+    private List<ISeriesOfPerformancesEntity> seriesOfPerformances = new LinkedList<>();
 
     @Override
     public Integer getMusicalPieceId() {
@@ -102,24 +103,23 @@ public class MusicalPieceEntity implements IMusicalPieceEntity {
     }
 
     @Override
-    public List<SeriesOfPerformancesEntity> getSeriesOfPerformances() {
+    public List<ISeriesOfPerformancesEntity> getSeriesOfPerformances() {
         return this.seriesOfPerformances;
     }
 
     @Override
-    public void setSeriesOfPerformances(
-        List<SeriesOfPerformancesEntity> seriesOfPerformances) {
+    public void setSeriesOfPerformances(List<ISeriesOfPerformancesEntity> seriesOfPerformances) {
         this.seriesOfPerformances = seriesOfPerformances;
     }
 
     @Override
-    public void addSeriesOfPerformance(SeriesOfPerformancesEntity seriesOfPerformancesEntity) {
+    public void addSeriesOfPerformance(ISeriesOfPerformancesEntity seriesOfPerformancesEntity) {
         this.seriesOfPerformances.add(seriesOfPerformancesEntity);
         seriesOfPerformancesEntity.addMusicalPiece(this);
     }
 
     @Override
-    public void removeSeriesOfPerformance(SeriesOfPerformancesEntity seriesOfPerformancesEntity) {
+    public void removeSeriesOfPerformance(ISeriesOfPerformancesEntity seriesOfPerformancesEntity) {
         this.seriesOfPerformances.remove(seriesOfPerformancesEntity);
         seriesOfPerformancesEntity.removeMusicalPiece(this);
     }

@@ -1,5 +1,6 @@
 package at.fhv.teamb.symphoniacus.persistence.model;
 
+import at.fhv.teamb.symphoniacus.persistence.model.interfaces.IDutyEntity;
 import at.fhv.teamb.symphoniacus.persistence.model.interfaces.IInstrumentationEntity;
 import at.fhv.teamb.symphoniacus.persistence.model.interfaces.IMusicalPieceEntity;
 import at.fhv.teamb.symphoniacus.persistence.model.interfaces.INegativeDutyWishEntity;
@@ -54,7 +55,7 @@ public class SeriesOfPerformancesEntity implements ISeriesOfPerformancesEntity {
     )
     private Set<IInstrumentationEntity> instrumentations = new LinkedHashSet<>();
 
-    @ManyToMany(cascade = {CascadeType.MERGE})
+    @ManyToMany(cascade = {CascadeType.MERGE}, targetEntity = MusicalPieceEntity.class)
     @JoinTable(
         name = "seriesOfPerformances_musicalPiece",
         joinColumns = {
@@ -66,13 +67,13 @@ public class SeriesOfPerformancesEntity implements ISeriesOfPerformancesEntity {
     )
     private Set<IMusicalPieceEntity> musicalPieces = new LinkedHashSet<>();
 
-    @OneToMany(mappedBy = "seriesOfPerformances", orphanRemoval = false)
-    private Set<DutyEntity> dutyEntities;
+    @OneToMany(mappedBy = "seriesOfPerformances", targetEntity = DutyEntity.class)
+    private Set<IDutyEntity> dutyEntities;
 
-    @OneToMany(mappedBy = "seriesOfPerformances")
+    @OneToMany(mappedBy = "seriesOfPerformances", targetEntity = PositiveWishEntity.class)
     private List<IPositiveWishEntity> positiveWishes = new LinkedList<>();
 
-    @OneToMany(mappedBy = "seriesOfPerformances")
+    @OneToMany(mappedBy = "seriesOfPerformances", targetEntity = NegativeDutyWishEntity.class)
     private List<INegativeDutyWishEntity> negativeDutyWishes = new LinkedList<>();
 
     @Override
@@ -110,13 +111,12 @@ public class SeriesOfPerformancesEntity implements ISeriesOfPerformancesEntity {
     }
 
     @Override
-    public Set<DutyEntity> getDutyEntities() {
+    public Set<IDutyEntity> getDutyEntities() {
         return dutyEntities;
     }
 
     @Override
-    public void setDutyEntities(
-        Set<DutyEntity> dutyEntities) {
+    public void setDutyEntities(Set<IDutyEntity> dutyEntities) {
         this.dutyEntities = dutyEntities;
     }
 
@@ -126,8 +126,7 @@ public class SeriesOfPerformancesEntity implements ISeriesOfPerformancesEntity {
     }
 
     @Override
-    public void setPositiveWishes(
-        List<IPositiveWishEntity> positiveWishes) {
+    public void setPositiveWishes(List<IPositiveWishEntity> positiveWishes) {
         this.positiveWishes = positiveWishes;
     }
 
@@ -182,13 +181,13 @@ public class SeriesOfPerformancesEntity implements ISeriesOfPerformancesEntity {
     }
 
     @Override
-    public void addDuty(DutyEntity dutyEntity) {
+    public void addDuty(IDutyEntity dutyEntity) {
         this.dutyEntities.add(dutyEntity);
         dutyEntity.setSeriesOfPerformances(this);
     }
 
     @Override
-    public void removeDuty(DutyEntity dutyEntity) {
+    public void removeDuty(IDutyEntity dutyEntity) {
         this.dutyEntities.remove(dutyEntity);
         dutyEntity.setSeriesOfPerformances(null);
     }
@@ -199,8 +198,7 @@ public class SeriesOfPerformancesEntity implements ISeriesOfPerformancesEntity {
     }
 
     @Override
-    public void setNegativeDutyWishes(
-        List<INegativeDutyWishEntity> negativeDutyWishes) {
+    public void setNegativeDutyWishes(List<INegativeDutyWishEntity> negativeDutyWishes) {
         this.negativeDutyWishes = negativeDutyWishes;
     }
 
@@ -210,8 +208,7 @@ public class SeriesOfPerformancesEntity implements ISeriesOfPerformancesEntity {
     }
 
     @Override
-    public void setInstrumentations(
-        Set<IInstrumentationEntity> instrumentations) {
+    public void setInstrumentations(Set<IInstrumentationEntity> instrumentations) {
         this.instrumentations = instrumentations;
     }
 
@@ -233,8 +230,7 @@ public class SeriesOfPerformancesEntity implements ISeriesOfPerformancesEntity {
     }
 
     @Override
-    public void setMusicalPieces(
-        Set<IMusicalPieceEntity> musicalPieces) {
+    public void setMusicalPieces(Set<IMusicalPieceEntity> musicalPieces) {
         this.musicalPieces = musicalPieces;
     }
 

@@ -1,5 +1,7 @@
 package at.fhv.teamb.symphoniacus.persistence.model;
 
+import at.fhv.teamb.symphoniacus.persistence.model.interfaces.IDutyEntity;
+import at.fhv.teamb.symphoniacus.persistence.model.interfaces.IMonthlyScheduleEntity;
 import at.fhv.teamb.symphoniacus.persistence.model.interfaces.IWeeklyScheduleEntity;
 import java.time.LocalDate;
 import java.util.LinkedList;
@@ -39,12 +41,16 @@ public class WeeklyScheduleEntity implements IWeeklyScheduleEntity {
     @Column(name = "isConfirmed")
     private boolean isConfirmed;
 
-    @ManyToOne(fetch = FetchType.LAZY, cascade = {CascadeType.PERSIST, CascadeType.MERGE})
+    @ManyToOne(
+        fetch = FetchType.LAZY,
+        cascade = {CascadeType.PERSIST, CascadeType.MERGE},
+        targetEntity = MonthlyScheduleEntity.class
+    )
     @JoinColumn(name = "monthlyScheduleId")
-    private MonthlyScheduleEntity monthlySchedule;
+    private IMonthlyScheduleEntity monthlySchedule;
 
-    @OneToMany(mappedBy = "weeklySchedule", orphanRemoval = true)
-    private List<DutyEntity> duties = new LinkedList<>();
+    @OneToMany(mappedBy = "weeklySchedule", orphanRemoval = true, targetEntity = DutyEntity.class)
+    private List<IDutyEntity> duties = new LinkedList<>();
 
     @Override
     public Integer getWeeklyScheduleId() {
@@ -107,28 +113,28 @@ public class WeeklyScheduleEntity implements IWeeklyScheduleEntity {
     }
 
     @Override
-    public MonthlyScheduleEntity getMonthlySchedule() {
+    public IMonthlyScheduleEntity getMonthlySchedule() {
         return monthlySchedule;
     }
 
     @Override
-    public void setMonthlySchedule(MonthlyScheduleEntity monthlySchedule) {
+    public void setMonthlySchedule(IMonthlyScheduleEntity monthlySchedule) {
         this.monthlySchedule = monthlySchedule;
     }
 
     @Override
-    public List<DutyEntity> getDuties() {
+    public List<IDutyEntity> getDuties() {
         return this.duties;
     }
 
     @Override
-    public void addDuty(DutyEntity duty) {
+    public void addDuty(IDutyEntity duty) {
         this.duties.add(duty);
         duty.setWeeklySchedule(this);
     }
 
     @Override
-    public void removeDuty(DutyEntity duty) {
+    public void removeDuty(IDutyEntity duty) {
         this.duties.remove(duty);
         duty.setWeeklySchedule(null);
     }

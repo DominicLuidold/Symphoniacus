@@ -1,6 +1,7 @@
 package at.fhv.teamb.symphoniacus.persistence.model;
 
 import at.fhv.teamb.symphoniacus.application.type.MusicianRoleType;
+import at.fhv.teamb.symphoniacus.persistence.model.interfaces.IMusicianEntity;
 import at.fhv.teamb.symphoniacus.persistence.model.interfaces.IMusicianRole;
 import java.util.LinkedList;
 import java.util.List;
@@ -26,16 +27,16 @@ public class MusicianRole implements IMusicianRole {
     @Column(name = "description")
     private MusicianRoleType description;
 
-    @ManyToMany(mappedBy = "musicianRoles")
-    private List<MusicianEntity> musicians = new LinkedList<>();
+    @ManyToMany(mappedBy = "musicianRoles", targetEntity = MusicianEntity.class)
+    private List<IMusicianEntity> musicians = new LinkedList<>();
 
     @Override
-    public void addMusician(MusicianEntity m) {
+    public void addMusician(IMusicianEntity m) {
         musicians.add(m);
     }
 
     @Override
-    public void removeMusician(MusicianEntity m) {
+    public void removeMusician(IMusicianEntity m) {
         musicians.remove(m);
     }
 

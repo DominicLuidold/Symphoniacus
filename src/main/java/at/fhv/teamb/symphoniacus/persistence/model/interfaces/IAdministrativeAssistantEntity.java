@@ -1,15 +1,11 @@
 package at.fhv.teamb.symphoniacus.persistence.model.interfaces;
 
 import at.fhv.teamb.symphoniacus.application.type.AdministrativeAssistantType;
-import at.fhv.teamb.symphoniacus.persistence.model.UserEntity;
 
-/**
- * @author Valentin
- */
 public interface IAdministrativeAssistantEntity {
-    UserEntity getUser();
+    IUserEntity getUser();
 
-    void setUser(UserEntity user);
+    void setUser(IUserEntity user);
 
     AdministrativeAssistantType getDescription();
 

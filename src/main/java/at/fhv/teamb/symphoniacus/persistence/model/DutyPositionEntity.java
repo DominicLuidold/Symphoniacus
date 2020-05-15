@@ -30,7 +30,8 @@ public class DutyPositionEntity implements IDutyPositionEntity {
 
     @ManyToOne(
         fetch = FetchType.LAZY,
-        cascade = {CascadeType.PERSIST, CascadeType.MERGE}
+        cascade = {CascadeType.PERSIST, CascadeType.MERGE},
+        targetEntity = InstrumentationPositionEntity.class
     )
     @JoinColumn(name = "instrumentationPositionId")
     private IInstrumentationPositionEntity instrumentationPosition;

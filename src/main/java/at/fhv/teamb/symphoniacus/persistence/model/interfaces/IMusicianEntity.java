@@ -15,27 +15,21 @@ public interface IMusicianEntity {
 
     void removeNegativeDateWish(INegativeDateWishEntity negativeWish);
 
-    void setContractualObligations(
-        List<IContractualObligationEntity> contractualObligations);
+    void setContractualObligations(List<IContractualObligationEntity> contractualObligations);
 
     List<INegativeDutyWishEntity> getNegativeDutyWishes();
 
-    void setNegativeDutyWishes(
-        List<INegativeDutyWishEntity> negativeDutyWishes);
+    void setNegativeDutyWishes(List<INegativeDutyWishEntity> negativeDutyWishes);
 
-    void setMusicianRoles(
-        List<IMusicianRole> musicianRoles);
+    void setMusicianRoles(List<IMusicianRole> musicianRoles);
 
-    void setDutyPositions(
-        List<IDutyPositionEntity> dutyPositions);
+    void setDutyPositions(List<IDutyPositionEntity> dutyPositions);
 
     List<IPositiveWishEntity> getPositiveWishes();
 
-    void setPositiveWishes(
-        List<IPositiveWishEntity> positiveWishes);
+    void setPositiveWishes(List<IPositiveWishEntity> positiveWishes);
 
-    void setVacations(
-        List<IVacationEntity> vacations);
+    void setVacations(List<IVacationEntity> vacations);
 
     Integer getMusicianId();
 

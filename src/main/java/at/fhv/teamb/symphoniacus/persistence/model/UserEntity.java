@@ -1,6 +1,7 @@
 package at.fhv.teamb.symphoniacus.persistence.model;
 
 import at.fhv.teamb.symphoniacus.persistence.model.interfaces.IAdministrativeAssistantEntity;
+import at.fhv.teamb.symphoniacus.persistence.model.interfaces.IMusicianEntity;
 import at.fhv.teamb.symphoniacus.persistence.model.interfaces.IUserEntity;
 import java.math.BigInteger;
 import java.security.MessageDigest;
@@ -23,7 +24,6 @@ import org.apache.logging.log4j.Logger;
 @Entity
 @Table(name = "user")
 public class UserEntity implements IUserEntity {
-
     private static final Logger LOG = LogManager.getLogger(UserEntity.class);
 
     @Id
@@ -67,10 +67,10 @@ public class UserEntity implements IUserEntity {
     @Column(name = "passwordSalt")
     private String passwordSalt;
 
-    @OneToOne(mappedBy = "user")
-    private MusicianEntity musician;
+    @OneToOne(mappedBy = "user", targetEntity = MusicianEntity.class)
+    private IMusicianEntity musician;
 
-    @OneToMany(mappedBy = "user")
+    @OneToMany(mappedBy = "user", targetEntity = AdministrativeAssistantEntity.class)
     private List<IAdministrativeAssistantEntity> administrativeAssistants = new LinkedList<>();
 
     @Override
@@ -214,12 +214,12 @@ public class UserEntity implements IUserEntity {
     }
 
     @Override
-    public MusicianEntity getMusician() {
+    public IMusicianEntity getMusician() {
         return this.musician;
     }
 
     @Override
-    public void setMusician(MusicianEntity musician) {
+    public void setMusician(IMusicianEntity musician) {
         this.musician = musician;
         musician.setUser(this);
     }

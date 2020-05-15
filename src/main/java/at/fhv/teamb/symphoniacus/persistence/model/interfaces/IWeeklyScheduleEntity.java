@@ -1,7 +1,5 @@
 package at.fhv.teamb.symphoniacus.persistence.model.interfaces;
 
-import at.fhv.teamb.symphoniacus.persistence.model.DutyEntity;
-import at.fhv.teamb.symphoniacus.persistence.model.MonthlyScheduleEntity;
 import java.time.LocalDate;
 import java.util.List;
 
@@ -30,13 +28,13 @@ public interface IWeeklyScheduleEntity {
 
     void setConfirmed(boolean confirmed);
 
-    MonthlyScheduleEntity getMonthlySchedule();
+    IMonthlyScheduleEntity getMonthlySchedule();
 
-    void setMonthlySchedule(MonthlyScheduleEntity monthlySchedule);
+    void setMonthlySchedule(IMonthlyScheduleEntity monthlySchedule);
 
-    List<DutyEntity> getDuties();
+    List<IDutyEntity> getDuties();
 
-    void addDuty(DutyEntity duty);
+    void addDuty(IDutyEntity duty);
 
-    void removeDuty(DutyEntity duty);
+    void removeDuty(IDutyEntity duty);
 }

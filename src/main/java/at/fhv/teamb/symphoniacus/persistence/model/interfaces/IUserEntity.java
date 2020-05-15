@@ -1,6 +1,5 @@
 package at.fhv.teamb.symphoniacus.persistence.model.interfaces;
 
-import at.fhv.teamb.symphoniacus.persistence.model.MusicianEntity;
 import java.security.NoSuchAlgorithmException;
 import java.util.List;
 import java.util.Optional;
@@ -56,20 +55,17 @@ public interface IUserEntity {
 
     void setPasswordSalt(String passwordSalt);
 
-    MusicianEntity getMusician();
+    IMusicianEntity getMusician();
 
-    void setMusician(MusicianEntity musician);
+    void setMusician(IMusicianEntity musician);
 
     List<IAdministrativeAssistantEntity> getAdministrativeAssistants();
 
     void addAdministrativeAssistant(IAdministrativeAssistantEntity administrativeAssistant);
 
-    void removeAdministrativeAssistant(
-        IAdministrativeAssistantEntity administrativeAssistant
-    );
+    void removeAdministrativeAssistant(IAdministrativeAssistantEntity administrativeAssistant);
 
-    Optional<String> getHashFromPlaintext(String password)
-        throws NoSuchAlgorithmException;
+    Optional<String> getHashFromPlaintext(String password) throws NoSuchAlgorithmException;
 
     String generateSalt();
 }

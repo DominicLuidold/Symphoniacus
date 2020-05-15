@@ -1,5 +1,6 @@
 package at.fhv.teamb.symphoniacus.persistence.model;
 
+import at.fhv.teamb.symphoniacus.persistence.model.interfaces.IMusicianEntity;
 import at.fhv.teamb.symphoniacus.persistence.model.interfaces.IVacationEntity;
 import java.time.LocalDate;
 import javax.persistence.Column;
@@ -20,9 +21,9 @@ public class VacationEntity implements IVacationEntity {
     @Column(name = "vacationId")
     private Integer vacationId;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.LAZY, targetEntity = MusicianEntity.class)
     @JoinColumn(name = "musicianId")
-    private MusicianEntity musician;
+    private IMusicianEntity musician;
 
     @Column(name = "startDate")
     private LocalDate startDate;
@@ -44,12 +45,12 @@ public class VacationEntity implements IVacationEntity {
     }
 
     @Override
-    public MusicianEntity getMusician() {
+    public IMusicianEntity getMusician() {
         return this.musician;
     }
 
     @Override
-    public void setMusician(MusicianEntity musician) {
+    public void setMusician(IMusicianEntity musician) {
         this.musician = musician;
     }
 

@@ -1,17 +1,14 @@
 package at.fhv.teamb.symphoniacus.persistence.model.interfaces;
 
-import at.fhv.teamb.symphoniacus.persistence.model.MonthlyScheduleEntity;
-import at.fhv.teamb.symphoniacus.persistence.model.MusicianEntity;
-import at.fhv.teamb.symphoniacus.persistence.model.WishRequestable;
 import java.time.LocalDate;
 import java.util.List;
 
 public interface INegativeDateWishEntity {
     Integer getNegativeDateId();
 
-    void addMonthlySchedule(MonthlyScheduleEntity monthlyScheduleEntity);
+    void addMonthlySchedule(IMonthlyScheduleEntity monthlyScheduleEntity);
 
-    void removeMonthlySchedule(MonthlyScheduleEntity monthlyScheduleEntity);
+    void removeMonthlySchedule(IMonthlyScheduleEntity monthlyScheduleEntity);
 
     void setNegativeDateId(Integer negativeDateId);
 
@@ -27,12 +24,11 @@ public interface INegativeDateWishEntity {
 
     void setEndDate(LocalDate endDate);
 
-    List<MonthlyScheduleEntity> getMonthlySchedules();
+    List<IMonthlyScheduleEntity> getMonthlySchedules();
 
-    void setMonthlySchedules(
-        List<MonthlyScheduleEntity> monthlySchedules);
+    void setMonthlySchedules(List<IMonthlyScheduleEntity> monthlySchedules);
 
-    MusicianEntity getMusician();
+    IMusicianEntity getMusician();
 
-    void setMusician(MusicianEntity musician);
+    void setMusician(IMusicianEntity musician);
 }
