@@ -25,6 +25,8 @@
                <Separator />
                <Label fx:id="dutyTitle" />
                <Pane HBox.hgrow="ALWAYS" />
+               <ComboBox fx:id="musicalPieceSelect" visible="false" layoutX="15.0" layoutY="33.0" prefWidth="160.0" promptText="%tab.duty.schedule.header.choose.musicalpiece" />
+               <Separator />
                <Button fx:id="getOldDutyBtn" mnemonicParsing="false" text="%tab.duty.schedule.old.duty.btn" />
                <ComboBox fx:id="oldDutySelect" layoutX="15.0" layoutY="33.0" prefWidth="160.0" promptText="%tab.duty.schedule.old.duty.choose" />
                <Separator />
@@ -33,13 +35,18 @@
          </ToolBar>
       </children>
    </AnchorPane>
-   <SplitPane fx:id="leftSplitPane" dividerPositions="0.3" orientation="HORIZONTAL" prefHeight="160.0" prefWidth="200.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="45.0">
+   <SplitPane fx:id="leftSplitPane" dividerPositions="0.35" orientation="HORIZONTAL" prefHeight="160.0" prefWidth="200.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="45.0">
        <padding>
            <Insets top="5" right="5" bottom="5" left="5" />
        </padding>
        <items>
             <TableView fx:id="positionsTable">
                 <columns>
+                    <TableColumn fx:id="number" prefWidth="35.0" text="%tab.duty.schedule.table.posnumber" >
+                        <cellValueFactory>
+                            <PropertyValueFactory property="number" />
+                        </cellValueFactory>
+                    </TableColumn>
                     <TableColumn fx:id="role" prefWidth="120.0" text="%tab.duty.schedule.table.role" >
                         <cellValueFactory>
                             <PropertyValueFactory property="role" />

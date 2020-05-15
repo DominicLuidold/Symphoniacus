@@ -2,14 +2,19 @@ package at.fhv.teamb.symphoniacus.presentation;
 
 import at.fhv.teamb.symphoniacus.application.DutyManager;
 import at.fhv.teamb.symphoniacus.application.DutyScheduleManager;
+import at.fhv.teamb.symphoniacus.application.PointsManager;
 import at.fhv.teamb.symphoniacus.application.dto.SectionDto;
 import at.fhv.teamb.symphoniacus.domain.ActualSectionInstrumentation;
 import at.fhv.teamb.symphoniacus.domain.Duty;
 import at.fhv.teamb.symphoniacus.domain.DutyPosition;
+import at.fhv.teamb.symphoniacus.domain.MusicalPiece;
 import at.fhv.teamb.symphoniacus.domain.Musician;
+import at.fhv.teamb.symphoniacus.domain.Points;
 import at.fhv.teamb.symphoniacus.persistence.PersistenceState;
+import at.fhv.teamb.symphoniacus.persistence.model.InstrumentationPositionEntity;
 import at.fhv.teamb.symphoniacus.presentation.internal.AlertHelper;
 import at.fhv.teamb.symphoniacus.presentation.internal.DutyPositionMusicianTableModel;
+import at.fhv.teamb.symphoniacus.presentation.internal.MusicalPieceComboView;
 import at.fhv.teamb.symphoniacus.presentation.internal.MusicianPointsTableModel;
 import at.fhv.teamb.symphoniacus.presentation.internal.MusicianTableModel;
 import at.fhv.teamb.symphoniacus.presentation.internal.OldDutyComboView;
@@ -33,6 +38,8 @@ import java.util.stream.Collectors;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.collections.transformation.FilteredList;
+import javafx.collections.transformation.SortedList;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.geometry.Insets;
@@ -43,6 +50,7 @@ import javafx.scene.control.Button;
 import javafx.scene.control.ButtonBar;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.ComboBox;
+import javafx.scene.control.Dialog;
 import javafx.scene.control.Label;
 import javafx.scene.control.Separator;
 import javafx.scene.control.TableCell;
@@ -56,10 +64,12 @@ import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
+import javafx.stage.Modality;
 import javafx.util.Duration;
 import javafx.util.StringConverter;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.controlsfx.control.CheckListView;
 import org.controlsfx.control.Notifications;
 import org.controlsfx.control.PopOver;
 
@@ -67,12 +77,14 @@ public class DutyScheduleController
     implements Controllable, Initializable, Parentable<DutySchedulerCalendarController> {
 
     private static final Logger LOG = LogManager.getLogger(DutyScheduleController.class);
+
     @FXML
     public Button scheduleSaveBtn;
     private Duty duty;
     private SectionDto section;
     private DutyScheduleManager dutyScheduleManager;
     private DutyManager dutyManager;
+    private PointsManager pointsManager;
     private ActualSectionInstrumentation actualSectionInstrumentation;
     private HashMap<DutyPosition, Optional<Musician>> oldMusicianOnPosition = new HashMap<>();
     private DutyPosition selectedDutyPosition;
@@ -116,10 +128,15 @@ public class DutyScheduleController
     private ComboBox<OldDutyComboView> oldDutySelect;
 
     @FXML
+    private ComboBox<MusicalPieceComboView> musicalPieceSelect;
+
+    @FXML
     private TableColumn<MusicianPointsTableModel, String> columnPointsWithRequests;
 
     @FXML
     private TableColumn<MusicianPointsTableModel, String> columnPointsWithoutRequests;
+
+    private CheckListView<MusicalPiece> scheduleMusicalPiecesChkListView = new CheckListView<>();
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
@@ -217,7 +234,9 @@ public class DutyScheduleController
             for (Musician domainMusician : musiciansWithoutWishRequest) {
                 MusicianTableModel mtm = new MusicianTableModel(domainMusician);
                 guiList.add(mtm);
-                if (this.selectedDutyPosition.getAssignedMusician().isPresent()) {
+                if (this.selectedDutyPosition != null
+                    && this.selectedDutyPosition.getAssignedMusician().isPresent()
+                ) {
                     LOG.debug("There is already a musician assigned for this position");
                     if (domainMusician.getShortcut().equals(
                         this.selectedDutyPosition.getAssignedMusician().get().getShortcut()
@@ -286,6 +305,40 @@ public class DutyScheduleController
         }
     }
 
+    private void initMultipleMusicalPieces() {
+        AlertHelper.showAlert(
+            Alert.AlertType.INFORMATION,
+            this.dutySchedule.getParent().getScene().getWindow(),
+            this.resources.getString(
+                "tab.duty.schedule.multiple.pieces.dialog.beginning.title"
+            ),
+            this.resources.getString("tab.duty.schedule.multiple.pieces.dialog.beginning.body")
+        );
+
+        // this one should obviously not be empty
+        // add entries to combobox
+        for (MusicalPiece mp : this.duty.getMusicalPieces()) {
+            this.musicalPieceSelect.getItems().add(
+                new MusicalPieceComboView(mp)
+            );
+        }
+        // show pretty name
+        final StringConverter<MusicalPieceComboView> converter =
+            new StringConverter<>() {
+                @Override
+                public String toString(MusicalPieceComboView object) {
+                    return object.getName();
+                }
+
+                @Override
+                public MusicalPieceComboView fromString(String nameOfPiece) {
+                    return null;
+                }
+            };
+        this.musicalPieceSelect.setConverter(converter);
+        this.musicalPieceSelect.visibleProperty().set(true);
+    }
+
     /**
      * Initialize the left side of the View with the Actualsectioninstrumentation
      * and their Musicians.
@@ -313,6 +366,12 @@ public class DutyScheduleController
                 } else {
                     this.actualSectionInstrumentation = currentAsi.get();
                     this.duty = this.actualSectionInstrumentation.getDuty();
+                    LOG.debug("Musical Pieces? {}", this.duty.getMusicalPieces().size());
+
+                    if (this.duty.getMusicalPieces().size() > 1) {
+                        LOG.debug("Multiple musical piece for this duty found");
+                        this.initMultipleMusicalPieces();
+                    }
 
                     ObservableList<DutyPositionMusicianTableModel> observablePositionList =
                         FXCollections.observableArrayList();
@@ -327,7 +386,63 @@ public class DutyScheduleController
                             )
                         );
                     }
-                    this.positionsTable.setItems(observablePositionList);
+
+                    if (this.duty.getMusicalPieces().isEmpty()) {
+                        LOG.error("No musical Pieces found for duty!");
+                        AlertHelper.showAlert(
+                            Alert.AlertType.ERROR,
+                            this.dutySchedule.getParent().getScene().getWindow(),
+                            "Error",
+                            "No musical pieces found"
+                        );
+                        return;
+                    }
+
+                    FilteredList<DutyPositionMusicianTableModel> filteredList = new FilteredList<>(
+                        observablePositionList,
+                        dp -> {
+                            // always select first musical piece as default
+                            return dp.getDutyPosition().getEntity().getInstrumentationPosition()
+                                .getInstrumentation().getMusicalPiece().getName().equals(
+                                    this.duty.getMusicalPieces().get(0).getEntity().getName()
+                                );
+                        }
+                    );
+                    this.musicalPieceSelect.valueProperty().addListener(
+                        (observable, oldValue, newValue) -> {
+                            if (newValue != null) {
+                                LOG.debug("New selected piece is {}", newValue.getName());
+                                filteredList.setPredicate(dutyPosition -> {
+                                    InstrumentationPositionEntity instrumentationPosition =
+                                        dutyPosition
+                                            .getDutyPosition()
+                                            .getEntity()
+                                            .getInstrumentationPosition();
+
+                                    if (
+                                        instrumentationPosition
+                                            .getInstrumentation()
+                                            .getMusicalPiece()
+                                            .getName()
+                                            .equals(
+                                                newValue.getName()
+                                            )
+                                    ) {
+                                        return true;
+                                    }
+
+                                    return false;
+                                });
+                            }
+                        }
+                    );
+                    SortedList<DutyPositionMusicianTableModel> sortedList = new SortedList<>(
+                        filteredList
+                    );
+
+                    sortedList.comparatorProperty().bind(this.positionsTable.comparatorProperty());
+
+                    this.positionsTable.setItems(sortedList);
                     mc.showStatusBarLoaded();
                 }
             });
@@ -417,10 +532,16 @@ public class DutyScheduleController
                                 oldasi.get().getDuty().getDutyPositions();
 
                             for (DutyPosition odp : oldDutyPositions) {
-                                if (odp.getEntity().getInstrumentationPosition()
-                                    .getInstrumentationPositionId()
-                                    .equals(dp.getEntity().getInstrumentationPosition()
-                                        .getInstrumentationPositionId())
+                                if (
+                                    odp
+                                        .getEntity()
+                                        .getInstrumentationPosition()
+                                        .getInstrumentationPositionId()
+                                        .equals(
+                                            dp.getEntity()
+                                                .getInstrumentationPosition()
+                                                .getInstrumentationPositionId()
+                                        )
                                 ) {
                                     if (odp.getAssignedMusician().isPresent()) {
                                         oldMusician = odp.getAssignedMusician();
@@ -506,10 +627,91 @@ public class DutyScheduleController
         }
     }
 
-    protected void addMusicianToPosition(
+    private void assignOnePositionToMusician(
+        DutyPosition dutyPosition,
+        ActualSectionInstrumentation asi,
+        Musician m
+    ) {
+        if (dutyPosition.getAssignedMusician().isPresent()) {
+            this.dutyScheduleManager.assignMusicianToPosition(
+                asi,
+                m,
+                dutyPosition.getAssignedMusician().get(),
+                dutyPosition
+            );
+            LOG.debug(
+                "New musician for position {} is: {} and oldMusician id {}",
+                dutyPosition.getEntity().getInstrumentationPosition()
+                    .getPositionDescription(),
+                m.getFullName(),
+                dutyPosition.getAssignedMusician().get()
+            );
+        } else {
+            this.dutyScheduleManager.assignMusicianToPosition(
+                asi,
+                m,
+                dutyPosition
+            );
+            LOG.debug(
+                "New musician for position {} is: {}",
+                dutyPosition.getEntity().getInstrumentationPosition()
+                    .getPositionDescription(),
+                m.getFullName()
+            );
+        }
+        this.positionsTable.refresh();
+    }
+
+    private void unassignOnePositionToMusician(
+        DutyPosition dutyPosition,
+        ActualSectionInstrumentation asi,
+        Musician m
+    ) {
+        if (dutyPosition.getAssignedMusician().isPresent()) {
+            LOG.debug("Unassigned Position {}",
+                dutyPosition.getEntity().getDutyPositionId()
+            );
+            this.dutyScheduleManager.removeMusicianFromPosition(
+                asi,
+                m,
+                dutyPosition
+            );
+            this.positionsTable.refresh();
+        }
+    }
+
+    private Dialog<ButtonType> getMusicalPieceDialog() {
+        ObservableList<MusicalPiece> list = FXCollections.observableList(
+            this.duty.getMusicalPieces()
+        );
+        this.scheduleMusicalPiecesChkListView = new CheckListView<>(list);
+        this.scheduleMusicalPiecesChkListView.getCheckModel().checkAll();
+        Label l = new Label(
+            this.resources.getString("tab.duty.schedule.multiple.pieces.dialog.body")
+        );
+
+        VBox vbox = new VBox();
+        vbox.getChildren().add(l);
+        vbox.getChildren().add(this.scheduleMusicalPiecesChkListView);
+
+        Dialog<ButtonType> dialog = new Dialog<>();
+        dialog.initOwner(this.dutySchedule.getParent().getScene().getWindow());
+        dialog.getDialogPane().getButtonTypes().addAll(ButtonType.CANCEL, ButtonType.OK);
+        dialog.getDialogPane().setContent(vbox);
+        dialog.setResizable(true);
+        dialog.getDialogPane().setPrefWidth(400);
+        dialog.initModality(Modality.WINDOW_MODAL);
+        dialog.setTitle(this.resources.getString(
+            "tab.duty.schedule.multiple.pieces.dialog.title"));
+
+        return dialog;
+    }
+
+    private void handleMultiplePiecesDialogAction(
+        DutyPosition dutyPosition,
         ActualSectionInstrumentation asi,
         Musician newMusician,
-        DutyPosition dutyPosition
+        ScheduleMusicianAction action
     ) {
         if (dutyPosition == null) {
             Notifications.create()
@@ -529,61 +731,130 @@ public class DutyScheduleController
             return;
         }
 
-        if (dutyPosition.getAssignedMusician().isPresent()) {
-            this.dutyScheduleManager.assignMusicianToPosition(
-                asi,
-                newMusician,
-                dutyPosition.getAssignedMusician().get(),
-                dutyPosition
-            );
-            LOG.debug(
-                "New musician for position {} is: {} and oldMusician id {}",
-                dutyPosition.getEntity().getInstrumentationPosition()
-                    .getPositionDescription(),
-                newMusician.getFullName(),
-                dutyPosition.getAssignedMusician().get()
-            );
-        } else {
-            this.dutyScheduleManager.assignMusicianToPosition(
-                asi,
-                newMusician,
-                dutyPosition
-            );
-            LOG.debug(
-                "New musician for position {} is: {}",
-                dutyPosition.getEntity().getInstrumentationPosition()
-                    .getPositionDescription(),
-                newMusician.getFullName()
-            );
-        }
+        if (this.duty.getMusicalPieces().size() > 1) {
+            LOG.debug("need to assign/unassign multiple positions");
+            Dialog<ButtonType> dialog = getMusicalPieceDialog();
 
-        Notifications.create()
-            .owner(this.getParentController().calendarView)
-            .title(
-                this.resources.getString(
-                    "notif.duty.schedule.position.add.musician.set.message.title"
+            Button okButton = (Button) dialog.getDialogPane().lookupButton(ButtonType.OK);
+            okButton.setText(
+                this.resources.getString("tab.duty.schedule.multiple.pieces.dialog.button.ok")
+            );
+
+            okButton.setOnAction(event -> {
+                ObservableList<MusicalPiece> sel = this.scheduleMusicalPiecesChkListView
+                    .getCheckModel()
+                    .getCheckedItems();
+
+                LOG.debug("Selected {} pieces to schedule", sel.size());
+
+                for (MusicalPiece mp : sel) {
+                    DutyPosition dp = getSamePositionForDifferentPiece(
+                        dutyPosition,
+                        mp,
+                        this.duty.getDutyPositions()
+                    );
+                    if (dp != null) {
+                        if (action.equals(ScheduleMusicianAction.ADD)) {
+                            this.assignOnePositionToMusician(dp, asi, newMusician);
+                        } else {
+                            this.unassignOnePositionToMusician(dp, asi, newMusician);
+                        }
+
+                    }
+                }
+                Notifications.create()
+                    .owner(this.getParentController().calendarView)
+                    .title(
+                        this.resources.getString(
+                            "notif.duty.schedule.position.add.musician.set.message.title"
+                        )
+                    )
+                    .text(
+                        this.resources.getString(
+                            "notif.duty.schedule.position.add.musician.set.message"
+                        )
+                    )
+                    .position(Pos.CENTER)
+                    .hideAfter(new Duration(2000))
+                    .show();
+            });
+
+            dialog.show();
+        } else {
+            if (action.equals(ScheduleMusicianAction.ADD)) {
+                this.assignOnePositionToMusician(dutyPosition, asi, newMusician);
+            } else {
+                this.unassignOnePositionToMusician(dutyPosition, asi, newMusician);
+            }
+            Notifications.create()
+                .owner(this.getParentController().calendarView)
+                .title(
+                    this.resources.getString(
+                        "notif.duty.schedule.position.add.musician.set.message.title"
+                    )
                 )
-            )
-            .text(
-                this.resources.getString(
-                    "notif.duty.schedule.position.add.musician.set.message"
+                .text(
+                    this.resources.getString(
+                        "notif.duty.schedule.position.add.musician.set.message"
+                    )
                 )
-            )
-            .position(Pos.CENTER)
-            .hideAfter(new Duration(2000))
-            .show();
+                .position(Pos.CENTER)
+                .hideAfter(new Duration(2000))
+                .show();
+        }
+    }
+
+    protected void addMusicianToPosition(
+        ActualSectionInstrumentation asi,
+        Musician newMusician,
+        DutyPosition dutyPosition
+    ) {
+        handleMultiplePiecesDialogAction(
+            dutyPosition,
+            asi,
+            newMusician,
+            ScheduleMusicianAction.ADD
+        );
 
         this.positionsTable.refresh();
         this.initDutyPositionsTableWithMusicians();
         this.initMusicianTableWithoutRequests();
     }
 
-    private void removeMusicianFromPosition(Musician musician) {
-        this.dutyScheduleManager.removeMusicianFromPosition(
+    private DutyPosition getSamePositionForDifferentPiece(
+        DutyPosition originalPosition,
+        MusicalPiece differentPiece,
+        List<DutyPosition> allPositions
+    ) {
+        for (DutyPosition dutyPosition : allPositions) {
+            InstrumentationPositionEntity ipe = dutyPosition
+                .getEntity()
+                .getInstrumentationPosition();
+            if (
+                ipe.getPositionDescription().equals(
+                    originalPosition
+                        .getEntity()
+                        .getInstrumentationPosition()
+                        .getPositionDescription())
+                    && ipe.getInstrumentation().getMusicalPiece().getName().equals(
+                    differentPiece.getEntity()
+                        .getName()
+                )
+            ) {
+                return dutyPosition;
+            }
+        }
+        return null;
+    }
+
+    private void removeMusicianFromPosition(Musician musician, DutyPosition dutyPosition) {
+        handleMultiplePiecesDialogAction(
+            dutyPosition,
             this.actualSectionInstrumentation,
             musician,
-            this.selectedDutyPosition
+            ScheduleMusicianAction.REMOVE
         );
+
         this.positionsTable.refresh();
         this.initMusicianTableWithoutRequests();
     }
@@ -628,13 +899,9 @@ public class DutyScheduleController
                             .assignMusicianToPosition(oldMusician.get(), dp);
                     } else {
                         if (dp.getAssignedMusician().isPresent()) {
-                            this.dutyScheduleManager.removeMusicianFromPosition(
-                                this.actualSectionInstrumentation,
-                                dp.getAssignedMusician().get(),
-                                dp
-                            );
+                            // TODO check if this is now broken
+                            this.removeMusicianFromPosition(dp.getAssignedMusician().get(), dp);
                         }
-
                     }
                 }
                 tearDown();
@@ -658,10 +925,12 @@ public class DutyScheduleController
         this.section = null;
         this.musicianTableWithRequests.getItems().clear();
         this.musicianTableWithoutRequests.getItems().clear();
-        this.positionsTable.getItems().clear();
+        this.positionsTable.setItems(FXCollections.observableArrayList());
         this.musicianTableWithRequests.refresh();
         this.musicianTableWithoutRequests.refresh();
         this.positionsTable.refresh();
+        this.musicalPieceSelect.getItems().clear();
+        this.musicalPieceSelect.visibleProperty().set(false);
         this.oldDutySelect.getItems().clear();
         this.oldDutySelect.setPromptText(
             this.resources.getString("tab.duty.schedule.old.duty.select.placeholder")
@@ -899,7 +1168,8 @@ public class DutyScheduleController
                 if (mtm != null
                     && mtm.getDutyPosition().getAssignedMusician().isPresent()) {
                     this.removeMusicianFromPosition(
-                        mtm.getDutyPosition().getAssignedMusician().get()
+                        mtm.getDutyPosition().getAssignedMusician().get(),
+                        mtm.getDutyPosition()
                     );
                 } else {
                     LOG.error("Cannot unset null musician");
@@ -978,7 +1248,12 @@ public class DutyScheduleController
 
                     this.selectedDutyPosition = dpmtm.getDutyPosition();
 
-                    assignedMusician.ifPresent(this::removeMusicianFromPosition);
+                    if (assignedMusician.isPresent()) {
+                        this.removeMusicianFromPosition(
+                            dpmtm.getDutyPosition().getAssignedMusician().get(),
+                            dpmtm.getDutyPosition()
+                        );
+                    }
                     return dpmtm;
                 }
             )
@@ -1004,6 +1279,12 @@ public class DutyScheduleController
         }
         this.duty = d.get();
 
+        if (this.pointsManager == null) {
+            this.pointsManager = new PointsManager();
+        }
+        Points p = this.pointsManager.getPointsOfDuty(this.duty.getEntity());
+        LOG.debug("Calculated Points of duty: {}", p.getValue());
+
         LOG.debug("Binding duty title to: {}", this.duty.getTitle());
         this.dutyTitle.textProperty().bind(
             new SimpleStringProperty(
@@ -1016,7 +1297,7 @@ public class DutyScheduleController
                     + " - "
                     + duty.getTitle()
                     + " - "
-                    + duty.getEntity().getDutyCategory().getPoints()
+                    + p.getValue()
                     + " "
                     + this.resources.getString("tab.duty.schedule.table.musicians.points")
             )
@@ -1035,5 +1316,9 @@ public class DutyScheduleController
     @Override
     public void setParentController(DutySchedulerCalendarController controller) {
         this.parentController = controller;
+    }
+
+    private enum ScheduleMusicianAction {
+        ADD, REMOVE
     }
 }
