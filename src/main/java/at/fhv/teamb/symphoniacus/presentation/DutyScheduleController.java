@@ -230,7 +230,9 @@ public class DutyScheduleController
             for (Musician domainMusician : musiciansWithoutWishRequest) {
                 MusicianTableModel mtm = new MusicianTableModel(domainMusician);
                 guiList.add(mtm);
-                if (this.selectedDutyPosition.getAssignedMusician().isPresent()) {
+                if (this.selectedDutyPosition != null
+                    && this.selectedDutyPosition.getAssignedMusician().isPresent()
+                ) {
                     LOG.debug("There is already a musician assigned for this position");
                     if (domainMusician.getShortcut().equals(
                         this.selectedDutyPosition.getAssignedMusician().get().getShortcut()
@@ -300,6 +302,15 @@ public class DutyScheduleController
     }
 
     private void initMultipleMusicalPieces() {
+        AlertHelper.showAlert(
+            Alert.AlertType.INFORMATION,
+            this.dutySchedule.getParent().getScene().getWindow(),
+            this.resources.getString(
+                "tab.duty.schedule.multiple.pieces.dialog.beginning.title"
+            ),
+            this.resources.getString("tab.duty.schedule.multiple.pieces.dialog.beginning.body")
+        );
+
         // this one should obviously not be empty
         // add entries to combobox
         for (MusicalPiece mp : this.duty.getMusicalPieces()) {
@@ -398,10 +409,11 @@ public class DutyScheduleController
                             if (newValue != null) {
                                 LOG.debug("New selected piece is {}", newValue.getName());
                                 filteredList.setPredicate(dutyPosition -> {
-                                    InstrumentationPositionEntity instrumentationPosition = dutyPosition
-                                        .getDutyPosition()
-                                        .getEntity()
-                                        .getInstrumentationPosition();
+                                    InstrumentationPositionEntity instrumentationPosition =
+                                        dutyPosition
+                                            .getDutyPosition()
+                                            .getEntity()
+                                            .getInstrumentationPosition();
 
                                     if (
                                         instrumentationPosition
@@ -514,10 +526,16 @@ public class DutyScheduleController
                                 oldasi.get().getDuty().getDutyPositions();
 
                             for (DutyPosition odp : oldDutyPositions) {
-                                if (odp.getEntity().getInstrumentationPosition()
-                                    .getInstrumentationPositionId()
-                                    .equals(dp.getEntity().getInstrumentationPosition()
-                                        .getInstrumentationPositionId())
+                                if (
+                                    odp
+                                        .getEntity()
+                                        .getInstrumentationPosition()
+                                        .getInstrumentationPositionId()
+                                        .equals(
+                                            dp.getEntity()
+                                                .getInstrumentationPosition()
+                                                .getInstrumentationPositionId()
+                                        )
                                 ) {
                                     if (odp.getAssignedMusician().isPresent()) {
                                         oldMusician = odp.getAssignedMusician();
@@ -660,7 +678,8 @@ public class DutyScheduleController
         ObservableList<MusicalPiece> list = FXCollections.observableList(
             this.duty.getMusicalPieces()
         );
-        scheduleMusicalPiecesChkListView = new CheckListView<>(list);
+        this.scheduleMusicalPiecesChkListView = new CheckListView<>(list);
+        this.scheduleMusicalPiecesChkListView.getCheckModel().checkAll();
 
         Dialog<ButtonType> dialog = new Dialog<>();
         dialog.initOwner(this.dutySchedule.getParent().getScene().getWindow());
@@ -670,8 +689,7 @@ public class DutyScheduleController
         dialog.getDialogPane().setPrefWidth(600);
         dialog.initModality(Modality.APPLICATION_MODAL);
         dialog.setTitle(this.resources.getString(
-            "tab.duty.schedule.multiple.pieces.dialog.title")
-        );
+            "tab.duty.schedule.multiple.pieces.dialog.title"));
 
         return dialog;
     }
@@ -682,8 +700,26 @@ public class DutyScheduleController
         Musician newMusician,
         ScheduleMusicianAction action
     ) {
+        if (dutyPosition == null) {
+            Notifications.create()
+                .title(
+                    this.resources.getString(
+                        "notif.duty.schedule.position.add.musician.unavailable.title"
+                    )
+                )
+                .text(
+                    this.resources.getString(
+                        "notif.duty.schedule.position.add.musician.unavailable.message"
+                    )
+                )
+                .position(Pos.CENTER)
+                .hideAfter(new Duration(2000))
+                .show();
+            return;
+        }
+
         if (this.duty.getMusicalPieces().size() > 1) {
-            LOG.debug("need to assign to multiple positions");
+            LOG.debug("need to assign/unassign multiple positions");
             Dialog<ButtonType> dialog = getMusicalPieceDialog();
 
             Button okButton = (Button) dialog.getDialogPane().lookupButton(ButtonType.OK);
@@ -713,6 +749,21 @@ public class DutyScheduleController
 
                     }
                 }
+                Notifications.create()
+                    .owner(this.getParentController().calendarView)
+                    .title(
+                        this.resources.getString(
+                            "notif.duty.schedule.position.add.musician.set.message.title"
+                        )
+                    )
+                    .text(
+                        this.resources.getString(
+                            "notif.duty.schedule.position.add.musician.set.message"
+                        )
+                    )
+                    .position(Pos.CENTER)
+                    .hideAfter(new Duration(2000))
+                    .show();
             });
 
             dialog.show();
@@ -722,6 +773,21 @@ public class DutyScheduleController
             } else {
                 this.unassignOnePositionToMusician(dutyPosition, asi, newMusician);
             }
+            Notifications.create()
+                .owner(this.getParentController().calendarView)
+                .title(
+                    this.resources.getString(
+                        "notif.duty.schedule.position.add.musician.set.message.title"
+                    )
+                )
+                .text(
+                    this.resources.getString(
+                        "notif.duty.schedule.position.add.musician.set.message"
+                    )
+                )
+                .position(Pos.CENTER)
+                .hideAfter(new Duration(2000))
+                .show();
         }
     }
 
@@ -730,46 +796,12 @@ public class DutyScheduleController
         Musician newMusician,
         DutyPosition dutyPosition
     ) {
-        if (dutyPosition == null) {
-            Notifications.create()
-                .title(
-                    this.resources.getString(
-                        "notif.duty.schedule.position.add.musician.unavailable.title"
-                    )
-                )
-                .text(
-                    this.resources.getString(
-                        "notif.duty.schedule.position.add.musician.unavailable.message"
-                    )
-                )
-                .position(Pos.CENTER)
-                .hideAfter(new Duration(2000))
-                .show();
-            return;
-        }
-
         handleMultiplePiecesDialogAction(
             dutyPosition,
             asi,
             newMusician,
             ScheduleMusicianAction.ADD
         );
-
-        Notifications.create()
-            .owner(this.getParentController().calendarView)
-            .title(
-                this.resources.getString(
-                    "notif.duty.schedule.position.add.musician.set.message.title"
-                )
-            )
-            .text(
-                this.resources.getString(
-                    "notif.duty.schedule.position.add.musician.set.message"
-                )
-            )
-            .position(Pos.CENTER)
-            .hideAfter(new Duration(2000))
-            .show();
 
         this.positionsTable.refresh();
         this.initDutyPositionsTableWithMusicians();
@@ -803,24 +835,6 @@ public class DutyScheduleController
     }
 
     private void removeMusicianFromPosition(Musician musician, DutyPosition dutyPosition) {
-        if (dutyPosition == null) {
-            Notifications.create()
-                .title(
-                    this.resources.getString(
-                        "notif.duty.schedule.position.add.musician.unavailable.title"
-                    )
-                )
-                .text(
-                    this.resources.getString(
-                        "notif.duty.schedule.position.add.musician.unavailable.message"
-                    )
-                )
-                .position(Pos.CENTER)
-                .hideAfter(new Duration(2000))
-                .show();
-            return;
-        }
-
         handleMultiplePiecesDialogAction(
             dutyPosition,
             this.actualSectionInstrumentation,
