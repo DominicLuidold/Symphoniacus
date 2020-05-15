@@ -1,5 +1,6 @@
 package at.fhv.teamb.symphoniacus.persistence.model;
 
+import at.fhv.teamb.symphoniacus.domain.InstrumentationPosition;
 import at.fhv.teamb.symphoniacus.persistence.model.interfaces.IInstrumentationEntity;
 import at.fhv.teamb.symphoniacus.persistence.model.interfaces.IInstrumentationPositionEntity;
 import java.util.LinkedList;
@@ -37,8 +38,8 @@ public class InstrumentationEntity implements IInstrumentationEntity {
     @OneToMany(mappedBy = "instrumentation", fetch = FetchType.LAZY)
     private List<SectionInstrumentationEntity> sectionInstrumentations = new LinkedList<>();
 
-    @OneToMany(mappedBy = "instrumentation", orphanRemoval = true)
-    private List<InstrumentationPositionEntity> instrumentationPositions = new LinkedList<>();
+    @OneToMany(mappedBy = "instrumentation", orphanRemoval = true, targetEntity = InstrumentationPositionEntity.class)
+    private List<IInstrumentationPositionEntity> instrumentationPositions = new LinkedList<>();
 
     public Integer getInstrumentationId() {
         return this.instrumentationId;

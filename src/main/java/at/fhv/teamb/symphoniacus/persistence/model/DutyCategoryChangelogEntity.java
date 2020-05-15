@@ -1,6 +1,7 @@
 package at.fhv.teamb.symphoniacus.persistence.model;
 
 import at.fhv.teamb.symphoniacus.persistence.model.interfaces.IDutyCategoryChangelogEntity;
+import at.fhv.teamb.symphoniacus.persistence.model.interfaces.IDutyCategoryEntity;
 import java.time.LocalDate;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -20,9 +21,9 @@ public class DutyCategoryChangelogEntity implements IDutyCategoryChangelogEntity
     @Column(name = "dutyCategoryChangelogId")
     private Integer dutyCategoryChangelogId;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.LAZY, targetEntity = DutyCategoryEntity.class)
     @JoinColumn(name = "dutyCategoryId")
-    private DutyCategoryEntity dutyCategory;
+    private IDutyCategoryEntity dutyCategory;
 
     @Column(name = "startDate")
     private LocalDate startDate;
@@ -38,11 +39,11 @@ public class DutyCategoryChangelogEntity implements IDutyCategoryChangelogEntity
         this.dutyCategoryChangelogId = dutyCategoryChangelogId;
     }
 
-    public DutyCategoryEntity getDutyCategory() {
+    public IDutyCategoryEntity getDutyCategory() {
         return dutyCategory;
     }
 
-    public void setDutyCategory(DutyCategoryEntity dutyCategory) {
+    public void setDutyCategory(IDutyCategoryEntity dutyCategory) {
         this.dutyCategory = dutyCategory;
     }
 
