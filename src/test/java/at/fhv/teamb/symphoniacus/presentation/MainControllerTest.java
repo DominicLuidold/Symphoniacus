@@ -4,11 +4,12 @@ import at.fhv.teamb.symphoniacus.application.type.MusicianRoleType;
 import at.fhv.teamb.symphoniacus.domain.AdministrativeAssistant;
 import at.fhv.teamb.symphoniacus.domain.Musician;
 import at.fhv.teamb.symphoniacus.persistence.model.AdministrativeAssistantEntity;
-import at.fhv.teamb.symphoniacus.persistence.model.IUserEntity;
 import at.fhv.teamb.symphoniacus.persistence.model.MusicianEntity;
 import at.fhv.teamb.symphoniacus.persistence.model.MusicianRole;
+import at.fhv.teamb.symphoniacus.persistence.model.UserEntity;
 import at.fhv.teamb.symphoniacus.persistence.model.interfaces.IAdministrativeAssistantEntity;
 import at.fhv.teamb.symphoniacus.persistence.model.interfaces.IMusicianRole;
+import at.fhv.teamb.symphoniacus.persistence.model.interfaces.IUserEntity;
 import at.fhv.teamb.symphoniacus.presentation.internal.TabPaneEntry;
 import java.util.Locale;
 import java.util.Queue;
@@ -30,7 +31,7 @@ public class MainControllerTest {
     @Test
     public void testGetPermittedTabs_shouldReturnAListOfPermittedTabsForMusician() {
         MusicianEntity entity = new MusicianEntity();
-        IUserEntity user = new IUserEntity();
+        IUserEntity user = new UserEntity();
         user.setFirstName("Max");
         entity.setUser(user);
         Musician m = new Musician(entity);
@@ -50,7 +51,7 @@ public class MainControllerTest {
     public void testGetPermittedTabs_shouldReturnAListOfPermittedTabsForMusicianWithRoles() {
         // Given: Musician is Musician with Duty Scheduler role
         MusicianEntity entity = new MusicianEntity();
-        IUserEntity user = new IUserEntity();
+        IUserEntity user = new UserEntity();
         user.setFirstName("Max");
         entity.setUser(user);
         IMusicianRole role = new MusicianRole();

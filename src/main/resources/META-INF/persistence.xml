@@ -26,7 +26,7 @@
         <class>at.fhv.teamb.symphoniacus.persistence.model.SectionMonthlyScheduleEntity</class>
         <class>at.fhv.teamb.symphoniacus.persistence.model.SeriesOfPerformancesEntity</class>
         <class>at.fhv.teamb.symphoniacus.persistence.model.Substitute</class>
-        <class>at.fhv.teamb.symphoniacus.persistence.model.IUserEntity</class>
+        <class>at.fhv.teamb.symphoniacus.persistence.model.UserEntity</class>
         <class>at.fhv.teamb.symphoniacus.persistence.model.VacationEntity</class>
         <class>at.fhv.teamb.symphoniacus.persistence.model.WeeklyScheduleEntity</class>
         <!-- Properties -->

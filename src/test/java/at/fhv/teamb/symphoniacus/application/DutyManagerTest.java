@@ -10,6 +10,7 @@ import at.fhv.teamb.symphoniacus.domain.Duty;
 import at.fhv.teamb.symphoniacus.persistence.dao.DutyDao;
 import at.fhv.teamb.symphoniacus.persistence.model.DutyEntity;
 import at.fhv.teamb.symphoniacus.persistence.model.SectionEntity;
+import at.fhv.teamb.symphoniacus.persistence.model.interfaces.IDutyEntity;
 import java.time.DayOfWeek;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -74,7 +75,7 @@ class DutyManagerTest {
 
     @Test
     void convertToDuties_ShouldReturnAList() {
-        List<DutyEntity> el = new LinkedList<>();
+        List<IDutyEntity> el = new LinkedList<>();
         el.add(new DutyEntity());
         el.add(new DutyEntity());
         List<Duty> duties = DutyManager.convertEntitiesToDomainObjects(el);
