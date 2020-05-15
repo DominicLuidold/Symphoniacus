@@ -2,8 +2,8 @@ package at.fhv.teamb.symphoniacus.application.dto;
 
 /**
  * DTO for SectionInstrumentations.
+ *
  * @author Nino Heinzle
- * @created : 15.05.20, Fr.
  **/
 public class SectionInstrumentationDto {
     private final int sectionInstrumentationId;
@@ -11,14 +11,17 @@ public class SectionInstrumentationDto {
     private final String predefinedSectionInstrumentation;
 
     /**
-     * creats a new SectionInstrumentationDto.
-     * @param sectionInstrumentationId given SectionInstrumentation
-     * @param musicalPiece given Musical Piece
+     * Creates  a new SectionInstrumentationDto.
+     *
+     * @param sectionInstrumentationId         given SectionInstrumentation
+     * @param musicalPiece                     given Musical Piece
      * @param predefinedSectionInstrumentation given Predefined Section Inst.
      */
-    public SectionInstrumentationDto(int sectionInstrumentationId,
-                                     MusicalPieceDto musicalPiece,
-                                     String predefinedSectionInstrumentation) {
+    private SectionInstrumentationDto(
+        int sectionInstrumentationId,
+        MusicalPieceDto musicalPiece,
+        String predefinedSectionInstrumentation
+    ) {
         this.sectionInstrumentationId = sectionInstrumentationId;
         this.musicalPiece = musicalPiece;
         this.predefinedSectionInstrumentation = predefinedSectionInstrumentation;
@@ -58,9 +61,10 @@ public class SectionInstrumentationDto {
         }
 
         /**
-         * Constructs a new SectionInstrugit smentationDto
-         * with the previously set options in the builder.
-         * @return Constructed SectionInstrumentationDto.
+         * Constructs a new SectionInstrumentationDto with the previously
+         * set options in the builder.
+         *
+         * @return Constructed UserDTO.
          */
         public SectionInstrumentationDto build() {
             return new SectionInstrumentationDto(
@@ -69,6 +73,5 @@ public class SectionInstrumentationDto {
                 this.predefinedSectionInstrumentation
             );
         }
-
     }
 }

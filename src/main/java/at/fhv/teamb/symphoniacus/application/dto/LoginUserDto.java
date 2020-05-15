@@ -3,7 +3,7 @@ package at.fhv.teamb.symphoniacus.application.dto;
 import at.fhv.teamb.symphoniacus.application.type.DomainUserType;
 
 /**
- * DTO for User.
+ * LoginDTO for User.
  *
  * @author Valentin Goronjic
  */
@@ -83,6 +83,7 @@ public class LoginUserDto {
 
         /**
          * Constructs a new UserDto with the previously set options in the builder.
+         *
          * @return Constructed UserDTO.
          */
         public LoginUserDto build() {

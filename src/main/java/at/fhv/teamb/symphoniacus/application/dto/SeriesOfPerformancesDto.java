@@ -1,6 +1,5 @@
 package at.fhv.teamb.symphoniacus.application.dto;
 
-import at.fhv.teamb.symphoniacus.persistence.model.DutyEntity;
 import java.time.LocalDate;
 import java.util.Set;
 

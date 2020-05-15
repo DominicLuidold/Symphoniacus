@@ -5,8 +5,8 @@ import java.util.Set;
 
 /**
  * DTO for MusicalPiece.
- * @author : Danijel Antonijevic
- * @created : 15.05.20, Fr.
+ *
+ * @author Danijel Antonijevic
  **/
 public class MusicalPieceDto {
 
