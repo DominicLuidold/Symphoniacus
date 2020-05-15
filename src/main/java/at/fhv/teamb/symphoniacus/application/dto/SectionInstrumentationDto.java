@@ -10,6 +10,12 @@ public class SectionInstrumentationDto {
     private final MusicalPieceDto musicalPiece;
     private final String predefinedSectionInstrumentation;
 
+    /**
+     * creats a new SectionInstrumentationDto.
+     * @param sectionInstrumentationId given SectionInstrumentation
+     * @param musicalPiece given Musical Piece
+     * @param predefinedSectionInstrumentation given Predefined Section Inst.
+     */
     public SectionInstrumentationDto(int sectionInstrumentationId,
                                      MusicalPieceDto musicalPiece,
                                      String predefinedSectionInstrumentation) {
@@ -50,8 +56,10 @@ public class SectionInstrumentationDto {
             this.predefinedSectionInstrumentation = predefinedSectionInstrumentation;
             return this;
         }
+
         /**
-         * Constructs a new SectionInstrugit smentationDto with the previously set options in the builder.
+         * Constructs a new SectionInstrugit smentationDto
+         * with the previously set options in the builder.
          * @return Constructed SectionInstrumentationDto.
          */
         public SectionInstrumentationDto build() {
