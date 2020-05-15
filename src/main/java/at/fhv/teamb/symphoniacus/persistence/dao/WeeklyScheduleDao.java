@@ -14,7 +14,7 @@ public class WeeklyScheduleDao extends BaseDao<IWeeklyScheduleEntity> {
      */
     @Override
     public Optional<IWeeklyScheduleEntity> find(Integer key) {
-        return this.find(IWeeklyScheduleEntity.class, key);
+        return this.find(WeeklyScheduleEntity.class, key);
     }
 
     /**
@@ -25,11 +25,11 @@ public class WeeklyScheduleDao extends BaseDao<IWeeklyScheduleEntity> {
      * @return A weekly schedule, if any
      */
     public Optional<IWeeklyScheduleEntity> findForDayAndYear(LocalDate day, int year) {
-        TypedQuery<IWeeklyScheduleEntity> query = entityManager.createQuery(
+        TypedQuery<WeeklyScheduleEntity> query = entityManager.createQuery(
             "SELECT w FROM WeeklyScheduleEntity w "
                 + "WHERE :day BETWEEN w.startDate AND w.endDate "
                 + "AND w.year = :year",
-            IWeeklyScheduleEntity.class
+            WeeklyScheduleEntity.class
         );
 
         query.setParameter("day", day);
@@ -47,7 +47,7 @@ public class WeeklyScheduleDao extends BaseDao<IWeeklyScheduleEntity> {
      */
     @Override
     public Optional<IWeeklyScheduleEntity> persist(IWeeklyScheduleEntity elem) {
-        return this.persist(IWeeklyScheduleEntity.class, elem);
+        return this.persist(WeeklyScheduleEntity.class, elem);
     }
 
     /**

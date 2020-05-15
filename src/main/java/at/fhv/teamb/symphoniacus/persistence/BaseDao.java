@@ -22,10 +22,6 @@ public abstract class BaseDao<T> implements Dao<T> {
         );
     protected static EntityManager entityManager = entityManagerFactory.createEntityManager();
 
-    public BaseDao() {
-        LOG.debug("Creating a new DAO and EntityManager");
-    }
-
     /**
      * Finds the object based on the provided primary key.
      *
@@ -33,10 +29,10 @@ public abstract class BaseDao<T> implements Dao<T> {
      * @param key   The primary key to use
      * @return The object
      */
-    protected Optional<T> find(Class<T> clazz, Integer key) {
+    protected Optional<T> find(Class<?> clazz, Integer key) {
         // Disable cache because duty positions could be set.
         //entityManager.clear();
-        T elem = entityManager.find(clazz, key);
+        T elem = (T) entityManager.find(clazz, key);
         if (elem != null) {
             return Optional.of(elem);
         }
@@ -50,7 +46,7 @@ public abstract class BaseDao<T> implements Dao<T> {
      * @param elem  The object to persist
      * @return Optional.empty if persisting not possible
      */
-    protected Optional<T> persist(Class<T> clazz, T elem) {
+    protected Optional<T> persist(Class<?> clazz, T elem) {
         EntityTransaction transaction = null;
         try {
             transaction = entityManager.getTransaction();
@@ -74,7 +70,7 @@ public abstract class BaseDao<T> implements Dao<T> {
      * @param elem  The object to update
      * @return Optional.empty if updating not possible
      */
-    protected Optional<T> update(Class<T> clazz, T elem) {
+    protected Optional<T> update(Class<?> clazz, T elem) {
         EntityTransaction transaction = null;
         try {
             transaction = entityManager.getTransaction();

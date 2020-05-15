@@ -2,7 +2,7 @@ package at.fhv.teamb.symphoniacus.persistence.dao;
 
 import at.fhv.teamb.symphoniacus.persistence.BaseDao;
 import at.fhv.teamb.symphoniacus.persistence.dao.interfaces.IDutyDao;
-import at.fhv.teamb.symphoniacus.persistence.model.MusicianEntity;
+import at.fhv.teamb.symphoniacus.persistence.model.DutyEntity;
 import at.fhv.teamb.symphoniacus.persistence.model.interfaces.IDutyCategoryEntity;
 import at.fhv.teamb.symphoniacus.persistence.model.interfaces.IDutyEntity;
 import at.fhv.teamb.symphoniacus.persistence.model.interfaces.IInstrumentationEntity;
@@ -31,7 +31,7 @@ public class DutyDao extends BaseDao<IDutyEntity> implements IDutyDao {
      */
     @Override
     public Optional<IDutyEntity> find(Integer key) {
-        return this.find(IDutyEntity.class, key);
+        return this.find(DutyEntity.class, key);
     }
 
     /**

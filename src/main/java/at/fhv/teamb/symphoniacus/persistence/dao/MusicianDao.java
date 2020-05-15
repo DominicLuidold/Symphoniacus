@@ -25,7 +25,7 @@ public class MusicianDao extends BaseDao<IMusicianEntity> {
      */
     @Override
     public Optional<IMusicianEntity> find(Integer key) {
-        return this.find(IMusicianEntity.class, key);
+        return this.find(MusicianEntity.class, key);
     }
 
     /**
