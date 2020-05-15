@@ -4,7 +4,9 @@ package at.fhv.teamb.symphoniacus.presentation;
 import at.fhv.teamb.symphoniacus.application.DutyCategoryManager;
 import at.fhv.teamb.symphoniacus.application.DutyManager;
 import at.fhv.teamb.symphoniacus.application.SeriesOfPerformancesManager;
+import at.fhv.teamb.symphoniacus.application.dto.DutyCategoryChangeLogDto;
 import at.fhv.teamb.symphoniacus.application.dto.DutyCategoryDto;
+import at.fhv.teamb.symphoniacus.application.dto.DutyDto;
 import at.fhv.teamb.symphoniacus.application.dto.InstrumentationDto;
 import at.fhv.teamb.symphoniacus.application.dto.SeriesOfPerformancesDto;
 import at.fhv.teamb.symphoniacus.domain.Duty;
@@ -70,7 +72,7 @@ public class NewDutyEntryController implements Initializable, Parentable<TabPane
     private static final Logger LOG = LogManager.getLogger(NewDutyEntryController.class);
     private TabPaneController parentController;
     private ResourceBundle resources;
-    private Duty duty;
+    private DutyDto duty;
     private DutyManager dutyManager;
     private DutyCategoryManager dutyCategoryManager;
     private SeriesOfPerformancesManager seriesOfPerformancesManager;
@@ -363,10 +365,10 @@ public class NewDutyEntryController implements Initializable, Parentable<TabPane
      *//*
 
     private void fillPointsField() {
-        DutyCategoryChangelogEntity temp = null;
+        DutyCategoryChangeLogDto temp = null;
         int points = 0;
-        for (DutyCategoryChangelogEntity dcl : this.dutyCategorySelect.getSelectionModel()
-            .getSelectedItem().getEntity().getDutyCategoryChangelogs()
+        for (DutyCategoryChangeLogDto dcl : this.dutyCategorySelect.getSelectionModel()
+            .getSelectedItem().getChangeLogs()
         ) {
             if (temp == null || (dcl.getStartDate().isAfter(temp.getStartDate())
                 && this.dutyStartDateInput.getValue().isAfter(dcl.getStartDate()))
@@ -440,7 +442,7 @@ public class NewDutyEntryController implements Initializable, Parentable<TabPane
                 .getCheckModel().getCheckedItems(), this.dutyStartDateInput.getValue()
                 .atTime(this.dutyStartTimeInput.getValue()),
             this.dutyEndDateInput.getValue().atTime(this.dutyEndTimeInput.getValue()),
-            this.dutyCategorySelect.getSelectionModel().getSelectedItem().getEntity())
+            this.dutyCategorySelect.getSelectionModel().getSelectedItem())
         ) {
             MainController.showErrorAlert(
                 this.resources.getString("tab.duty.new.entry.error.title"),
@@ -503,7 +505,7 @@ public class NewDutyEntryController implements Initializable, Parentable<TabPane
                 this.seriesOfPerformancesSelect.getValue()
             );
 
-            Set<InstrumentationEntity> instrumentations = new LinkedHashSet<>(
+            Set<InstrumentationDto> instrumentations = new LinkedHashSet<>(
                 this.instrumentationsSelect.getCheckModel().getCheckedItems()
             );
             // Delegate saving to manager
