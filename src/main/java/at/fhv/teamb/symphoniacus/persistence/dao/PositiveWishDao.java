@@ -1,6 +1,8 @@
 package at.fhv.teamb.symphoniacus.persistence.dao;
 
 import at.fhv.teamb.symphoniacus.persistence.BaseDao;
+import at.fhv.teamb.symphoniacus.persistence.dao.interfaces.IPositiveWishDao;
+import at.fhv.teamb.symphoniacus.persistence.model.PositiveWishEntity;
 import at.fhv.teamb.symphoniacus.persistence.model.WishRequestable;
 import at.fhv.teamb.symphoniacus.persistence.model.interfaces.IDutyEntity;
 import at.fhv.teamb.symphoniacus.persistence.model.interfaces.IPositiveWishEntity;
@@ -8,14 +10,15 @@ import java.util.List;
 import java.util.Optional;
 import javax.persistence.TypedQuery;
 
-public class PositiveWishDao extends BaseDao<IPositiveWishEntity> {
+public class PositiveWishDao extends BaseDao<IPositiveWishEntity>
+    implements IPositiveWishDao {
 
     /**
      * {@inheritDoc}
      */
     @Override
     public Optional<IPositiveWishEntity> find(Integer key) {
-        return this.find(IPositiveWishEntity.class, key);
+        return this.find(PositiveWishEntity.class, key);
     }
 
     /**
@@ -23,7 +26,7 @@ public class PositiveWishDao extends BaseDao<IPositiveWishEntity> {
      */
     @Override
     public Optional<IPositiveWishEntity> persist(IPositiveWishEntity elem) {
-        return this.persist(IPositiveWishEntity.class, elem);
+        return this.persist(PositiveWishEntity.class, elem);
     }
 
     /**
@@ -31,7 +34,7 @@ public class PositiveWishDao extends BaseDao<IPositiveWishEntity> {
      */
     @Override
     public Optional<IPositiveWishEntity> update(IPositiveWishEntity elem) {
-        return this.update(IPositiveWishEntity.class, elem);
+        return this.update(PositiveWishEntity.class, elem);
     }
 
     @Override
@@ -40,11 +43,9 @@ public class PositiveWishDao extends BaseDao<IPositiveWishEntity> {
     }
 
     /**
-     * Finds all PositiveWishes for a given duty.
-     *
-     * @param duty duty
-     * @return List of (Interface)WishRequestable
+     * {@inheritDoc}
      */
+    @Override
     public List<WishRequestable> getAllPositiveWishes(IDutyEntity duty) {
         TypedQuery<WishRequestable> query = entityManager.createQuery(
             "SELECT pw FROM PositiveWishEntity pw "

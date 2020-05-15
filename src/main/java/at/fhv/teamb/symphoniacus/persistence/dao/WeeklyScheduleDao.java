@@ -1,13 +1,15 @@
 package at.fhv.teamb.symphoniacus.persistence.dao;
 
 import at.fhv.teamb.symphoniacus.persistence.BaseDao;
+import at.fhv.teamb.symphoniacus.persistence.dao.interfaces.IWeeklyScheduleDao;
 import at.fhv.teamb.symphoniacus.persistence.model.WeeklyScheduleEntity;
 import at.fhv.teamb.symphoniacus.persistence.model.interfaces.IWeeklyScheduleEntity;
 import java.time.LocalDate;
 import java.util.Optional;
 import javax.persistence.TypedQuery;
 
-public class WeeklyScheduleDao extends BaseDao<IWeeklyScheduleEntity> {
+public class WeeklyScheduleDao extends BaseDao<IWeeklyScheduleEntity>
+    implements IWeeklyScheduleDao {
 
     /**
      * {@inheritDoc}
@@ -18,13 +20,10 @@ public class WeeklyScheduleDao extends BaseDao<IWeeklyScheduleEntity> {
     }
 
     /**
-     * Returns the {@link WeeklyScheduleEntity} for a given day and year.
-     *
-     * @param day  The day to use
-     * @param year The year to use
-     * @return A weekly schedule, if any
+     * {@inheritDoc}
      */
-    public Optional<IWeeklyScheduleEntity> findForDayAndYear(LocalDate day, int year) {
+    @Override
+    public Optional<WeeklyScheduleEntity> findForDayAndYear(LocalDate day, int year) {
         TypedQuery<WeeklyScheduleEntity> query = entityManager.createQuery(
             "SELECT w FROM WeeklyScheduleEntity w "
                 + "WHERE :day BETWEEN w.startDate AND w.endDate "
@@ -55,7 +54,7 @@ public class WeeklyScheduleDao extends BaseDao<IWeeklyScheduleEntity> {
      */
     @Override
     public Optional<IWeeklyScheduleEntity> update(IWeeklyScheduleEntity elem) {
-        return this.update(IWeeklyScheduleEntity.class, elem);
+        return this.update(WeeklyScheduleEntity.class, elem);
     }
 
     @Override

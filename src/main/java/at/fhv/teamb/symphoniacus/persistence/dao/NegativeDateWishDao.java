@@ -1,6 +1,8 @@
 package at.fhv.teamb.symphoniacus.persistence.dao;
 
 import at.fhv.teamb.symphoniacus.persistence.BaseDao;
+import at.fhv.teamb.symphoniacus.persistence.dao.interfaces.INegativeDateWishDao;
+import at.fhv.teamb.symphoniacus.persistence.model.NegativeDateWishEntity;
 import at.fhv.teamb.symphoniacus.persistence.model.WishRequestable;
 import at.fhv.teamb.symphoniacus.persistence.model.interfaces.IDutyEntity;
 import at.fhv.teamb.symphoniacus.persistence.model.interfaces.INegativeDateWishEntity;
@@ -8,14 +10,15 @@ import java.util.List;
 import java.util.Optional;
 import javax.persistence.TypedQuery;
 
-public class NegativeDateWishDao extends BaseDao<INegativeDateWishEntity> {
+public class NegativeDateWishDao extends BaseDao<INegativeDateWishEntity>
+    implements INegativeDateWishDao {
 
     /**
      * {@inheritDoc}
      */
     @Override
     public Optional<INegativeDateWishEntity> find(Integer key) {
-        return this.find(INegativeDateWishEntity.class, key);
+        return this.find(NegativeDateWishEntity.class, key);
     }
 
     /**
@@ -23,7 +26,7 @@ public class NegativeDateWishDao extends BaseDao<INegativeDateWishEntity> {
      */
     @Override
     public Optional<INegativeDateWishEntity> persist(INegativeDateWishEntity elem) {
-        return this.persist(INegativeDateWishEntity.class, elem);
+        return this.persist(NegativeDateWishEntity.class, elem);
     }
 
     /**
@@ -31,7 +34,7 @@ public class NegativeDateWishDao extends BaseDao<INegativeDateWishEntity> {
      */
     @Override
     public Optional<INegativeDateWishEntity> update(INegativeDateWishEntity elem) {
-        return this.update(INegativeDateWishEntity.class, elem);
+        return this.update(NegativeDateWishEntity.class, elem);
     }
 
     @Override
@@ -40,11 +43,9 @@ public class NegativeDateWishDao extends BaseDao<INegativeDateWishEntity> {
     }
 
     /**
-     * Finds all NegativeDateDateWishes for a given duty.
-     *
-     * @param duty duty
-     * @return List of (Interface)WishRequestable
+     * {@inheritDoc}
      */
+    @Override
     public List<WishRequestable> getAllNegativeDateWishes(IDutyEntity duty) {
         TypedQuery<WishRequestable> query = entityManager.createQuery(
             "SELECT nd FROM NegativeDateWishEntity nd "

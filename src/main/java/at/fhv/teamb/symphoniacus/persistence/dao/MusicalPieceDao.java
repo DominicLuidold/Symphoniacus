@@ -1,6 +1,7 @@
 package at.fhv.teamb.symphoniacus.persistence.dao;
 
 import at.fhv.teamb.symphoniacus.persistence.BaseDao;
+import at.fhv.teamb.symphoniacus.persistence.dao.interfaces.IMusicalPieceDao;
 import at.fhv.teamb.symphoniacus.persistence.model.MusicalPieceEntity;
 import at.fhv.teamb.symphoniacus.persistence.model.interfaces.IMusicalPieceEntity;
 import java.util.LinkedHashSet;
@@ -8,41 +9,39 @@ import java.util.Optional;
 import java.util.Set;
 import javax.persistence.TypedQuery;
 
-public class MusicalPieceDao extends BaseDao<IMusicalPieceEntity> {
+public class MusicalPieceDao extends BaseDao<IMusicalPieceEntity>
+    implements IMusicalPieceDao {
 
     /**
      * {@inheritDoc}
      */
     @Override
     public Optional<IMusicalPieceEntity> find(Integer key) {
-        return this.find(IMusicalPieceEntity.class, key);
+        return this.find(MusicalPieceEntity.class, key);
     }
 
     /**
-     * Fetches all {@link MusicalPieceEntity} objects.
-     *
-     * @return A Set of MusicalPieceEntity
+     * {@inheritDoc}
      */
-    public Set<IMusicalPieceEntity> getAll() {
-        TypedQuery<IMusicalPieceEntity> query = entityManager.createQuery(
+    @Override
+    public Set<MusicalPieceEntity> getAll() {
+        TypedQuery<MusicalPieceEntity> query = entityManager.createQuery(
             "SELECT mp FROM MusicalPieceEntity mp",
-            IMusicalPieceEntity.class
+            MusicalPieceEntity.class
         );
 
         return new LinkedHashSet<>(query.getResultList());
     }
 
     /**
-     * Returns all {@link MusicalPieceEntity} objects for a given name.
-     *
-     * @param name The name to search for
-     * @return A musical piece with the same name
+     * {@inheritDoc}
      */
-    public Optional<IMusicalPieceEntity> getMusicalPieceFromName(String name) {
-        TypedQuery<IMusicalPieceEntity> query = entityManager.createQuery(
+    @Override
+    public Optional<MusicalPieceEntity> getMusicalPieceFromName(String name) {
+        TypedQuery<MusicalPieceEntity> query = entityManager.createQuery(
             "SELECT mp FROM MusicalPieceEntity mp "
                 + "WHERE mp.name = :nameOfPiece",
-            IMusicalPieceEntity.class
+            MusicalPieceEntity.class
         );
 
         query.setParameter("nameOfPiece", name);
@@ -55,7 +54,7 @@ public class MusicalPieceDao extends BaseDao<IMusicalPieceEntity> {
      */
     @Override
     public Optional<IMusicalPieceEntity> persist(IMusicalPieceEntity elem) {
-        return this.persist(IMusicalPieceEntity.class, elem);
+        return this.persist(MusicalPieceEntity.class, elem);
     }
 
     /**
@@ -63,7 +62,7 @@ public class MusicalPieceDao extends BaseDao<IMusicalPieceEntity> {
      */
     @Override
     public Optional<IMusicalPieceEntity> update(IMusicalPieceEntity elem) {
-        return this.update(IMusicalPieceEntity.class, elem);
+        return this.update(MusicalPieceEntity.class, elem);
     }
 
     @Override

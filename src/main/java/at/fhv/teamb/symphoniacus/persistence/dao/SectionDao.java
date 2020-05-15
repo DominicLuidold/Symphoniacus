@@ -1,6 +1,7 @@
 package at.fhv.teamb.symphoniacus.persistence.dao;
 
 import at.fhv.teamb.symphoniacus.persistence.BaseDao;
+import at.fhv.teamb.symphoniacus.persistence.dao.interfaces.ISectionDao;
 import at.fhv.teamb.symphoniacus.persistence.model.SectionEntity;
 import at.fhv.teamb.symphoniacus.persistence.model.interfaces.ISectionEntity;
 import java.util.List;
@@ -12,7 +13,8 @@ import javax.persistence.TypedQuery;
  *
  * @author Dominic Luidold
  */
-public class SectionDao extends BaseDao<ISectionEntity> {
+public class SectionDao extends BaseDao<ISectionEntity>
+    implements ISectionDao {
 
     /**
      * {@inheritDoc}
@@ -23,14 +25,13 @@ public class SectionDao extends BaseDao<ISectionEntity> {
     }
 
     /**
-     * Returns all {@link SectionEntity} objects.
-     *
-     * @return A List of sections
+     * {@inheritDoc}
      */
-    public List<ISectionEntity> getAll() {
-        TypedQuery<ISectionEntity> query = entityManager.createQuery(
+    @Override
+    public List<SectionEntity> getAll() {
+        TypedQuery<SectionEntity> query = entityManager.createQuery(
             "SELECT s FROM SectionEntity s",
-            ISectionEntity.class
+            SectionEntity.class
         );
 
         return query.getResultList();
@@ -41,7 +42,7 @@ public class SectionDao extends BaseDao<ISectionEntity> {
      */
     @Override
     public Optional<ISectionEntity> persist(ISectionEntity elem) {
-        return this.persist(ISectionEntity.class, elem);
+        return this.persist(SectionEntity.class, elem);
     }
 
     /**
@@ -49,7 +50,7 @@ public class SectionDao extends BaseDao<ISectionEntity> {
      */
     @Override
     public Optional<ISectionEntity> update(ISectionEntity elem) {
-        return this.update(ISectionEntity.class, elem);
+        return this.update(SectionEntity.class, elem);
     }
 
     @Override

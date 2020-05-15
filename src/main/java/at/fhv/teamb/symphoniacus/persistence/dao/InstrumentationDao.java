@@ -3,7 +3,6 @@ package at.fhv.teamb.symphoniacus.persistence.dao;
 import at.fhv.teamb.symphoniacus.persistence.BaseDao;
 import at.fhv.teamb.symphoniacus.persistence.dao.interfaces.IInstrumentationDao;
 import at.fhv.teamb.symphoniacus.persistence.model.InstrumentationEntity;
-import at.fhv.teamb.symphoniacus.persistence.model.MusicalPieceEntity;
 import at.fhv.teamb.symphoniacus.persistence.model.interfaces.IInstrumentationEntity;
 import at.fhv.teamb.symphoniacus.persistence.model.interfaces.IMusicalPieceEntity;
 import at.fhv.teamb.symphoniacus.persistence.model.interfaces.ISeriesOfPerformancesEntity;
@@ -20,7 +19,7 @@ public class InstrumentationDao extends BaseDao<IInstrumentationEntity>
      */
     @Override
     public Optional<IInstrumentationEntity> find(Integer key) {
-        return this.find(IInstrumentationEntity.class, key);
+        return this.find(InstrumentationEntity.class, key);
     }
 
     /**
@@ -28,7 +27,7 @@ public class InstrumentationDao extends BaseDao<IInstrumentationEntity>
      */
     @Override
     public Optional<IInstrumentationEntity> persist(IInstrumentationEntity elem) {
-        return this.persist(IInstrumentationEntity.class, elem);
+        return this.persist(InstrumentationEntity.class, elem);
     }
 
     /**
@@ -36,7 +35,7 @@ public class InstrumentationDao extends BaseDao<IInstrumentationEntity>
      */
     @Override
     public Optional<IInstrumentationEntity> update(IInstrumentationEntity elem) {
-        return this.update(IInstrumentationEntity.class, elem);
+        return this.update(InstrumentationEntity.class, elem);
     }
 
     @Override
@@ -47,15 +46,16 @@ public class InstrumentationDao extends BaseDao<IInstrumentationEntity>
     /**
      * {@inheritDoc}
      */
-    public Set<IInstrumentationEntity> getAllInstrumentationsToSeries(
+    @Override
+    public Set<InstrumentationEntity> getAllInstrumentationsToSeries(
         ISeriesOfPerformancesEntity series
     ) {
-        TypedQuery<IInstrumentationEntity> query = entityManager.createQuery(
+        TypedQuery<InstrumentationEntity> query = entityManager.createQuery(
             "SELECT inst FROM InstrumentationEntity inst "
                 + "JOIN FETCH inst.musicalPiece instm"
                 + "INNER JOIN inst.seriesOfPerformances sp "
                 + "WHERE sp.seriesOfPerformancesId = :seriesId",
-            IInstrumentationEntity.class
+            InstrumentationEntity.class
         );
 
         query.setParameter("seriesId", series.getSeriesOfPerformancesId());
@@ -64,20 +64,17 @@ public class InstrumentationDao extends BaseDao<IInstrumentationEntity>
     }
 
     /**
-     * Returns all {@link InstrumentationEntity} objects for a Set of
-     * {@link MusicalPieceEntity} objects.
-     *
-     * @param musicalPieces given musicalPieces
-     * @return A Set of all instrumentations to all given musicalPieces
+     * {@inheritDoc}
      */
-    public Set<IInstrumentationEntity> getInstrumentationsToMusicalPieces(
+    @Override
+    public Set<InstrumentationEntity> getInstrumentationsToMusicalPieces(
         Set<IMusicalPieceEntity> musicalPieces
     ) {
-        TypedQuery<IInstrumentationEntity> query = entityManager.createQuery(
+        TypedQuery<InstrumentationEntity> query = entityManager.createQuery(
             "SELECT inst FROM InstrumentationEntity inst "
                 + "LEFT JOIN FETCH inst.sectionInstrumentations "
                 + "WHERE inst.musicalPiece IN :musicalPieces",
-            IInstrumentationEntity.class
+            InstrumentationEntity.class
         );
 
         query.setParameter("musicalPieces", musicalPieces);

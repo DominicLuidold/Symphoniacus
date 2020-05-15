@@ -1,6 +1,8 @@
 package at.fhv.teamb.symphoniacus.persistence.dao;
 
 import at.fhv.teamb.symphoniacus.persistence.BaseDao;
+import at.fhv.teamb.symphoniacus.persistence.dao.interfaces.IAdministrativeAssistantDao;
+import at.fhv.teamb.symphoniacus.persistence.model.AdministrativeAssistantEntity;
 import at.fhv.teamb.symphoniacus.persistence.model.interfaces.IAdministrativeAssistantEntity;
 import java.util.Optional;
 
@@ -9,14 +11,15 @@ import java.util.Optional;
  *
  * @author Tobias Moser
  */
-public class AdministrativeAssistantDao extends BaseDao<IAdministrativeAssistantEntity> {
+public class AdministrativeAssistantDao extends BaseDao<IAdministrativeAssistantEntity>
+    implements IAdministrativeAssistantDao {
 
     /**
      * {@inheritDoc}
      */
     @Override
     public Optional<IAdministrativeAssistantEntity> find(Integer key) {
-        return this.find(IAdministrativeAssistantEntity.class, key);
+        return this.find(AdministrativeAssistantEntity.class, key);
     }
 
     /**
@@ -24,7 +27,7 @@ public class AdministrativeAssistantDao extends BaseDao<IAdministrativeAssistant
      */
     @Override
     public Optional<IAdministrativeAssistantEntity> persist(IAdministrativeAssistantEntity elem) {
-        return this.persist(IAdministrativeAssistantEntity.class, elem);
+        return this.persist(AdministrativeAssistantEntity.class, elem);
     }
 
     /**
@@ -32,7 +35,7 @@ public class AdministrativeAssistantDao extends BaseDao<IAdministrativeAssistant
      */
     @Override
     public Optional<IAdministrativeAssistantEntity> update(IAdministrativeAssistantEntity elem) {
-        return this.update(IAdministrativeAssistantEntity.class, elem);
+        return this.update(AdministrativeAssistantEntity.class, elem);
     }
 
     @Override

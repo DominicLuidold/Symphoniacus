@@ -2,6 +2,7 @@ package at.fhv.teamb.symphoniacus.persistence.dao;
 
 import at.fhv.teamb.symphoniacus.persistence.BaseDao;
 import at.fhv.teamb.symphoniacus.persistence.dao.interfaces.ISeriesOfPerformancesDao;
+import at.fhv.teamb.symphoniacus.persistence.model.SeriesOfPerformancesEntity;
 import at.fhv.teamb.symphoniacus.persistence.model.interfaces.ISeriesOfPerformancesEntity;
 import java.time.LocalDate;
 import java.util.List;
@@ -16,16 +17,16 @@ public class SeriesOfPerformancesDao extends BaseDao<ISeriesOfPerformancesEntity
      */
     @Override
     public Optional<ISeriesOfPerformancesEntity> find(Integer key) {
-        return this.find(ISeriesOfPerformancesEntity.class, key);
+        return this.find(SeriesOfPerformancesEntity.class, key);
     }
 
     /**
      * {@inheritDoc}
      */
-    public List<ISeriesOfPerformancesEntity> getAll() {
-        TypedQuery<ISeriesOfPerformancesEntity> query = entityManager.createQuery(
+    public List<SeriesOfPerformancesEntity> getAll() {
+        TypedQuery<SeriesOfPerformancesEntity> query = entityManager.createQuery(
             "SELECT sop FROM SeriesOfPerformancesEntity sop",
-            ISeriesOfPerformancesEntity.class
+            SeriesOfPerformancesEntity.class
         );
 
         return query.getResultList();
@@ -36,7 +37,7 @@ public class SeriesOfPerformancesDao extends BaseDao<ISeriesOfPerformancesEntity
      */
     @Override
     public Optional<ISeriesOfPerformancesEntity> persist(ISeriesOfPerformancesEntity elem) {
-        return this.persist(ISeriesOfPerformancesEntity.class, elem);
+        return this.persist(SeriesOfPerformancesEntity.class, elem);
     }
 
     /**
@@ -44,7 +45,7 @@ public class SeriesOfPerformancesDao extends BaseDao<ISeriesOfPerformancesEntity
      */
     @Override
     public Optional<ISeriesOfPerformancesEntity> update(ISeriesOfPerformancesEntity elem) {
-        return this.update(ISeriesOfPerformancesEntity.class, elem);
+        return this.update(SeriesOfPerformancesEntity.class, elem);
     }
 
     @Override
@@ -53,12 +54,7 @@ public class SeriesOfPerformancesDao extends BaseDao<ISeriesOfPerformancesEntity
     }
 
     /**
-     * Checks if a searched seriesOfPerformances already exists.
-     *
-     * @param title        The tile of the given seriesOfPerformance
-     * @param startingDate The starting Date of the given seriesOfPerformance
-     * @param endingDate   The ending Date of the given seriesOfPerformance
-     * @return returns true if a seriesOfPerformance is found with the given inputs
+     * {@inheritDoc}
      */
     public boolean doesSeriesAlreadyExist(
         String title,

@@ -32,11 +32,7 @@ public abstract class BaseDao<T> implements Dao<T> {
     protected Optional<T> find(Class<?> clazz, Integer key) {
         // Disable cache because duty positions could be set.
         //entityManager.clear();
-        T elem = (T) entityManager.find(clazz, key);
-        if (elem != null) {
-            return Optional.of(elem);
-        }
-        return Optional.empty();
+        return Optional.ofNullable((T) entityManager.find(clazz, key));
     }
 
     /**

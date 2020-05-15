@@ -3,7 +3,6 @@ package at.fhv.teamb.symphoniacus.persistence.dao;
 import at.fhv.teamb.symphoniacus.persistence.BaseDao;
 import at.fhv.teamb.symphoniacus.persistence.dao.interfaces.IDutyCategoryChangeLogDao;
 import at.fhv.teamb.symphoniacus.persistence.model.DutyCategoryChangelogEntity;
-import at.fhv.teamb.symphoniacus.persistence.model.DutyCategoryEntity;
 import at.fhv.teamb.symphoniacus.persistence.model.interfaces.IDutyCategoryChangelogEntity;
 import at.fhv.teamb.symphoniacus.persistence.model.interfaces.IDutyCategoryEntity;
 import at.fhv.teamb.symphoniacus.persistence.model.interfaces.IDutyEntity;
@@ -24,7 +23,7 @@ public class DutyCategoryChangeLogDao extends BaseDao<IDutyCategoryChangelogEnti
      */
     @Override
     public Optional<IDutyCategoryChangelogEntity> find(Integer key) {
-        return this.find(IDutyCategoryChangelogEntity.class, key);
+        return this.find(DutyCategoryChangelogEntity.class, key);
     }
 
     /**
@@ -32,7 +31,7 @@ public class DutyCategoryChangeLogDao extends BaseDao<IDutyCategoryChangelogEnti
      */
     @Override
     public Optional<IDutyCategoryChangelogEntity> persist(IDutyCategoryChangelogEntity elem) {
-        return this.persist(IDutyCategoryChangelogEntity.class, elem);
+        return this.persist(DutyCategoryChangelogEntity.class, elem);
     }
 
     /**
@@ -40,7 +39,7 @@ public class DutyCategoryChangeLogDao extends BaseDao<IDutyCategoryChangelogEnti
      */
     @Override
     public Optional<IDutyCategoryChangelogEntity> update(IDutyCategoryChangelogEntity elem) {
-        return this.update(IDutyCategoryChangelogEntity.class, elem);
+        return this.update(DutyCategoryChangelogEntity.class, elem);
     }
 
     @Override
@@ -49,19 +48,16 @@ public class DutyCategoryChangeLogDao extends BaseDao<IDutyCategoryChangelogEnti
     }
 
     /**
-     * Finds all {@link DutyCategoryChangelogEntity} matching that belong to a given
-     * {@link DutyCategoryEntity}.
-     *
-     * @param categoryEntity The duty category to use
-     * @return A List of DutyCategoryChangelogEntity objects
+     * {@inheritDoc}
      */
-    public List<IDutyCategoryChangelogEntity> getDutyCategoryChangelogs(
+    @Override
+    public List<DutyCategoryChangelogEntity> getDutyCategoryChangelogs(
         IDutyCategoryEntity categoryEntity
     ) {
-        TypedQuery<IDutyCategoryChangelogEntity> query = entityManager.createQuery(
+        TypedQuery<DutyCategoryChangelogEntity> query = entityManager.createQuery(
             "SELECT changelog FROM DutyCategoryChangelogEntity changelog "
                 + "WHERE changelog.dutyCategory = :givenCategory",
-            IDutyCategoryChangelogEntity.class
+            DutyCategoryChangelogEntity.class
         );
 
         query.setParameter("givenCategory", categoryEntity);
@@ -72,6 +68,7 @@ public class DutyCategoryChangeLogDao extends BaseDao<IDutyCategoryChangelogEnti
     /**
      * {@inheritDoc}
      */
+    @Override
     public boolean doesLogAlreadyExists(IDutyEntity duty) {
         TypedQuery<Long> query = entityManager.createQuery(
             "SELECT COUNT(changelog) FROM DutyCategoryChangelogEntity changelog "
@@ -89,12 +86,13 @@ public class DutyCategoryChangeLogDao extends BaseDao<IDutyCategoryChangelogEnti
     /**
      * {@inheritDoc}
      */
-    public Optional<IDutyCategoryChangelogEntity> getChangelogByDetails(IDutyEntity duty) {
-        TypedQuery<IDutyCategoryChangelogEntity> query = entityManager.createQuery(
+    @Override
+    public Optional<DutyCategoryChangelogEntity> getChangelogByDetails(IDutyEntity duty) {
+        TypedQuery<DutyCategoryChangelogEntity> query = entityManager.createQuery(
             "SELECT changelog FROM DutyCategoryChangelogEntity changelog "
                 + "WHERE changelog.dutyCategory = :givenCategory "
                 + "AND changelog.startDate = :givenStartDate ",
-            IDutyCategoryChangelogEntity.class
+            DutyCategoryChangelogEntity.class
         );
 
         query.setParameter("givenCategory", duty.getDutyCategory());

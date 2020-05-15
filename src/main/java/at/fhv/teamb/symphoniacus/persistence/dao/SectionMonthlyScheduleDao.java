@@ -1,7 +1,7 @@
 package at.fhv.teamb.symphoniacus.persistence.dao;
 
-import at.fhv.teamb.symphoniacus.domain.Section;
 import at.fhv.teamb.symphoniacus.persistence.BaseDao;
+import at.fhv.teamb.symphoniacus.persistence.dao.interfaces.ISectionMonthlyScheduleDao;
 import at.fhv.teamb.symphoniacus.persistence.model.SectionMonthlyScheduleEntity;
 import at.fhv.teamb.symphoniacus.persistence.model.interfaces.ISectionEntity;
 import at.fhv.teamb.symphoniacus.persistence.model.interfaces.ISectionMonthlyScheduleEntity;
@@ -16,31 +16,28 @@ import javax.persistence.TypedQuery;
  *
  * @author Dominic Luidold
  */
-public class SectionMonthlyScheduleDao extends BaseDao<ISectionMonthlyScheduleEntity> {
+public class SectionMonthlyScheduleDao extends BaseDao<ISectionMonthlyScheduleEntity>
+    implements ISectionMonthlyScheduleDao {
 
     /**
      * {@inheritDoc}
      */
     @Override
     public Optional<ISectionMonthlyScheduleEntity> find(Integer key) {
-        return this.find(ISectionMonthlyScheduleEntity.class, key);
+        return this.find(SectionMonthlyScheduleEntity.class, key);
     }
 
     /**
-     * Finds all {@link SectionMonthlyScheduleEntity} objects based on provided {@link Section}
-     * object and year.
-     *
-     * @param section The section to use
-     * @param year    The year to use
-     * @return A List of section monthly schedules
+     * {@inheritDoc}
      */
-    public List<ISectionMonthlyScheduleEntity> findAllInYear(ISectionEntity section, Year year) {
-        TypedQuery<ISectionMonthlyScheduleEntity> query = entityManager.createQuery(
+    @Override
+    public List<SectionMonthlyScheduleEntity> findAllInYear(ISectionEntity section, Year year) {
+        TypedQuery<SectionMonthlyScheduleEntity> query = entityManager.createQuery(
             "SELECT sms FROM SectionMonthlyScheduleEntity sms "
                 + "JOIN FETCH sms.monthlySchedule ms "
                 + "WHERE sms.section = :section "
                 + "AND ms.year = :year",
-            ISectionMonthlyScheduleEntity.class
+            SectionMonthlyScheduleEntity.class
         );
 
         query.setParameter("section", section);
@@ -50,19 +47,15 @@ public class SectionMonthlyScheduleDao extends BaseDao<ISectionMonthlyScheduleEn
     }
 
     /**
-     * Finds a List of {@link SectionMonthlyScheduleEntity} objects based on
-     * provided year and month.
-     *
-     * @param year  The year to use
-     * @param month The month to use
-     * @return A List of section monthly schedules
+     * {@inheritDoc}
      */
-    public List<ISectionMonthlyScheduleEntity> findAllInYearAndMonth(Year year, Month month) {
-        TypedQuery<ISectionMonthlyScheduleEntity> query = entityManager.createQuery(
+    @Override
+    public List<SectionMonthlyScheduleEntity> findAllInYearAndMonth(Year year, Month month) {
+        TypedQuery<SectionMonthlyScheduleEntity> query = entityManager.createQuery(
             "SELECT sms FROM SectionMonthlyScheduleEntity sms "
                 + "JOIN FETCH sms.monthlySchedule ms "
                 + "WHERE ms.year = :year AND ms.month = :month",
-            ISectionMonthlyScheduleEntity.class
+            SectionMonthlyScheduleEntity.class
         );
 
         query.setParameter("year", year.getValue());
@@ -71,25 +64,18 @@ public class SectionMonthlyScheduleDao extends BaseDao<ISectionMonthlyScheduleEn
         return query.getResultList();
     }
 
-    /**
-     * Finds a {@link SectionMonthlyScheduleEntity} object based on provided {@link Section}
-     * object, year and month.
-     *
-     * @param year  The year to use
-     * @param month The month to use
-     * @return A section monthly schedule
-     */
+    @Override
     public ISectionMonthlyScheduleEntity findAllInYearAndMonth(
         ISectionEntity section,
         Year year,
         Month month
     ) {
-        TypedQuery<ISectionMonthlyScheduleEntity> query = entityManager.createQuery(
+        TypedQuery<SectionMonthlyScheduleEntity> query = entityManager.createQuery(
             "SELECT sms FROM SectionMonthlyScheduleEntity sms "
                 + "JOIN FETCH sms.monthlySchedule ms "
                 + "WHERE sms.section = :section "
                 + "AND ms.year = :year AND ms.month = :month",
-            ISectionMonthlyScheduleEntity.class
+            SectionMonthlyScheduleEntity.class
         );
 
         query.setParameter("section", section);

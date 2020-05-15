@@ -1,6 +1,8 @@
 package at.fhv.teamb.symphoniacus.persistence.dao;
 
 import at.fhv.teamb.symphoniacus.persistence.BaseDao;
+import at.fhv.teamb.symphoniacus.persistence.dao.interfaces.IContractualObligationDao;
+import at.fhv.teamb.symphoniacus.persistence.model.ContractualObligationEntity;
 import at.fhv.teamb.symphoniacus.persistence.model.interfaces.IContractualObligationEntity;
 import at.fhv.teamb.symphoniacus.persistence.model.interfaces.IMusicianEntity;
 import java.time.LocalDate;
@@ -12,14 +14,15 @@ import javax.persistence.TypedQuery;
  *
  * @author Nino Heinzle
  */
-public class ContractualObligationDao extends BaseDao<IContractualObligationEntity> {
+public class ContractualObligationDao extends BaseDao<IContractualObligationEntity>
+    implements IContractualObligationDao {
 
     /**
      * {@inheritDoc}
      */
     @Override
     public Optional<IContractualObligationEntity> find(Integer key) {
-        return this.find(IContractualObligationEntity.class, key);
+        return this.find(ContractualObligationEntity.class, key);
     }
 
     /**
@@ -27,12 +30,15 @@ public class ContractualObligationDao extends BaseDao<IContractualObligationEnti
      */
     @Override
     public Optional<IContractualObligationEntity> persist(IContractualObligationEntity elem) {
-        return this.persist(IContractualObligationEntity.class, elem);
+        return this.persist(ContractualObligationEntity.class, elem);
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public Optional<IContractualObligationEntity> update(IContractualObligationEntity elem) {
-        return this.update(IContractualObligationEntity.class, elem);
+        return this.update(ContractualObligationEntity.class, elem);
     }
 
     @Override
@@ -41,18 +47,16 @@ public class ContractualObligationDao extends BaseDao<IContractualObligationEnti
     }
 
     /**
-     * Finds matching ContractualObligation to a Musician.
-     *
-     * @param musician given musician contains musician.Id
-     * @return ContractualObligationEntity
+     * {@inheritDoc}
      */
+    @Override
     public IContractualObligationEntity getContractualObligation(IMusicianEntity musician) {
-        TypedQuery<IContractualObligationEntity> query = entityManager.createQuery(
+        TypedQuery<ContractualObligationEntity> query = entityManager.createQuery(
             "SELECT co FROM ContractualObligationEntity co "
                 + "WHERE co.musician = :musician "
                 + "AND co.startDate <= :currentDate "
                 + "AND co.endDate >= :currentDate",
-            IContractualObligationEntity.class
+            ContractualObligationEntity.class
         );
 
         query.setParameter("musician", musician);
