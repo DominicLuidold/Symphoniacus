@@ -314,6 +314,7 @@ public class DutyManager {
         SeriesOfPerformancesDto seriesOfPerformances,
         DutyCategoryDto dutyCategory
     ) {
+        //TODO private methods
         //Convert SeriesDto to Entity
         ISeriesOfPerformancesEntity series = new SeriesOfPerformancesEntity();
         series.setStartDate(seriesOfPerformances.getStartDate());
