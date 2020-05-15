@@ -1,5 +1,6 @@
 package at.fhv.teamb.symphoniacus.application;
 
+import at.fhv.teamb.symphoniacus.application.dto.SeriesOfPerformancesDto;
 import at.fhv.teamb.symphoniacus.persistence.dao.InstrumentationDao;
 import at.fhv.teamb.symphoniacus.persistence.dao.SeriesOfPerformancesDao;
 import at.fhv.teamb.symphoniacus.persistence.model.InstrumentationEntity;
@@ -7,6 +8,7 @@ import at.fhv.teamb.symphoniacus.persistence.model.InstrumentationPositionEntity
 import at.fhv.teamb.symphoniacus.persistence.model.MusicalPieceEntity;
 import at.fhv.teamb.symphoniacus.persistence.model.SeriesOfPerformancesEntity;
 import java.time.LocalDate;
+import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 
@@ -86,5 +88,29 @@ public class SeriesOfPerformancesManager {
         SeriesOfPerformancesEntity series
     ) {
         return this.instrumentationDao.getAllInstrumentationsToSeries(series);
+    }
+
+    /**
+     *
+     * @return
+     */
+    public List<SeriesOfPerformancesDto> getAllSerieses() {
+        List<ISeriesOfPerformancesEntity> serieses = seriesOfPerformancesDao.getAll();
+
+        List<SeriesOfPerformancesDto> seriesDtoList = new LinkedList<>();
+        for (ISeriesOfPerformancesEntity series: serieses) {
+            SeriesOfPerformancesDto seriesDto =
+                new SeriesOfPerformancesDto
+                    .SeriesOfPerformancesDtoBuilder(series.getSeriesOfPerformancesId())
+                    .withDescription(series.getDescription())
+                    .withDuties(series.getDuties())
+                    .withStartDate(series.getStartDate())
+                    .withEndDate(series.getEndDate())
+                    .withMusicalPieces(series.getMusicalPieces())
+                    .withInstrumentations(series.getInstrumentations())
+                    .withIsTour(series.getIsTour()).build();
+            seriesDtoList.add(seriesDto);
+        }
+        return seriesDtoList;
     }
 }

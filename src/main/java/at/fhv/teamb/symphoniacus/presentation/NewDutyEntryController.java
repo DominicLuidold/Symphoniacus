@@ -3,6 +3,9 @@ package at.fhv.teamb.symphoniacus.presentation;
 import at.fhv.teamb.symphoniacus.application.DutyCategoryManager;
 import at.fhv.teamb.symphoniacus.application.DutyManager;
 import at.fhv.teamb.symphoniacus.application.SeriesOfPerformancesManager;
+import at.fhv.teamb.symphoniacus.application.dto.DutyCategoryDto;
+import at.fhv.teamb.symphoniacus.application.dto.InstrumentationDto;
+import at.fhv.teamb.symphoniacus.application.dto.SeriesOfPerformancesDto;
 import at.fhv.teamb.symphoniacus.domain.Duty;
 import at.fhv.teamb.symphoniacus.domain.DutyCategory;
 import at.fhv.teamb.symphoniacus.persistence.PersistenceState;
@@ -79,13 +82,13 @@ public class NewDutyEntryController implements Initializable, Parentable<TabPane
     private AnchorPane newDutyEntryPane;
 
     @FXML
-    private ComboBox<SeriesOfPerformancesEntity> seriesOfPerformancesSelect;
+    private ComboBox<SeriesOfPerformancesDto> seriesOfPerformancesSelect;
 
     @FXML
     private Button newSeriesOfPerformancesBtn;
 
     @FXML
-    private ComboBox<DutyCategory> dutyCategorySelect;
+    private ComboBox<DutyCategoryDto> dutyCategorySelect;
 
     @FXML
     private JFXTextField dutyPointsInput;
@@ -112,7 +115,7 @@ public class NewDutyEntryController implements Initializable, Parentable<TabPane
     private Button scheduleBackBtn;
 
     @FXML
-    private CheckComboBox<InstrumentationEntity> instrumentationsSelect;
+    private CheckComboBox<InstrumentationDto> instrumentationsSelect;
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
@@ -233,25 +236,25 @@ public class NewDutyEntryController implements Initializable, Parentable<TabPane
      * Initializes the {@link #seriesOfPerformancesSelect} combo box with data.
      */
     private void initSeriesOfPerformancesComboBox() {
-        List<SeriesOfPerformancesEntity> seriesOfPerformancesList =
-            new SeriesOfPerformancesDao().getAll();
+        List<SeriesOfPerformancesDto> seriesOfPerformancesList =
+            this.seriesOfPerformancesManager.getAllSerieses();
         LOG.debug("Found {} series of performances", seriesOfPerformancesList.size());
 
-        final ObservableList<SeriesOfPerformancesEntity> observableList =
+        final ObservableList<SeriesOfPerformancesDto> observableList =
             FXCollections.observableArrayList();
 
         observableList.addAll(seriesOfPerformancesList);
         this.seriesOfPerformancesSelect.getItems().setAll(observableList);
         this.seriesOfPerformancesSelect.setConverter(new StringConverter<>() {
             @Override
-            public String toString(SeriesOfPerformancesEntity seriesOfPerformancesEntity) {
+            public String toString(SeriesOfPerformancesDto seriesOfPerformancesEntity) {
                 return seriesOfPerformancesEntity.getDescription()
                     + " | " + " (" + seriesOfPerformancesEntity.getStartDate().toString()
                     + ")-(" + seriesOfPerformancesEntity.getEndDate().toString() + ")";
             }
 
             @Override
-            public SeriesOfPerformancesEntity fromString(String title) {
+            public SeriesOfPerformancesDto fromString(String title) {
                 return observableList.stream()
                     .filter(item -> item.getDescription().equals(title))
                     .collect(Collectors.toList()).get(0);
@@ -264,22 +267,22 @@ public class NewDutyEntryController implements Initializable, Parentable<TabPane
      */
     private void initInstrumentationsCheckComboBox() {
         this.instrumentationsSelect.getCheckModel().clearChecks();
-        final ObservableSet<InstrumentationEntity> observInstrumentations =
+        final ObservableSet<InstrumentationDto> observInstrumentations =
             FXCollections.observableSet();
 
-        Set<InstrumentationEntity> instrumentations =
+        Set<InstrumentationDto> instrumentations =
             this.seriesOfPerformancesManager.getAllInstrumentations(
                 this.seriesOfPerformancesSelect.getSelectionModel().getSelectedItem()
             );
         observInstrumentations.addAll(instrumentations);
 
-        ObservableList<InstrumentationEntity> oldList = this.instrumentationsSelect.getItems();
+        ObservableList<InstrumentationDto> oldList = this.instrumentationsSelect.getItems();
         this.instrumentationsSelect.getItems().removeAll(oldList);
         this.instrumentationsSelect.getItems().addAll(instrumentations);
         this.instrumentationsSelect.setConverter(
             new StringConverter<>() {
                 @Override
-                public String toString(InstrumentationEntity inst) {
+                public String toString(InstrumentationDto inst) {
                     return (inst.getName() + " - "
                         + inst.getMusicalPiece().getName());
                 }

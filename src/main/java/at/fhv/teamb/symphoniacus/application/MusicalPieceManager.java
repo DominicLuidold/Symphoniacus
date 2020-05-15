@@ -1,9 +1,11 @@
 package at.fhv.teamb.symphoniacus.application;
 
+import at.fhv.teamb.symphoniacus.application.dto.MusicalPieceDto;
 import at.fhv.teamb.symphoniacus.persistence.dao.InstrumentationDao;
 import at.fhv.teamb.symphoniacus.persistence.dao.MusicalPieceDao;
 import at.fhv.teamb.symphoniacus.persistence.model.InstrumentationEntity;
 import at.fhv.teamb.symphoniacus.persistence.model.MusicalPieceEntity;
+import java.util.LinkedHashSet;
 import java.util.Optional;
 import java.util.Set;
 
@@ -17,12 +19,22 @@ public class MusicalPieceManager {
     }
 
     /**
-     * Returns all {@link MusicalPieceEntity} objects.
+     * Returns all {@link MusicalPieceDto} objects.
      *
      * @return A Set of MusicalPieces
      */
-    public Set<MusicalPieceEntity> getAllMusicalPieces() {
-        return this.musicalPieceDao.getAll();
+    public Set<MusicalPieceDto> getAllMusicalPieces() {
+        Set<MusicalPieceDto> pieces = new LinkedHashSet<>();
+        for (MusicalPieceEntity piece : this.musicalPieceDao.getAll()) {
+            pieces.add(new MusicalPieceDto.MusicalPieceDtoBuilder(piece.getMusicalPieceId())
+                .withName(piece.getName())
+                .withCategory(piece.getCategory())
+                .withInstrumentations(null) //Wird aktuell nicht benötigt
+                .withSeriesOfPerformances(null) //Wird aktuell nicht benötigt
+                .build()
+            );
+        }
+        return pieces;
     }
 
     /**
