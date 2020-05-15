@@ -1,9 +1,8 @@
 package at.fhv.teamb.symphoniacus.persistence.dao;
 
 import at.fhv.teamb.symphoniacus.persistence.BaseDao;
-import at.fhv.teamb.symphoniacus.persistence.model.DutyEntity;
-import at.fhv.teamb.symphoniacus.persistence.model.NegativeDutyWishEntity;
 import at.fhv.teamb.symphoniacus.persistence.model.WishRequestable;
+import at.fhv.teamb.symphoniacus.persistence.model.interfaces.IDutyEntity;
 import at.fhv.teamb.symphoniacus.persistence.model.interfaces.INegativeDutyWishEntity;
 import java.util.List;
 import java.util.Optional;
@@ -16,7 +15,7 @@ public class NegativeDutyWishDao extends BaseDao<INegativeDutyWishEntity> {
      */
     @Override
     public Optional<INegativeDutyWishEntity> find(Integer key) {
-        return this.find(NegativeDutyWishEntity.class, key);
+        return this.find(INegativeDutyWishEntity.class, key);
     }
 
     /**
@@ -24,7 +23,7 @@ public class NegativeDutyWishDao extends BaseDao<INegativeDutyWishEntity> {
      */
     @Override
     public Optional<INegativeDutyWishEntity> persist(INegativeDutyWishEntity elem) {
-        return this.persist(NegativeDutyWishEntity.class, elem);
+        return this.persist(INegativeDutyWishEntity.class, elem);
     }
 
     /**
@@ -32,7 +31,7 @@ public class NegativeDutyWishDao extends BaseDao<INegativeDutyWishEntity> {
      */
     @Override
     public Optional<INegativeDutyWishEntity> update(INegativeDutyWishEntity elem) {
-        return this.update(NegativeDutyWishEntity.class, elem);
+        return this.update(INegativeDutyWishEntity.class, elem);
     }
 
     @Override
@@ -46,7 +45,7 @@ public class NegativeDutyWishDao extends BaseDao<INegativeDutyWishEntity> {
      * @param duty duty
      * @return List of (Interface)WishRequestable
      */
-    public List<WishRequestable> getAllNegativeDutyWishes(DutyEntity duty) {
+    public List<WishRequestable> getAllNegativeDutyWishes(IDutyEntity duty) {
         TypedQuery<WishRequestable> query = entityManager.createQuery(
             "SELECT nw FROM NegativeDutyWishEntity nw "
                 + "JOIN nw.seriesOfPerformances sop "

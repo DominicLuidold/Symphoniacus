@@ -1,9 +1,8 @@
 package at.fhv.teamb.symphoniacus.persistence.dao;
 
 import at.fhv.teamb.symphoniacus.persistence.BaseDao;
-import at.fhv.teamb.symphoniacus.persistence.model.DutyEntity;
-import at.fhv.teamb.symphoniacus.persistence.model.PositiveWishEntity;
 import at.fhv.teamb.symphoniacus.persistence.model.WishRequestable;
+import at.fhv.teamb.symphoniacus.persistence.model.interfaces.IDutyEntity;
 import at.fhv.teamb.symphoniacus.persistence.model.interfaces.IPositiveWishEntity;
 import java.util.List;
 import java.util.Optional;
@@ -16,7 +15,7 @@ public class PositiveWishDao extends BaseDao<IPositiveWishEntity> {
      */
     @Override
     public Optional<IPositiveWishEntity> find(Integer key) {
-        return this.find(PositiveWishEntity.class, key);
+        return this.find(IPositiveWishEntity.class, key);
     }
 
     /**
@@ -24,7 +23,7 @@ public class PositiveWishDao extends BaseDao<IPositiveWishEntity> {
      */
     @Override
     public Optional<IPositiveWishEntity> persist(IPositiveWishEntity elem) {
-        return this.persist(PositiveWishEntity.class, elem);
+        return this.persist(IPositiveWishEntity.class, elem);
     }
 
     /**
@@ -32,7 +31,7 @@ public class PositiveWishDao extends BaseDao<IPositiveWishEntity> {
      */
     @Override
     public Optional<IPositiveWishEntity> update(IPositiveWishEntity elem) {
-        return this.update(PositiveWishEntity.class, elem);
+        return this.update(IPositiveWishEntity.class, elem);
     }
 
     @Override
@@ -46,7 +45,7 @@ public class PositiveWishDao extends BaseDao<IPositiveWishEntity> {
      * @param duty duty
      * @return List of (Interface)WishRequestable
      */
-    public List<WishRequestable> getAllPositiveWishes(DutyEntity duty) {
+    public List<WishRequestable> getAllPositiveWishes(IDutyEntity duty) {
         TypedQuery<WishRequestable> query = entityManager.createQuery(
             "SELECT pw FROM PositiveWishEntity pw "
                 + "JOIN pw.seriesOfPerformances sop "

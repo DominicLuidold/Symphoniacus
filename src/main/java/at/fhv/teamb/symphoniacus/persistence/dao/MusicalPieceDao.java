@@ -15,7 +15,7 @@ public class MusicalPieceDao extends BaseDao<IMusicalPieceEntity> {
      */
     @Override
     public Optional<IMusicalPieceEntity> find(Integer key) {
-        return this.find(MusicalPieceEntity.class, key);
+        return this.find(IMusicalPieceEntity.class, key);
     }
 
     /**
@@ -26,7 +26,7 @@ public class MusicalPieceDao extends BaseDao<IMusicalPieceEntity> {
     public Set<IMusicalPieceEntity> getAll() {
         TypedQuery<IMusicalPieceEntity> query = entityManager.createQuery(
             "SELECT mp FROM MusicalPieceEntity mp",
-            MusicalPieceEntity.class
+            IMusicalPieceEntity.class
         );
 
         return new LinkedHashSet<>(query.getResultList());
@@ -42,7 +42,7 @@ public class MusicalPieceDao extends BaseDao<IMusicalPieceEntity> {
         TypedQuery<IMusicalPieceEntity> query = entityManager.createQuery(
             "SELECT mp FROM MusicalPieceEntity mp "
                 + "WHERE mp.name = :nameOfPiece",
-            MusicalPieceEntity.class
+            IMusicalPieceEntity.class
         );
 
         query.setParameter("nameOfPiece", name);
@@ -55,7 +55,7 @@ public class MusicalPieceDao extends BaseDao<IMusicalPieceEntity> {
      */
     @Override
     public Optional<IMusicalPieceEntity> persist(IMusicalPieceEntity elem) {
-        return this.persist(MusicalPieceEntity.class, elem);
+        return this.persist(IMusicalPieceEntity.class, elem);
     }
 
     /**
@@ -63,7 +63,7 @@ public class MusicalPieceDao extends BaseDao<IMusicalPieceEntity> {
      */
     @Override
     public Optional<IMusicalPieceEntity> update(IMusicalPieceEntity elem) {
-        return this.update(MusicalPieceEntity.class, elem);
+        return this.update(IMusicalPieceEntity.class, elem);
     }
 
     @Override

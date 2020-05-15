@@ -1,7 +1,6 @@
 package at.fhv.teamb.symphoniacus.persistence.dao;
 
 import at.fhv.teamb.symphoniacus.persistence.BaseDao;
-import at.fhv.teamb.symphoniacus.persistence.model.DutyCategoryEntity;
 import at.fhv.teamb.symphoniacus.persistence.model.interfaces.IDutyCategoryEntity;
 import java.util.List;
 import java.util.Optional;
@@ -14,7 +13,7 @@ public class DutyCategoryDao extends BaseDao<IDutyCategoryEntity> {
      */
     @Override
     public Optional<IDutyCategoryEntity> find(Integer key) {
-        return this.find(DutyCategoryEntity.class, key);
+        return this.find(IDutyCategoryEntity.class, key);
     }
 
     /**
@@ -25,7 +24,7 @@ public class DutyCategoryDao extends BaseDao<IDutyCategoryEntity> {
     public List<IDutyCategoryEntity> getAll() {
         TypedQuery<IDutyCategoryEntity> query = entityManager.createQuery(
             "SELECT dC FROM DutyCategoryEntity dC",
-            DutyCategoryEntity.class
+            IDutyCategoryEntity.class
         );
 
         return query.getResultList();
@@ -42,7 +41,7 @@ public class DutyCategoryDao extends BaseDao<IDutyCategoryEntity> {
         TypedQuery<IDutyCategoryEntity> query = entityManager.createQuery(
             "SELECT dc FROM DutyCategoryEntity dc "
                 + "WHERE dc.type = :nameOfCategory",
-            DutyCategoryEntity.class
+            IDutyCategoryEntity.class
         );
 
         query.setParameter("nameOfCategory", type);
@@ -55,7 +54,7 @@ public class DutyCategoryDao extends BaseDao<IDutyCategoryEntity> {
      */
     @Override
     public Optional<IDutyCategoryEntity> persist(IDutyCategoryEntity elem) {
-        return this.persist(DutyCategoryEntity.class, elem);
+        return this.persist(IDutyCategoryEntity.class, elem);
     }
 
     /**
@@ -63,7 +62,7 @@ public class DutyCategoryDao extends BaseDao<IDutyCategoryEntity> {
      */
     @Override
     public Optional<IDutyCategoryEntity> update(IDutyCategoryEntity elem) {
-        return this.update(DutyCategoryEntity.class, elem);
+        return this.update(IDutyCategoryEntity.class, elem);
     }
 
     @Override

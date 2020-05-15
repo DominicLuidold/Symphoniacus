@@ -6,6 +6,7 @@ import at.fhv.teamb.symphoniacus.persistence.model.DutyPositionEntity;
 import at.fhv.teamb.symphoniacus.persistence.model.MusicianEntity;
 import at.fhv.teamb.symphoniacus.persistence.model.SectionEntity;
 import at.fhv.teamb.symphoniacus.persistence.model.SectionMonthlyScheduleEntity;
+import at.fhv.teamb.symphoniacus.persistence.model.interfaces.IDutyEntity;
 import at.fhv.teamb.symphoniacus.persistence.model.interfaces.IDutyPositionEntity;
 import at.fhv.teamb.symphoniacus.persistence.model.interfaces.ISectionEntity;
 import at.fhv.teamb.symphoniacus.persistence.model.interfaces.ISectionMonthlyScheduleEntity;
@@ -25,7 +26,7 @@ public class DutyPositionDao extends BaseDao<IDutyPositionEntity> {
      */
     @Override
     public Optional<IDutyPositionEntity> find(Integer key) {
-        return this.find(DutyPositionEntity.class, key);
+        return this.find(IDutyPositionEntity.class, key);
     }
 
     /**
@@ -37,7 +38,7 @@ public class DutyPositionDao extends BaseDao<IDutyPositionEntity> {
      * @return A List of corresponding DutyPosition entities
      */
     public List<IDutyPositionEntity> findCorrespondingPositions(
-        DutyEntity duty,
+        IDutyEntity duty,
         ISectionEntity section
     ) {
         TypedQuery<IDutyPositionEntity> query = entityManager.createQuery(
@@ -46,7 +47,7 @@ public class DutyPositionDao extends BaseDao<IDutyPositionEntity> {
                 + "LEFT JOIN FETCH p.musician m "
                 + "LEFT JOIN FETCH m.user "
                 + "WHERE p.duty = :duty AND p.section = :section",
-            DutyPositionEntity.class
+            IDutyPositionEntity.class
         );
 
         query.setParameter("duty", duty);
@@ -85,7 +86,7 @@ public class DutyPositionDao extends BaseDao<IDutyPositionEntity> {
      */
     @Override
     public Optional<IDutyPositionEntity> persist(IDutyPositionEntity elem) {
-        return this.persist(DutyPositionEntity.class, elem);
+        return this.persist(IDutyPositionEntity.class, elem);
     }
 
     /**
@@ -93,7 +94,7 @@ public class DutyPositionDao extends BaseDao<IDutyPositionEntity> {
      */
     @Override
     public Optional<IDutyPositionEntity> update(IDutyPositionEntity elem) {
-        return this.update(DutyPositionEntity.class, elem);
+        return this.update(IDutyPositionEntity.class, elem);
     }
 
     @Override

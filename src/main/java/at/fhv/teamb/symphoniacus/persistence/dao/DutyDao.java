@@ -2,11 +2,11 @@ package at.fhv.teamb.symphoniacus.persistence.dao;
 
 import at.fhv.teamb.symphoniacus.persistence.BaseDao;
 import at.fhv.teamb.symphoniacus.persistence.dao.interfaces.IDutyDao;
-import at.fhv.teamb.symphoniacus.persistence.model.DutyEntity;
 import at.fhv.teamb.symphoniacus.persistence.model.MusicianEntity;
 import at.fhv.teamb.symphoniacus.persistence.model.interfaces.IDutyCategoryEntity;
 import at.fhv.teamb.symphoniacus.persistence.model.interfaces.IDutyEntity;
 import at.fhv.teamb.symphoniacus.persistence.model.interfaces.IInstrumentationEntity;
+import at.fhv.teamb.symphoniacus.persistence.model.interfaces.IMusicianEntity;
 import at.fhv.teamb.symphoniacus.persistence.model.interfaces.ISectionEntity;
 import at.fhv.teamb.symphoniacus.persistence.model.interfaces.ISeriesOfPerformancesEntity;
 import java.time.LocalDate;
@@ -151,7 +151,7 @@ public class DutyDao extends BaseDao<IDutyEntity> implements IDutyDao {
      * @param month    A LocalDateTime that represents the month
      * @return A List of the corresponding duties that were found
      */
-    public List<DutyEntity> getAllDutiesInRangeFromMusician(
+    public List<IDutyEntity> getAllDutiesInRangeFromMusician(
         MusicianEntity musician,
         LocalDate month
     ) {
@@ -161,7 +161,7 @@ public class DutyDao extends BaseDao<IDutyEntity> implements IDutyDao {
         LocalDateTime startWithTime = start.atStartOfDay();
         LocalDateTime endWithTime = end.atStartOfDay();
 
-        TypedQuery<DutyEntity> query = entityManager.createQuery(
+        TypedQuery<IDutyEntity> query = entityManager.createQuery(
             "SELECT d FROM DutyEntity d "
                 + "JOIN FETCH d.dutyPositions dp "
                 + "JOIN FETCH dp.musician m "
@@ -172,7 +172,7 @@ public class DutyDao extends BaseDao<IDutyEntity> implements IDutyDao {
                 + "AND m = :musician "
                 + "AND co.startDate <= :currentDate "
                 + "AND co.endDate >= :currentDate",
-            DutyEntity.class
+            IDutyEntity.class
         );
 
         query.setParameter("musician", musician);
@@ -190,8 +190,8 @@ public class DutyDao extends BaseDao<IDutyEntity> implements IDutyDao {
      * @param month     LocalDate any day of a month represents the whole month
      * @return A set uf DutyEntities, because duplicates of duties are unnecessary
      */
-    public Set<DutyEntity> getAllDutiesOfMusicians(
-        List<MusicianEntity> musicians,
+    public Set<IDutyEntity> getAllDutiesOfMusicians(
+        List<IMusicianEntity> musicians,
         LocalDate month
     ) {
         YearMonth yearMonth = YearMonth.from(month);
@@ -200,13 +200,13 @@ public class DutyDao extends BaseDao<IDutyEntity> implements IDutyDao {
         LocalDateTime startWithTime = start.atStartOfDay();
         LocalDateTime endWithTime = end.atStartOfDay();
 
-        TypedQuery<DutyEntity> query = entityManager.createQuery(
+        TypedQuery<IDutyEntity> query = entityManager.createQuery(
             "SELECT d FROM DutyEntity d "
                 + "INNER JOIN d.dutyPositions dp "
                 + "INNER JOIN dp.musician m "
                 + "WHERE d.end <= :end "
                 + "AND d.start >= :start AND m IN :musicians",
-            DutyEntity.class
+            IDutyEntity.class
         );
 
         query.setParameter("start", startWithTime);

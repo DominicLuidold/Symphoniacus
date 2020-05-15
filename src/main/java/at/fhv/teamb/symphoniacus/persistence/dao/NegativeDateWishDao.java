@@ -1,9 +1,8 @@
 package at.fhv.teamb.symphoniacus.persistence.dao;
 
 import at.fhv.teamb.symphoniacus.persistence.BaseDao;
-import at.fhv.teamb.symphoniacus.persistence.model.DutyEntity;
-import at.fhv.teamb.symphoniacus.persistence.model.NegativeDateWishEntity;
 import at.fhv.teamb.symphoniacus.persistence.model.WishRequestable;
+import at.fhv.teamb.symphoniacus.persistence.model.interfaces.IDutyEntity;
 import at.fhv.teamb.symphoniacus.persistence.model.interfaces.INegativeDateWishEntity;
 import java.util.List;
 import java.util.Optional;
@@ -16,7 +15,7 @@ public class NegativeDateWishDao extends BaseDao<INegativeDateWishEntity> {
      */
     @Override
     public Optional<INegativeDateWishEntity> find(Integer key) {
-        return this.find(NegativeDateWishEntity.class, key);
+        return this.find(INegativeDateWishEntity.class, key);
     }
 
     /**
@@ -24,7 +23,7 @@ public class NegativeDateWishDao extends BaseDao<INegativeDateWishEntity> {
      */
     @Override
     public Optional<INegativeDateWishEntity> persist(INegativeDateWishEntity elem) {
-        return this.persist(NegativeDateWishEntity.class, elem);
+        return this.persist(INegativeDateWishEntity.class, elem);
     }
 
     /**
@@ -32,7 +31,7 @@ public class NegativeDateWishDao extends BaseDao<INegativeDateWishEntity> {
      */
     @Override
     public Optional<INegativeDateWishEntity> update(INegativeDateWishEntity elem) {
-        return this.update(NegativeDateWishEntity.class, elem);
+        return this.update(INegativeDateWishEntity.class, elem);
     }
 
     @Override
@@ -46,7 +45,7 @@ public class NegativeDateWishDao extends BaseDao<INegativeDateWishEntity> {
      * @param duty duty
      * @return List of (Interface)WishRequestable
      */
-    public List<WishRequestable> getAllNegativeDateWishes(DutyEntity duty) {
+    public List<WishRequestable> getAllNegativeDateWishes(IDutyEntity duty) {
         TypedQuery<WishRequestable> query = entityManager.createQuery(
             "SELECT nd FROM NegativeDateWishEntity nd "
                 + "JOIN nd.monthlySchedules ms "

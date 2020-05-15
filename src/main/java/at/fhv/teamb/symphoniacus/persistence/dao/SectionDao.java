@@ -19,7 +19,7 @@ public class SectionDao extends BaseDao<ISectionEntity> {
      */
     @Override
     public Optional<ISectionEntity> find(Integer key) {
-        return this.find(SectionEntity.class, key);
+        return this.find(ISectionEntity.class, key);
     }
 
     /**
@@ -30,7 +30,7 @@ public class SectionDao extends BaseDao<ISectionEntity> {
     public List<ISectionEntity> getAll() {
         TypedQuery<ISectionEntity> query = entityManager.createQuery(
             "SELECT s FROM SectionEntity s",
-            SectionEntity.class
+            ISectionEntity.class
         );
 
         return query.getResultList();
@@ -41,7 +41,7 @@ public class SectionDao extends BaseDao<ISectionEntity> {
      */
     @Override
     public Optional<ISectionEntity> persist(ISectionEntity elem) {
-        return this.persist(SectionEntity.class, elem);
+        return this.persist(ISectionEntity.class, elem);
     }
 
     /**
@@ -49,7 +49,7 @@ public class SectionDao extends BaseDao<ISectionEntity> {
      */
     @Override
     public Optional<ISectionEntity> update(ISectionEntity elem) {
-        return this.update(SectionEntity.class, elem);
+        return this.update(ISectionEntity.class, elem);
     }
 
     @Override

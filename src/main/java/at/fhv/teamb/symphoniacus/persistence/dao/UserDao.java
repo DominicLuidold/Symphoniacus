@@ -73,7 +73,8 @@ public class UserDao extends BaseDao<IUserEntity> {
 
     /**
      * Checks whether the given userShortcut + password hash are valid.
-     * @param userShortCut current user's shortcut
+     *
+     * @param userShortCut      current user's shortcut
      * @param inputPasswordHash current user's password hash
      * @return true if credentials are correct
      */

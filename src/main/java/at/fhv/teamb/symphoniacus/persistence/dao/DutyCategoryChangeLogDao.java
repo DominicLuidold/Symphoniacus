@@ -16,8 +16,8 @@ import javax.persistence.TypedQuery;
  *
  * @author Nino Heinzle
  */
-public class DutyCategoryChangeLogDao extends BaseDao<IDutyCategoryChangelogEntity> implements
-    IDutyCategoryChangeLogDao {
+public class DutyCategoryChangeLogDao extends BaseDao<IDutyCategoryChangelogEntity>
+    implements IDutyCategoryChangeLogDao {
 
     /**
      * {@inheritDoc}
@@ -61,7 +61,7 @@ public class DutyCategoryChangeLogDao extends BaseDao<IDutyCategoryChangelogEnti
         TypedQuery<IDutyCategoryChangelogEntity> query = entityManager.createQuery(
             "SELECT changelog FROM DutyCategoryChangelogEntity changelog "
                 + "WHERE changelog.dutyCategory = :givenCategory",
-            DutyCategoryChangelogEntity.class
+            IDutyCategoryChangelogEntity.class
         );
 
         query.setParameter("givenCategory", categoryEntity);

@@ -8,8 +8,8 @@ import java.util.List;
 import java.util.Optional;
 import javax.persistence.TypedQuery;
 
-public class SeriesOfPerformancesDao extends BaseDao<ISeriesOfPerformancesEntity> implements
-    ISeriesOfPerformancesDao {
+public class SeriesOfPerformancesDao extends BaseDao<ISeriesOfPerformancesEntity>
+    implements ISeriesOfPerformancesDao {
 
     /**
      * {@inheritDoc}

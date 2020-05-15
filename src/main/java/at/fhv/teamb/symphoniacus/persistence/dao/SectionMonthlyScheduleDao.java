@@ -23,7 +23,7 @@ public class SectionMonthlyScheduleDao extends BaseDao<ISectionMonthlyScheduleEn
      */
     @Override
     public Optional<ISectionMonthlyScheduleEntity> find(Integer key) {
-        return this.find(SectionMonthlyScheduleEntity.class, key);
+        return this.find(ISectionMonthlyScheduleEntity.class, key);
     }
 
     /**
@@ -40,7 +40,7 @@ public class SectionMonthlyScheduleDao extends BaseDao<ISectionMonthlyScheduleEn
                 + "JOIN FETCH sms.monthlySchedule ms "
                 + "WHERE sms.section = :section "
                 + "AND ms.year = :year",
-            SectionMonthlyScheduleEntity.class
+            ISectionMonthlyScheduleEntity.class
         );
 
         query.setParameter("section", section);
@@ -89,7 +89,7 @@ public class SectionMonthlyScheduleDao extends BaseDao<ISectionMonthlyScheduleEn
                 + "JOIN FETCH sms.monthlySchedule ms "
                 + "WHERE sms.section = :section "
                 + "AND ms.year = :year AND ms.month = :month",
-            SectionMonthlyScheduleEntity.class
+            ISectionMonthlyScheduleEntity.class
         );
 
         query.setParameter("section", section);
@@ -104,7 +104,7 @@ public class SectionMonthlyScheduleDao extends BaseDao<ISectionMonthlyScheduleEn
      */
     @Override
     public Optional<ISectionMonthlyScheduleEntity> persist(ISectionMonthlyScheduleEntity elem) {
-        return this.persist(SectionMonthlyScheduleEntity.class, elem);
+        return this.persist(ISectionMonthlyScheduleEntity.class, elem);
     }
 
     /**
@@ -112,7 +112,7 @@ public class SectionMonthlyScheduleDao extends BaseDao<ISectionMonthlyScheduleEn
      */
     @Override
     public Optional<ISectionMonthlyScheduleEntity> update(ISectionMonthlyScheduleEntity elem) {
-        return this.update(SectionMonthlyScheduleEntity.class, elem);
+        return this.update(ISectionMonthlyScheduleEntity.class, elem);
     }
 
     @Override

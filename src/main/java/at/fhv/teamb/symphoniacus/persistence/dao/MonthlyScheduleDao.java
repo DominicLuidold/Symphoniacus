@@ -2,20 +2,21 @@ package at.fhv.teamb.symphoniacus.persistence.dao;
 
 import at.fhv.teamb.symphoniacus.persistence.BaseDao;
 import at.fhv.teamb.symphoniacus.persistence.model.MonthlyScheduleEntity;
+import at.fhv.teamb.symphoniacus.persistence.model.interfaces.IMonthlyScheduleEntity;
 import java.util.Optional;
 import javax.persistence.TypedQuery;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-public class MonthlyScheduleDao extends BaseDao<MonthlyScheduleEntity> {
+public class MonthlyScheduleDao extends BaseDao<IMonthlyScheduleEntity> {
     private static final Logger LOG = LogManager.getLogger(MonthlyScheduleDao.class);
 
     /**
      * {@inheritDoc}
      */
     @Override
-    public Optional<MonthlyScheduleEntity> find(Integer key) {
-        return this.find(MonthlyScheduleEntity.class, key);
+    public Optional<IMonthlyScheduleEntity> find(Integer key) {
+        return this.find(IMonthlyScheduleEntity.class, key);
     }
 
     /**
@@ -25,11 +26,11 @@ public class MonthlyScheduleDao extends BaseDao<MonthlyScheduleEntity> {
      * @param year  The year to use
      * @return A monthly schedule, if any
      */
-    public Optional<MonthlyScheduleEntity> findForMonthAndYear(int month, int year) {
-        TypedQuery<MonthlyScheduleEntity> query = entityManager.createQuery(
+    public Optional<IMonthlyScheduleEntity> findForMonthAndYear(int month, int year) {
+        TypedQuery<IMonthlyScheduleEntity> query = entityManager.createQuery(
             "SELECT m FROM MonthlyScheduleEntity m "
                 + "WHERE m.month = :month AND m.year = :year",
-            MonthlyScheduleEntity.class
+            IMonthlyScheduleEntity.class
         );
 
         query.setParameter("month", month);
@@ -47,20 +48,20 @@ public class MonthlyScheduleDao extends BaseDao<MonthlyScheduleEntity> {
      * {@inheritDoc}
      */
     @Override
-    public Optional<MonthlyScheduleEntity> persist(MonthlyScheduleEntity elem) {
-        return this.persist(MonthlyScheduleEntity.class, elem);
+    public Optional<IMonthlyScheduleEntity> persist(IMonthlyScheduleEntity elem) {
+        return this.persist(IMonthlyScheduleEntity.class, elem);
     }
 
     /**
      * {@inheritDoc}
      */
     @Override
-    public Optional<MonthlyScheduleEntity> update(MonthlyScheduleEntity elem) {
-        return this.update(MonthlyScheduleEntity.class, elem);
+    public Optional<IMonthlyScheduleEntity> update(IMonthlyScheduleEntity elem) {
+        return this.update(IMonthlyScheduleEntity.class, elem);
     }
 
     @Override
-    public boolean remove(MonthlyScheduleEntity elem) {
+    public boolean remove(IMonthlyScheduleEntity elem) {
         return false;
     }
 }

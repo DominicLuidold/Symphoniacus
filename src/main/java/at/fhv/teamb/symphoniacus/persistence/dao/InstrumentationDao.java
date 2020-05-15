@@ -12,8 +12,8 @@ import java.util.Optional;
 import java.util.Set;
 import javax.persistence.TypedQuery;
 
-public class InstrumentationDao extends BaseDao<IInstrumentationEntity> implements
-    IInstrumentationDao {
+public class InstrumentationDao extends BaseDao<IInstrumentationEntity>
+    implements IInstrumentationDao {
 
     /**
      * {@inheritDoc}
@@ -77,13 +77,11 @@ public class InstrumentationDao extends BaseDao<IInstrumentationEntity> implemen
             "SELECT inst FROM InstrumentationEntity inst "
                 + "LEFT JOIN FETCH inst.sectionInstrumentations "
                 + "WHERE inst.musicalPiece IN :musicalPieces",
-            InstrumentationEntity.class
+            IInstrumentationEntity.class
         );
 
         query.setParameter("musicalPieces", musicalPieces);
 
         return new LinkedHashSet<>(query.getResultList());
     }
-
-
 }
