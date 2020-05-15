@@ -1,5 +1,7 @@
 package at.fhv.teamb.symphoniacus.persistence.model;
 
+import at.fhv.teamb.symphoniacus.persistence.model.interfaces.IDutyCategoryEntity;
+import at.fhv.teamb.symphoniacus.persistence.model.interfaces.IDutyEntity;
 import java.time.LocalDateTime;
 import java.util.HashSet;
 import java.util.Set;
@@ -19,7 +21,7 @@ import javax.persistence.Table;
 
 @Entity
 @Table(name = "duty")
-public class DutyEntity {
+public class DutyEntity implements IDutyEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "dutyId")
@@ -85,7 +87,7 @@ public class DutyEntity {
         this.weeklySchedule = weeklySchedule;
     }
 
-    public DutyCategoryEntity getDutyCategory() {
+    public IDutyCategoryEntity getDutyCategory() {
         return this.dutyCategory;
     }
 

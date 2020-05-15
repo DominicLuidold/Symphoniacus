@@ -7,6 +7,7 @@ import at.fhv.teamb.symphoniacus.domain.Section;
 import at.fhv.teamb.symphoniacus.persistence.PersistenceState;
 import at.fhv.teamb.symphoniacus.persistence.dao.DutyCategoryChangeLogDao;
 import at.fhv.teamb.symphoniacus.persistence.dao.DutyDao;
+import at.fhv.teamb.symphoniacus.persistence.dao.interfaces.IDutyDao;
 import at.fhv.teamb.symphoniacus.persistence.model.DutyCategoryChangelogEntity;
 import at.fhv.teamb.symphoniacus.persistence.model.DutyCategoryEntity;
 import at.fhv.teamb.symphoniacus.persistence.model.DutyEntity;
@@ -16,6 +17,9 @@ import at.fhv.teamb.symphoniacus.persistence.model.SectionEntity;
 import at.fhv.teamb.symphoniacus.persistence.model.SectionMonthlyScheduleEntity;
 import at.fhv.teamb.symphoniacus.persistence.model.SeriesOfPerformancesEntity;
 import at.fhv.teamb.symphoniacus.persistence.model.WeeklyScheduleEntity;
+import at.fhv.teamb.symphoniacus.persistence.model.interfaces.IDutyCategoryEntity;
+import at.fhv.teamb.symphoniacus.persistence.model.interfaces.IInstrumentationEntity;
+import at.fhv.teamb.symphoniacus.persistence.model.interfaces.ISeriesOfPerformancesEntity;
 import java.time.DayOfWeek;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -42,7 +46,7 @@ public class DutyManager {
     private final SectionMonthlyScheduleManager sectionMonthlyScheduleManager;
     private final WeeklyScheduleManager weeklyScheduleManager;
     private final DutyCategoryChangeLogDao changeLogDao;
-    protected DutyDao dutyDao;
+    protected IDutyDao dutyDao;
 
     /**
      * Initialize the DutyManager.
@@ -373,11 +377,11 @@ public class DutyManager {
      * @return whether this specific duty exists or not
      */
     public boolean doesDutyAlreadyExists(
-        SeriesOfPerformancesEntity seriesOfPerformances,
-        List<InstrumentationEntity> instrumentations,
+        ISeriesOfPerformancesEntity seriesOfPerformances,
+        List<IInstrumentationEntity> instrumentations,
         LocalDateTime startingDate,
         LocalDateTime endingDate,
-        DutyCategoryEntity category) {
+        IDutyCategoryEntity category) {
 
         return this.dutyDao.doesDutyAlreadyExists(
             seriesOfPerformances,

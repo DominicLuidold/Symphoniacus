@@ -2,10 +2,13 @@ package at.fhv.teamb.symphoniacus.application;
 
 import at.fhv.teamb.symphoniacus.persistence.dao.InstrumentationDao;
 import at.fhv.teamb.symphoniacus.persistence.dao.SeriesOfPerformancesDao;
+import at.fhv.teamb.symphoniacus.persistence.dao.interfaces.IInstrumentationDao;
 import at.fhv.teamb.symphoniacus.persistence.model.InstrumentationEntity;
 import at.fhv.teamb.symphoniacus.persistence.model.InstrumentationPositionEntity;
 import at.fhv.teamb.symphoniacus.persistence.model.MusicalPieceEntity;
 import at.fhv.teamb.symphoniacus.persistence.model.SeriesOfPerformancesEntity;
+import at.fhv.teamb.symphoniacus.persistence.model.interfaces.IInstrumentationEntity;
+import at.fhv.teamb.symphoniacus.persistence.model.interfaces.ISeriesOfPerformancesEntity;
 import java.time.LocalDate;
 import java.util.Optional;
 import java.util.Set;
@@ -17,7 +20,7 @@ import java.util.Set;
  * @author Danijel Antonijevic
  */
 public class SeriesOfPerformancesManager {
-    private final InstrumentationDao instrumentationDao;
+    private final IInstrumentationDao instrumentationDao;
     private final SeriesOfPerformancesDao seriesOfPerformancesDao;
 
     /**
@@ -82,8 +85,8 @@ public class SeriesOfPerformancesManager {
      * @param series The series of performances to use
      * @return A Set of instrumentation entities
      */
-    public Set<InstrumentationEntity> getAllInstrumentations(
-        SeriesOfPerformancesEntity series
+    public Set<IInstrumentationEntity> getAllInstrumentations(
+        ISeriesOfPerformancesEntity series
     ) {
         return this.instrumentationDao.getAllInstrumentationsToSeries(series);
     }

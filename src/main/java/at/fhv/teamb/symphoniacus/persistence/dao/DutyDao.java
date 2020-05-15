@@ -1,12 +1,17 @@
 package at.fhv.teamb.symphoniacus.persistence.dao;
 
 import at.fhv.teamb.symphoniacus.persistence.BaseDao;
+import at.fhv.teamb.symphoniacus.persistence.dao.interfaces.IDutyDao;
 import at.fhv.teamb.symphoniacus.persistence.model.DutyCategoryEntity;
 import at.fhv.teamb.symphoniacus.persistence.model.DutyEntity;
 import at.fhv.teamb.symphoniacus.persistence.model.InstrumentationEntity;
 import at.fhv.teamb.symphoniacus.persistence.model.MusicianEntity;
 import at.fhv.teamb.symphoniacus.persistence.model.SectionEntity;
 import at.fhv.teamb.symphoniacus.persistence.model.SeriesOfPerformancesEntity;
+import at.fhv.teamb.symphoniacus.persistence.model.interfaces.IDutyCategoryEntity;
+import at.fhv.teamb.symphoniacus.persistence.model.interfaces.IDutyEntity;
+import at.fhv.teamb.symphoniacus.persistence.model.interfaces.IInstrumentationEntity;
+import at.fhv.teamb.symphoniacus.persistence.model.interfaces.ISeriesOfPerformancesEntity;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.YearMonth;
@@ -22,14 +27,41 @@ import javax.persistence.TypedQuery;
  * @author Valentin Goronjic
  * @author Dominic Luidold
  */
-public class DutyDao extends BaseDao<DutyEntity> {
+public class DutyDao extends BaseDao<IDutyEntity> implements IDutyDao {
 
     /**
      * {@inheritDoc}
      */
     @Override
-    public Optional<DutyEntity> find(Integer key) {
-        return this.find(DutyEntity.class, key);
+    public Optional<IDutyEntity> find(Integer key) {
+        return this.find(IDutyEntity.class, key);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public Optional<IDutyEntity> persist(IDutyEntity elem) {
+        return this.persist(IDutyEntity.class, elem);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public Optional<IDutyEntity> update(IDutyEntity elem) {
+        return this.update(IDutyEntity.class, elem);
+    }
+
+    /**
+     * Removes a duty.
+     *
+     * @param elem The duty to be removed.
+     * @return True if the duty was removed
+     */
+    @Override
+    public boolean remove(IDutyEntity elem) {
+        return false;
     }
 
     /**
@@ -209,33 +241,6 @@ public class DutyDao extends BaseDao<DutyEntity> {
     }
 
     /**
-     * {@inheritDoc}
-     */
-    @Override
-    public Optional<DutyEntity> persist(DutyEntity elem) {
-        return this.persist(DutyEntity.class, elem);
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public Optional<DutyEntity> update(DutyEntity elem) {
-        return this.update(DutyEntity.class, elem);
-    }
-
-    /**
-     * Removes a duty.
-     *
-     * @param elem The duty to be removed.
-     * @return True if the duty was removed
-     */
-    @Override
-    public boolean remove(DutyEntity elem) {
-        return false;
-    }
-
-    /**
      * Returns {@link DutyEntity} objects belonging to a {@link SeriesOfPerformancesEntity}
      * based on provided data.
      *
@@ -294,21 +299,14 @@ public class DutyDao extends BaseDao<DutyEntity> {
     }
 
     /**
-     * Checks whether a duty with the given parameters exists or not.
-     *
-     * @param series           given Series of Performances from searched Duty.
-     * @param instrumentations given instrumentation from searched Duty.
-     * @param startingDate     given starting Date from the searched Duty.
-     * @param endingDate       given ending Date from searched Duty.
-     * @param category         given dutyCategory from searched Duty.
-     * @return True if duty exists, false otherwise
+     * {@inheritDoc}
      */
     public boolean doesDutyAlreadyExists(
-        SeriesOfPerformancesEntity series,
-        List<InstrumentationEntity> instrumentations,
+        ISeriesOfPerformancesEntity series,
+        List<IInstrumentationEntity> instrumentations,
         LocalDateTime startingDate,
         LocalDateTime endingDate,
-        DutyCategoryEntity category) {
+        IDutyCategoryEntity category) {
 
         TypedQuery<Long> query = entityManager.createQuery(
             "SELECT COUNT(d) FROM DutyEntity d "

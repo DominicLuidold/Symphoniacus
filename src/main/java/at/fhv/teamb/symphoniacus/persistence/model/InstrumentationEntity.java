@@ -1,5 +1,7 @@
 package at.fhv.teamb.symphoniacus.persistence.model;
 
+import at.fhv.teamb.symphoniacus.persistence.model.interfaces.IInstrumentationEntity;
+import at.fhv.teamb.symphoniacus.persistence.model.interfaces.IMusicalPieceEntity;
 import java.util.LinkedList;
 import java.util.List;
 import javax.persistence.Column;
@@ -16,7 +18,7 @@ import javax.persistence.Table;
 
 @Entity
 @Table(name = "instrumentation")
-public class InstrumentationEntity {
+public class InstrumentationEntity implements IInstrumentationEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "instrumentationId")
@@ -54,7 +56,7 @@ public class InstrumentationEntity {
         this.name = name;
     }
 
-    public MusicalPieceEntity getMusicalPiece() {
+    public IMusicalPieceEntity getMusicalPiece() {
         return this.musicalPiece;
     }
 
