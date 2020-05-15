@@ -32,9 +32,9 @@ public class DutyEntity implements IDutyEntity {
     @JoinColumn(name = "weeklyScheduleId")
     private WeeklyScheduleEntity weeklySchedule;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.LAZY, targetEntity = DutyCategoryEntity.class)
     @JoinColumn(name = "dutyCategoryId")
-    private DutyCategoryEntity dutyCategory;
+    private IDutyCategoryEntity dutyCategory;
 
     @Column(name = "description")
     private String description;
