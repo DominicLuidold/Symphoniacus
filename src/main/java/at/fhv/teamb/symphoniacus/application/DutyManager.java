@@ -11,6 +11,7 @@ import at.fhv.teamb.symphoniacus.persistence.PersistenceState;
 import at.fhv.teamb.symphoniacus.persistence.dao.DutyCategoryChangeLogDao;
 import at.fhv.teamb.symphoniacus.persistence.dao.DutyCategoryDao;
 import at.fhv.teamb.symphoniacus.persistence.dao.DutyDao;
+import at.fhv.teamb.symphoniacus.persistence.dao.InstrumentationDao;
 import at.fhv.teamb.symphoniacus.persistence.dao.SeriesOfPerformancesDao;
 import at.fhv.teamb.symphoniacus.persistence.dao.interfaces.IDutyCategoryChangeLogDao;
 import at.fhv.teamb.symphoniacus.persistence.dao.interfaces.IDutyCategoryDao;
@@ -58,6 +59,7 @@ public class DutyManager {
     private final SeriesOfPerformancesDao seriesDao;
     private final IDutyCategoryDao categoryDao;
     private final DutyCategoryDao dutyCategoryDao;
+    private final InstrumentationDao instrumentationDao;
     protected IDutyDao dutyDao;
 
     /**
@@ -73,6 +75,7 @@ public class DutyManager {
         this.seriesDao = new SeriesOfPerformancesDao();
         this.categoryDao = new DutyCategoryDao();
         this.dutyCategoryDao = new DutyCategoryDao();
+        this.instrumentationDao = new InstrumentationDao();
     }
 
     /**
@@ -325,10 +328,10 @@ public class DutyManager {
             duty.setDutyCategory(newCategory.get());
         }
 
-        duty.getDutyPositions().addAll(this.dutyPositionManager.createDutyPositions(
-            convertInstrumentationToEntity(instrumentations),
+        this.dutyPositionManager.createDutyPositions(
+            convertInstrumentationToEntityObjects(instrumentations),
             duty
-        ));
+        );
         Optional<IDutyEntity> persistedDuty = this.dutyDao.persist(duty);
 
         if (userPointsChanged) {
@@ -485,17 +488,19 @@ public class DutyManager {
         return dutyCategoryDtos;
     }
 
-    private Set<IInstrumentationEntity> convertInstrumentationToEntity(
+    private Set<IInstrumentationEntity> convertInstrumentationToEntityObjects(
         Set<InstrumentationDto> instrumentations
     ) {
-        Set<IInstrumentationEntity> dutyCategoryDtos = new LinkedHashSet<>();
+        Set<IInstrumentationEntity> newInstrumentations = new LinkedHashSet<>();
         for (InstrumentationDto i : instrumentations) {
-            IInstrumentationEntity instDto = new InstrumentationEntity();
-            instDto.setName(i.getName());
-            instDto.setInstrumentationId(i.getInstrumentationId());
+            Optional<IInstrumentationEntity> newInst = this.instrumentationDao
+                .find(i.getInstrumentationId());
 
-            dutyCategoryDtos.add(instDto);
+            if (newInst.isPresent()) {
+                newInstrumentations.add(newInst.get());
+            }
+
         }
-        return dutyCategoryDtos;
+        return newInstrumentations;
     }
 }
