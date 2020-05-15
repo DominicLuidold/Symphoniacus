@@ -684,14 +684,14 @@ public class DutyScheduleController
             this.resources.getString("tab.duty.schedule.multiple.pieces.dialog.body")
         );
 
-        VBox vBox = new VBox();
-        vBox.getChildren().add(l);
-        vBox.getChildren().add(this.scheduleMusicalPiecesChkListView);
+        VBox vbox = new VBox();
+        vbox.getChildren().add(l);
+        vbox.getChildren().add(this.scheduleMusicalPiecesChkListView);
 
         Dialog<ButtonType> dialog = new Dialog<>();
         dialog.initOwner(this.dutySchedule.getParent().getScene().getWindow());
         dialog.getDialogPane().getButtonTypes().addAll(ButtonType.CANCEL, ButtonType.OK);
-        dialog.getDialogPane().setContent(vBox);
+        dialog.getDialogPane().setContent(vbox);
         dialog.setResizable(true);
         dialog.getDialogPane().setPrefWidth(400);
         dialog.initModality(Modality.WINDOW_MODAL);
