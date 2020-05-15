@@ -316,7 +316,6 @@ public class DutyManager {
 
         IDutyEntity duty = createDuty(description,timeOfDay,start,end);
 
-
         Optional<ISeriesOfPerformancesEntity> newSeries = this.seriesDao
             .find(seriesOfPerformances.getSeriesOfPerformancesId());
         Optional<IDutyCategoryEntity> newCategory = this.dutyCategoryDao
