@@ -510,7 +510,8 @@ public class NewDutyEntryController implements Initializable, Parentable<TabPane
                 if (this.duty.getPersistenceState() == PersistenceState.PERSISTED) {
                     // Show success alert
                     Alert successAlert = new Alert(Alert.AlertType.INFORMATION);
-                    successAlert.setTitle(this.resources.getString("tab.duty.new.entry.success.title"));
+                    successAlert.setTitle(this.resources
+                        .getString("tab.duty.new.entry.success.title"));
                     successAlert.setContentText(
                         this.resources.getString("tab.duty.new.entry.success.dutySaved")
                     );
