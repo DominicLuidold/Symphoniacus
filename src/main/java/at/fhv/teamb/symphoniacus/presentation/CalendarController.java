@@ -100,7 +100,8 @@ public abstract class CalendarController implements Initializable, Parentable<Ta
     }
 
     /**
-     * Adda a new Duty as Entry to the Calendar.
+     * Add a new Duty as Entry to the Calendar.
+     *
      * @param duty to add to Calendar
      */
     protected void addDuty(Duty duty) {
@@ -135,7 +136,8 @@ public abstract class CalendarController implements Initializable, Parentable<Ta
     }
 
     /**
-     * Retruns a CalendarFX {@link Entry} object of a Duty.
+     * Returns a CalendarFX {@link Entry} object of a Duty.
+     *
      * @param duty to convert to Entry
      * @return Entry of the given Duty
      */
