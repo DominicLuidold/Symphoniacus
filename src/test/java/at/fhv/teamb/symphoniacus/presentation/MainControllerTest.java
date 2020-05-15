@@ -8,6 +8,7 @@ import at.fhv.teamb.symphoniacus.persistence.model.IUserEntity;
 import at.fhv.teamb.symphoniacus.persistence.model.MusicianEntity;
 import at.fhv.teamb.symphoniacus.persistence.model.MusicianRole;
 import at.fhv.teamb.symphoniacus.persistence.model.interfaces.IAdministrativeAssistantEntity;
+import at.fhv.teamb.symphoniacus.persistence.model.interfaces.IMusicianRole;
 import at.fhv.teamb.symphoniacus.presentation.internal.TabPaneEntry;
 import java.util.Locale;
 import java.util.Queue;
@@ -52,7 +53,7 @@ public class MainControllerTest {
         IUserEntity user = new IUserEntity();
         user.setFirstName("Max");
         entity.setUser(user);
-        MusicianRole role = new MusicianRole();
+        IMusicianRole role = new MusicianRole();
         role.setMusicianRoleId(2);
         role.setDescription(MusicianRoleType.DUTY_SCHEDULER);
         entity.addMusicianRole(role);

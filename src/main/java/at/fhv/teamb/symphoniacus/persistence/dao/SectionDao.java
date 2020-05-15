@@ -2,6 +2,7 @@ package at.fhv.teamb.symphoniacus.persistence.dao;
 
 import at.fhv.teamb.symphoniacus.persistence.BaseDao;
 import at.fhv.teamb.symphoniacus.persistence.model.SectionEntity;
+import at.fhv.teamb.symphoniacus.persistence.model.interfaces.ISectionEntity;
 import java.util.List;
 import java.util.Optional;
 import javax.persistence.TypedQuery;
@@ -11,13 +12,13 @@ import javax.persistence.TypedQuery;
  *
  * @author Dominic Luidold
  */
-public class SectionDao extends BaseDao<SectionEntity> {
+public class SectionDao extends BaseDao<ISectionEntity> {
 
     /**
      * {@inheritDoc}
      */
     @Override
-    public Optional<SectionEntity> find(Integer key) {
+    public Optional<ISectionEntity> find(Integer key) {
         return this.find(SectionEntity.class, key);
     }
 
@@ -26,8 +27,8 @@ public class SectionDao extends BaseDao<SectionEntity> {
      *
      * @return A List of sections
      */
-    public List<SectionEntity> getAll() {
-        TypedQuery<SectionEntity> query = entityManager.createQuery(
+    public List<ISectionEntity> getAll() {
+        TypedQuery<ISectionEntity> query = entityManager.createQuery(
             "SELECT s FROM SectionEntity s",
             SectionEntity.class
         );
@@ -39,7 +40,7 @@ public class SectionDao extends BaseDao<SectionEntity> {
      * {@inheritDoc}
      */
     @Override
-    public Optional<SectionEntity> persist(SectionEntity elem) {
+    public Optional<ISectionEntity> persist(ISectionEntity elem) {
         return this.persist(SectionEntity.class, elem);
     }
 
@@ -47,12 +48,12 @@ public class SectionDao extends BaseDao<SectionEntity> {
      * {@inheritDoc}
      */
     @Override
-    public Optional<SectionEntity> update(SectionEntity elem) {
+    public Optional<ISectionEntity> update(ISectionEntity elem) {
         return this.update(SectionEntity.class, elem);
     }
 
     @Override
-    public boolean remove(SectionEntity elem) {
+    public boolean remove(ISectionEntity elem) {
         return false;
     }
 }

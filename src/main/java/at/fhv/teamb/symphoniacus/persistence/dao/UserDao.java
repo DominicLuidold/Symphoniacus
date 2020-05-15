@@ -2,8 +2,8 @@ package at.fhv.teamb.symphoniacus.persistence.dao;
 
 import at.fhv.teamb.symphoniacus.persistence.BaseDao;
 import at.fhv.teamb.symphoniacus.persistence.model.AdministrativeAssistantEntity;
-import at.fhv.teamb.symphoniacus.persistence.model.IUserEntity;
 import at.fhv.teamb.symphoniacus.persistence.model.MusicianEntity;
+import at.fhv.teamb.symphoniacus.persistence.model.interfaces.IUserEntity;
 import java.util.List;
 import java.util.Optional;
 import javax.persistence.TypedQuery;

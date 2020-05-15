@@ -4,7 +4,7 @@ import at.fhv.teamb.symphoniacus.application.dto.LoginUserDto;
 import at.fhv.teamb.symphoniacus.application.type.DomainUserType;
 import at.fhv.teamb.symphoniacus.domain.User;
 import at.fhv.teamb.symphoniacus.persistence.dao.UserDao;
-import at.fhv.teamb.symphoniacus.persistence.model.IUserEntity;
+import at.fhv.teamb.symphoniacus.persistence.model.interfaces.IUserEntity;
 import java.security.NoSuchAlgorithmException;
 import java.util.Optional;
 import org.apache.logging.log4j.LogManager;

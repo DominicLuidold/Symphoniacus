@@ -7,7 +7,6 @@ import at.fhv.teamb.symphoniacus.application.dto.SectionDto;
 import at.fhv.teamb.symphoniacus.application.dto.SeriesOfPerformancesDto;
 import at.fhv.teamb.symphoniacus.domain.Duty;
 import at.fhv.teamb.symphoniacus.domain.DutyCategory;
-import at.fhv.teamb.symphoniacus.domain.Section;
 import at.fhv.teamb.symphoniacus.persistence.PersistenceState;
 import at.fhv.teamb.symphoniacus.persistence.dao.DutyCategoryChangeLogDao;
 import at.fhv.teamb.symphoniacus.persistence.dao.DutyCategoryDao;
@@ -21,15 +20,14 @@ import at.fhv.teamb.symphoniacus.persistence.model.DutyEntity;
 import at.fhv.teamb.symphoniacus.persistence.model.InstrumentationEntity;
 import at.fhv.teamb.symphoniacus.persistence.model.MonthlyScheduleEntity;
 import at.fhv.teamb.symphoniacus.persistence.model.SectionEntity;
-import at.fhv.teamb.symphoniacus.persistence.model.SectionMonthlyScheduleEntity;
 import at.fhv.teamb.symphoniacus.persistence.model.SeriesOfPerformancesEntity;
-import at.fhv.teamb.symphoniacus.persistence.model.WeeklyScheduleEntity;
 import at.fhv.teamb.symphoniacus.persistence.model.interfaces.IDutyCategoryChangelogEntity;
 import at.fhv.teamb.symphoniacus.persistence.model.interfaces.IDutyCategoryEntity;
 import at.fhv.teamb.symphoniacus.persistence.model.interfaces.IDutyEntity;
 import at.fhv.teamb.symphoniacus.persistence.model.interfaces.IInstrumentationEntity;
 import at.fhv.teamb.symphoniacus.persistence.model.interfaces.ISectionMonthlyScheduleEntity;
 import at.fhv.teamb.symphoniacus.persistence.model.interfaces.ISeriesOfPerformancesEntity;
+import at.fhv.teamb.symphoniacus.persistence.model.interfaces.IWeeklyScheduleEntity;
 import java.time.DayOfWeek;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -266,7 +264,7 @@ public class DutyManager {
         MonthlyScheduleEntity monthlyScheduleEntity =
             this.monthlyScheduleManager.createIfNotExists(YearMonth.from(start.toLocalDate()));
         // Get weekly schedule entity
-        WeeklyScheduleEntity weeklyScheduleEntity =
+        IWeeklyScheduleEntity weeklyScheduleEntity =
             this.weeklyScheduleManager.createIfNotExists(start.toLocalDate(), start.getYear());
 
         // Add weekly schedule to monthly schedule and vice versa
@@ -279,7 +277,7 @@ public class DutyManager {
         weeklyScheduleEntity.addDuty(dutyEntity);
 
 
-        Optional<DutyCategoryEntity> dutyCat = this.categoryDao.find(dutyCategory
+        Optional<IDutyCategoryEntity> dutyCat = this.categoryDao.find(dutyCategory
             .getDutyCategoryId());
         Optional<ISeriesOfPerformancesEntity> sopEntity = this.seriesDao.find(sop
             .getSeriesOfPerformancesId());

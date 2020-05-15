@@ -3,8 +3,9 @@ package at.fhv.teamb.symphoniacus.persistence.dao;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
-import at.fhv.teamb.symphoniacus.persistence.model.DutyCategoryChangelogEntity;
 import at.fhv.teamb.symphoniacus.persistence.model.DutyCategoryEntity;
+import at.fhv.teamb.symphoniacus.persistence.model.interfaces.IDutyCategoryChangelogEntity;
+import at.fhv.teamb.symphoniacus.persistence.model.interfaces.IDutyCategoryEntity;
 import java.util.List;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -36,16 +37,16 @@ class DutyCategoryChangeLogDaoTest {
     @Test
     void getDutyCategoryChangeLog_ShouldReturnListOfCategoryChangeLog() {
         // Given
-        DutyCategoryEntity categoryEntity = new DutyCategoryEntity();
+        IDutyCategoryEntity categoryEntity = new DutyCategoryEntity();
         categoryEntity.setDutyCategoryId(3);
 
-        List<DutyCategoryChangelogEntity> changelogEntityList =
+        List<IDutyCategoryChangelogEntity> changelogEntityList =
             this.dao.getDutyCategoryChangelogs(categoryEntity);
 
         assertNotNull(changelogEntityList, "The returning List has to be not null");
 
         if (!changelogEntityList.isEmpty()) {
-            for (DutyCategoryChangelogEntity entity : changelogEntityList) {
+            for (IDutyCategoryChangelogEntity entity : changelogEntityList) {
                 assertEquals(
                     entity.getDutyCategory().getDutyCategoryId(),
                     categoryEntity.getDutyCategoryId()

@@ -4,8 +4,8 @@ import at.fhv.teamb.symphoniacus.persistence.BaseDao;
 import at.fhv.teamb.symphoniacus.persistence.dao.interfaces.IDutyCategoryChangeLogDao;
 import at.fhv.teamb.symphoniacus.persistence.model.DutyCategoryChangelogEntity;
 import at.fhv.teamb.symphoniacus.persistence.model.DutyCategoryEntity;
-import at.fhv.teamb.symphoniacus.persistence.model.DutyEntity;
 import at.fhv.teamb.symphoniacus.persistence.model.interfaces.IDutyCategoryChangelogEntity;
+import at.fhv.teamb.symphoniacus.persistence.model.interfaces.IDutyCategoryEntity;
 import at.fhv.teamb.symphoniacus.persistence.model.interfaces.IDutyEntity;
 import java.util.List;
 import java.util.Optional;
@@ -55,10 +55,10 @@ public class DutyCategoryChangeLogDao extends BaseDao<IDutyCategoryChangelogEnti
      * @param categoryEntity The duty category to use
      * @return A List of DutyCategoryChangelogEntity objects
      */
-    public List<DutyCategoryChangelogEntity> getDutyCategoryChangelogs(
-        DutyCategoryEntity categoryEntity
+    public List<IDutyCategoryChangelogEntity> getDutyCategoryChangelogs(
+        IDutyCategoryEntity categoryEntity
     ) {
-        TypedQuery<DutyCategoryChangelogEntity> query = entityManager.createQuery(
+        TypedQuery<IDutyCategoryChangelogEntity> query = entityManager.createQuery(
             "SELECT changelog FROM DutyCategoryChangelogEntity changelog "
                 + "WHERE changelog.dutyCategory = :givenCategory",
             DutyCategoryChangelogEntity.class

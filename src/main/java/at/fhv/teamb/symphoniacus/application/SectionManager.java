@@ -2,7 +2,7 @@ package at.fhv.teamb.symphoniacus.application;
 
 import at.fhv.teamb.symphoniacus.application.dto.SectionDto;
 import at.fhv.teamb.symphoniacus.persistence.dao.SectionDao;
-import at.fhv.teamb.symphoniacus.persistence.model.SectionEntity;
+import at.fhv.teamb.symphoniacus.persistence.model.interfaces.ISectionEntity;
 import java.util.LinkedList;
 import java.util.List;
 import org.apache.logging.log4j.LogManager;
@@ -26,9 +26,9 @@ public class SectionManager {
      * @return List of all Sections
      */
     public List<SectionDto> getAll() {
-        List<SectionEntity> sectionEntities = this.sectionDao.getAll();
+        List<ISectionEntity> sectionEntities = this.sectionDao.getAll();
         List<SectionDto> sections = new LinkedList<>();
-        for (SectionEntity se : sectionEntities) {
+        for (ISectionEntity se : sectionEntities) {
             SectionDto.SectionDtoBuilder dtob = new SectionDto.SectionDtoBuilder(se.getSectionId());
             dtob.withSectionShortcut(se.getSectionShortcut());
             dtob.withDescription(se.getDescription());

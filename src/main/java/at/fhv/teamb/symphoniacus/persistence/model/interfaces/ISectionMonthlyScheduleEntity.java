@@ -1,20 +1,35 @@
 package at.fhv.teamb.symphoniacus.persistence.model.interfaces;
 
 import java.util.List;
-import java.util.Set;
 
 public interface ISectionMonthlyScheduleEntity {
+    Integer getSectionMonthlyScheduleId();
 
-    void setMonthlySchedule(IMonthlyScheduleEntity entity);
+    void setSectionMonthlyScheduleId(Integer sectionMonthlyScheduleId);
+
+    IMonthlyScheduleEntity getMonthlySchedule();
+
+    void setMonthlySchedule(IMonthlyScheduleEntity monthlySchedule);
+
+    boolean isReadyForDutyScheduler();
+
+    void setReadyForDutyScheduler(boolean readyForDutyScheduler);
+
+    boolean isReadyForOrganisationManager();
+
+    void setReadyForOrganisationManager(boolean readyForOrganisationManager);
+
+    boolean isPublished();
+
+    void setPublished(boolean published);
+
+    ISectionEntity getSection();
 
     void setSection(ISectionEntity section);
 
-    void setReadyForDutyScheduler(boolean value);
-
-    void setReadyForOrganisationManager(boolean value);
-
-    void setPublished(boolean value);
-
     List<IDutyEntity> getDuties();
 
+    void addDuty(IDutyEntity duty);
+
+    void removeDuty(IDutyEntity duty);
 }

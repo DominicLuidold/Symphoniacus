@@ -1,32 +1,46 @@
 package at.fhv.teamb.symphoniacus.persistence.model.interfaces;
 
-import at.fhv.teamb.symphoniacus.persistence.model.InstrumentationPositionEntity;
-import at.fhv.teamb.symphoniacus.persistence.model.MusicalPieceEntity;
 import java.util.List;
-import java.util.Set;
 
-/**
- * Interface for InstrumentationEntity class.
- *
- * @author Theresa Gierer
- */
 public interface IInstrumentationEntity {
-    String getName();
-
-    IMusicalPieceEntity getMusicalPiece();
-
-    //TODO: find out how the fuck this works
-    List<IInstrumentationPositionEntity> getInstrumentationPositions();
-
     Integer getInstrumentationId();
 
-    List<ISectionInstrumentationEntity> getSectionInstrumentations();
+    void setInstrumentationId(int instrumentationId);
 
-    void setInstrumentationId(int id);
+    String getName();
 
     void setName(String name);
 
-    void addSeriesOfPerformance(ISeriesOfPerformancesEntity entity);
+    IMusicalPieceEntity getMusicalPiece();
 
-    void removeSeriesOfPerformance(ISeriesOfPerformancesEntity entity);
+    void setMusicalPiece(IMusicalPieceEntity musicalPiece);
+
+    List<ISectionInstrumentationEntity> getSectionInstrumentations();
+
+    void addSectionInstrumentation(
+        ISectionInstrumentationEntity sectionInstrumentation
+    );
+
+    void removeSectionInstrumentation(
+        ISectionInstrumentationEntity sectionInstrumentation
+    );
+
+    List<IInstrumentationPositionEntity> getInstrumentationPositions();
+
+    void addInstrumentationPosition(
+        IInstrumentationPositionEntity instrumentationPosition
+    );
+
+    void removeInstrumentationPosition(
+        IInstrumentationPositionEntity instrumentationPosition
+    );
+
+    List<ISeriesOfPerformancesEntity> getSeriesOfPerformances();
+
+    void setSeriesOfPerformances(
+        List<ISeriesOfPerformancesEntity> seriesOfPerformances);
+
+    void addSeriesOfPerformance(ISeriesOfPerformancesEntity series);
+
+    void removeSeriesOfPerformance(ISeriesOfPerformancesEntity series);
 }

@@ -4,6 +4,7 @@ import at.fhv.teamb.symphoniacus.persistence.BaseDao;
 import at.fhv.teamb.symphoniacus.persistence.model.ContractualObligationEntity;
 import at.fhv.teamb.symphoniacus.persistence.model.MusicianEntity;
 import at.fhv.teamb.symphoniacus.persistence.model.SectionEntity;
+import at.fhv.teamb.symphoniacus.persistence.model.interfaces.ISectionEntity;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
@@ -33,7 +34,7 @@ public class MusicianDao extends BaseDao<MusicianEntity> {
      * @param section The section to use
      * @return A List of active musicians belonging to the section
      */
-    public List<MusicianEntity> findAllWithSectionAndActiveContract(SectionEntity section) {
+    public List<MusicianEntity> findAllWithSectionAndActiveContract(ISectionEntity section) {
         TypedQuery<MusicianEntity> query = entityManager.createQuery(
             "SELECT m FROM MusicianEntity m "
                 + "JOIN FETCH m.user "
@@ -58,7 +59,7 @@ public class MusicianDao extends BaseDao<MusicianEntity> {
      * @param section The section to use
      * @return A List of external musicians belonging to the section
      */
-    public List<MusicianEntity> findExternalsWithSection(SectionEntity section) {
+    public List<MusicianEntity> findExternalsWithSection(ISectionEntity section) {
         TypedQuery<MusicianEntity> query = entityManager.createQuery(
             "SELECT m FROM MusicianEntity m "
                 + "JOIN FETCH m.user u "

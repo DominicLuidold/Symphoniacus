@@ -1,9 +1,9 @@
 package at.fhv.teamb.symphoniacus.domain;
 
 import at.fhv.teamb.symphoniacus.domain.exception.PointsNotCalculatedException;
-import at.fhv.teamb.symphoniacus.persistence.model.DutyPositionEntity;
 import at.fhv.teamb.symphoniacus.persistence.model.MusicianEntity;
-import at.fhv.teamb.symphoniacus.persistence.model.IUserEntity;
+import at.fhv.teamb.symphoniacus.persistence.model.interfaces.IDutyPositionEntity;
+import at.fhv.teamb.symphoniacus.persistence.model.interfaces.IUserEntity;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
@@ -73,7 +73,7 @@ public class Musician {
         return this.isExternal;
     }
 
-    public List<DutyPositionEntity> getAssignedDutyPositions() {
+    public List<IDutyPositionEntity> getAssignedDutyPositions() {
         return this.entity.getDutyPositions();
     }
 

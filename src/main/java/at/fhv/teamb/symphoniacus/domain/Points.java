@@ -1,9 +1,9 @@
 package at.fhv.teamb.symphoniacus.domain;
 
-import at.fhv.teamb.symphoniacus.persistence.model.ContractualObligationEntity;
-import at.fhv.teamb.symphoniacus.persistence.model.DutyCategoryChangelogEntity;
-import at.fhv.teamb.symphoniacus.persistence.model.DutyCategoryEntity;
 import at.fhv.teamb.symphoniacus.persistence.model.DutyEntity;
+import at.fhv.teamb.symphoniacus.persistence.model.interfaces.IContractualObligationEntity;
+import at.fhv.teamb.symphoniacus.persistence.model.interfaces.IDutyCategoryChangelogEntity;
+import at.fhv.teamb.symphoniacus.persistence.model.interfaces.IDutyCategoryEntity;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
@@ -35,7 +35,7 @@ public class Points {
      * @param obligationEntity Contract of a musician w/ debitPoints
      * @return Points
      */
-    public static Points calcDebitPoints(ContractualObligationEntity obligationEntity) {
+    public static Points calcDebitPoints(IContractualObligationEntity obligationEntity) {
         return new Points(obligationEntity.getPointsPerMonth());
     }
 
@@ -50,7 +50,7 @@ public class Points {
      */
     public static Points calcGainedPoints(
         List<DutyEntity> duties,
-        List<DutyCategoryChangelogEntity> catChangeLogs
+        List<IDutyCategoryChangelogEntity> catChangeLogs
     ) {
         if (duties.isEmpty()) {
             LOG.error("No duties delivered -> Points cannot be calculated");
@@ -77,7 +77,7 @@ public class Points {
      */
     public static Points calcBalancePoints(
         List<DutyEntity> duties,
-        Set<DutyCategoryEntity> dutyCategories
+        Set<IDutyCategoryEntity> dutyCategories
     ) {
         if (duties.isEmpty()) {
             LOG.error("No duties delivered -> Points cannot be calculated");
@@ -103,12 +103,12 @@ public class Points {
      */
     private static int giveChangeLogPointsOfDuty(
         DutyEntity duty,
-        List<DutyCategoryChangelogEntity> catChangeLogs
+        List<IDutyCategoryChangelogEntity> catChangeLogs
     ) {
         int points = 0;
-        DutyCategoryChangelogEntity temp = null;
+        IDutyCategoryChangelogEntity temp = null;
         LocalDate dutyTime = duty.getStart().toLocalDate();
-        for (DutyCategoryChangelogEntity catChangeLogEntity : catChangeLogs) {
+        for (IDutyCategoryChangelogEntity catChangeLogEntity : catChangeLogs) {
             if (duty.getDutyCategory().getDutyCategoryId()
                 .equals(catChangeLogEntity.getDutyCategory().getDutyCategoryId())) {
                 if (temp == null
@@ -164,7 +164,7 @@ public class Points {
      */
     private static Points calcBalancePointsForCurrentMonth(
         List<DutyEntity> duties,
-        Set<DutyCategoryEntity> dutyCategories
+        Set<IDutyCategoryEntity> dutyCategories
     ) {
         int points = 0;
         // Iterate every duty from current month
@@ -172,7 +172,7 @@ public class Points {
             if (duty.getStart().isAfter(LocalDateTime.now())) {
                 // Iterate every dutyCategory and find match to duty -> count points
                 // and break from iterator
-                for (DutyCategoryEntity cat : dutyCategories) {
+                for (IDutyCategoryEntity cat : dutyCategories) {
                     if (cat.getDutyCategoryId()
                         .equals(duty.getDutyCategory().getDutyCategoryId())
                     ) {
@@ -194,11 +194,11 @@ public class Points {
      */
     private static Points calcBalancePointsForMonthAfterCurrent(
         List<DutyEntity> duties,
-        Set<DutyCategoryEntity> dutyCategories
+        Set<IDutyCategoryEntity> dutyCategories
     ) {
         int points = 0;
         for (DutyEntity duty : duties) {
-            for (DutyCategoryEntity cat : dutyCategories) {
+            for (IDutyCategoryEntity cat : dutyCategories) {
                 if (duty.getDutyCategory().getDutyCategoryId().equals(cat.getDutyCategoryId())) {
                     points = points + cat.getPoints();
                     break;

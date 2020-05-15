@@ -1,5 +1,7 @@
 package at.fhv.teamb.symphoniacus.persistence.model;
 
+import at.fhv.teamb.symphoniacus.persistence.model.interfaces.IMusicalPieceEntity;
+import at.fhv.teamb.symphoniacus.persistence.model.interfaces.ISeriesOfPerformancesMusicalPiece;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -12,7 +14,7 @@ import javax.persistence.Table;
 
 @Entity
 @Table(name = "seriesOfPerformances_musicalPiece")
-public class SeriesOfPerformancesMusicalPiece {
+public class SeriesOfPerformancesMusicalPiece implements ISeriesOfPerformancesMusicalPiece {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "seriesOfPerformances_musicalPieceId")
@@ -27,36 +29,44 @@ public class SeriesOfPerformancesMusicalPiece {
     //Many-To-One Part for MUSICALPIECE Table
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "musicalPieceId")
-    private MusicalPieceEntity musicalPiece;
+    private IMusicalPieceEntity musicalPiece;
 
-    public MusicalPieceEntity getMusicalPiece() {
+    @Override
+    public IMusicalPieceEntity getMusicalPiece() {
         return this.musicalPiece;
     }
 
-    public void setMusicalPiece(MusicalPieceEntity musicalPiece) {
+    @Override
+    public void setMusicalPiece(IMusicalPieceEntity musicalPiece) {
         this.musicalPiece = musicalPiece;
     }
 
+    @Override
     public Integer getSeriesOfPerformancesMusicalPieceId() {
         return this.seriesOfPerformancesMusicalPieceId;
     }
 
+    @Override
     public void setSeriesOfPerformancesMusicalPieceId(Integer seriesOfPerformancesMusicalPieceId) {
         this.seriesOfPerformancesMusicalPieceId = seriesOfPerformancesMusicalPieceId;
     }
 
+    @Override
     public Integer getMusicalPieceId() {
         return this.musicalPieceId;
     }
 
+    @Override
     public void setMusicalPieceId(Integer musicalPieceId) {
         this.musicalPieceId = musicalPieceId;
     }
 
+    @Override
     public Integer getSeriesOfPerformancesId() {
         return this.seriesOfPerformancesId;
     }
 
+    @Override
     public void setSeriesOfPerformancesId(Integer seriesOfPerformancesId) {
         this.seriesOfPerformancesId = seriesOfPerformancesId;
     }

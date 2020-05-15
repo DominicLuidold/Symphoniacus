@@ -1,6 +1,7 @@
 package at.fhv.teamb.symphoniacus.domain;
 
 import at.fhv.teamb.symphoniacus.persistence.model.DutyPositionEntity;
+import at.fhv.teamb.symphoniacus.persistence.model.interfaces.IDutyPositionEntity;
 import java.util.Optional;
 
 /**
@@ -9,14 +10,14 @@ import java.util.Optional;
  * @author Dominic Luidold
  */
 public class DutyPosition {
-    private DutyPositionEntity entity;
+    private IDutyPositionEntity entity;
 
     /**
      * Initializes the DutyPosition object based on provided {@link DutyPositionEntity}.
      *
      * @param entity The entity to use
      */
-    public DutyPosition(DutyPositionEntity entity) {
+    public DutyPosition(IDutyPositionEntity entity) {
         this.entity = entity;
     }
 
@@ -33,7 +34,7 @@ public class DutyPosition {
         }
     }
 
-    public DutyPositionEntity getEntity() {
+    public IDutyPositionEntity getEntity() {
         return this.entity;
     }
 }

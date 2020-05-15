@@ -1,6 +1,7 @@
 package at.fhv.teamb.symphoniacus.persistence.model;
 
 import at.fhv.teamb.symphoniacus.persistence.model.interfaces.IAdministrativeAssistantEntity;
+import at.fhv.teamb.symphoniacus.persistence.model.interfaces.IUserEntity;
 import java.math.BigInteger;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
@@ -21,7 +22,7 @@ import org.apache.logging.log4j.Logger;
 
 @Entity
 @Table(name = "user")
-public class UserEntity {
+public class UserEntity implements IUserEntity {
 
     private static final Logger LOG = LogManager.getLogger(UserEntity.class);
 
@@ -72,50 +73,62 @@ public class UserEntity {
     @OneToMany(mappedBy = "user")
     private List<IAdministrativeAssistantEntity> administrativeAssistants = new LinkedList<>();
 
+    @Override
     public Integer getUserId() {
         return this.userId;
     }
 
+    @Override
     public void setUserId(Integer userId) {
         this.userId = userId;
     }
 
+    @Override
     public String getFirstName() {
         return this.firstName;
     }
 
+    @Override
     public void setFirstName(String firstName) {
         this.firstName = firstName;
     }
 
+    @Override
     public String getLastName() {
         return this.lastName;
     }
 
+    @Override
     public void setLastName(String lastName) {
         this.lastName = lastName;
     }
 
+    @Override
     public String getShortcut() {
         return this.shortcut;
     }
 
+    @Override
     public void setShortcut(String shortcut) {
         this.shortcut = shortcut;
     }
 
+    @Override
     public String getEmail() {
         return this.email;
     }
 
+    @Override
     public void setEmail(String email) {
         this.email = email;
     }
 
+    @Override
     public String getPhone() {
         return this.phone;
     }
 
+    @Override
     public void setPhone(String phone) {
         this.phone = phone;
     }
@@ -126,6 +139,7 @@ public class UserEntity {
      * @param password Password in Plaintext.
      * @throws Exception When hash cannot be generated
      */
+    @Override
     public void setPassword(String password) throws Exception {
         if (this.passwordSalt == null) {
             LOG.debug("Generating salt");
@@ -139,72 +153,89 @@ public class UserEntity {
         }
     }
 
+    @Override
     public String getCity() {
         return this.city;
     }
 
+    @Override
     public void setCity(String city) {
         this.city = city;
     }
 
+    @Override
     public String getZipCode() {
         return this.zipCode;
     }
 
+    @Override
     public void setZipCode(String zipCode) {
         this.zipCode = zipCode;
     }
 
+    @Override
     public String getCountry() {
         return this.country;
     }
 
+    @Override
     public void setCountry(String country) {
         this.country = country;
     }
 
+    @Override
     public String getStreet() {
         return this.street;
     }
 
+    @Override
     public void setStreet(String street) {
         this.street = street;
     }
 
+    @Override
     public String getStreetNumber() {
         return this.streetNumber;
     }
 
+    @Override
     public void setStreetNumber(String streetNumber) {
         this.streetNumber = streetNumber;
     }
 
+    @Override
     public String getPasswordSalt() {
         return this.passwordSalt;
     }
 
+    @Override
     public void setPasswordSalt(String passwordSalt) {
         this.passwordSalt = passwordSalt;
     }
 
+    @Override
     public MusicianEntity getMusician() {
         return this.musician;
     }
 
+    @Override
     public void setMusician(MusicianEntity musician) {
         this.musician = musician;
         musician.setUser(this);
     }
 
+    @Override
     public List<IAdministrativeAssistantEntity> getAdministrativeAssistants() {
         return this.administrativeAssistants;
     }
 
+    @Override
     public void addAdministrativeAssistant(IAdministrativeAssistantEntity administrativeAssistant) {
         this.administrativeAssistants.add(administrativeAssistant);
         administrativeAssistant.setUser(this);
     }
 
+    @Override
     public void removeAdministrativeAssistant(
         IAdministrativeAssistantEntity administrativeAssistant
     ) {
@@ -219,6 +250,7 @@ public class UserEntity {
      * @return Optional, which if is present contains the hashed password
      * @throws NoSuchAlgorithmException When SHA-512 is lost
      */
+    @Override
     public Optional<String> getHashFromPlaintext(String password)
         throws NoSuchAlgorithmException {
         // https://www.geeksforgeeks.org/sha-512-hash-in-java/
@@ -249,6 +281,7 @@ public class UserEntity {
      *
      * @return Salt
      */
+    @Override
     public String generateSalt() {
         SecureRandom random = new SecureRandom();
         byte[] salt = new byte[16];

@@ -39,70 +39,86 @@ public class MusicalPieceEntity implements IMusicalPieceEntity {
     @ManyToMany(mappedBy = "musicalPieces")
     private List<SeriesOfPerformancesEntity> seriesOfPerformances = new LinkedList<>();
 
+    @Override
     public Integer getMusicalPieceId() {
         return this.musicalPieceId;
     }
 
+    @Override
     public void setMusicalPieceId(Integer musicalPieceId) {
         this.musicalPieceId = musicalPieceId;
     }
 
+    @Override
     public String getName() {
         return this.name;
     }
 
+    @Override
     public void setName(String name) {
         this.name = name;
     }
 
+    @Override
     public String getComposer() {
         return this.composer;
     }
 
+    @Override
     public void setComposer(String composer) {
         this.composer = composer;
     }
 
+    @Override
     public String getCategory() {
         return this.category;
     }
 
+    @Override
     public void setCategory(String category) {
         this.category = category;
     }
 
+    @Override
     public Set<IInstrumentationEntity> getInstrumentations() {
         return this.instrumentations;
     }
 
+    @Override
     public void setInstrumentations(Set<IInstrumentationEntity> instrumentations) {
         this.instrumentations = instrumentations;
     }
 
-    public void addInstrumentation(InstrumentationEntity instrumentation) {
+    @Override
+    public void addInstrumentation(IInstrumentationEntity instrumentation) {
         this.instrumentations.add(instrumentation);
         instrumentation.setMusicalPiece(this);
     }
 
-    public void removeInstrumentation(InstrumentationEntity instrumentation) {
+    @Override
+    public void removeInstrumentation(IInstrumentationEntity instrumentation) {
         this.instrumentations.remove(instrumentation);
         instrumentation.setMusicalPiece(null);
     }
 
+    @Override
     public List<SeriesOfPerformancesEntity> getSeriesOfPerformances() {
         return this.seriesOfPerformances;
     }
 
+    @Override
     public void setSeriesOfPerformances(
         List<SeriesOfPerformancesEntity> seriesOfPerformances) {
         this.seriesOfPerformances = seriesOfPerformances;
     }
 
+    @Override
     public void addSeriesOfPerformance(SeriesOfPerformancesEntity seriesOfPerformancesEntity) {
         this.seriesOfPerformances.add(seriesOfPerformancesEntity);
         seriesOfPerformancesEntity.addMusicalPiece(this);
     }
 
+    @Override
     public void removeSeriesOfPerformance(SeriesOfPerformancesEntity seriesOfPerformancesEntity) {
         this.seriesOfPerformances.remove(seriesOfPerformancesEntity);
         seriesOfPerformancesEntity.removeMusicalPiece(this);

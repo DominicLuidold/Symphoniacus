@@ -7,7 +7,6 @@ import at.fhv.teamb.symphoniacus.persistence.PersistenceState;
 import at.fhv.teamb.symphoniacus.persistence.dao.DutyPositionDao;
 import at.fhv.teamb.symphoniacus.persistence.dao.SectionDao;
 import at.fhv.teamb.symphoniacus.persistence.dao.SectionMonthlyScheduleDao;
-import at.fhv.teamb.symphoniacus.persistence.model.MonthlyScheduleEntity;
 import at.fhv.teamb.symphoniacus.persistence.model.SectionEntity;
 import at.fhv.teamb.symphoniacus.persistence.model.SectionMonthlyScheduleEntity;
 import at.fhv.teamb.symphoniacus.persistence.model.interfaces.IMonthlyScheduleEntity;
@@ -53,13 +52,13 @@ public class SectionMonthlyScheduleManager {
     public Set<SectionMonthlySchedule> getSectionMonthlySchedules(SectionDto section, Year year) {
         Set<SectionMonthlySchedule> sectionMonthlySchedules = new HashSet<>();
 
-        SectionEntity sectionEntity = new SectionEntity();
+        ISectionEntity sectionEntity = new SectionEntity();
         sectionEntity.setSectionId(section.getSectionId());
         sectionEntity.setSectionShortcut(section.getSectionShortcut());
         sectionEntity.setDescription(section.getDescription());
 
         // Fetch section monthly schedules from database
-        for (SectionMonthlyScheduleEntity smsEntity : this.smsDao
+        for (ISectionMonthlyScheduleEntity smsEntity : this.smsDao
             .findAllInYear(sectionEntity, year)
         ) {
             // Convert entity to domain object
@@ -85,7 +84,7 @@ public class SectionMonthlyScheduleManager {
         Month month
     ) {
         // Fetch section monthly schedule from database
-        SectionMonthlyScheduleEntity smsEntity =
+        ISectionMonthlyScheduleEntity smsEntity =
             this.smsDao.findAllInYearAndMonth(section.getEntity(), year, month);
 
         // Convert entity to domain object
@@ -116,7 +115,7 @@ public class SectionMonthlyScheduleManager {
         sectionMonthlySchedule.getEntity().setReadyForOrganisationManager(true);
 
         // Write update to database and set publish state
-        Optional<SectionMonthlyScheduleEntity> persisted =
+        Optional<ISectionMonthlyScheduleEntity> persisted =
             this.smsDao.update(sectionMonthlySchedule.getEntity());
         if (persisted.isPresent()) {
             sectionMonthlySchedule.setPublishState(
@@ -178,7 +177,7 @@ public class SectionMonthlyScheduleManager {
      */
     private void setPersistenceState(SectionMonthlySchedule sms) {
         // Get entity from domain object
-        SectionMonthlyScheduleEntity entity = sms.getEntity();
+        ISectionMonthlyScheduleEntity entity = sms.getEntity();
 
         // Set appropriate PublishState
         if (entity.isReadyForDutyScheduler()) {

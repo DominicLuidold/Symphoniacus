@@ -45,62 +45,77 @@ public class SectionMonthlyScheduleEntity implements ISectionMonthlyScheduleEnti
     @ManyToMany(mappedBy = "sectionMonthlySchedules", targetEntity = DutyEntity.class)
     private List<IDutyEntity> duties = new LinkedList<>();
 
+    @Override
     public Integer getSectionMonthlyScheduleId() {
         return this.sectionMonthlyScheduleId;
     }
 
+    @Override
     public void setSectionMonthlyScheduleId(Integer sectionMonthlyScheduleId) {
         this.sectionMonthlyScheduleId = sectionMonthlyScheduleId;
     }
 
+    @Override
     public IMonthlyScheduleEntity getMonthlySchedule() {
         return this.monthlySchedule;
     }
 
+    @Override
     public void setMonthlySchedule(IMonthlyScheduleEntity monthlySchedule) {
         this.monthlySchedule = monthlySchedule;
     }
 
+    @Override
     public boolean isReadyForDutyScheduler() {
         return this.isReadyForDutyScheduler;
     }
 
+    @Override
     public void setReadyForDutyScheduler(boolean readyForDutyScheduler) {
         this.isReadyForDutyScheduler = readyForDutyScheduler;
     }
 
+    @Override
     public boolean isReadyForOrganisationManager() {
         return this.isReadyForOrganisationManager;
     }
 
+    @Override
     public void setReadyForOrganisationManager(boolean readyForOrganisationManager) {
         this.isReadyForOrganisationManager = readyForOrganisationManager;
     }
 
+    @Override
     public boolean isPublished() {
         return this.isPublished;
     }
 
+    @Override
     public void setPublished(boolean published) {
         this.isPublished = published;
     }
 
+    @Override
     public ISectionEntity getSection() {
         return this.section;
     }
 
+    @Override
     public void setSection(ISectionEntity section) {
         this.section = section;
     }
 
+    @Override
     public List<IDutyEntity> getDuties() {
         return this.duties;
     }
 
+    @Override
     public void addDuty(IDutyEntity duty) {
         this.duties.add(duty);
     }
 
+    @Override
     public void removeDuty(IDutyEntity duty) {
         this.duties.remove(duty);
     }

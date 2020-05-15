@@ -31,34 +31,42 @@ public class DutyCategoryChangelogEntity implements IDutyCategoryChangelogEntity
     @Column(name = "points")
     private Integer points;
 
+    @Override
     public Integer getDutyCategoryChangelogId() {
         return this.dutyCategoryChangelogId;
     }
 
+    @Override
     public void setDutyCategoryChangelogId(Integer dutyCategoryChangelogId) {
         this.dutyCategoryChangelogId = dutyCategoryChangelogId;
     }
 
+    @Override
     public IDutyCategoryEntity getDutyCategory() {
         return dutyCategory;
     }
 
+    @Override
     public void setDutyCategory(IDutyCategoryEntity dutyCategory) {
         this.dutyCategory = dutyCategory;
     }
 
+    @Override
     public LocalDate getStartDate() {
         return this.startDate;
     }
 
+    @Override
     public void setStartDate(LocalDate startDate) {
         this.startDate = startDate;
     }
 
+    @Override
     public Integer getPoints() {
         return this.points;
     }
 
+    @Override
     public void setPoints(Integer points) {
         this.points = points;
     }

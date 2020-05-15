@@ -1,6 +1,6 @@
 package at.fhv.teamb.symphoniacus.domain;
 
-import at.fhv.teamb.symphoniacus.persistence.model.DutyCategoryChangelogEntity;
+import at.fhv.teamb.symphoniacus.persistence.model.interfaces.IDutyCategoryChangelogEntity;
 
 /**
  * Domain object for DutyCategoryChangelog.
@@ -8,13 +8,13 @@ import at.fhv.teamb.symphoniacus.persistence.model.DutyCategoryChangelogEntity;
  * @author Dominic Luidold
  */
 public class DutyCategoryChangelog {
-    private final DutyCategoryChangelogEntity entity;
+    private final IDutyCategoryChangelogEntity entity;
 
-    public DutyCategoryChangelog(DutyCategoryChangelogEntity entity) {
+    public DutyCategoryChangelog(IDutyCategoryChangelogEntity entity) {
         this.entity = entity;
     }
 
-    public DutyCategoryChangelogEntity getEntity() {
+    public IDutyCategoryChangelogEntity getEntity() {
         return this.entity;
     }
 }

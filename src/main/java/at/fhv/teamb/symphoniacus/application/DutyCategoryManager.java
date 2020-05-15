@@ -2,20 +2,15 @@ package at.fhv.teamb.symphoniacus.application;
 
 import at.fhv.teamb.symphoniacus.application.dto.DutyCategoryChangeLogDto;
 import at.fhv.teamb.symphoniacus.application.dto.DutyCategoryDto;
-import at.fhv.teamb.symphoniacus.application.dto.DutyDto;
 import at.fhv.teamb.symphoniacus.domain.DutyCategory;
 import at.fhv.teamb.symphoniacus.domain.DutyCategoryChangelog;
 import at.fhv.teamb.symphoniacus.persistence.PersistenceState;
 import at.fhv.teamb.symphoniacus.persistence.dao.DutyCategoryDao;
-import at.fhv.teamb.symphoniacus.persistence.model.DutyCategoryChangelogEntity;
-import at.fhv.teamb.symphoniacus.persistence.model.DutyCategoryEntity;
-import at.fhv.teamb.symphoniacus.persistence.model.DutyEntity;
+import at.fhv.teamb.symphoniacus.persistence.model.interfaces.IDutyCategoryChangelogEntity;
 import at.fhv.teamb.symphoniacus.persistence.model.interfaces.IDutyCategoryEntity;
-import java.util.LinkedHashSet;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Optional;
-import java.util.Set;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -23,7 +18,7 @@ public class DutyCategoryManager {
     private static final Logger LOG = LogManager.getLogger(DutyCategoryManager.class);
     private final DutyCategoryDao categoryDao;
     private List<DutyCategory> dutyCategories;
-    private List<DutyCategoryEntity> dutyCategoryEntities;
+    private List<IDutyCategoryEntity> dutyCategoryEntities;
 
     public DutyCategoryManager() {
         this.categoryDao = new DutyCategoryDao();
@@ -44,10 +39,10 @@ public class DutyCategoryManager {
             }
 
             // Convert duty category entities to domain objects
-            for (DutyCategoryEntity entity : this.dutyCategoryEntities) {
+            for (IDutyCategoryEntity entity : this.dutyCategoryEntities) {
                 // Convert duty category changelog entities to domain objects
                 List<DutyCategoryChangelog> changelogList = new LinkedList<>();
-                for (DutyCategoryChangelogEntity changelogEntity :
+                for (IDutyCategoryChangelogEntity changelogEntity :
                     entity.getDutyCategoryChangelogs()
                 ) {
                     changelogList.add(new DutyCategoryChangelog(changelogEntity));
@@ -97,7 +92,7 @@ public class DutyCategoryManager {
      * @param dutyCategory The duty category to persist
      */
     public void persist(DutyCategory dutyCategory) {
-        Optional<DutyCategoryEntity> persisted = this.categoryDao.update(dutyCategory.getEntity());
+        Optional<IDutyCategoryEntity> persisted = this.categoryDao.update(dutyCategory.getEntity());
 
         if (persisted.isPresent()) {
             dutyCategory.setPersistenceState(PersistenceState.PERSISTED);

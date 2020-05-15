@@ -6,13 +6,14 @@ import at.fhv.teamb.symphoniacus.application.dto.MusicalPieceDto;
 import at.fhv.teamb.symphoniacus.application.dto.SeriesOfPerformancesDto;
 import at.fhv.teamb.symphoniacus.persistence.dao.InstrumentationDao;
 import at.fhv.teamb.symphoniacus.persistence.dao.SeriesOfPerformancesDao;
-import at.fhv.teamb.symphoniacus.persistence.model.DutyEntity;
 import at.fhv.teamb.symphoniacus.persistence.dao.interfaces.IInstrumentationDao;
+import at.fhv.teamb.symphoniacus.persistence.model.DutyEntity;
 import at.fhv.teamb.symphoniacus.persistence.model.InstrumentationEntity;
 import at.fhv.teamb.symphoniacus.persistence.model.InstrumentationPositionEntity;
 import at.fhv.teamb.symphoniacus.persistence.model.MusicalPieceEntity;
 import at.fhv.teamb.symphoniacus.persistence.model.SeriesOfPerformancesEntity;
 import at.fhv.teamb.symphoniacus.persistence.model.interfaces.IInstrumentationEntity;
+import at.fhv.teamb.symphoniacus.persistence.model.interfaces.IMusicalPieceEntity;
 import at.fhv.teamb.symphoniacus.persistence.model.interfaces.ISeriesOfPerformancesEntity;
 import java.time.LocalDate;
 import java.util.LinkedHashSet;
@@ -70,10 +71,10 @@ public class SeriesOfPerformancesManager {
         return result.isPresent();
     }
 
-    private Set<MusicalPieceEntity> convertMusicalPieceDtoToEntities(Set<MusicalPieceDto> dtos) {
-        Set<MusicalPieceEntity> entities = new LinkedHashSet<>();
+    private Set<IMusicalPieceEntity> convertMusicalPieceDtoToEntities(Set<MusicalPieceDto> dtos) {
+        Set<IMusicalPieceEntity> entities = new LinkedHashSet<>();
         for (MusicalPieceDto dto : dtos) {
-            MusicalPieceEntity entity = new MusicalPieceEntity();
+            IMusicalPieceEntity entity = new MusicalPieceEntity();
             entity.setMusicalPieceId(dto.getMusicalPieceId());
             entity.setCategory(dto.getCategory());
             entity.setName(dto.getName());
@@ -84,11 +85,11 @@ public class SeriesOfPerformancesManager {
         return entities;
     }
 
-    private Set<InstrumentationEntity> convertInstrumentationDtoToEntites(
+    private Set<IInstrumentationEntity> convertInstrumentationDtoToEntites(
         Set<InstrumentationDto> dtos) {
-        Set<InstrumentationEntity> entities = new LinkedHashSet<>();
+        Set<IInstrumentationEntity> entities = new LinkedHashSet<>();
         for (InstrumentationDto dto : dtos) {
-            InstrumentationEntity entity = new InstrumentationEntity();
+            IInstrumentationEntity entity = new InstrumentationEntity();
             entity.setInstrumentationId(dto.getInstrumentationId());
             entity.setName(dto.getName());
             entities.add(entity);

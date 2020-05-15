@@ -4,17 +4,18 @@ import at.fhv.teamb.symphoniacus.persistence.BaseDao;
 import at.fhv.teamb.symphoniacus.persistence.model.DutyEntity;
 import at.fhv.teamb.symphoniacus.persistence.model.NegativeDateWishEntity;
 import at.fhv.teamb.symphoniacus.persistence.model.WishRequestable;
+import at.fhv.teamb.symphoniacus.persistence.model.interfaces.INegativeDateWishEntity;
 import java.util.List;
 import java.util.Optional;
 import javax.persistence.TypedQuery;
 
-public class NegativeDateWishDao extends BaseDao<NegativeDateWishEntity> {
+public class NegativeDateWishDao extends BaseDao<INegativeDateWishEntity> {
 
     /**
      * {@inheritDoc}
      */
     @Override
-    public Optional<NegativeDateWishEntity> find(Integer key) {
+    public Optional<INegativeDateWishEntity> find(Integer key) {
         return this.find(NegativeDateWishEntity.class, key);
     }
 
@@ -22,7 +23,7 @@ public class NegativeDateWishDao extends BaseDao<NegativeDateWishEntity> {
      * {@inheritDoc}
      */
     @Override
-    public Optional<NegativeDateWishEntity> persist(NegativeDateWishEntity elem) {
+    public Optional<INegativeDateWishEntity> persist(INegativeDateWishEntity elem) {
         return this.persist(NegativeDateWishEntity.class, elem);
     }
 
@@ -30,12 +31,12 @@ public class NegativeDateWishDao extends BaseDao<NegativeDateWishEntity> {
      * {@inheritDoc}
      */
     @Override
-    public Optional<NegativeDateWishEntity> update(NegativeDateWishEntity elem) {
+    public Optional<INegativeDateWishEntity> update(INegativeDateWishEntity elem) {
         return this.update(NegativeDateWishEntity.class, elem);
     }
 
     @Override
-    public boolean remove(NegativeDateWishEntity elem) {
+    public boolean remove(INegativeDateWishEntity elem) {
         return false;
     }
 

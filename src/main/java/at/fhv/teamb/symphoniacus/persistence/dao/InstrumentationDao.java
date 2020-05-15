@@ -4,8 +4,8 @@ import at.fhv.teamb.symphoniacus.persistence.BaseDao;
 import at.fhv.teamb.symphoniacus.persistence.dao.interfaces.IInstrumentationDao;
 import at.fhv.teamb.symphoniacus.persistence.model.InstrumentationEntity;
 import at.fhv.teamb.symphoniacus.persistence.model.MusicalPieceEntity;
-import at.fhv.teamb.symphoniacus.persistence.model.SeriesOfPerformancesEntity;
 import at.fhv.teamb.symphoniacus.persistence.model.interfaces.IInstrumentationEntity;
+import at.fhv.teamb.symphoniacus.persistence.model.interfaces.IMusicalPieceEntity;
 import at.fhv.teamb.symphoniacus.persistence.model.interfaces.ISeriesOfPerformancesEntity;
 import java.util.LinkedHashSet;
 import java.util.Optional;
@@ -70,10 +70,10 @@ public class InstrumentationDao extends BaseDao<IInstrumentationEntity> implemen
      * @param musicalPieces given musicalPieces
      * @return A Set of all instrumentations to all given musicalPieces
      */
-    public Set<InstrumentationEntity> getInstrumentationsToMusicalPieces(
-        Set<MusicalPieceEntity> musicalPieces
+    public Set<IInstrumentationEntity> getInstrumentationsToMusicalPieces(
+        Set<IMusicalPieceEntity> musicalPieces
     ) {
-        TypedQuery<InstrumentationEntity> query = entityManager.createQuery(
+        TypedQuery<IInstrumentationEntity> query = entityManager.createQuery(
             "SELECT inst FROM InstrumentationEntity inst "
                 + "LEFT JOIN FETCH inst.sectionInstrumentations "
                 + "WHERE inst.musicalPiece IN :musicalPieces",

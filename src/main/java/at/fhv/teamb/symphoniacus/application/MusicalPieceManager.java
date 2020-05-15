@@ -6,9 +6,7 @@ import at.fhv.teamb.symphoniacus.application.dto.SectionInstrumentationDto;
 import at.fhv.teamb.symphoniacus.persistence.dao.InstrumentationDao;
 import at.fhv.teamb.symphoniacus.persistence.dao.MusicalPieceDao;
 import at.fhv.teamb.symphoniacus.persistence.model.MusicalPieceEntity;
-import at.fhv.teamb.symphoniacus.persistence.model.SectionInstrumentationEntity;
 import at.fhv.teamb.symphoniacus.persistence.model.interfaces.IInstrumentationEntity;
-
 import at.fhv.teamb.symphoniacus.persistence.model.interfaces.IMusicalPieceEntity;
 import at.fhv.teamb.symphoniacus.persistence.model.interfaces.ISectionInstrumentationEntity;
 import java.util.LinkedHashSet;
@@ -70,9 +68,9 @@ public class MusicalPieceManager {
     ) {
 
         // Convert Musical piece DTO to enities for dao query
-        Set<MusicalPieceEntity> musicalPieceEntities = new LinkedHashSet<>();
+        Set<IMusicalPieceEntity> musicalPieceEntities = new LinkedHashSet<>();
         for (MusicalPieceDto piece : musicalPieces) {
-            MusicalPieceEntity mpentity = new MusicalPieceEntity();
+            IMusicalPieceEntity mpentity = new MusicalPieceEntity();
             // Andere attribute werden nicht befüllt, weil query nicht mehr als id braucen sollte
             mpentity.setMusicalPieceId(piece.getMusicalPieceId());
             musicalPieceEntities.add(mpentity);
@@ -95,7 +93,7 @@ public class MusicalPieceManager {
         return instrumentationDtos;
     }
 
-    private MusicalPieceDto convertMusicalPiecesDto(MusicalPieceEntity entity) {
+    private MusicalPieceDto convertMusicalPiecesDto(IMusicalPieceEntity entity) {
         MusicalPieceDto dto = new MusicalPieceDto.MusicalPieceDtoBuilder(entity.getMusicalPieceId())
             .withName(entity.getName()).withCategory(entity.getCategory()).build();
 
@@ -122,7 +120,7 @@ public class MusicalPieceManager {
      * @return A musical piece entity
      */
     public Optional<MusicalPieceDto> getByName(String name) {
-        Optional<MusicalPieceEntity> entity = this.musicalPieceDao.getMusicalPieceFromName(name);
+        Optional<IMusicalPieceEntity> entity = this.musicalPieceDao.getMusicalPieceFromName(name);
         if (entity.isPresent()) {
             return Optional.of(convertMusicalPieceToDto(entity.get()));
         } else {

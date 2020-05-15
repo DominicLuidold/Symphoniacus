@@ -6,6 +6,9 @@ import at.fhv.teamb.symphoniacus.persistence.model.DutyPositionEntity;
 import at.fhv.teamb.symphoniacus.persistence.model.MusicianEntity;
 import at.fhv.teamb.symphoniacus.persistence.model.SectionEntity;
 import at.fhv.teamb.symphoniacus.persistence.model.SectionMonthlyScheduleEntity;
+import at.fhv.teamb.symphoniacus.persistence.model.interfaces.IDutyPositionEntity;
+import at.fhv.teamb.symphoniacus.persistence.model.interfaces.ISectionEntity;
+import at.fhv.teamb.symphoniacus.persistence.model.interfaces.ISectionMonthlyScheduleEntity;
 import java.util.List;
 import java.util.Optional;
 import javax.persistence.TypedQuery;
@@ -15,13 +18,13 @@ import javax.persistence.TypedQuery;
  *
  * @author Dominic Luidold
  */
-public class DutyPositionDao extends BaseDao<DutyPositionEntity> {
+public class DutyPositionDao extends BaseDao<IDutyPositionEntity> {
 
     /**
      * {@inheritDoc}
      */
     @Override
-    public Optional<DutyPositionEntity> find(Integer key) {
+    public Optional<IDutyPositionEntity> find(Integer key) {
         return this.find(DutyPositionEntity.class, key);
     }
 
@@ -33,11 +36,11 @@ public class DutyPositionDao extends BaseDao<DutyPositionEntity> {
      * @param section The section to use
      * @return A List of corresponding DutyPosition entities
      */
-    public List<DutyPositionEntity> findCorrespondingPositions(
+    public List<IDutyPositionEntity> findCorrespondingPositions(
         DutyEntity duty,
-        SectionEntity section
+        ISectionEntity section
     ) {
-        TypedQuery<DutyPositionEntity> query = entityManager.createQuery(
+        TypedQuery<IDutyPositionEntity> query = entityManager.createQuery(
             "SELECT p FROM DutyPositionEntity p "
                 + "JOIN FETCH p.instrumentationPosition "
                 + "LEFT JOIN FETCH p.musician m "
@@ -60,7 +63,7 @@ public class DutyPositionDao extends BaseDao<DutyPositionEntity> {
      * @return A List of corresponding DutyPosition entities
      */
     public Long findCorrespondingPositionsWithoutMusician(
-        SectionMonthlyScheduleEntity sms
+        ISectionMonthlyScheduleEntity sms
     ) {
         TypedQuery<Long> query = entityManager.createQuery(
             "SELECT COUNT(p) FROM DutyPositionEntity p "
@@ -81,7 +84,7 @@ public class DutyPositionDao extends BaseDao<DutyPositionEntity> {
      * {@inheritDoc}
      */
     @Override
-    public Optional<DutyPositionEntity> persist(DutyPositionEntity elem) {
+    public Optional<IDutyPositionEntity> persist(IDutyPositionEntity elem) {
         return this.persist(DutyPositionEntity.class, elem);
     }
 
@@ -89,12 +92,12 @@ public class DutyPositionDao extends BaseDao<DutyPositionEntity> {
      * {@inheritDoc}
      */
     @Override
-    public Optional<DutyPositionEntity> update(DutyPositionEntity elem) {
+    public Optional<IDutyPositionEntity> update(IDutyPositionEntity elem) {
         return this.update(DutyPositionEntity.class, elem);
     }
 
     @Override
-    public boolean remove(DutyPositionEntity elem) {
+    public boolean remove(IDutyPositionEntity elem) {
         return false;
     }
 }

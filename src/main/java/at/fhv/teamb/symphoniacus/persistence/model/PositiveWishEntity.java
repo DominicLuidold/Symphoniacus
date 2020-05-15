@@ -1,5 +1,6 @@
 package at.fhv.teamb.symphoniacus.persistence.model;
 
+import at.fhv.teamb.symphoniacus.persistence.model.interfaces.IPositiveWishEntity;
 import java.time.LocalDate;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -13,7 +14,7 @@ import javax.persistence.Table;
 
 @Entity
 @Table(name = "positiveWish")
-public class PositiveWishEntity implements WishRequestable {
+public class PositiveWishEntity implements IPositiveWishEntity, WishRequestable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "positiveWishId")
@@ -30,35 +31,43 @@ public class PositiveWishEntity implements WishRequestable {
     @JoinColumn(name = "seriesOfPerformancesId")
     private SeriesOfPerformancesEntity seriesOfPerformances;
 
+    @Override
     public MusicianEntity getMusician() {
         return musician;
     }
 
+    @Override
     public void setMusician(MusicianEntity musician) {
         this.musician = musician;
     }
 
+    @Override
     public SeriesOfPerformancesEntity getSeriesOfPerformances() {
         return seriesOfPerformances;
     }
 
+    @Override
     public void setSeriesOfPerformances(
         SeriesOfPerformancesEntity seriesOfPerformances) {
         this.seriesOfPerformances = seriesOfPerformances;
     }
 
+    @Override
     public Integer getPositiveWishId() {
         return this.positiveWishId;
     }
 
+    @Override
     public void setPositiveWishId(Integer positiveWishId) {
         this.positiveWishId = positiveWishId;
     }
 
+    @Override
     public String getDescription() {
         return this.description;
     }
 
+    @Override
     public void setDescription(String description) {
         this.description = description;
     }

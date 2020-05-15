@@ -4,11 +4,12 @@ import at.fhv.teamb.symphoniacus.domain.Points;
 import at.fhv.teamb.symphoniacus.persistence.dao.ContractualObligationDao;
 import at.fhv.teamb.symphoniacus.persistence.dao.DutyCategoryChangeLogDao;
 import at.fhv.teamb.symphoniacus.persistence.dao.DutyDao;
-import at.fhv.teamb.symphoniacus.persistence.model.DutyCategoryChangelogEntity;
 import at.fhv.teamb.symphoniacus.persistence.model.DutyCategoryEntity;
 import at.fhv.teamb.symphoniacus.persistence.model.DutyEntity;
-import at.fhv.teamb.symphoniacus.persistence.model.DutyPositionEntity;
 import at.fhv.teamb.symphoniacus.persistence.model.MusicianEntity;
+import at.fhv.teamb.symphoniacus.persistence.model.interfaces.IDutyCategoryChangelogEntity;
+import at.fhv.teamb.symphoniacus.persistence.model.interfaces.IDutyCategoryEntity;
+import at.fhv.teamb.symphoniacus.persistence.model.interfaces.IDutyPositionEntity;
 import java.time.LocalDate;
 import java.util.LinkedHashSet;
 import java.util.LinkedList;
@@ -99,9 +100,9 @@ public class PointsManager {
             }
 
             // Get all dutyCategoryChangelogs to all dutyCategories
-            List<DutyCategoryChangelogEntity> dutyCategoryChangelogs = new LinkedList<>();
-            for (DutyCategoryEntity dc : this.getAllDutyCategories(listOfDutiesFromMusician)) {
-                List<DutyCategoryChangelogEntity> changelogEntityList =
+            List<IDutyCategoryChangelogEntity> dutyCategoryChangelogs = new LinkedList<>();
+            for (IDutyCategoryEntity dc : this.getAllDutyCategories(listOfDutiesFromMusician)) {
+                List<IDutyCategoryChangelogEntity> changelogEntityList =
                     this.dutyCatChangeDao.getDutyCategoryChangelogs(dc);
                 if (changelogEntityList != null) {
                     dutyCategoryChangelogs.addAll(changelogEntityList);
@@ -122,7 +123,7 @@ public class PointsManager {
     private List<DutyEntity> getAllDutiesFromMusician(MusicianEntity musician) {
         List<DutyEntity> duties = new LinkedList<>();
         for (DutyEntity duty : this.allDuties) {
-            for (DutyPositionEntity dp : duty.getDutyPositions()) {
+            for (IDutyPositionEntity dp : duty.getDutyPositions()) {
                 if (dp.getMusician() != null
                     && dp.getMusician().getMusicianId().equals(musician.getMusicianId())
                 ) {
@@ -194,8 +195,8 @@ public class PointsManager {
      * @param duties The duties to use
      * @return A List of DutyCategoryEntity objects
      */
-    private Set<DutyCategoryEntity> getAllDutyCategories(List<DutyEntity> duties) {
-        Set<DutyCategoryEntity> dutyCategories = new LinkedHashSet<>();
+    private Set<IDutyCategoryEntity> getAllDutyCategories(List<DutyEntity> duties) {
+        Set<IDutyCategoryEntity> dutyCategories = new LinkedHashSet<>();
         for (DutyEntity d : duties) {
             dutyCategories.add(d.getDutyCategory());
         }

@@ -1,6 +1,6 @@
 package at.fhv.teamb.symphoniacus.domain;
 
-import at.fhv.teamb.symphoniacus.persistence.model.InstrumentationPositionEntity;
+import at.fhv.teamb.symphoniacus.persistence.model.interfaces.IInstrumentationPositionEntity;
 
 /**
  * Domain object for InstrumentationPosition.
@@ -8,13 +8,13 @@ import at.fhv.teamb.symphoniacus.persistence.model.InstrumentationPositionEntity
  * @author Dominic Luidold
  */
 public class InstrumentationPosition {
-    private InstrumentationPositionEntity entity;
+    private IInstrumentationPositionEntity entity;
 
-    public InstrumentationPosition(InstrumentationPositionEntity entity) {
+    public InstrumentationPosition(IInstrumentationPositionEntity entity) {
         this.entity = entity;
     }
 
-    public InstrumentationPositionEntity getEntity() {
+    public IInstrumentationPositionEntity getEntity() {
         return this.entity;
     }
 }

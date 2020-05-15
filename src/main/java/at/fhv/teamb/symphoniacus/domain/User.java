@@ -1,7 +1,7 @@
 package at.fhv.teamb.symphoniacus.domain;
 
 import at.fhv.teamb.symphoniacus.application.type.DomainUserType;
-import at.fhv.teamb.symphoniacus.persistence.model.IUserEntity;
+import at.fhv.teamb.symphoniacus.persistence.model.interfaces.IUserEntity;
 
 public class User {
 

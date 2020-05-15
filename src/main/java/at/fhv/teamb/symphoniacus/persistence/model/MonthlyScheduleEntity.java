@@ -1,7 +1,9 @@
 package at.fhv.teamb.symphoniacus.persistence.model;
 
 import at.fhv.teamb.symphoniacus.persistence.model.interfaces.IMonthlyScheduleEntity;
+import at.fhv.teamb.symphoniacus.persistence.model.interfaces.INegativeDateWishEntity;
 import at.fhv.teamb.symphoniacus.persistence.model.interfaces.ISectionMonthlyScheduleEntity;
+import at.fhv.teamb.symphoniacus.persistence.model.interfaces.IWeeklyScheduleEntity;
 import java.time.LocalDate;
 import java.util.HashSet;
 import java.util.LinkedList;
@@ -46,105 +48,128 @@ public class MonthlyScheduleEntity implements IMonthlyScheduleEntity {
     private Set<ISectionMonthlyScheduleEntity> sectionMonthlySchedules = new HashSet<>();
 
     @ManyToMany(mappedBy = "monthlySchedules")
-    private List<NegativeDateWishEntity> negativeDateWishes = new LinkedList<>();
+    private List<INegativeDateWishEntity> negativeDateWishes = new LinkedList<>();
 
     @OneToMany(mappedBy = "monthlySchedule")
-    private List<WeeklyScheduleEntity> weeklySchedules = new LinkedList<>();
+    private List<IWeeklyScheduleEntity> weeklySchedules = new LinkedList<>();
 
+    @Override
     public Integer getMonthlyScheduleId() {
         return this.monthlyScheduleId;
     }
 
+    @Override
     public void setMonthlyScheduleId(Integer monthlyScheduleId) {
         this.monthlyScheduleId = monthlyScheduleId;
     }
 
+    @Override
     public Integer getMonth() {
         return this.month;
     }
 
+    @Override
     public void setMonth(Integer month) {
         this.month = month;
     }
 
+    @Override
     public Integer getYear() {
         return this.year;
     }
 
+    @Override
     public void setYear(Integer year) {
         this.year = year;
     }
 
+    @Override
     public LocalDate getPublishDate() {
         return this.publishDate;
     }
 
+    @Override
     public void setPublishDate(LocalDate publishDate) {
         this.publishDate = publishDate;
     }
 
+    @Override
     public LocalDate getEndDateClassification() {
         return this.endDateClassification;
     }
 
+    @Override
     public void setEndDateClassification(LocalDate endDateClassification) {
         this.endDateClassification = endDateClassification;
     }
 
+    @Override
     public boolean getPublished() {
         return this.isPublished;
     }
 
+    @Override
     public void setPublished(boolean published) {
         this.isPublished = published;
     }
 
+    @Override
     public LocalDate getEndWish() {
         return this.endWish;
     }
 
+    @Override
     public void setEndWish(LocalDate endWish) {
         this.endWish = endWish;
     }
 
+    @Override
     public Set<ISectionMonthlyScheduleEntity> getSectionMonthlySchedule() {
         return this.sectionMonthlySchedules;
     }
 
+    @Override
     public void addSectionMonthlySchedule(ISectionMonthlyScheduleEntity sectionMonthlySchedule) {
         this.sectionMonthlySchedules.add(sectionMonthlySchedule);
         sectionMonthlySchedule.setMonthlySchedule(this);
     }
 
+    @Override
     public void removeSectionMonthlySchedule(ISectionMonthlyScheduleEntity sectionMonthlySchedule) {
         this.sectionMonthlySchedules.remove(sectionMonthlySchedule);
         sectionMonthlySchedule.setMonthlySchedule(null);
     }
 
-    public List<NegativeDateWishEntity> getNegativeDateWishes() {
+    @Override
+    public List<INegativeDateWishEntity> getNegativeDateWishes() {
         return this.negativeDateWishes;
     }
 
-    public void addNegativeDateWish(NegativeDateWishEntity negativeDateWishEntity) {
+    @Override
+    public void addNegativeDateWish(INegativeDateWishEntity negativeDateWishEntity) {
         this.negativeDateWishes.add(negativeDateWishEntity);
         negativeDateWishEntity.addMonthlySchedule(this);
     }
 
-    public void removeNegativeDateWish(NegativeDateWishEntity negativeDateWishEntity) {
+    @Override
+    public void removeNegativeDateWish(INegativeDateWishEntity negativeDateWishEntity) {
         this.negativeDateWishes.add(negativeDateWishEntity);
         negativeDateWishEntity.removeMonthlySchedule(this);
     }
 
-    public List<WeeklyScheduleEntity> getWeeklySchedules() {
+    @Override
+    public List<IWeeklyScheduleEntity> getWeeklySchedules() {
         return this.weeklySchedules;
     }
 
-    public void addWeeklySchedule(WeeklyScheduleEntity weeklySchedule) {
+    @Override
+    public void addWeeklySchedule(IWeeklyScheduleEntity weeklySchedule) {
         this.weeklySchedules.add(weeklySchedule);
         weeklySchedule.setMonthlySchedule(this);
     }
 
-    public void removeWeeklySchedule(WeeklyScheduleEntity weeklySchedule) {
+    @Override
+    public void removeWeeklySchedule(IWeeklyScheduleEntity weeklySchedule) {
         this.weeklySchedules.add(weeklySchedule);
         weeklySchedule.setMonthlySchedule(null);
     }

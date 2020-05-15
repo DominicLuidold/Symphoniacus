@@ -2,8 +2,10 @@ package at.fhv.teamb.symphoniacus.persistence.model;
 
 import at.fhv.teamb.symphoniacus.persistence.model.interfaces.IDutyCategoryEntity;
 import at.fhv.teamb.symphoniacus.persistence.model.interfaces.IDutyEntity;
+import at.fhv.teamb.symphoniacus.persistence.model.interfaces.IDutyPositionEntity;
 import at.fhv.teamb.symphoniacus.persistence.model.interfaces.ISectionMonthlyScheduleEntity;
 import at.fhv.teamb.symphoniacus.persistence.model.interfaces.ISeriesOfPerformancesEntity;
+import at.fhv.teamb.symphoniacus.persistence.model.interfaces.IWeeklyScheduleEntity;
 import java.time.LocalDateTime;
 import java.util.HashSet;
 import java.util.Set;
@@ -31,7 +33,7 @@ public class DutyEntity implements IDutyEntity {
 
     @ManyToOne(fetch = FetchType.LAZY, cascade = {CascadeType.PERSIST, CascadeType.MERGE})
     @JoinColumn(name = "weeklyScheduleId")
-    private WeeklyScheduleEntity weeklySchedule;
+    private IWeeklyScheduleEntity weeklySchedule;
 
     @ManyToOne(fetch = FetchType.LAZY, targetEntity = DutyCategoryEntity.class)
     @JoinColumn(name = "dutyCategoryId")
@@ -49,7 +51,8 @@ public class DutyEntity implements IDutyEntity {
     @Column(name = "end")
     private LocalDateTime end;
 
-    @ManyToOne(fetch = FetchType.LAZY, cascade = {CascadeType.PERSIST, CascadeType.MERGE}, targetEntity = SeriesOfPerformancesEntity.class)
+    @ManyToOne(fetch = FetchType.LAZY, cascade = {CascadeType.PERSIST,
+        CascadeType.MERGE}, targetEntity = SeriesOfPerformancesEntity.class)
     @JoinColumn(name = "seriesOfPerformancesId")
     private ISeriesOfPerformancesEntity seriesOfPerformances;
 
@@ -59,7 +62,7 @@ public class DutyEntity implements IDutyEntity {
         mappedBy = "duty",
         orphanRemoval = true
     )
-    private Set<DutyPositionEntity> dutyPositions = new HashSet<>();
+    private Set<IDutyPositionEntity> dutyPositions = new HashSet<>();
 
     @ManyToMany(targetEntity = SectionMonthlyScheduleEntity.class)
     @JoinTable(
@@ -73,100 +76,123 @@ public class DutyEntity implements IDutyEntity {
     )
     private Set<ISectionMonthlyScheduleEntity> sectionMonthlySchedules = new HashSet<>();
 
+    @Override
     public Integer getDutyId() {
         return this.dutyId;
     }
 
+    @Override
     public void setDutyId(Integer dutyId) {
         this.dutyId = dutyId;
     }
 
-    public WeeklyScheduleEntity getWeeklySchedule() {
+    @Override
+    public IWeeklyScheduleEntity getWeeklySchedule() {
         return this.weeklySchedule;
     }
 
-    public void setWeeklySchedule(WeeklyScheduleEntity weeklySchedule) {
+    @Override
+    public void setWeeklySchedule(IWeeklyScheduleEntity weeklySchedule) {
         this.weeklySchedule = weeklySchedule;
     }
 
+    @Override
     public IDutyCategoryEntity getDutyCategory() {
         return this.dutyCategory;
     }
 
+    @Override
     public void setDutyCategory(DutyCategoryEntity dutyCategory) {
         this.dutyCategory = dutyCategory;
     }
 
+    @Override
     public String getDescription() {
         return this.description;
     }
 
+    @Override
     public void setDescription(String description) {
         this.description = description;
     }
 
+    @Override
     public String getTimeOfDay() {
         return this.timeOfDay;
     }
 
+    @Override
     public void setTimeOfDay(String timeOfDay) {
         this.timeOfDay = timeOfDay;
     }
 
+    @Override
     public LocalDateTime getStart() {
         return this.start;
     }
 
+    @Override
     public void setStart(LocalDateTime start) {
         this.start = start;
     }
 
+    @Override
     public LocalDateTime getEnd() {
         return this.end;
     }
 
+    @Override
     public void setEnd(LocalDateTime end) {
         this.end = end;
     }
 
+    @Override
     public ISeriesOfPerformancesEntity getSeriesOfPerformances() {
         return seriesOfPerformances;
     }
 
+    @Override
     public void setSeriesOfPerformances(
         ISeriesOfPerformancesEntity seriesOfPerformances
     ) {
         this.seriesOfPerformances = seriesOfPerformances;
     }
 
-    public Set<DutyPositionEntity> getDutyPositions() {
+    @Override
+    public Set<IDutyPositionEntity> getDutyPositions() {
         return this.dutyPositions;
     }
 
-    public void addDutyPosition(DutyPositionEntity dutyPositionEntity) {
+    @Override
+    public void addDutyPosition(IDutyPositionEntity dutyPositionEntity) {
         this.dutyPositions.add(dutyPositionEntity);
         dutyPositionEntity.setDuty(this);
     }
 
-    public void removeDutyPosition(DutyPositionEntity dutyPositionEntity) {
+    @Override
+    public void removeDutyPosition(IDutyPositionEntity dutyPositionEntity) {
         this.dutyPositions.remove(dutyPositionEntity);
         dutyPositionEntity.setDuty(null);
     }
 
+    @Override
     public Set<ISectionMonthlyScheduleEntity> getSectionMonthlySchedules() {
         return this.sectionMonthlySchedules;
     }
 
+    @Override
     public void addSectionMonthlySchedule(ISectionMonthlyScheduleEntity sms) {
         this.sectionMonthlySchedules.add(sms);
         sms.getDuties().add(this);
     }
 
+    @Override
     public void removeSectionMonthlySchedule(ISectionMonthlyScheduleEntity sms) {
         this.sectionMonthlySchedules.remove(sms);
         sms.getDuties().remove(this);
     }
 
+    @Override
     public void setSectionMonthlySchedules(
         Set<ISectionMonthlyScheduleEntity> sectionMonthlySchedules) {
         this.sectionMonthlySchedules = sectionMonthlySchedules;
