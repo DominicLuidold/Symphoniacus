@@ -1,5 +1,6 @@
 package at.fhv.teamb.symphoniacus.application;
 
+import at.fhv.teamb.symphoniacus.application.dto.DutyCategoryChangeLogDto;
 import at.fhv.teamb.symphoniacus.application.dto.DutyCategoryDto;
 import at.fhv.teamb.symphoniacus.application.dto.DutyDto;
 import at.fhv.teamb.symphoniacus.domain.DutyCategory;
@@ -63,10 +64,26 @@ public class DutyCategoryManager {
         for (DutyCategory d : cats) {
             DutyCategoryDto dc = new DutyCategoryDto
                 .DutyCategoryDtoBuilder(d.getEntity().getDutyCategoryId())
-                .withType(d.getEntity().getType()).build();
+                .withType(d.getEntity().getType())
+                .withChangeLogs(convertChangeLogToDto(d.getChangelogList())).build();
             dutyCategoryDtos.add(dc);
         }
         return dutyCategoryDtos;
+    }
+
+    private List<DutyCategoryChangeLogDto> convertChangeLogToDto(
+        List<DutyCategoryChangelog> changelogList
+    ) {
+        List<DutyCategoryChangeLogDto> changeLog = new LinkedList<>();
+        for (DutyCategoryChangelog cl : changelogList) {
+            DutyCategoryChangeLogDto clDto = new DutyCategoryChangeLogDto
+                .DutyCategoryChangeLogDtoBuilder(cl.getEntity().getDutyCategoryChangelogId())
+                .withPoints(cl.getEntity().getPoints())
+                .withDutyCategory(convertCategoryEntityToDto(cl.getEntity().getDutyCategory()))
+                .build();
+            changeLog.add(clDto);
+        }
+        return changeLog;
     }
 
     /**
@@ -95,5 +112,10 @@ public class DutyCategoryManager {
                 dutyCategory.getEntity().getType()
             );
         }
+    }
+
+    private DutyCategoryDto convertCategoryEntityToDto(DutyCategoryEntity dutyCat) {
+        return new DutyCategoryDto.DutyCategoryDtoBuilder(dutyCat.getDutyCategoryId())
+            .withPoints(dutyCat.getPoints()).withType(dutyCat.getType()).build();
     }
 }

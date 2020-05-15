@@ -1,12 +1,18 @@
 package at.fhv.teamb.symphoniacus.application;
 
+import at.fhv.teamb.symphoniacus.application.dto.DutyCategoryDto;
+import at.fhv.teamb.symphoniacus.application.dto.DutyDto;
+import at.fhv.teamb.symphoniacus.application.dto.InstrumentationDto;
 import at.fhv.teamb.symphoniacus.application.dto.SectionDto;
+import at.fhv.teamb.symphoniacus.application.dto.SeriesOfPerformancesDto;
 import at.fhv.teamb.symphoniacus.domain.Duty;
 import at.fhv.teamb.symphoniacus.domain.DutyCategory;
 import at.fhv.teamb.symphoniacus.domain.Section;
 import at.fhv.teamb.symphoniacus.persistence.PersistenceState;
 import at.fhv.teamb.symphoniacus.persistence.dao.DutyCategoryChangeLogDao;
+import at.fhv.teamb.symphoniacus.persistence.dao.DutyCategoryDao;
 import at.fhv.teamb.symphoniacus.persistence.dao.DutyDao;
+import at.fhv.teamb.symphoniacus.persistence.dao.SeriesOfPerformancesDao;
 import at.fhv.teamb.symphoniacus.persistence.model.DutyCategoryChangelogEntity;
 import at.fhv.teamb.symphoniacus.persistence.model.DutyCategoryEntity;
 import at.fhv.teamb.symphoniacus.persistence.model.DutyEntity;
@@ -42,6 +48,8 @@ public class DutyManager {
     private final SectionMonthlyScheduleManager sectionMonthlyScheduleManager;
     private final WeeklyScheduleManager weeklyScheduleManager;
     private final DutyCategoryChangeLogDao changeLogDao;
+    private final SeriesOfPerformancesDao seriesDao;
+    private final DutyCategoryDao categoryDao;
     protected DutyDao dutyDao;
 
     /**
@@ -54,6 +62,8 @@ public class DutyManager {
         this.weeklyScheduleManager = new WeeklyScheduleManager();
         this.changeLogDao = new DutyCategoryChangeLogDao();
         this.dutyDao = new DutyDao();
+        this.seriesDao = new SeriesOfPerformancesDao();
+        this.categoryDao = new DutyCategoryDao();
     }
 
     /**
@@ -236,13 +246,13 @@ public class DutyManager {
      * @param sop          The {@link SeriesOfPerformancesEntity} to use
      * @return A duty domain object
      */
-    public Duty createDuty(
-        DutyCategory dutyCategory,
+    public DutyDto createDuty(
+        DutyCategoryDto dutyCategory,
         String description,
         String timeOfDay,
         LocalDateTime start,
         LocalDateTime end,
-        SeriesOfPerformancesEntity sop
+        SeriesOfPerformancesDto sop
     ) {
         // Get monthly schedule entity
         MonthlyScheduleEntity monthlyScheduleEntity =
@@ -255,26 +265,34 @@ public class DutyManager {
         monthlyScheduleEntity.addWeeklySchedule(weeklyScheduleEntity);
 
         // Create duty entity
-        DutyEntity dutyEntity = new DutyEntity();
+        DutyDto dutyEntity = new DutyDto();
 
         // Add duty to weekly schedule and vice versa
         weeklyScheduleEntity.addDuty(dutyEntity);
 
-        // Fill duty entity with data
-        dutyEntity.setDutyCategory(dutyCategory.getEntity());
-        dutyEntity.setDescription(description);
-        dutyEntity.setTimeOfDay(timeOfDay);
-        dutyEntity.setStart(start);
-        dutyEntity.setEnd(end);
-        dutyEntity.setSeriesOfPerformances(sop);
-        for (SectionMonthlyScheduleEntity sectionMonthlySchedule :
-            this.sectionMonthlyScheduleManager.createIfNotExist(
-                start.getYear(),
-                start.getMonthValue(),
-                monthlyScheduleEntity
-            )
-        ) {
-            dutyEntity.addSectionMonthlySchedule(sectionMonthlySchedule);
+
+        Optional<DutyCategoryEntity> dutyCat = this.categoryDao.find(dutyCategory
+            .getDutyCategoryId());
+        Optional<SeriesOfPerformancesEntity> sopEntity = this.seriesDao.find(sop
+            .getSeriesOfPerformancesId());
+
+        if (dutyCat.isPresent()) {
+            // Fill duty entity with data
+            dutyEntity.setDutyCategory(dutyCat.get());
+            dutyEntity.setDescription(description);
+            dutyEntity.setTimeOfDay(timeOfDay);
+            dutyEntity.setStart(start);
+            dutyEntity.setEnd(end);
+            sopEntity.ifPresent(dutyEntity::setSeriesOfPerformances);
+            for (SectionMonthlyScheduleEntity sectionMonthlySchedule :
+                this.sectionMonthlyScheduleManager.createIfNotExist(
+                    start.getYear(),
+                    start.getMonthValue(),
+                    monthlyScheduleEntity
+                )
+            ) {
+                dutyEntity.addSectionMonthlySchedule(sectionMonthlySchedule);
+            }
         }
 
         // Return domain object
@@ -373,19 +391,42 @@ public class DutyManager {
      * @return whether this specific duty exists or not
      */
     public boolean doesDutyAlreadyExists(
-        SeriesOfPerformancesEntity seriesOfPerformances,
-        List<InstrumentationEntity> instrumentations,
+        SeriesOfPerformancesDto seriesOfPerformances,
+        List<InstrumentationDto> instrumentations,
         LocalDateTime startingDate,
         LocalDateTime endingDate,
-        DutyCategoryEntity category) {
+        DutyCategoryDto category) {
 
-        return this.dutyDao.doesDutyAlreadyExists(
-            seriesOfPerformances,
-            instrumentations,
-            startingDate,
-            endingDate,
-            category
-        );
+        Optional<SeriesOfPerformancesEntity> series = this.seriesDao
+            .find(seriesOfPerformances.getSeriesOfPerformancesId());
+        DutyCategoryEntity dutyCat = new DutyCategoryEntity();
+
+        //Convert DTO to Entity
+        dutyCat.setDutyCategoryId(category.getDutyCategoryId());
+        dutyCat.setType(category.getType());
+        dutyCat.setPoints(category.getPoints());
+
+        //Convert List of instDTO to instEntity
+        List<InstrumentationEntity> instrumentationEntity = new LinkedList<>();
+
+        for (InstrumentationDto i : instrumentations) {
+            InstrumentationEntity inst = new InstrumentationEntity();
+            inst.setInstrumentationId(i.getInstrumentationId());
+            inst.setName(i.getName());
+        }
+
+        if (series.isPresent()) {
+            return this.dutyDao.doesDutyAlreadyExists(
+                series.get(),
+                instrumentationEntity,
+                startingDate,
+                endingDate,
+                dutyCat
+            );
+        } else {
+            return false;
+        }
+
     }
 
     private SectionEntity sectionDtoToSectionEntity(SectionDto section) {
@@ -394,5 +435,17 @@ public class DutyManager {
         sectionEntity.setSectionShortcut(section.getSectionShortcut());
         sectionEntity.setDescription(section.getDescription());
         return sectionEntity;
+    }
+
+    private List<DutyCategoryDto> convertCategoriesToDto(List<DutyCategory> cats) {
+        List<DutyCategoryDto> dutyCategoryDtos = new LinkedList<>();
+        for (DutyCategory d : cats) {
+            DutyCategoryDto dc = new DutyCategoryDto
+                .DutyCategoryDtoBuilder(d.getEntity().getDutyCategoryId())
+                .withType(d.getEntity().getType())
+                .build();
+            dutyCategoryDtos.add(dc);
+        }
+        return dutyCategoryDtos;
     }
 }
