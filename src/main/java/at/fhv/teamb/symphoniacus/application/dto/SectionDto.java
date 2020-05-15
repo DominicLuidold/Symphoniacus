@@ -1,7 +1,7 @@
 package at.fhv.teamb.symphoniacus.application.dto;
 
-import at.fhv.teamb.symphoniacus.persistence.model.MusicianEntity;
 import at.fhv.teamb.symphoniacus.persistence.model.interfaces.IDutyPositionEntity;
+import at.fhv.teamb.symphoniacus.persistence.model.interfaces.IMusicianEntity;
 import at.fhv.teamb.symphoniacus.persistence.model.interfaces.ISectionInstrumentationEntity;
 import at.fhv.teamb.symphoniacus.persistence.model.interfaces.ISectionMonthlyScheduleEntity;
 import java.util.List;
@@ -17,7 +17,7 @@ public class SectionDto {
     private final String sectionShortcut;
     private final String description;
     private final List<ISectionMonthlyScheduleEntity> sectionMonthlySchedules;
-    private final List<MusicianEntity> musicians;
+    private final List<IMusicianEntity> musicians;
     private final List<IDutyPositionEntity> dutyPositions;
     private final List<ISectionInstrumentationEntity> sectionInstrumentations;
 
@@ -26,7 +26,7 @@ public class SectionDto {
         String sectionShortcut,
         String description,
         List<ISectionMonthlyScheduleEntity> sectionMonthlySchedules,
-        List<MusicianEntity> musicians,
+        List<IMusicianEntity> musicians,
         List<IDutyPositionEntity> dutyPositions,
         List<ISectionInstrumentationEntity> sectionInstrumentations
     ) {
@@ -56,7 +56,7 @@ public class SectionDto {
         return this.sectionMonthlySchedules;
     }
 
-    public List<MusicianEntity> getMusicians() {
+    public List<IMusicianEntity> getMusicians() {
         return this.musicians;
     }
 
@@ -73,7 +73,7 @@ public class SectionDto {
         private String sectionShortcut;
         private String description;
         private List<ISectionMonthlyScheduleEntity> sectionMonthlySchedules;
-        private List<MusicianEntity> musicians;
+        private List<IMusicianEntity> musicians;
         private List<IDutyPositionEntity> dutyPositions;
         private List<ISectionInstrumentationEntity> sectionInstrumentations;
 
@@ -99,7 +99,7 @@ public class SectionDto {
             return this;
         }
 
-        public SectionDtoBuilder withMusicians(List<MusicianEntity> musicians) {
+        public SectionDtoBuilder withMusicians(List<IMusicianEntity> musicians) {
             this.musicians = musicians;
             return this;
         }
