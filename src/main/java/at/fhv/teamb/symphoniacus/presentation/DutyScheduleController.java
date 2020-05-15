@@ -680,14 +680,21 @@ public class DutyScheduleController
         );
         this.scheduleMusicalPiecesChkListView = new CheckListView<>(list);
         this.scheduleMusicalPiecesChkListView.getCheckModel().checkAll();
+        Label l = new Label(
+            this.resources.getString("tab.duty.schedule.multiple.pieces.dialog.body")
+        );
+
+        VBox vBox = new VBox();
+        vBox.getChildren().add(l);
+        vBox.getChildren().add(this.scheduleMusicalPiecesChkListView);
 
         Dialog<ButtonType> dialog = new Dialog<>();
         dialog.initOwner(this.dutySchedule.getParent().getScene().getWindow());
         dialog.getDialogPane().getButtonTypes().addAll(ButtonType.CANCEL, ButtonType.OK);
-        dialog.getDialogPane().setContent(scheduleMusicalPiecesChkListView);
+        dialog.getDialogPane().setContent(vBox);
         dialog.setResizable(true);
-        dialog.getDialogPane().setPrefWidth(600);
-        dialog.initModality(Modality.APPLICATION_MODAL);
+        dialog.getDialogPane().setPrefWidth(400);
+        dialog.initModality(Modality.WINDOW_MODAL);
         dialog.setTitle(this.resources.getString(
             "tab.duty.schedule.multiple.pieces.dialog.title"));
 
