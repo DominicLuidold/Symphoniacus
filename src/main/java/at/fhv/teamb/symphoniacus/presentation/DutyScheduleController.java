@@ -77,6 +77,7 @@ public class DutyScheduleController
     implements Controllable, Initializable, Parentable<DutySchedulerCalendarController> {
 
     private static final Logger LOG = LogManager.getLogger(DutyScheduleController.class);
+
     @FXML
     public Button scheduleSaveBtn;
     private Duty duty;
