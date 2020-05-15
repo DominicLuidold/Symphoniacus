@@ -1,15 +1,15 @@
 package at.fhv.teamb.symphoniacus.application.dto;
 
+import at.fhv.teamb.symphoniacus.persistence.PersistenceState;
 import java.time.LocalDateTime;
 
 /**
- * DTO for Duties.
- * @author : Danijel Antonijevic
+ * DTO for Duty.
+ *
+ * @author Danijel Antonijevic
  * @author Nino Heinzle
- * @created : 15.05.20, Fr.
  **/
 public class DutyDto {
-
     private final int dutyId;
     private final String description;
     private final String timeOfDay;
@@ -17,8 +17,8 @@ public class DutyDto {
     private final LocalDateTime start;
     private final LocalDateTime end;
     private final SeriesOfPerformancesDto seriesOfPerformances;
+    private final PersistenceState persistenceState;
 
-    // so machen wir das!
     private DutyDto(
         int dutyId,
         String description,
@@ -26,7 +26,8 @@ public class DutyDto {
         DutyCategoryDto dutyCategory,
         LocalDateTime start,
         LocalDateTime end,
-        SeriesOfPerformancesDto seriesOfPerformances
+        SeriesOfPerformancesDto seriesOfPerformances,
+        PersistenceState persistenceState
     ) {
         this.dutyId = dutyId;
         this.description = description;
@@ -35,6 +36,7 @@ public class DutyDto {
         this.start = start;
         this.end = end;
         this.seriesOfPerformances = seriesOfPerformances;
+        this.persistenceState = persistenceState;
     }
 
     public int getDutyId() {
@@ -65,6 +67,10 @@ public class DutyDto {
         return this.seriesOfPerformances;
     }
 
+    public PersistenceState getPersistenceState() {
+        return this.persistenceState;
+    }
+
     public static class DutyDtoBuilder {
         private final int dutyId;
         private String description;
@@ -73,6 +79,7 @@ public class DutyDto {
         private LocalDateTime start;
         private LocalDateTime end;
         private SeriesOfPerformancesDto seriesOfPerformances;
+        private PersistenceState persistenceState;
 
         public DutyDtoBuilder(int dutyId) {
             this.dutyId = dutyId;
@@ -105,13 +112,20 @@ public class DutyDto {
         }
 
         public DutyDtoBuilder withSeriesOfPerformances(
-            SeriesOfPerformancesDto seriesOfPerformances) {
+            SeriesOfPerformancesDto seriesOfPerformances
+        ) {
             this.seriesOfPerformances = seriesOfPerformances;
+            return this;
+        }
+
+        public DutyDtoBuilder withPersistenceState(PersistenceState persistenceState) {
+            this.persistenceState = persistenceState;
             return this;
         }
 
         /**
          * Constructs a new DutyDto with the previously set options in the builder.
+         *
          * @return Constructed DutyDto.
          */
         public DutyDto build() {
@@ -122,7 +136,8 @@ public class DutyDto {
                 this.dutyCategory,
                 this.start,
                 this.end,
-                this.seriesOfPerformances
+                this.seriesOfPerformances,
+                this.persistenceState
             );
         }
     }
