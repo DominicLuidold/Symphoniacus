@@ -164,6 +164,7 @@ public class SeriesOfPerformancesController
         addIcon.getStyleClass().addAll("button-icon");
         this.addModifyButton.setGraphic(addIcon);
 
+        // Set UK Time Format for DatePicker
         this.startingDate.setConverter(UkTimeFormatter.getUkTimeConverter());
         this.endingDate.setConverter(UkTimeFormatter.getUkTimeConverter());
     }

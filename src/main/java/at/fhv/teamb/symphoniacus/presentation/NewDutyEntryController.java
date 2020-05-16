@@ -12,14 +12,17 @@ import at.fhv.teamb.symphoniacus.domain.DutyCategory;
 import at.fhv.teamb.symphoniacus.persistence.PersistenceState;
 import at.fhv.teamb.symphoniacus.presentation.internal.Parentable;
 import at.fhv.teamb.symphoniacus.presentation.internal.TabPaneEntry;
+import at.fhv.teamb.symphoniacus.presentation.internal.UkTimeFormatter;
 import com.jfoenix.controls.JFXDatePicker;
 import com.jfoenix.controls.JFXTextField;
 import com.jfoenix.controls.JFXTimePicker;
 import com.jfoenix.validation.RequiredFieldValidator;
 import java.net.URL;
 import java.time.LocalTime;
+import java.time.format.FormatStyle;
 import java.util.LinkedHashSet;
 import java.util.List;
+import java.util.Locale;
 import java.util.Optional;
 import java.util.ResourceBundle;
 import java.util.Set;
@@ -38,6 +41,7 @@ import javafx.scene.control.ComboBoxBase;
 import javafx.scene.control.Label;
 import javafx.scene.image.ImageView;
 import javafx.util.StringConverter;
+import javafx.util.converter.LocalTimeStringConverter;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -133,6 +137,24 @@ public class NewDutyEntryController implements Initializable, Parentable<TabPane
 
         // Set event handlers
         this.setEventHandlers();
+
+        // Set UK Time Format for DatePicker
+        this.dutyStartDateInput.setConverter(UkTimeFormatter.getUkTimeConverter());
+        this.dutyEndDateInput.setConverter(UkTimeFormatter.getUkTimeConverter());
+
+        // Hier könnte man zukünftig das Format frei wählbar machen
+        setTimeConverter(Locale.UK);
+    }
+
+    private void setTimeConverter(Locale format) {
+        StringConverter<LocalTime> converter =
+            new LocalTimeStringConverter(FormatStyle.SHORT, format);
+        this.dutyStartTimeInput.setConverter(converter);
+        this.dutyEndTimeInput.setConverter(converter);
+        if (format.equals(Locale.UK)) {
+            this.dutyStartTimeInput.set24HourView(true);
+            this.dutyEndTimeInput.set24HourView(true);
+        }
     }
 
     /**
@@ -155,7 +177,6 @@ public class NewDutyEntryController implements Initializable, Parentable<TabPane
         });
     }
 
-
     /**
      * Sets the actions for all buttons of the new duty view.
      */
@@ -177,7 +198,6 @@ public class NewDutyEntryController implements Initializable, Parentable<TabPane
         addIcon.getStyleClass().addAll("button-icon");
         this.editDutyPointsBtn.setGraphic(editIcon);
     }
-
 
     /**
      * Sets the validators required for the new duty view.
@@ -234,7 +254,6 @@ public class NewDutyEntryController implements Initializable, Parentable<TabPane
             setSaveButtonStatus();
         });
     }
-
 
     /**
      * Initializes the {@link #seriesOfPerformancesSelect} combo box with data.
@@ -361,7 +380,6 @@ public class NewDutyEntryController implements Initializable, Parentable<TabPane
         this.userEditedPoints = false;
     }
 
-
     /**
      * Validates whether the following conditions are met.
      *
@@ -465,7 +483,6 @@ public class NewDutyEntryController implements Initializable, Parentable<TabPane
             }
         }
     }
-
 
     /**
      * Persists a new duty.
