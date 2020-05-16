@@ -711,7 +711,8 @@ public class DutyScheduleController
         DutyPosition dutyPosition,
         ActualSectionInstrumentation asi,
         Musician newMusician,
-        ScheduleMusicianAction action
+        ScheduleMusicianAction action,
+        boolean force
     ) {
         if (dutyPosition == null) {
             Notifications.create()
@@ -733,53 +734,25 @@ public class DutyScheduleController
 
         if (this.duty.getMusicalPieces().size() > 1) {
             LOG.debug("need to assign/unassign multiple positions");
-            Dialog<ButtonType> dialog = getMusicalPieceDialog();
 
-            Button okButton = (Button) dialog.getDialogPane().lookupButton(ButtonType.OK);
-            okButton.setText(
-                this.resources.getString("tab.duty.schedule.multiple.pieces.dialog.button.ok")
-            );
+            if (force == true) {
+                doMultiplePiecesAction(asi, dutyPosition, newMusician, action);
+            } else {
+                Dialog<ButtonType> dialog = getMusicalPieceDialog();
 
-            okButton.setOnAction(event -> {
-                ObservableList<MusicalPiece> sel = this.scheduleMusicalPiecesChkListView
-                    .getCheckModel()
-                    .getCheckedItems();
-
-                LOG.debug("Selected {} pieces to schedule", sel.size());
-
-                for (MusicalPiece mp : sel) {
-                    DutyPosition dp = getSamePositionForDifferentPiece(
-                        dutyPosition,
-                        mp,
-                        this.duty.getDutyPositions()
-                    );
-                    if (dp != null) {
-                        if (action.equals(ScheduleMusicianAction.ADD)) {
-                            this.assignOnePositionToMusician(dp, asi, newMusician);
-                        } else {
-                            this.unassignOnePositionToMusician(dp, asi, newMusician);
-                        }
-                    }
-                    this.initMusicianTableWithoutRequests();
-                }
-                Notifications.create()
-                    .owner(this.getParentController().calendarView)
-                    .title(
-                        this.resources.getString(
-                            "notif.duty.schedule.position.add.musician.set.message.title"
-                        )
+                Button okButton = (Button) dialog.getDialogPane().lookupButton(ButtonType.OK);
+                okButton.setText(
+                    this.resources.getString(
+                        "tab.duty.schedule.multiple.pieces.dialog.button.ok"
                     )
-                    .text(
-                        this.resources.getString(
-                            "notif.duty.schedule.position.add.musician.set.message"
-                        )
-                    )
-                    .position(Pos.CENTER)
-                    .hideAfter(new Duration(2000))
-                    .show();
-            });
+                );
 
-            dialog.show();
+                okButton.setOnAction(event -> {
+                    doMultiplePiecesAction(asi, dutyPosition, newMusician, action);
+                });
+
+                dialog.show();
+            }
         } else {
             if (action.equals(ScheduleMusicianAction.ADD)) {
                 this.assignOnePositionToMusician(dutyPosition, asi, newMusician);
@@ -805,6 +778,50 @@ public class DutyScheduleController
         }
     }
 
+    private void doMultiplePiecesAction(
+        ActualSectionInstrumentation asi,
+        DutyPosition dutyPosition,
+        Musician newMusician,
+        ScheduleMusicianAction action
+    ) {
+        ObservableList<MusicalPiece> sel = this.scheduleMusicalPiecesChkListView
+            .getCheckModel()
+            .getCheckedItems();
+
+        LOG.debug("Selected {} pieces to schedule", sel.size());
+
+        for (MusicalPiece mp : sel) {
+            DutyPosition dp = getSamePositionForDifferentPiece(
+                dutyPosition,
+                mp,
+                this.duty.getDutyPositions()
+            );
+            if (dp != null) {
+                if (action.equals(ScheduleMusicianAction.ADD)) {
+                    this.assignOnePositionToMusician(dp, asi, newMusician);
+                } else {
+                    this.unassignOnePositionToMusician(dp, asi, newMusician);
+                }
+            }
+            this.initMusicianTableWithoutRequests();
+        }
+        Notifications.create()
+            .owner(this.getParentController().calendarView)
+            .title(
+                this.resources.getString(
+                    "notif.duty.schedule.position.add.musician.set.message.title"
+                )
+            )
+            .text(
+                this.resources.getString(
+                    "notif.duty.schedule.position.add.musician.set.message"
+                )
+            )
+            .position(Pos.CENTER)
+            .hideAfter(new Duration(2000))
+            .show();
+    }
+
     protected void addMusicianToPosition(
         ActualSectionInstrumentation asi,
         Musician newMusician,
@@ -814,7 +831,8 @@ public class DutyScheduleController
             dutyPosition,
             asi,
             newMusician,
-            ScheduleMusicianAction.ADD
+            ScheduleMusicianAction.ADD,
+            false
         );
 
         this.positionsTable.refresh();
@@ -848,12 +866,17 @@ public class DutyScheduleController
         return null;
     }
 
-    private void removeMusicianFromPosition(Musician musician, DutyPosition dutyPosition) {
+    private void removeMusicianFromPosition(
+        Musician musician,
+        DutyPosition dutyPosition,
+        boolean force
+    ) {
         handleMultiplePiecesDialogAction(
             dutyPosition,
             this.actualSectionInstrumentation,
             musician,
-            ScheduleMusicianAction.REMOVE
+            ScheduleMusicianAction.REMOVE,
+            force
         );
 
         this.positionsTable.refresh();
@@ -901,7 +924,11 @@ public class DutyScheduleController
                     } else {
                         if (dp.getAssignedMusician().isPresent()) {
                             // TODO check if this is now broken
-                            this.removeMusicianFromPosition(dp.getAssignedMusician().get(), dp);
+                            this.removeMusicianFromPosition(
+                                dp.getAssignedMusician().get(),
+                                dp,
+                                true
+                            );
                         }
                     }
                 }
@@ -1170,7 +1197,8 @@ public class DutyScheduleController
                     && mtm.getDutyPosition().getAssignedMusician().isPresent()) {
                     this.removeMusicianFromPosition(
                         mtm.getDutyPosition().getAssignedMusician().get(),
-                        mtm.getDutyPosition()
+                        mtm.getDutyPosition(),
+                        false
                     );
                 } else {
                     LOG.error("Cannot unset null musician");
@@ -1252,7 +1280,8 @@ public class DutyScheduleController
                     if (assignedMusician.isPresent()) {
                         this.removeMusicianFromPosition(
                             dpmtm.getDutyPosition().getAssignedMusician().get(),
-                            dpmtm.getDutyPosition()
+                            dpmtm.getDutyPosition(),
+                            false
                         );
                     }
                     return dpmtm;
