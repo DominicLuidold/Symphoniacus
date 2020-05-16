@@ -759,8 +759,8 @@ public class DutyScheduleController
                         } else {
                             this.unassignOnePositionToMusician(dp, asi, newMusician);
                         }
-
                     }
+                    this.initMusicianTableWithoutRequests();
                 }
                 Notifications.create()
                     .owner(this.getParentController().calendarView)
@@ -786,6 +786,7 @@ public class DutyScheduleController
             } else {
                 this.unassignOnePositionToMusician(dutyPosition, asi, newMusician);
             }
+            this.initMusicianTableWithoutRequests();
             Notifications.create()
                 .owner(this.getParentController().calendarView)
                 .title(
