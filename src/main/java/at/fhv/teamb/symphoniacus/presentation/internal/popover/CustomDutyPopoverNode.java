@@ -7,6 +7,7 @@ import at.fhv.teamb.symphoniacus.application.dto.SectionDto;
 import at.fhv.teamb.symphoniacus.domain.ActualSectionInstrumentation;
 import at.fhv.teamb.symphoniacus.domain.Duty;
 import at.fhv.teamb.symphoniacus.domain.DutyPosition;
+import at.fhv.teamb.symphoniacus.domain.MusicalPiece;
 import at.fhv.teamb.symphoniacus.domain.Points;
 import at.fhv.teamb.symphoniacus.persistence.model.InstrumentationEntity;
 import at.fhv.teamb.symphoniacus.presentation.DutyPopoverController;
@@ -174,21 +175,39 @@ public class CustomDutyPopoverNode extends PopOverContentPane {
 
         if (asi.isPresent()) {
             List<DutyPosition> dps = asi.get().getDuty().getDutyPositions();
-            for (DutyPosition dp : dps) {
-                if (dp.getAssignedMusician().isPresent()) {
-                    Label l = new Label(
-                        "\u2714 " + dp.getEntity() // Unicode character, ✔
-                            .getInstrumentationPosition().getPositionDescription()
-                            + ": " + dp.getAssignedMusician().get().getFullName());
-                    l.setStyle("-fx-text-fill: green");
-                    ldps.add(l);
+            List<MusicalPiece> pieces = asi.get().getDuty().getMusicalPieces();
 
-                } else {
-                    Label l = new Label("\u2718 " + dp.getEntity() // Unicode character, ✘
-                        .getInstrumentationPosition().getPositionDescription());
-                    l.setStyle("-fx-text-fill: red");
-                    ldps.add(l);
+            for (MusicalPiece mp : pieces) {
+                Label musicalPiece = new Label(mp.toString() + ": ");
+                musicalPiece.setStyle("-fx-font-weight: bold");
+                ldps.add(musicalPiece);
+
+                for (DutyPosition dp : dps) {
+                    if (
+                        dp.getEntity()
+                        .getInstrumentationPosition()
+                        .getInstrumentation()
+                        .getMusicalPiece()
+                        .getName()
+                        .equals(mp.getEntity().getName())
+                    ) {
+                        if (dp.getAssignedMusician().isPresent()) {
+                            Label l = new Label(
+                                "\u2714 " + dp.getEntity() // Unicode character, ✔
+                                    .getInstrumentationPosition().getPositionDescription()
+                                    + ": " + dp.getAssignedMusician().get().getFullName());
+                            l.setStyle("-fx-text-fill: green");
+                            ldps.add(l);
+
+                        } else {
+                            Label l = new Label("\u2718 " + dp.getEntity() // Unicode character, ✘
+                                .getInstrumentationPosition().getPositionDescription());
+                            l.setStyle("-fx-text-fill: red");
+                            ldps.add(l);
+                        }
+                    }
                 }
+                ldps.add(new Label());
             }
         }
         this.popoverController.setInstrumentationStatus(ldps);
