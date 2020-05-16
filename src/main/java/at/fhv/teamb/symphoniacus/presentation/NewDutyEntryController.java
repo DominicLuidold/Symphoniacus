@@ -83,6 +83,9 @@ public class NewDutyEntryController implements Initializable, Parentable<TabPane
     private Button newSeriesOfPerformancesBtn;
 
     @FXML
+    private Button editDutyPointsBtn;
+
+    @FXML
     private ComboBox<DutyCategoryDto> dutyCategorySelect;
 
     @FXML
@@ -126,6 +129,7 @@ public class NewDutyEntryController implements Initializable, Parentable<TabPane
 
         // Disable non-editable/pressable elements
         this.scheduleSaveBtn.setDisable(true);
+        this.dutyPointsInput.setEditable(false);
         this.dutyPointsInput.setDisable(true);
 
         // Set input validators
@@ -183,6 +187,11 @@ public class NewDutyEntryController implements Initializable, Parentable<TabPane
         FontIcon addIcon = new FontIcon(FontAwesome.PLUS);
         addIcon.getStyleClass().addAll("button-icon");
         this.newSeriesOfPerformancesBtn.setGraphic(addIcon);
+
+        this.editDutyPointsBtn.setOnAction(e -> setDutyPointsInputEditability());
+        FontIcon editIcon = new FontIcon(FontAwesome.EDIT);
+        addIcon.getStyleClass().addAll("button-icon");
+        this.editDutyPointsBtn.setGraphic(editIcon);
     }
 
 
@@ -340,11 +349,11 @@ public class NewDutyEntryController implements Initializable, Parentable<TabPane
     private void updatePointsField() {
         // Check if a valid start date is set to calculate points
         if (this.validStartDate.get() && validCategory.get()) {
-            this.dutyPointsInput.setDisable(false);
+            this.dutyPointsInput.setEditable(true);
             this.fillPointsField();
         } else {
             this.dutyPointsInput.clear();
-            this.dutyPointsInput.setDisable(true);
+            this.dutyPointsInput.setEditable(false);
         }
     }
 
@@ -537,6 +546,14 @@ public class NewDutyEntryController implements Initializable, Parentable<TabPane
 
         } else {
             LOG.error("New Duty could not be saved");
+        }
+    }
+
+    private void setDutyPointsInputEditability() {
+        if(this.dutyPointsInput.isDisable()) {
+            this.dutyPointsInput.setDisable(false);
+        } else {
+            this.dutyPointsInput.setDisable(true);
         }
     }
 
