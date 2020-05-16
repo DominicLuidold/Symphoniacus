@@ -61,7 +61,10 @@ public class SeriesOfPerformancesController
     private boolean itemChanged;
     private TabPaneController parentController;
     @FXML
-    private GridPane grid;
+    private GridPane grid1;
+
+    @FXML
+    private GridPane grid2;
 
     @FXML
     private JFXTextField nameOfSeries;
@@ -228,6 +231,9 @@ public class SeriesOfPerformancesController
             this.instrumentationCheckComboBox.getItems();
 
         // Füge neu dazugekommene Instrumentations in die currentlist
+        // TODO !-! hier wird ein Nullpointer von CheckComboboxSkin !EXTERNES PROG.! geworfen
+        //  vielleicht kann dieser noch zukünftig gefixt werden,
+        //  beeinträchtigt funktionalität momentan nicht
         for (InstrumentationDto instrumentation : instrumentations) {
             if (!(currentItems.contains(instrumentation))) {
                 this.instrumentationCheckComboBox.getItems().add(instrumentation);
