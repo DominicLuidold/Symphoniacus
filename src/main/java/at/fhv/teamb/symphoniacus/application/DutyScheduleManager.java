@@ -11,6 +11,7 @@ import at.fhv.teamb.symphoniacus.persistence.PersistenceState;
 import at.fhv.teamb.symphoniacus.persistence.dao.DutyDao;
 import at.fhv.teamb.symphoniacus.persistence.dao.DutyPositionDao;
 import at.fhv.teamb.symphoniacus.persistence.dao.MusicianDao;
+import at.fhv.teamb.symphoniacus.persistence.dao.interfaces.IDutyDao;
 import at.fhv.teamb.symphoniacus.persistence.dao.interfaces.IDutyPositionDao;
 import at.fhv.teamb.symphoniacus.persistence.dao.interfaces.IMusicianDao;
 import at.fhv.teamb.symphoniacus.persistence.model.MusicianEntity;
@@ -38,7 +39,7 @@ import org.apache.logging.log4j.Logger;
  */
 public class DutyScheduleManager {
     private static final Logger LOG = LogManager.getLogger(DutyScheduleManager.class);
-    private final DutyDao dutyDao;
+    private final IDutyDao dutyDao;
     private final IDutyPositionDao dutyPositionDao;
     private final IMusicianDao musicianDao;
     private final PointsManager pointsManager;

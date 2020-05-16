@@ -16,6 +16,8 @@ import at.fhv.teamb.symphoniacus.persistence.dao.SeriesOfPerformancesDao;
 import at.fhv.teamb.symphoniacus.persistence.dao.interfaces.IDutyCategoryChangeLogDao;
 import at.fhv.teamb.symphoniacus.persistence.dao.interfaces.IDutyCategoryDao;
 import at.fhv.teamb.symphoniacus.persistence.dao.interfaces.IDutyDao;
+import at.fhv.teamb.symphoniacus.persistence.dao.interfaces.IInstrumentationDao;
+import at.fhv.teamb.symphoniacus.persistence.dao.interfaces.ISeriesOfPerformancesDao;
 import at.fhv.teamb.symphoniacus.persistence.model.DutyCategoryChangelogEntity;
 import at.fhv.teamb.symphoniacus.persistence.model.DutyCategoryEntity;
 import at.fhv.teamb.symphoniacus.persistence.model.DutyEntity;
@@ -56,10 +58,10 @@ public class DutyManager {
     private final SectionMonthlyScheduleManager sectionMonthlyScheduleManager;
     private final WeeklyScheduleManager weeklyScheduleManager;
     private final IDutyCategoryChangeLogDao changeLogDao;
-    private final SeriesOfPerformancesDao seriesDao;
+    private final ISeriesOfPerformancesDao seriesDao;
     private final IDutyCategoryDao categoryDao;
-    private final DutyCategoryDao dutyCategoryDao;
-    private final InstrumentationDao instrumentationDao;
+    private final IDutyCategoryDao dutyCategoryDao;
+    private final IInstrumentationDao instrumentationDao;
     protected IDutyDao dutyDao;
 
     /**

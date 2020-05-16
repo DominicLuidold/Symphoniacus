@@ -6,6 +6,7 @@ import at.fhv.teamb.symphoniacus.domain.DutyCategory;
 import at.fhv.teamb.symphoniacus.domain.DutyCategoryChangelog;
 import at.fhv.teamb.symphoniacus.persistence.PersistenceState;
 import at.fhv.teamb.symphoniacus.persistence.dao.DutyCategoryDao;
+import at.fhv.teamb.symphoniacus.persistence.dao.interfaces.IDutyCategoryDao;
 import at.fhv.teamb.symphoniacus.persistence.model.interfaces.IDutyCategoryChangelogEntity;
 import at.fhv.teamb.symphoniacus.persistence.model.interfaces.IDutyCategoryEntity;
 import java.util.LinkedList;
@@ -16,7 +17,7 @@ import org.apache.logging.log4j.Logger;
 
 public class DutyCategoryManager {
     private static final Logger LOG = LogManager.getLogger(DutyCategoryManager.class);
-    private final DutyCategoryDao categoryDao;
+    private final IDutyCategoryDao categoryDao;
     private List<DutyCategory> dutyCategories;
     private List<IDutyCategoryEntity> dutyCategoryEntities;
 
