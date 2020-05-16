@@ -72,6 +72,7 @@ public class NewDutyEntryController implements Initializable, Parentable<TabPane
     private AtomicBoolean validCategory = new AtomicBoolean(false);
     private AtomicBoolean validStartTime = new AtomicBoolean(false);
     private AtomicBoolean validEndTime = new AtomicBoolean(false);
+    private AtomicBoolean validSoP = new AtomicBoolean(false);
     private boolean userEditedPoints;
 
     @FXML
@@ -211,6 +212,14 @@ public class NewDutyEntryController implements Initializable, Parentable<TabPane
             updatePointsField();
             setSaveButtonStatus();
         });
+
+        //Validate Combobox seriesOfPerformance
+        this.seriesOfPerformancesSelect.valueProperty()
+            .addListener((observable, oldValue, newValue) -> {
+                this.validSoP.set(!this.seriesOfPerformancesSelect.getSelectionModel().isEmpty());
+                setSaveButtonStatus();
+            });
+
 
         // Validate start date
         RequiredFieldValidator dateValidator = new RequiredFieldValidator();
@@ -463,10 +472,18 @@ public class NewDutyEntryController implements Initializable, Parentable<TabPane
                 this.resources.getString("global.button.ok")
             );
             return false;
+        } else if (this.instrumentationsSelect.getCheckModel().getCheckedItems().isEmpty()) {
+            MainController.showErrorAlert(
+                this.resources.getString("tab.duty.new.entry.error.title"),
+                this.resources.getString("tab.duty.new.entry.error.instrumentation.title"),
+                this.resources.getString("global.button.ok")
+            );
+            return false;
         } else {
             return true;
         }
     }
+
 
     /**
      * Disables the {@link #scheduleSaveBtn} if not all requirements have been met.
@@ -475,24 +492,11 @@ public class NewDutyEntryController implements Initializable, Parentable<TabPane
     private void setSaveButtonStatus() {
         if (this.dutyCategorySelect.getSelectionModel().isEmpty()) {
             this.validCategory.set(false);
-            /*
-            this.dutyCategorySelect.setBorder(
-                new Border(
-                    new BorderStroke(
-                        Paint.valueOf("red"),
-                        BorderStrokeStyle.SOLID,
-                        CornerRadii.EMPTY,
-                        BorderWidths.DEFAULT
-                    )
-                )
-            );
-             */
             this.scheduleSaveBtn.setDisable(true);
         } else {
-            //this.dutyCategorySelect.setBorder(null);
             if (this.validCategory.get() && this.validStartDate.get()
                 && this.validEndDate.get() && this.validStartTime.get()
-                && this.validEndTime.get()
+                && this.validEndTime.get() && this.validSoP.get()
             ) {
                 this.scheduleSaveBtn.setDisable(false);
             } else {
