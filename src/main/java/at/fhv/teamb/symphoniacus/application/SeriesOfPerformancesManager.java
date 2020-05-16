@@ -162,6 +162,26 @@ public class SeriesOfPerformancesManager {
         return seriesDtoList;
     }
 
+    /**
+     * Filters all series of performances that began either before or equal the the given Date.
+     *
+     * @param startedBeforeOrEqual target Date
+     * @return A List of filtered SeriesOfPerformancesDto
+     */
+    public List<SeriesOfPerformancesDto> getFilteredSeries(LocalDate startedBeforeOrEqual) {
+        List<SeriesOfPerformancesDto> allSeries = getAllSeries();
+        List<SeriesOfPerformancesDto> filteredSeries = new LinkedList<>();
+        for (SeriesOfPerformancesDto series : allSeries) {
+            if ((series.getStartDate().isBefore(startedBeforeOrEqual)
+                || series.getStartDate().isEqual(startedBeforeOrEqual))
+                && (series.getEndDate().isAfter(startedBeforeOrEqual)
+                || series.getEndDate().isEqual(startedBeforeOrEqual))) {
+                filteredSeries.add(series);
+            }
+        }
+        return filteredSeries;
+    }
+
     private Set<MusicalPieceDto> convertMusicalPiecesToDto(Set<IMusicalPieceEntity> mp) {
         Set<MusicalPieceDto> musicalPieces = new LinkedHashSet<>();
         for (IMusicalPieceEntity m : mp) {
