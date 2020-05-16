@@ -144,6 +144,8 @@ public class NewDutyEntryController implements Initializable, Parentable<TabPane
 
         // Hier könnte man zukünftig das Format frei wählbar machen
         setTimeConverter(Locale.UK);
+
+        setComboboxConverters();
     }
 
     private void setTimeConverter(Locale format) {
@@ -268,21 +270,6 @@ public class NewDutyEntryController implements Initializable, Parentable<TabPane
 
         observableList.addAll(seriesOfPerformancesList);
         this.seriesOfPerformancesSelect.getItems().setAll(observableList);
-        this.seriesOfPerformancesSelect.setConverter(new StringConverter<>() {
-            @Override
-            public String toString(SeriesOfPerformancesDto seriesOfPerformancesEntity) {
-                return seriesOfPerformancesEntity.getDescription()
-                    + " | " + " (" + seriesOfPerformancesEntity.getStartDate().toString()
-                    + ")-(" + seriesOfPerformancesEntity.getEndDate().toString() + ")";
-            }
-
-            @Override
-            public SeriesOfPerformancesDto fromString(String title) {
-                return observableList.stream()
-                    .filter(item -> item.getDescription().equals(title))
-                    .collect(Collectors.toList()).get(0);
-            }
-        });
     }
 
     /**
@@ -302,6 +289,23 @@ public class NewDutyEntryController implements Initializable, Parentable<TabPane
         ObservableList<InstrumentationDto> oldList = this.instrumentationsSelect.getItems();
         this.instrumentationsSelect.getItems().removeAll(oldList);
         this.instrumentationsSelect.getItems().addAll(instrumentations);
+
+    }
+
+    /**
+     * Initializes the {@link #dutyCategorySelect} combo box with data.
+     */
+    private void initCategoryComboBox() {
+        List<DutyCategoryDto> dutyCategoryList = this.dutyCategoryManager.getDutyCategories();
+        LOG.debug("Found {} duty categories", dutyCategoryList.size());
+        this.dutyCategorySelect.getItems().setAll(dutyCategoryList);
+    }
+
+    /**
+     * Set necessary String converters for each Combobox.
+     */
+    private void setComboboxConverters() {
+        // Instrumentation Combobox
         this.instrumentationsSelect.setConverter(
             new StringConverter<>() {
                 @Override
@@ -319,15 +323,27 @@ public class NewDutyEntryController implements Initializable, Parentable<TabPane
                     return null;
                 }
             });
-    }
 
-    /**
-     * Initializes the {@link #dutyCategorySelect} combo box with data.
-     */
-    private void initCategoryComboBox() {
-        List<DutyCategoryDto> dutyCategoryList = this.dutyCategoryManager.getDutyCategories();
-        LOG.debug("Found {} duty categories", dutyCategoryList.size());
-        this.dutyCategorySelect.getItems().setAll(dutyCategoryList);
+        // Series of Performances Combobox
+        this.seriesOfPerformancesSelect.setConverter(new StringConverter<>() {
+            @Override
+            public String toString(SeriesOfPerformancesDto seriesOfPerformancesEntity) {
+                return seriesOfPerformancesEntity.getDescription()
+                    + " | " + " (" + seriesOfPerformancesEntity.getStartDate().toString()
+                    + ")-(" + seriesOfPerformancesEntity.getEndDate().toString() + ")";
+            }
+
+            @Override
+            public SeriesOfPerformancesDto fromString(String title) {
+                ObservableList<SeriesOfPerformancesDto> observableList =
+                    seriesOfPerformancesSelect.getItems();
+                return observableList.stream()
+                    .filter(item -> item.getDescription().equals(title))
+                    .collect(Collectors.toList()).get(0);
+            }
+        });
+
+        // Duty Category Combobox
         this.dutyCategorySelect.setConverter(new StringConverter<>() {
             @Override
             public String toString(DutyCategoryDto dutyCategory) {
@@ -336,6 +352,7 @@ public class NewDutyEntryController implements Initializable, Parentable<TabPane
 
             @Override
             public DutyCategoryDto fromString(String title) {
+                ObservableList<DutyCategoryDto> dutyCategoryList = dutyCategorySelect.getItems();
                 DutyCategoryDto result = dutyCategoryList.stream()
                     .filter(item -> item.getType().equals(title))
                     .collect(Collectors.toList()).get(0);
