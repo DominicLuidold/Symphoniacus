@@ -1,6 +1,6 @@
 package at.fhv.teamb.symphoniacus.domain;
 
-import at.fhv.teamb.symphoniacus.persistence.model.MusicalPieceEntity;
+import at.fhv.teamb.symphoniacus.persistence.model.interfaces.IMusicalPieceEntity;
 
 /**
  * Domain object for MusicalPiece.
@@ -8,13 +8,13 @@ import at.fhv.teamb.symphoniacus.persistence.model.MusicalPieceEntity;
  * @author Valentin Goronjic
  */
 public class MusicalPiece {
-    private MusicalPieceEntity entity;
+    private IMusicalPieceEntity entity;
 
-    public MusicalPiece(MusicalPieceEntity entity) {
+    public MusicalPiece(IMusicalPieceEntity entity) {
         this.entity = entity;
     }
 
-    public MusicalPieceEntity getEntity() {
+    public IMusicalPieceEntity getEntity() {
         return this.entity;
     }
 

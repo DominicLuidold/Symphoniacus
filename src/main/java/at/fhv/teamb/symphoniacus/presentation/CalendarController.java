@@ -1,6 +1,7 @@
 package at.fhv.teamb.symphoniacus.presentation;
 
 import at.fhv.teamb.symphoniacus.application.DutyManager;
+import at.fhv.teamb.symphoniacus.application.dto.DutyDto;
 import at.fhv.teamb.symphoniacus.domain.Duty;
 import at.fhv.teamb.symphoniacus.persistence.model.DutyEntity;
 import at.fhv.teamb.symphoniacus.presentation.internal.Parentable;
@@ -104,8 +105,12 @@ public abstract class CalendarController implements Initializable, Parentable<Ta
      *
      * @param duty to add to Calendar
      */
-    protected void addDuty(Duty duty) {
-        this.calendar.addEntry(createDutyCalendarEntry(duty));
+    protected void addDuty(DutyDto duty) {
+        Duty newDuty = this.dutyManager.getDutyByDutyDto(duty);
+
+        if (newDuty != null) {
+            this.calendar.addEntry(createDutyCalendarEntry(newDuty));
+        }
     }
 
     /**

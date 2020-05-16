@@ -537,4 +537,20 @@ public class DutyManager {
         }
         return newInstrumentations;
     }
+
+    /**
+     * Converts a DutyDto to Duty Domain Object
+     * @param duty given DutyDto
+     * @return Duty Domain Object
+     */
+    public Duty getDutyByDutyDto (DutyDto duty) {
+        Optional<IDutyEntity> dutyEntity = this.dutyDao.find(duty.getDutyId());
+
+        if(dutyEntity.isPresent()) {
+            return new Duty(dutyEntity.get());
+        } else {
+            LOG.error("A Duty with given DutyId from Dto does not exists");
+            return null;
+        }
+    }
 }

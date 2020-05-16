@@ -30,11 +30,11 @@ public class Points {
      * @param duty given duty
      * @return the correct number of Points of given Duty at a given Date
      */
-    public static Points getPointsOfDuty(DutyEntity duty) {
+    public static Points getPointsOfDuty(IDutyEntity duty) {
         LocalDate timeOfDuty = duty.getStart().toLocalDate();
-        DutyCategoryChangelogEntity temp = null;
+        IDutyCategoryChangelogEntity temp = null;
         int points = 0;
-        for (DutyCategoryChangelogEntity dcl : duty.getDutyCategory().getDutyCategoryChangelogs()) {
+        for (IDutyCategoryChangelogEntity dcl : duty.getDutyCategory().getDutyCategoryChangelogs()) {
             if (temp == null || (dcl.getStartDate().isAfter(temp.getStartDate())
                 && timeOfDuty.isAfter(dcl.getStartDate()))
                 || timeOfDuty.isEqual(dcl.getStartDate())

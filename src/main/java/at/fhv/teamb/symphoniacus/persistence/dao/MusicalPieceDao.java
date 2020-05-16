@@ -2,10 +2,11 @@ package at.fhv.teamb.symphoniacus.persistence.dao;
 
 import at.fhv.teamb.symphoniacus.persistence.BaseDao;
 import at.fhv.teamb.symphoniacus.persistence.dao.interfaces.IMusicalPieceDao;
-import at.fhv.teamb.symphoniacus.persistence.model.DutyEntity;
 import at.fhv.teamb.symphoniacus.persistence.model.MusicalPieceEntity;
+import at.fhv.teamb.symphoniacus.persistence.model.interfaces.IDutyEntity;
 import at.fhv.teamb.symphoniacus.persistence.model.interfaces.IMusicalPieceEntity;
 import java.util.LinkedHashSet;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
@@ -82,7 +83,7 @@ public class MusicalPieceDao extends BaseDao<IMusicalPieceEntity>
      * @param dutyEntity The duty for which the musical pieces should be loaded
      * @return List of {@link MusicalPieceEntity} objects (empty when no series of performances)
      */
-    public List<MusicalPieceEntity> getMusicalPiecesOfDuty(DutyEntity dutyEntity) {
+    public List<IMusicalPieceEntity> getMusicalPiecesOfDuty(IDutyEntity dutyEntity) {
         TypedQuery<MusicalPieceEntity> query = entityManager.createQuery(
             "SELECT m from DutyEntity d "
             + "INNER JOIN d.seriesOfPerformances sop "
@@ -95,6 +96,6 @@ public class MusicalPieceDao extends BaseDao<IMusicalPieceEntity>
         LOG.debug("{} Musical pieces for duty found", result.size());
 
 
-        return result;
+        return new LinkedList<>(result);
     }
 }

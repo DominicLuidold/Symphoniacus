@@ -143,7 +143,7 @@ public class PointsManager {
      * @param duty given duty
      * @return the correct number of Points of given Duty at a given Date
      */
-    public Points getPointsOfDuty(DutyEntity duty) {
+    public Points getPointsOfDuty(IDutyEntity duty) {
         return Points.getPointsOfDuty(duty);
     }
 

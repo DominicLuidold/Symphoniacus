@@ -15,12 +15,13 @@ import at.fhv.teamb.symphoniacus.persistence.dao.MusicalPieceDao;
 import at.fhv.teamb.symphoniacus.persistence.dao.MusicianDao;
 import at.fhv.teamb.symphoniacus.persistence.dao.interfaces.IDutyDao;
 import at.fhv.teamb.symphoniacus.persistence.dao.interfaces.IDutyPositionDao;
+import at.fhv.teamb.symphoniacus.persistence.dao.interfaces.IMusicalPieceDao;
 import at.fhv.teamb.symphoniacus.persistence.dao.interfaces.IMusicianDao;
-import at.fhv.teamb.symphoniacus.persistence.model.MusicalPieceEntity;
 import at.fhv.teamb.symphoniacus.persistence.model.MusicianEntity;
 import at.fhv.teamb.symphoniacus.persistence.model.SectionEntity;
 import at.fhv.teamb.symphoniacus.persistence.model.interfaces.IDutyEntity;
 import at.fhv.teamb.symphoniacus.persistence.model.interfaces.IDutyPositionEntity;
+import at.fhv.teamb.symphoniacus.persistence.model.interfaces.IMusicalPieceEntity;
 import at.fhv.teamb.symphoniacus.persistence.model.interfaces.IMusicianEntity;
 import at.fhv.teamb.symphoniacus.persistence.model.interfaces.ISectionEntity;
 import java.time.LocalDate;
@@ -45,7 +46,7 @@ public class DutyScheduleManager {
     private final IDutyDao dutyDao;
     private final IDutyPositionDao dutyPositionDao;
     private final IMusicianDao musicianDao;
-    private final MusicalPieceDao musicalPieceDao;
+    private final IMusicalPieceDao musicalPieceDao;
     private final PointsManager pointsManager;
     private final Set<Musician> setMusicians;
     private final Set<Musician> unsetMusicians;
@@ -71,10 +72,10 @@ public class DutyScheduleManager {
 
     /**
      * Initializes the DutyScheduleManager (usage for Team C only).
-     *
-     * @param dutyDao            The DutyDao used in this manager
+     *  @param dutyDao            The DutyDao used in this manager
      * @param dutyPositionDao    The DutyPositionDao used in this manager
      * @param musicianDao        The MusicianDao used in this manager
+     * @param musicalPieceDao
      * @param pointsManager      The PointsManager used in this manager
      * @param wishRequestManager The WishRequestManager used in this manager
      */
@@ -82,12 +83,14 @@ public class DutyScheduleManager {
         IDutyDao dutyDao,
         IDutyPositionDao dutyPositionDao,
         IMusicianDao musicianDao,
+        IMusicalPieceDao musicalPieceDao,
         PointsManager pointsManager,
         WishRequestManager wishRequestManager
     ) {
         this.dutyDao = dutyDao;
         this.dutyPositionDao = dutyPositionDao;
         this.musicianDao = musicianDao;
+        this.musicalPieceDao = musicalPieceDao;
         this.pointsManager = pointsManager;
         this.setMusicians = new HashSet<>();
         this.unsetMusicians = new HashSet<>();
@@ -123,17 +126,17 @@ public class DutyScheduleManager {
             this.dutyPositionDao.findCorrespondingPositions(duty.getEntity(), sectionEntity);
 
         // Get all Musical Pieces
-        List<MusicalPieceEntity> musicalPieces = this.musicalPieceDao.getMusicalPiecesOfDuty(
+        List<IMusicalPieceEntity> musicalPieces = this.musicalPieceDao.getMusicalPiecesOfDuty(
             duty.getEntity()
         );
         List<MusicalPiece> musicalPiecesDomain = new LinkedList<>();
-        for (MusicalPieceEntity entity : musicalPieces) {
+        for (IMusicalPieceEntity entity : musicalPieces) {
             musicalPiecesDomain.add(new MusicalPiece(entity));
         }
 
         // Create DutyPosition domain objects
         List<DutyPosition> dutyPositions = new LinkedList<>();
-        for (DutyPositionEntity dpEntity : dutyPositionEntities) {
+        for (IDutyPositionEntity dpEntity : dutyPositionEntities) {
             DutyPosition dp = new DutyPosition(dpEntity);
 
             // #00 <TEXT>
