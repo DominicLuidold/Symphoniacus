@@ -61,7 +61,10 @@ public class SeriesOfPerformancesController
     private boolean itemChanged;
     private TabPaneController parentController;
     @FXML
-    private GridPane grid;
+    private GridPane grid1;
+
+    @FXML
+    private GridPane grid2;
 
     @FXML
     private JFXTextField nameOfSeries;
@@ -164,8 +167,12 @@ public class SeriesOfPerformancesController
         addIcon.getStyleClass().addAll("button-icon");
         this.addModifyButton.setGraphic(addIcon);
 
+        // Set UK Time Format for DatePicker
         this.startingDate.setConverter(UkTimeFormatter.getUkTimeConverter());
         this.endingDate.setConverter(UkTimeFormatter.getUkTimeConverter());
+
+        // Set necessary string converters to each combobox
+        setComboboxConverters();
     }
 
     /**
@@ -179,30 +186,6 @@ public class SeriesOfPerformancesController
         Set<MusicalPieceDto> mp = this.musicalPieceManager.getAllMusicalPieces();
         musicalPieces.addAll(mp);
 
-        final StringConverter<MusicalPieceDto> musicalConverter =
-            new StringConverter<>() {
-                @Override
-                public String toString(MusicalPieceDto piece) {
-                    return piece.getName();
-                }
-
-                @Override
-                public MusicalPieceDto fromString(String nameOfPiece) {
-                    Optional<MusicalPieceDto> piece = musicalPieceManager.getByName(
-                        nameOfPiece
-                    );
-                    if (piece.isPresent()) {
-                        return piece.get();
-                    } else {
-                        LOG.error(
-                            "Somehow the musicial piece couldn't get found by its"
-                                + " name in the SeriesOfPerformancesController");
-                        //Should never be able to get here
-                        return null;
-                    }
-                }
-            };
-        this.musicalPieceCheckComboBox.setConverter(musicalConverter);
         /*
         Der schlimmste Fehler meines Lebens!:
         https://stackoverflow.com/questions/30643979/checkcombobox-choices-are-empty
@@ -244,26 +227,13 @@ public class SeriesOfPerformancesController
         // All Intrumentations of the checked musical pieces
         ObservableSet<InstrumentationDto> instrumentations = FXCollections.observableSet(inst);
 
-        final StringConverter<InstrumentationDto> instrumentationConverter =
-            new StringConverter<>() {
-                @Override
-                public String toString(InstrumentationDto instrumentation) {
-                    return instrumentation.getName() + " - "
-                        + instrumentation.getMusicalPiece().getName();
-                }
-
-                @Override
-                public InstrumentationDto fromString(String nameOfPiece) {
-                    LOG.error(
-                        "Return NULL: SeriesOfPerformancesController fromString von instrumentation"
-                            + " wurde aufgerufen -> ist aber garnicht implementiert");
-                    return null;
-                }
-            };
         ObservableList<InstrumentationDto> currentItems =
             this.instrumentationCheckComboBox.getItems();
 
         // Füge neu dazugekommene Instrumentations in die currentlist
+        // TODO !-! hier wird ein Nullpointer von CheckComboboxSkin !EXTERNES PROG.! geworfen
+        //  vielleicht kann dieser noch zukünftig gefixt werden,
+        //  beeinträchtigt funktionalität momentan nicht
         for (InstrumentationDto instrumentation : instrumentations) {
             if (!(currentItems.contains(instrumentation))) {
                 this.instrumentationCheckComboBox.getItems().add(instrumentation);
@@ -312,7 +282,6 @@ public class SeriesOfPerformancesController
             }
         }
 
-        this.instrumentationCheckComboBox.setConverter(instrumentationConverter);
         this.instrumentationCheckComboBox.addEventHandler(
             ComboBoxBase.ON_HIDDEN,
             event -> loadSectionInstrumentationDescriptions()
@@ -347,6 +316,56 @@ public class SeriesOfPerformancesController
 
         ObservableList<String> descriptions = FXCollections.observableArrayList(desc);
         listView.setItems(descriptions);
+    }
+
+    /**
+     * Set necessary String converters for each Combobox.
+     */
+    private void setComboboxConverters() {
+        // Mucsical Pieces CheckCombobox
+        final StringConverter<MusicalPieceDto> musicalConverter =
+            new StringConverter<>() {
+                @Override
+                public String toString(MusicalPieceDto piece) {
+                    return piece.getName();
+                }
+
+                @Override
+                public MusicalPieceDto fromString(String nameOfPiece) {
+                    Optional<MusicalPieceDto> piece = musicalPieceManager.getByName(
+                        nameOfPiece
+                    );
+                    if (piece.isPresent()) {
+                        return piece.get();
+                    } else {
+                        LOG.error(
+                            "Somehow the musicial piece couldn't get found by its"
+                                + " name in the SeriesOfPerformancesController");
+                        //Should never be able to get here
+                        return null;
+                    }
+                }
+            };
+        this.musicalPieceCheckComboBox.setConverter(musicalConverter);
+
+        //Instrumentations CheckCombobox
+        final StringConverter<InstrumentationDto> instrumentationConverter =
+            new StringConverter<>() {
+                @Override
+                public String toString(InstrumentationDto instrumentation) {
+                    return instrumentation.getName() + " - "
+                        + instrumentation.getMusicalPiece().getName();
+                }
+
+                @Override
+                public InstrumentationDto fromString(String nameOfPiece) {
+                    LOG.error(
+                        "Return NULL: SeriesOfPerformancesController fromString von instrumentation"
+                            + " wurde aufgerufen -> ist aber garnicht implementiert");
+                    return null;
+                }
+            };
+        this.instrumentationCheckComboBox.setConverter(instrumentationConverter);
     }
 
     /**
