@@ -21,8 +21,20 @@ public class DutyCategoryManager {
     private List<DutyCategory> dutyCategories;
     private List<IDutyCategoryEntity> dutyCategoryEntities;
 
+    /**
+     * Initializes the DutyCategoryManager (usage for Team B only).
+     */
     public DutyCategoryManager() {
         this.categoryDao = new DutyCategoryDao();
+    }
+
+    /**
+     * Initializes the DutyCategoryManager (usage for Team C only).
+     *
+     * @param categoryDao The DutyCategoryDao used in this manager
+     */
+    public DutyCategoryManager(IDutyCategoryDao categoryDao) {
+        this.categoryDao = categoryDao;
     }
 
     /**

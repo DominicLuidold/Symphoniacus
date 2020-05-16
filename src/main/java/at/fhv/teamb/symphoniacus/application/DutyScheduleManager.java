@@ -52,7 +52,7 @@ public class DutyScheduleManager {
     private Set<Musician> sectionMusicians;
 
     /**
-     * Initialize the DutyScheduleManager.
+     * Initializes the DutyScheduleManager (usage for Team B only).
      */
     public DutyScheduleManager() {
         this.dutyDao = new DutyDao();
@@ -62,6 +62,31 @@ public class DutyScheduleManager {
         this.setMusicians = new HashSet<>();
         this.unsetMusicians = new HashSet<>();
         this.wishRequestManager = new WishRequestManager();
+    }
+
+    /**
+     * Initializes the DutyScheduleManager (usage for Team C only).
+     *
+     * @param dutyDao            The DutyDao used in this manager
+     * @param dutyPositionDao    The DutyPositionDao used in this manager
+     * @param musicianDao        The MusicianDao used in this manager
+     * @param pointsManager      The PointsManager used in this manager
+     * @param wishRequestManager The WishRequestManager used in this manager
+     */
+    public DutyScheduleManager(
+        IDutyDao dutyDao,
+        IDutyPositionDao dutyPositionDao,
+        IMusicianDao musicianDao,
+        PointsManager pointsManager,
+        WishRequestManager wishRequestManager
+    ) {
+        this.dutyDao = dutyDao;
+        this.dutyPositionDao = dutyPositionDao;
+        this.musicianDao = musicianDao;
+        this.pointsManager = pointsManager;
+        this.setMusicians = new HashSet<>();
+        this.unsetMusicians = new HashSet<>();
+        this.wishRequestManager = wishRequestManager;
     }
 
     /**

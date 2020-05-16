@@ -37,12 +37,29 @@ public class PointsManager {
     private Set<IDutyEntity> allDuties;
 
     /**
-     * Initialize PointsManager.
+     * Initializes the PointsManager (usage for Team B only).
      */
     public PointsManager() {
         this.conDao = new ContractualObligationDao();
         this.dutyCatChangeDao = new DutyCategoryChangeLogDao();
         this.dutyDao = new DutyDao();
+    }
+
+    /**
+     * Initializes the PointsManager (usage for Team C only).
+     *
+     * @param conDao           The ContractualObligationDao used in this manager
+     * @param dutyCatChangeDao The DutyCategoryChangeLogDao used in this manager
+     * @param dutyDao          The DutyDao used in this manager
+     */
+    public PointsManager(
+        IContractualObligationDao conDao,
+        IDutyCategoryChangeLogDao dutyCatChangeDao,
+        IDutyDao dutyDao
+    ) {
+        this.conDao = conDao;
+        this.dutyCatChangeDao = dutyCatChangeDao;
+        this.dutyDao = dutyDao;
     }
 
     /**

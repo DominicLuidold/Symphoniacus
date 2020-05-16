@@ -13,8 +13,20 @@ public class MonthlyScheduleManager {
     private static final Logger LOG = LogManager.getLogger(MonthlyScheduleManager.class);
     private final IMonthlyScheduleDao monthlyScheduleDao;
 
+    /**
+     * Initializes the MonthlyScheduleManager (usage for Team B only).
+     */
     public MonthlyScheduleManager() {
         this.monthlyScheduleDao = new MonthlyScheduleDao();
+    }
+
+    /**
+     * Initializes the MonthlyScheduleManager (usage for Team C only).
+     *
+     * @param monthlyScheduleDao The MonthlyScheduleDao used in this manager
+     */
+    public MonthlyScheduleManager(IMonthlyScheduleDao monthlyScheduleDao) {
+        this.monthlyScheduleDao = monthlyScheduleDao;
     }
 
     /**

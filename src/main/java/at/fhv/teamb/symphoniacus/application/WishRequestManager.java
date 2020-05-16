@@ -27,12 +27,29 @@ public class WishRequestManager {
     private Set<WishRequestable> allWishRequests;
 
     /**
-     * Constructor.
+     * Initializes the WishRequestManager (usage for Team B only).
      */
     public WishRequestManager() {
         this.positiveWishDao = new PositiveWishDao();
         this.negDutyWishDao = new NegativeDutyWishDao();
         this.negDateWishDao = new NegativeDateWishDao();
+    }
+
+    /**
+     * Initializes the WishRequestManager (usage for Team C only).
+     *
+     * @param positiveWishDao The PositiveWishDao used in this manager
+     * @param negDutyWishDao  The NegativeDutyWishDao used in this manager
+     * @param negDateWishDao  The NegativeDateWishDao used in this manager
+     */
+    public WishRequestManager(
+        IPositiveWishDao positiveWishDao,
+        INegativeDutyWishDao negDutyWishDao,
+        INegativeDateWishDao negDateWishDao
+    ) {
+        this.positiveWishDao = positiveWishDao;
+        this.negDutyWishDao = negDutyWishDao;
+        this.negDateWishDao = negDateWishDao;
     }
 
     /**

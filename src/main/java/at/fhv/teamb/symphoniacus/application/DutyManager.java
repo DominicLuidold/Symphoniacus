@@ -59,13 +59,12 @@ public class DutyManager {
     private final WeeklyScheduleManager weeklyScheduleManager;
     private final IDutyCategoryChangeLogDao changeLogDao;
     private final ISeriesOfPerformancesDao seriesDao;
-    private final IDutyCategoryDao categoryDao;
     private final IDutyCategoryDao dutyCategoryDao;
     private final IInstrumentationDao instrumentationDao;
     protected IDutyDao dutyDao;
 
     /**
-     * Initialize the DutyManager.
+     * Initializes the DutyManager (usage for Team B only).
      */
     public DutyManager() {
         this.dutyPositionManager = new DutyPositionManager();
@@ -75,9 +74,43 @@ public class DutyManager {
         this.changeLogDao = new DutyCategoryChangeLogDao();
         this.dutyDao = new DutyDao();
         this.seriesDao = new SeriesOfPerformancesDao();
-        this.categoryDao = new DutyCategoryDao();
         this.dutyCategoryDao = new DutyCategoryDao();
         this.instrumentationDao = new InstrumentationDao();
+    }
+
+    /**
+     * Initializes the DutyManager (usage for Team C only).
+     *
+     * @param dutyPositionManager           The DutyPositionManager used in this manager
+     * @param monthlyScheduleManager        The MonthlyScheduleManager used in this manager
+     * @param sectionMonthlyScheduleManager The SectionMonthlyScheduleManager used in this manager
+     * @param weeklyScheduleManager         The WeeklyScheduleManager used in this manager
+     * @param changeLogDao                  The ChangelogDao used in this manager
+     * @param dutyDao                       The DutyDao used in this manager
+     * @param seriesDao                     The SeriesDao used in this manager
+     * @param dutyCategoryDao               The DutyCategoryDao used in this manager
+     * @param instrumentationDao            THe InstrumentationDao used in this manager
+     */
+    public DutyManager(
+        DutyPositionManager dutyPositionManager,
+        MonthlyScheduleManager monthlyScheduleManager,
+        SectionMonthlyScheduleManager sectionMonthlyScheduleManager,
+        WeeklyScheduleManager weeklyScheduleManager,
+        IDutyCategoryChangeLogDao changeLogDao,
+        IDutyDao dutyDao,
+        ISeriesOfPerformancesDao seriesDao,
+        IDutyCategoryDao dutyCategoryDao,
+        IInstrumentationDao instrumentationDao
+    ) {
+        this.dutyPositionManager = dutyPositionManager;
+        this.monthlyScheduleManager = monthlyScheduleManager;
+        this.sectionMonthlyScheduleManager = sectionMonthlyScheduleManager;
+        this.weeklyScheduleManager = weeklyScheduleManager;
+        this.changeLogDao = changeLogDao;
+        this.dutyDao = dutyDao;
+        this.seriesDao = seriesDao;
+        this.dutyCategoryDao = dutyCategoryDao;
+        this.instrumentationDao = instrumentationDao;
     }
 
     /**
@@ -305,7 +338,6 @@ public class DutyManager {
      * <p>The method will subsequently change the {@link PersistenceState} of the object
      * from {@link PersistenceState#EDITED} to {@link PersistenceState#PERSISTED}, provided
      * that the database update was successful.
-     *
      */
     public DutyDto save(
         boolean userPointsChanged,
@@ -319,7 +351,7 @@ public class DutyManager {
         LocalDateTime end
     ) {
 
-        IDutyEntity duty = createDuty(description,timeOfDay,start,end);
+        IDutyEntity duty = createDuty(description, timeOfDay, start, end);
 
         Optional<ISeriesOfPerformancesEntity> newSeries = this.seriesDao
             .find(seriesOfPerformances.getSeriesOfPerformancesId());

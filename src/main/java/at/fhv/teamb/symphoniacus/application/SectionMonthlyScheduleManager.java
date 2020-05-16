@@ -9,6 +9,7 @@ import at.fhv.teamb.symphoniacus.persistence.dao.SectionDao;
 import at.fhv.teamb.symphoniacus.persistence.dao.SectionMonthlyScheduleDao;
 import at.fhv.teamb.symphoniacus.persistence.dao.interfaces.IDutyPositionDao;
 import at.fhv.teamb.symphoniacus.persistence.dao.interfaces.ISectionDao;
+import at.fhv.teamb.symphoniacus.persistence.dao.interfaces.ISectionMonthlyScheduleDao;
 import at.fhv.teamb.symphoniacus.persistence.model.SectionEntity;
 import at.fhv.teamb.symphoniacus.persistence.model.SectionMonthlyScheduleEntity;
 import at.fhv.teamb.symphoniacus.persistence.model.interfaces.IMonthlyScheduleEntity;
@@ -33,15 +34,32 @@ public class SectionMonthlyScheduleManager {
     private static final Logger LOG = LogManager.getLogger(SectionMonthlyScheduleManager.class);
     private final IDutyPositionDao dutyPositionDao;
     private final ISectionDao sectionDao;
-    private final SectionMonthlyScheduleDao smsDao;
+    private final ISectionMonthlyScheduleDao smsDao;
 
     /**
-     * Initialize the SectionMonthlyScheduleManager.
+     * Initializes the SectionMonthlyScheduleManager (usage for Team B only).
      */
     public SectionMonthlyScheduleManager() {
         this.dutyPositionDao = new DutyPositionDao();
         this.sectionDao = new SectionDao();
         this.smsDao = new SectionMonthlyScheduleDao();
+    }
+
+    /**
+     * Initializes the SectionMonthlyScheduleManager (usage for Team C only).
+     *
+     * @param dutyPositionDao The DutyPositionDao used in this manager
+     * @param sectionDao      The SectionDao used in this manager
+     * @param smsDao          The SectionMonthlyScheduleDao used in this manager
+     */
+    public SectionMonthlyScheduleManager(
+        IDutyPositionDao dutyPositionDao,
+        ISectionDao sectionDao,
+        ISectionMonthlyScheduleDao smsDao
+    ) {
+        this.dutyPositionDao = dutyPositionDao;
+        this.sectionDao = sectionDao;
+        this.smsDao = smsDao;
     }
 
     /**

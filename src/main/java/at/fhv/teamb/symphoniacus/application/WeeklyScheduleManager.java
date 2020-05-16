@@ -14,8 +14,20 @@ public class WeeklyScheduleManager {
     private static final Logger LOG = LogManager.getLogger(WeeklyScheduleManager.class);
     private final IWeeklyScheduleDao weeklyScheduleDao;
 
+    /**
+     * Initializes the WeeklyScheduleManager (usage for Team B only).
+     */
     public WeeklyScheduleManager() {
         this.weeklyScheduleDao = new WeeklyScheduleDao();
+    }
+
+    /**
+     * Initializes the WeeklyScheduleManager (usage for Team C only).
+     *
+     * @param weeklyScheduleDao The WeeklyScheduleDao used in this manager
+     */
+    public WeeklyScheduleManager(IWeeklyScheduleDao weeklyScheduleDao) {
+        this.weeklyScheduleDao = weeklyScheduleDao;
     }
 
     /**

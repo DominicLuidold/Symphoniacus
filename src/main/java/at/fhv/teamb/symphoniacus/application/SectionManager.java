@@ -6,8 +6,6 @@ import at.fhv.teamb.symphoniacus.persistence.dao.interfaces.ISectionDao;
 import at.fhv.teamb.symphoniacus.persistence.model.interfaces.ISectionEntity;
 import java.util.LinkedList;
 import java.util.List;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
 
 /**
  * Manager for Section.
@@ -15,15 +13,27 @@ import org.apache.logging.log4j.Logger;
  * @author Tobias Moser
  */
 public class SectionManager {
-    private static final Logger LOG = LogManager.getLogger(MusicianManager.class);
-    private ISectionDao sectionDao;
+    private final ISectionDao sectionDao;
 
+    /**
+     * Initializes the SectionManager (usage for Team B only).
+     */
     public SectionManager() {
         this.sectionDao = new SectionDao();
     }
 
     /**
+     * Initializes the SectionManager (usage for Team C only).
+     *
+     * @param sectionDao The SectionDao used in this manager.
+     */
+    public SectionManager(ISectionDao sectionDao) {
+        this.sectionDao = sectionDao;
+    }
+
+    /**
      * Will return a list of all Section as Dtos.
+     *
      * @return List of all Sections
      */
     public List<SectionDto> getAll() {
