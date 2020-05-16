@@ -735,7 +735,7 @@ public class DutyScheduleController
         if (this.duty.getMusicalPieces().size() > 1) {
             LOG.debug("need to assign/unassign multiple positions");
 
-            if (force == true) {
+            if (force) {
                 doMultiplePiecesAction(asi, dutyPosition, newMusician, action);
             } else {
                 Dialog<ButtonType> dialog = getMusicalPieceDialog();
