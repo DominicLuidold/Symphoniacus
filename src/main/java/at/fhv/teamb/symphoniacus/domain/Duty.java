@@ -26,9 +26,10 @@ public class Duty {
     private List<DutyPosition> dutyPositions;
     private String title;
     private PersistenceState persistenceState;
+    private List<MusicalPiece> musicalPieces = new LinkedList<>(); // prevent NPE
 
     public Duty(IDutyEntity entity) {
-        this(entity, null);
+        this(entity, null, null);
     }
 
     /**
@@ -38,10 +39,14 @@ public class Duty {
      * @param entity        The entity to use
      * @param dutyPositions The List of DutyPositions to use
      */
-    public Duty(IDutyEntity entity, List<DutyPosition> dutyPositions) {
+    public Duty(IDutyEntity entity, List<DutyPosition> dutyPositions, List<MusicalPiece> musicalPieces) {
+        
         this.entity = entity;
         if (dutyPositions != null) {
             this.dutyPositions = Collections.unmodifiableList(dutyPositions);
+        }
+        if (musicalPieces != null) {
+            this.musicalPieces = musicalPieces;
         }
     }
 
@@ -164,6 +169,14 @@ public class Duty {
 
     public void setPersistenceState(PersistenceState persistenceState) {
         this.persistenceState = persistenceState;
+    }
+
+    public List<MusicalPiece> getMusicalPieces() {
+        return this.musicalPieces;
+    }
+
+    public void setMusicalPieces(List<MusicalPiece> musicalPieces) {
+        this.musicalPieces = musicalPieces;
     }
 
     @Override

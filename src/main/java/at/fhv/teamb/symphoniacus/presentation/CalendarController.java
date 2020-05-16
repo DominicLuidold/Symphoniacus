@@ -43,6 +43,8 @@ public abstract class CalendarController implements Initializable, Parentable<Ta
     @FXML
     protected CalendarView calendarView;
 
+    protected Calendar calendar;
+
     public CalendarController() {
         this.dutyManager = new DutyManager();
     }
@@ -81,6 +83,7 @@ public abstract class CalendarController implements Initializable, Parentable<Ta
         calendar.setShortName(shortName);
         calendar.setReadOnly(readOnly);
         calendar.setStyle(Calendar.Style.STYLE1);
+        this.calendar = calendar;
         return calendar;
     }
 
@@ -94,6 +97,15 @@ public abstract class CalendarController implements Initializable, Parentable<Ta
         for (Entry<Duty> entry : this.createDutyCalendarEntries(duties)) {
             entry.setCalendar(calendar);
         }
+    }
+
+    /**
+     * Add a new Duty as Entry to the Calendar.
+     *
+     * @param duty to add to Calendar
+     */
+    protected void addDuty(Duty duty) {
+        this.calendar.addEntry(createDutyCalendarEntry(duty));
     }
 
     /**
@@ -118,16 +130,26 @@ public abstract class CalendarController implements Initializable, Parentable<Ta
     private List<Entry<Duty>> createDutyCalendarEntries(List<Duty> duties) {
         List<Entry<Duty>> calendarEntries = new LinkedList<>();
         for (Duty duty : duties) {
-            Interval interval = new Interval(
-                duty.getEntity().getStart().toLocalDate(),
-                duty.getEntity().getStart().toLocalTime(),
-                duty.getEntity().getEnd().toLocalDate(),
-                duty.getEntity().getEnd().toLocalTime()
-            );
-            Entry<Duty> entry = new Entry<>(duty.getTitle(), interval);
-            entry.setUserObject(duty);
-            calendarEntries.add(entry);
+            calendarEntries.add(createDutyCalendarEntry(duty));
         }
         return calendarEntries;
+    }
+
+    /**
+     * Returns a CalendarFX {@link Entry} object of a Duty.
+     *
+     * @param duty to convert to Entry
+     * @return Entry of the given Duty
+     */
+    private Entry<Duty> createDutyCalendarEntry(Duty duty) {
+        Interval interval = new Interval(
+            duty.getEntity().getStart().toLocalDate(),
+            duty.getEntity().getStart().toLocalTime(),
+            duty.getEntity().getEnd().toLocalDate(),
+            duty.getEntity().getEnd().toLocalTime()
+        );
+        Entry<Duty> entry = new Entry<>(duty.getTitle(), interval);
+        entry.setUserObject(duty);
+        return entry;
     }
 }

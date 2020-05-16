@@ -41,7 +41,8 @@ public class DutyPositionDao extends BaseDao<IDutyPositionEntity>
                 + "JOIN FETCH p.instrumentationPosition "
                 + "LEFT JOIN FETCH p.musician m "
                 + "LEFT JOIN FETCH m.user "
-                + "WHERE p.duty = :duty AND p.section = :section",
+                + "WHERE p.duty = :duty AND p.section = :section "
+                + "ORDER BY p.instrumentationPosition.positionDescription ASC",
             DutyPositionEntity.class
         );
 

@@ -24,6 +24,7 @@ build
 .classpath
 .settings/
 bin
+.metadata
 
 .vscode/
 /.metadata/

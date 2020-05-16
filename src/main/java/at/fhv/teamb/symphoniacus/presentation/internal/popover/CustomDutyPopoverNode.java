@@ -1,12 +1,16 @@
 package at.fhv.teamb.symphoniacus.presentation.internal.popover;
 
 import at.fhv.teamb.symphoniacus.application.DutyScheduleManager;
+import at.fhv.teamb.symphoniacus.application.PointsManager;
 import at.fhv.teamb.symphoniacus.application.SectionManager;
 import at.fhv.teamb.symphoniacus.application.dto.SectionDto;
 import at.fhv.teamb.symphoniacus.domain.ActualSectionInstrumentation;
 import at.fhv.teamb.symphoniacus.domain.Duty;
 import at.fhv.teamb.symphoniacus.domain.DutyPosition;
 import at.fhv.teamb.symphoniacus.persistence.model.interfaces.IInstrumentationEntity;
+import at.fhv.teamb.symphoniacus.domain.MusicalPiece;
+import at.fhv.teamb.symphoniacus.domain.Points;
+import at.fhv.teamb.symphoniacus.persistence.model.InstrumentationEntity;
 import at.fhv.teamb.symphoniacus.presentation.DutyPopoverController;
 import com.calendarfx.model.Entry;
 import com.calendarfx.view.DateControl;
@@ -22,13 +26,19 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.control.Label;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.controlsfx.control.PopOver;
 
 public class CustomDutyPopoverNode extends PopOverContentPane {
+
+    private static final Logger LOG = LogManager.getLogger(CustomDutyPopoverNode.class);
+
     private Entry<?> entry;
     private Duty duty;
     private SectionDto section;
     private DutyPopoverController popoverController;
+    private PointsManager pointsManager;
 
     /**
      * Custom Popover for Dutyscheduler.
@@ -64,6 +74,16 @@ public class CustomDutyPopoverNode extends PopOverContentPane {
         }
     }
 
+    private int getPointsOfDuty(Duty duty) {
+        if (this.pointsManager == null) {
+            this.pointsManager = new PointsManager();
+        }
+        Points p = this.pointsManager.getPointsOfDuty(duty.getEntity());
+        LOG.debug("Calculated Points of duty: {}", p.getValue());
+
+        return p.getValue();
+    }
+
     /**
      * Load the Duty Details: Title, Discription, Points and Instrumentation.
      */
@@ -73,8 +93,11 @@ public class CustomDutyPopoverNode extends PopOverContentPane {
             Locale.setDefault(locale);
             ResourceBundle bundle = ResourceBundle.getBundle("bundles.language", locale);
             FXMLLoader loader =
-                new FXMLLoader(getClass()
-                    .getResource("/view/customDutyPopover.fxml"), bundle);
+                new FXMLLoader(
+                    getClass()
+                        .getResource("/view/customDutyPopover.fxml"),
+                    bundle
+                );
 
             try {
                 Parent root = loader.load();
@@ -82,32 +105,25 @@ public class CustomDutyPopoverNode extends PopOverContentPane {
                 setCenter(root);
 
                 this.popoverController = loader.getController();
-                popoverController.setTitleText(duty.getTitle());
-                popoverController.setDescriptionText(duty.getEntity().getDescription());
-                popoverController.setPointsText(duty
-                    .getEntity()
-                    .getDutyCategory()
-                    .getPoints()
-                    .toString()
-                );
+                this.popoverController.setTitleText(this.duty.getTitle());
+                this.popoverController.setDescriptionText(this.duty.getEntity().getDescription());
 
-                if (duty.getEntity().getSeriesOfPerformances() != null) {
+                int points = getPointsOfDuty(this.duty);
+                this.popoverController.setPointsText(Integer.toString(points));
+
+                if (this.duty.getEntity().getSeriesOfPerformances() != null) {
                     Set<IInstrumentationEntity> instrumentationSet =
-                        duty.getEntity().getSeriesOfPerformances().getInstrumentations();
+                        this.duty.getEntity().getSeriesOfPerformances().getInstrumentations();
                     List<Label> instrumentations = new LinkedList<>();
 
                     for (IInstrumentationEntity ie : instrumentationSet) {
                         instrumentations.add(new Label(ie.getName()));
                     }
-                    popoverController.setInstrumentationText(instrumentations);
+                    this.popoverController.setInstrumentationText(instrumentations);
                 }
-
-
-
             } catch (IOException e) {
-                e.printStackTrace();
+                LOG.error(e);
             }
-
         }
     }
 
@@ -121,65 +137,80 @@ public class CustomDutyPopoverNode extends PopOverContentPane {
         for (SectionDto section : sections) {
             Optional<ActualSectionInstrumentation> asi =
                 dutyScheduleManager.getInstrumentationDetails(
-                    duty,
+                    this.duty,
                     section
                 );
             if (asi.isPresent()) {
-                Boolean ready = true;
+                boolean ready = true;
                 for (DutyPosition dp : asi.get().getDuty().getDutyPositions()) {
                     if (dp.getAssignedMusician().isEmpty()) {
                         ready = false;
                         break;
                     }
                 }
-                popoverController.setStatusSection(ready, section.getSectionId());
+                this.popoverController.setStatusSection(ready, section.getSectionId());
             }
 
         }
 
-        popoverController.disableEditDutyBtn();
-        popoverController.disableEditScheduleBtn();
-
+        this.popoverController.disableEditDutyBtn();
+        this.popoverController.disableEditScheduleBtn();
     }
 
     /**
      * Load details for Dutyscheduler.
      */
     public void loadDutySchedulerProperties() {
-        popoverController.setDuty(duty);
-        popoverController.setSection(section);
-        popoverController.removeSections();
-        popoverController.removeEditDutyBtn();
+        this.popoverController.setDuty(this.duty);
+        this.popoverController.setSection(this.section);
+        this.popoverController.removeSections();
+        this.popoverController.removeEditDutyBtn();
 
         DutyScheduleManager dutyScheduleManager = new DutyScheduleManager();
-        Optional<ActualSectionInstrumentation> asi =
-            dutyScheduleManager.getInstrumentationDetails(
-                duty,
-                section
+        Optional<ActualSectionInstrumentation> asi = dutyScheduleManager
+            .getInstrumentationDetails(
+                this.duty,
+                this.section
             );
         List<Label> ldps = new LinkedList<>();
 
         if (asi.isPresent()) {
             List<DutyPosition> dps = asi.get().getDuty().getDutyPositions();
-            for (DutyPosition dp : dps) {
-                if (dp.getAssignedMusician().isPresent()) {
-                    Label l = new Label(
-                        "\u2714 " + dp.getEntity() // Unicode character, ✔
-                            .getInstrumentationPosition().getPositionDescription()
-                            + ": " + dp.getAssignedMusician().get().getFullName());
-                    l.setStyle("-fx-text-fill: green");
-                    ldps.add(l);
+            List<MusicalPiece> pieces = asi.get().getDuty().getMusicalPieces();
 
-                } else {
-                    Label l = new Label("\u2718 " + dp.getEntity() // Unicode character, ✘
-                        .getInstrumentationPosition().getPositionDescription());
-                    l.setStyle("-fx-text-fill: red");
-                    ldps.add(l);
+            for (MusicalPiece mp : pieces) {
+                Label musicalPiece = new Label(mp.toString() + ": ");
+                musicalPiece.setStyle("-fx-font-weight: bold");
+                ldps.add(musicalPiece);
+
+                for (DutyPosition dp : dps) {
+                    if (
+                        dp.getEntity()
+                        .getInstrumentationPosition()
+                        .getInstrumentation()
+                        .getMusicalPiece()
+                        .getName()
+                        .equals(mp.getEntity().getName())
+                    ) {
+                        if (dp.getAssignedMusician().isPresent()) {
+                            Label l = new Label(
+                                "\u2714 " + dp.getEntity() // Unicode character, ✔
+                                    .getInstrumentationPosition().getPositionDescription()
+                                    + ": " + dp.getAssignedMusician().get().getFullName());
+                            l.setStyle("-fx-text-fill: green");
+                            ldps.add(l);
+
+                        } else {
+                            Label l = new Label("\u2718 " + dp.getEntity() // Unicode character, ✘
+                                .getInstrumentationPosition().getPositionDescription());
+                            l.setStyle("-fx-text-fill: red");
+                            ldps.add(l);
+                        }
+                    }
                 }
-
+                ldps.add(new Label());
             }
-
         }
-        popoverController.setInstrumentationStatus(ldps);
+        this.popoverController.setInstrumentationStatus(ldps);
     }
 }

@@ -12,14 +12,14 @@
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.ScrollPane?>
 <PopOverContentPane fx:controller="at.fhv.teamb.symphoniacus.presentation.DutyPopoverController"
-                    prefHeight="400" prefWidth="300"
+                    prefHeight="450" prefWidth="410"
                     xmlns="http://javafx.com/javafx/11.0.1"
                     xmlns:fx="http://javafx.com/fxml/1">
     <center>
         <AnchorPane BorderPane.alignment="CENTER">
             <children>
                 <VBox AnchorPane.leftAnchor="10.0" AnchorPane.topAnchor="10.0" AnchorPane.rightAnchor="10">
-                    <ScrollPane prefHeight="370" prefWidth="260">
+                    <ScrollPane prefHeight="380" prefWidth="260">
                         <VBox>
                             <padding>
                                 <Insets top="10" bottom="10" right="10" left="10">
