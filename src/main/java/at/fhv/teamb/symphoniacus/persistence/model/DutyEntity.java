@@ -72,7 +72,10 @@ public class DutyEntity implements IDutyEntity {
     )
     private Set<IDutyPositionEntity> dutyPositions = new HashSet<>();
 
-    @ManyToMany(targetEntity = SectionMonthlyScheduleEntity.class)
+    @ManyToMany(
+        cascade = {CascadeType.PERSIST, CascadeType.MERGE},
+        targetEntity = SectionMonthlyScheduleEntity.class
+    )
     @JoinTable(
         name = "duty_sectionMonthlySchedule",
         joinColumns = {

@@ -53,8 +53,8 @@ public abstract class BaseDao<T> implements Dao<T> {
         } catch (Exception e) {
             if (transaction != null && transaction.isActive()) {
                 transaction.rollback();
-                LOG.error("Could not persist element", e);
             }
+            LOG.error("Could not persist element", e);
         }
         return Optional.empty();
     }
@@ -77,8 +77,8 @@ public abstract class BaseDao<T> implements Dao<T> {
         } catch (Exception e) {
             if (transaction != null && transaction.isActive()) {
                 transaction.rollback();
-                LOG.error("Could not update element", e);
             }
+            LOG.error("Could not update element", e);
         }
         return Optional.empty();
     }
