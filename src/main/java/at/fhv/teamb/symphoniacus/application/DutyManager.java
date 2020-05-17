@@ -19,9 +19,7 @@ import at.fhv.teamb.symphoniacus.persistence.dao.interfaces.IDutyDao;
 import at.fhv.teamb.symphoniacus.persistence.dao.interfaces.IInstrumentationDao;
 import at.fhv.teamb.symphoniacus.persistence.dao.interfaces.ISeriesOfPerformancesDao;
 import at.fhv.teamb.symphoniacus.persistence.model.DutyCategoryChangelogEntity;
-import at.fhv.teamb.symphoniacus.persistence.model.DutyCategoryEntity;
 import at.fhv.teamb.symphoniacus.persistence.model.DutyEntity;
-import at.fhv.teamb.symphoniacus.persistence.model.InstrumentationEntity;
 import at.fhv.teamb.symphoniacus.persistence.model.SectionEntity;
 import at.fhv.teamb.symphoniacus.persistence.model.interfaces.IDutyCategoryChangelogEntity;
 import at.fhv.teamb.symphoniacus.persistence.model.interfaces.IDutyCategoryEntity;
@@ -476,32 +474,32 @@ public class DutyManager {
         LocalDateTime endingDate,
         DutyCategoryDto category) {
 
-        DutyCategoryEntity dutyCat = new DutyCategoryEntity();
-
-        //Convert DTO to Entity
-        dutyCat.setDutyCategoryId(category.getDutyCategoryId());
-        dutyCat.setType(category.getType());
-        dutyCat.setPoints(category.getPoints());
+        Optional<IDutyCategoryEntity> dutyCat = this.dutyCategoryDao
+            .find(category.getDutyCategoryId());
 
         //Convert List of instDTO to instEntity
-        List<IInstrumentationEntity> instrumentationEntity = new LinkedList<>();
+        List<IInstrumentationEntity> newInstrumentations = new LinkedList<>();
+        Optional<IInstrumentationEntity> inst = Optional.empty();
 
         for (InstrumentationDto i : instrumentations) {
-            IInstrumentationEntity inst = new InstrumentationEntity();
-            inst.setInstrumentationId(i.getInstrumentationId());
-            inst.setName(i.getName());
+            inst = this.instrumentationDao.find(i.getInstrumentationId());
+            if (inst.isPresent()) {
+                newInstrumentations.add(inst.get());
+            }
         }
 
         Optional<ISeriesOfPerformancesEntity> series = this.seriesDao.find(
-            seriesOfPerformances.getSeriesOfPerformancesId()
-        );
-        if (series.isPresent()) {
+            seriesOfPerformances.getSeriesOfPerformancesId());
+
+        System.out.println();
+
+        if (series.isPresent() && dutyCat.isPresent() && !newInstrumentations.isEmpty()) {
             return this.dutyDao.doesDutyAlreadyExists(
                 series.get(),
-                instrumentationEntity,
+                newInstrumentations,
                 startingDate,
                 endingDate,
-                dutyCat
+                dutyCat.get()
             );
         } else {
             return false;

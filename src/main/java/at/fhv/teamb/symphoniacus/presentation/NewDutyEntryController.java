@@ -108,7 +108,7 @@ public class NewDutyEntryController implements Initializable, Parentable<Calenda
     private Button scheduleSaveBtn;
 
     @FXML
-    private Button scheduleBackBtn;
+    private Button scheduleCancelBtn;
 
     @FXML
     private CheckComboBox<InstrumentationDto> instrumentationsSelect;
@@ -176,12 +176,15 @@ public class NewDutyEntryController implements Initializable, Parentable<Calenda
                 initInstrumentationsCheckComboBox();
                 this.instrumentationsSelect.setDisable(false);
             }
+            setSaveButtonStatus();
         });
 
         // Update series of performances after creating new one in other tab
         this.seriesOfPerformancesSelect.addEventHandler(ComboBoxBase.ON_SHOWING, event -> {
             initSeriesOfPerformancesComboBox();
+            setSaveButtonStatus();
         });
+
     }
 
     /**
@@ -192,7 +195,7 @@ public class NewDutyEntryController implements Initializable, Parentable<Calenda
         this.scheduleSaveBtn.setOnAction(event -> saveNewDutyEntry());
 
         // Cancel button
-        this.scheduleBackBtn.setOnAction(e -> confirmTabClosure());
+        this.scheduleCancelBtn.setOnAction(e -> confirmTabClosure());
 
         // Button to open new series of performances tabs
         this.newSeriesOfPerformancesBtn.setOnAction(e -> openNewSopTab());
@@ -220,6 +223,7 @@ public class NewDutyEntryController implements Initializable, Parentable<Calenda
         //Validate Combobox seriesOfPerformance
         this.seriesOfPerformancesSelect.valueProperty()
             .addListener((observable, oldValue, newValue) -> {
+
                 this.validSoP.set(!this.seriesOfPerformancesSelect.getSelectionModel().isEmpty());
                 setSaveButtonStatus();
             });
@@ -282,7 +286,9 @@ public class NewDutyEntryController implements Initializable, Parentable<Calenda
             FXCollections.observableArrayList();
 
         observableList.addAll(seriesOfPerformancesList);
-        this.seriesOfPerformancesSelect.getItems().setAll(observableList);
+        this.seriesOfPerformancesSelect.getItems().removeAll();
+        this.seriesOfPerformancesSelect.getItems().addAll(observableList);
+
     }
 
     /**

@@ -276,7 +276,7 @@ public class DutyDao extends BaseDao<IDutyEntity> implements IDutyDao {
                 + "AND d.start = :sDate "
                 + "AND d.end = :eDate "
                 + "AND d.seriesOfPerformances = :series "
-                + "AND d.dutyCategory.dutyCategoryId = :category ",
+                + "AND d.dutyCategory = :category ",
             Long.class
         );
 
@@ -284,8 +284,7 @@ public class DutyDao extends BaseDao<IDutyEntity> implements IDutyDao {
         query.setParameter("sDate", startingDate);
         query.setParameter("eDate", endingDate);
         query.setParameter("inst", instrumentations);
-        query.setParameter("category", category.getDutyCategoryId());
-
+        query.setParameter("category", category);
         return (query.getSingleResult() >= 1);
     }
 }

@@ -99,7 +99,7 @@
             <HBox fx:id="tabsBottomButtonHbox" alignment="CENTER" prefHeight="100.0" spacing="30.0" VBox.vgrow="ALWAYS">
                <children>
                   <Button fx:id="scheduleSaveBtn" alignment="CENTER" defaultButton="true" minHeight="40.0" mnemonicParsing="false" prefHeight="40" prefWidth="150.0" text="%global.button.save" />
-                  <Button fx:id="scheduleBackBtn" alignment="CENTER" cancelButton="true" contentDisplay="CENTER" minHeight="40.0" mnemonicParsing="false" prefHeight="40" prefWidth="150.0" text="%global.button.back" />
+                  <Button fx:id="scheduleCancelBtn" alignment="CENTER" cancelButton="true" contentDisplay="CENTER" minHeight="40.0" mnemonicParsing="false" prefHeight="40" prefWidth="150.0" text="%global.button.cancel" />
                </children>
                <opaqueInsets>
                   <Insets />
