@@ -539,14 +539,14 @@ public class DutyManager {
     }
 
     /**
-     * Converts a DutyDto to Duty Domain Object
+     * Converts a DutyDto to Duty Domain Object.
      * @param duty given DutyDto
      * @return Duty Domain Object
      */
-    public Duty getDutyByDutyDto (DutyDto duty) {
+    public Duty getDutyByDutyDto(DutyDto duty) {
         Optional<IDutyEntity> dutyEntity = this.dutyDao.find(duty.getDutyId());
 
-        if(dutyEntity.isPresent()) {
+        if (dutyEntity.isPresent()) {
             return new Duty(dutyEntity.get());
         } else {
             LOG.error("A Duty with given DutyId from Dto does not exists");
