@@ -417,6 +417,7 @@ public class DutyManager {
 
     private DutyDto fillNewDtoWithState(DutyDto duty, PersistenceState state) {
         return new DutyDto.DutyDtoBuilder()
+            .withDutyId(duty.getDutyId())
             .withDescription(duty.getDescription())
             .withTimeOfDay(duty.getTimeOfDay())
             .withStart(duty.getStart())
