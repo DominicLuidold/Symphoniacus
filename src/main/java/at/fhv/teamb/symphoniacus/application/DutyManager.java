@@ -540,7 +540,6 @@ public class DutyManager {
 
     /**
      * Converts a DutyDto to Duty Domain Object.
-     *
      * @param duty given DutyDto
      * @return Duty Domain Object
      */
