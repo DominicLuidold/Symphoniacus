@@ -177,6 +177,11 @@ public class NewDutyEntryController implements Initializable, Parentable<Calenda
                 this.instrumentationsSelect.setDisable(false);
             }
         });
+
+        // Update series of performances after creating new one in other tab
+        this.seriesOfPerformancesSelect.addEventHandler(ComboBoxBase.ON_SHOWING, event -> {
+            initSeriesOfPerformancesComboBox();
+        });
     }
 
     /**
