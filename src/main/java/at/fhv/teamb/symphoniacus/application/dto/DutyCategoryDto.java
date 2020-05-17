@@ -4,7 +4,8 @@ import java.util.List;
 
 /**
  * DTO for DutyCategory.
- * @author : Danijel Antonijevic
+ *
+ * @author Danijel Antonijevic
  **/
 public class DutyCategoryDto {
 
@@ -33,7 +34,7 @@ public class DutyCategoryDto {
     }
 
     public String getType() {
-        return type;
+        return this.type;
     }
 
     public int getPoints() {
@@ -83,6 +84,7 @@ public class DutyCategoryDto {
 
         /**
          * Constructs a new DutyCategoryDto with the previously set options in the builder.
+         *
          * @return Constructed DutyCategoryDto.
          */
         public DutyCategoryDto build() {

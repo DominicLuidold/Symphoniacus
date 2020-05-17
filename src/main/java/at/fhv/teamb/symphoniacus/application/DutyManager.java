@@ -360,6 +360,12 @@ public class DutyManager {
         if (newSeries.isPresent() && newCategory.isPresent()) {
             duty.setSeriesOfPerformances(newSeries.get());
             duty.setDutyCategory(newCategory.get());
+        } else {
+            LOG.error(
+                "SeriesOfPerformances and/or DutyCategory are missing for duty {}, "
+                    + "this should not have happened",
+                duty.getDutyId()
+            );
         }
 
         this.dutyPositionManager.createDutyPositions(
@@ -541,6 +547,7 @@ public class DutyManager {
 
     /**
      * Converts a DutyDto to Duty Domain Object.
+     *
      * @param duty given DutyDto
      * @return Duty Domain Object
      */

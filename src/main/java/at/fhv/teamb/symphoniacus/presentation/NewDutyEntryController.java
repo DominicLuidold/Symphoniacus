@@ -625,7 +625,6 @@ public class NewDutyEntryController implements Initializable, Parentable<Calenda
      * @param startTime The start time
      * @return A String matching a predefined value for the start time
      */
-
     private String calculateTimeOfDay(LocalTime startTime) {
         if (startTime.isBefore(LocalTime.of(10, 1))) {
             return "MORNING";
@@ -640,7 +639,6 @@ public class NewDutyEntryController implements Initializable, Parentable<Calenda
     /**
      * Opens a new series of performances tab.
      */
-
     private void openNewSopTab() {
         this.getParentController().getParentController().addTab(TabPaneEntry.ADD_SOP);
     }
@@ -649,7 +647,6 @@ public class NewDutyEntryController implements Initializable, Parentable<Calenda
     /**
      * Closes the current tab.
      */
-
     private void closeTab() {
         LOG.debug("Closing Add Duty");
         this.getParentController().getParentController().removeTab(TabPaneEntry.ADD_DUTY);
@@ -659,9 +656,8 @@ public class NewDutyEntryController implements Initializable, Parentable<Calenda
 
 
     /**
-     * {@inheritDoc}.
+     * {@inheritDoc}
      */
-
     @Override
     public void setParentController(CalendarController controller) {
         this.parentController = controller;
@@ -669,9 +665,8 @@ public class NewDutyEntryController implements Initializable, Parentable<Calenda
 
 
     /**
-     * {@inheritDoc}.
+     * {@inheritDoc}
      */
-
     @Override
     public CalendarController getParentController() {
         return (CalendarController) this.parentController;
@@ -679,9 +674,8 @@ public class NewDutyEntryController implements Initializable, Parentable<Calenda
 
 
     /**
-     * {@inheritDoc}.
+     * {@inheritDoc}
      */
-
     @Override
     public void initializeWithParent() {
         // Intentionally empty - currently not needed
