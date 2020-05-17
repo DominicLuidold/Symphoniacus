@@ -445,6 +445,15 @@ public class SeriesOfPerformancesController
                 this.resources.getString("global.button.ok")
             );
             return false;
+        } else if (this.musicalPieceCheckComboBox.getCheckModel().getCheckedItems().isEmpty()) {
+            MainController.showErrorAlert(
+                this.resources.getString("seriesOfPerformances.error.title"),
+                this.resources.getString(
+                    "seriesOfPerformances.error.noMusicalPieceSelected.message"
+                ),
+                this.resources.getString("global.button.ok")
+            );
+            return false;
         } else if (!isInstrumentationForMusicalPieceSelected()) {
             MainController.showErrorAlert(
                 this.resources.getString("seriesOfPerformances.error.title"),
@@ -454,9 +463,8 @@ public class SeriesOfPerformancesController
                 this.resources.getString("global.button.ok")
             );
             return false;
-        } else {
-            return true;
         }
+        return true;
     }
 
     private void cancel() {
