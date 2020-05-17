@@ -11,7 +11,7 @@ import at.fhv.teamb.symphoniacus.domain.MusicalPiece;
 import at.fhv.teamb.symphoniacus.domain.Musician;
 import at.fhv.teamb.symphoniacus.domain.Points;
 import at.fhv.teamb.symphoniacus.persistence.PersistenceState;
-import at.fhv.teamb.symphoniacus.persistence.model.InstrumentationPositionEntity;
+import at.fhv.teamb.symphoniacus.persistence.model.interfaces.IInstrumentationPositionEntity;
 import at.fhv.teamb.symphoniacus.presentation.internal.AlertHelper;
 import at.fhv.teamb.symphoniacus.presentation.internal.DutyPositionMusicianTableModel;
 import at.fhv.teamb.symphoniacus.presentation.internal.MusicalPieceComboView;
@@ -413,7 +413,7 @@ public class DutyScheduleController
                             if (newValue != null) {
                                 LOG.debug("New selected piece is {}", newValue.getName());
                                 filteredList.setPredicate(dutyPosition -> {
-                                    InstrumentationPositionEntity instrumentationPosition =
+                                    IInstrumentationPositionEntity instrumentationPosition =
                                         dutyPosition
                                             .getDutyPosition()
                                             .getEntity()
@@ -846,7 +846,7 @@ public class DutyScheduleController
         List<DutyPosition> allPositions
     ) {
         for (DutyPosition dutyPosition : allPositions) {
-            InstrumentationPositionEntity ipe = dutyPosition
+            IInstrumentationPositionEntity ipe = dutyPosition
                 .getEntity()
                 .getInstrumentationPosition();
             if (

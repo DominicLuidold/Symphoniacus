@@ -1,5 +1,7 @@
 package at.fhv.teamb.symphoniacus.persistence.model;
 
+import at.fhv.teamb.symphoniacus.persistence.model.interfaces.IDutyCategoryChangelogEntity;
+import at.fhv.teamb.symphoniacus.persistence.model.interfaces.IDutyCategoryEntity;
 import java.time.LocalDate;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -13,15 +15,15 @@ import javax.persistence.Table;
 
 @Entity
 @Table(name = "dutyCategoryChangelog")
-public class DutyCategoryChangelogEntity {
+public class DutyCategoryChangelogEntity implements IDutyCategoryChangelogEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "dutyCategoryChangelogId")
     private Integer dutyCategoryChangelogId;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.LAZY, targetEntity = DutyCategoryEntity.class)
     @JoinColumn(name = "dutyCategoryId")
-    private DutyCategoryEntity dutyCategory;
+    private IDutyCategoryEntity dutyCategory;
 
     @Column(name = "startDate")
     private LocalDate startDate;
@@ -29,34 +31,42 @@ public class DutyCategoryChangelogEntity {
     @Column(name = "points")
     private Integer points;
 
+    @Override
     public Integer getDutyCategoryChangelogId() {
         return this.dutyCategoryChangelogId;
     }
 
+    @Override
     public void setDutyCategoryChangelogId(Integer dutyCategoryChangelogId) {
         this.dutyCategoryChangelogId = dutyCategoryChangelogId;
     }
 
-    public DutyCategoryEntity getDutyCategory() {
+    @Override
+    public IDutyCategoryEntity getDutyCategory() {
         return dutyCategory;
     }
 
-    public void setDutyCategory(DutyCategoryEntity dutyCategory) {
+    @Override
+    public void setDutyCategory(IDutyCategoryEntity dutyCategory) {
         this.dutyCategory = dutyCategory;
     }
 
+    @Override
     public LocalDate getStartDate() {
         return this.startDate;
     }
 
+    @Override
     public void setStartDate(LocalDate startDate) {
         this.startDate = startDate;
     }
 
+    @Override
     public Integer getPoints() {
         return this.points;
     }
 
+    @Override
     public void setPoints(Integer points) {
         this.points = points;
     }

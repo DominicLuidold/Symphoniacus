@@ -2,8 +2,9 @@ package at.fhv.teamb.symphoniacus.application;
 
 import at.fhv.teamb.symphoniacus.domain.Musician;
 import at.fhv.teamb.symphoniacus.persistence.dao.MusicianDao;
-import at.fhv.teamb.symphoniacus.persistence.model.MusicianEntity;
-import at.fhv.teamb.symphoniacus.persistence.model.UserEntity;
+import at.fhv.teamb.symphoniacus.persistence.dao.interfaces.IMusicianDao;
+import at.fhv.teamb.symphoniacus.persistence.model.interfaces.IMusicianEntity;
+import at.fhv.teamb.symphoniacus.persistence.model.interfaces.IUserEntity;
 import java.util.Optional;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -16,21 +17,21 @@ import org.apache.logging.log4j.Logger;
  */
 public class MusicianManager {
     private static final Logger LOG = LogManager.getLogger(MusicianManager.class);
-    private MusicianDao musicianDao;
+    private IMusicianDao musicianDao;
 
     public MusicianManager() {
         this.musicianDao = new MusicianDao();
     }
 
     /**
-     * Returns a {@link Musician} based on provided {@link UserEntity}.
+     * Returns a {@link Musician} based on provided {@link IUserEntity}.
      *
      * <p>In case of the user not being a musician, an empty {@link Optional} will be returned.
      *
      * @param user The user to use
      * @return A Musician object representing the provided User
      */
-    public Optional<Musician> loadMusician(UserEntity user) {
+    public Optional<Musician> loadMusician(IUserEntity user) {
         if (user == null) {
             LOG.error("Cannot load musician with null user.");
             return Optional.empty();
@@ -45,7 +46,7 @@ public class MusicianManager {
      * @return Optional which is filled when loading worked, else empty
      */
     public Optional<Musician> loadMusician(int userId) {
-        Optional<MusicianEntity> musicianEntity = this.musicianDao.find(userId);
+        Optional<IMusicianEntity> musicianEntity = this.musicianDao.find(userId);
 
         // Load attempt failed
         if (musicianEntity.isEmpty()) {

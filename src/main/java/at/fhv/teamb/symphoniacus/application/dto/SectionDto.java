@@ -1,9 +1,9 @@
 package at.fhv.teamb.symphoniacus.application.dto;
 
-import at.fhv.teamb.symphoniacus.persistence.model.DutyPositionEntity;
-import at.fhv.teamb.symphoniacus.persistence.model.MusicianEntity;
-import at.fhv.teamb.symphoniacus.persistence.model.SectionInstrumentationEntity;
-import at.fhv.teamb.symphoniacus.persistence.model.SectionMonthlyScheduleEntity;
+import at.fhv.teamb.symphoniacus.persistence.model.interfaces.IDutyPositionEntity;
+import at.fhv.teamb.symphoniacus.persistence.model.interfaces.IMusicianEntity;
+import at.fhv.teamb.symphoniacus.persistence.model.interfaces.ISectionInstrumentationEntity;
+import at.fhv.teamb.symphoniacus.persistence.model.interfaces.ISectionMonthlyScheduleEntity;
 import java.util.List;
 
 /**
@@ -16,19 +16,19 @@ public class SectionDto {
     private final int sectionId;
     private final String sectionShortcut;
     private final String description;
-    private final List<SectionMonthlyScheduleEntity> sectionMonthlySchedules;
-    private final List<MusicianEntity> musicians;
-    private final List<DutyPositionEntity> dutyPositions;
-    private final List<SectionInstrumentationEntity> sectionInstrumentations;
+    private final List<ISectionMonthlyScheduleEntity> sectionMonthlySchedules;
+    private final List<IMusicianEntity> musicians;
+    private final List<IDutyPositionEntity> dutyPositions;
+    private final List<ISectionInstrumentationEntity> sectionInstrumentations;
 
     private SectionDto(
         int sectionId,
         String sectionShortcut,
         String description,
-        List<SectionMonthlyScheduleEntity> sectionMonthlySchedules,
-        List<MusicianEntity> musicians,
-        List<DutyPositionEntity> dutyPositions,
-        List<SectionInstrumentationEntity> sectionInstrumentations
+        List<ISectionMonthlyScheduleEntity> sectionMonthlySchedules,
+        List<IMusicianEntity> musicians,
+        List<IDutyPositionEntity> dutyPositions,
+        List<ISectionInstrumentationEntity> sectionInstrumentations
     ) {
         this.sectionId = sectionId;
         this.sectionShortcut = sectionShortcut;
@@ -52,19 +52,19 @@ public class SectionDto {
         return this.description;
     }
 
-    public List<SectionMonthlyScheduleEntity> getSectionMonthlySchedules() {
+    public List<ISectionMonthlyScheduleEntity> getSectionMonthlySchedules() {
         return this.sectionMonthlySchedules;
     }
 
-    public List<MusicianEntity> getMusicians() {
+    public List<IMusicianEntity> getMusicians() {
         return this.musicians;
     }
 
-    public List<DutyPositionEntity> getDutyPositions() {
+    public List<IDutyPositionEntity> getDutyPositions() {
         return this.dutyPositions;
     }
 
-    public List<SectionInstrumentationEntity> getSectionInstrumentations() {
+    public List<ISectionInstrumentationEntity> getSectionInstrumentations() {
         return this.sectionInstrumentations;
     }
 
@@ -72,10 +72,10 @@ public class SectionDto {
         private final int sectionId;
         private String sectionShortcut;
         private String description;
-        private List<SectionMonthlyScheduleEntity> sectionMonthlySchedules;
-        private List<MusicianEntity> musicians;
-        private List<DutyPositionEntity> dutyPositions;
-        private List<SectionInstrumentationEntity> sectionInstrumentations;
+        private List<ISectionMonthlyScheduleEntity> sectionMonthlySchedules;
+        private List<IMusicianEntity> musicians;
+        private List<IDutyPositionEntity> dutyPositions;
+        private List<ISectionInstrumentationEntity> sectionInstrumentations;
 
         // we need this to be set
         public SectionDtoBuilder(int sectionId) {
@@ -93,24 +93,24 @@ public class SectionDto {
         }
 
         public SectionDtoBuilder withSectionMonthlySchedules(
-            List<SectionMonthlyScheduleEntity> sectionMonthlySchedules
+            List<ISectionMonthlyScheduleEntity> sectionMonthlySchedules
         ) {
             this.sectionMonthlySchedules = sectionMonthlySchedules;
             return this;
         }
 
-        public SectionDtoBuilder withMusicians(List<MusicianEntity> musicians) {
+        public SectionDtoBuilder withMusicians(List<IMusicianEntity> musicians) {
             this.musicians = musicians;
             return this;
         }
 
-        public SectionDtoBuilder withDutyPositions(List<DutyPositionEntity> dutyPositions) {
+        public SectionDtoBuilder withDutyPositions(List<IDutyPositionEntity> dutyPositions) {
             this.dutyPositions = dutyPositions;
             return this;
         }
 
         public SectionDtoBuilder withSectionInstrumentations(
-            List<SectionInstrumentationEntity> sectionInstrumentations
+            List<ISectionInstrumentationEntity> sectionInstrumentations
         ) {
             this.sectionInstrumentations = sectionInstrumentations;
             return this;

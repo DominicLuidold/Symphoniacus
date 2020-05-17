@@ -49,7 +49,6 @@ public abstract class LoadingAnimationTask<T> extends Task<T> {
         Throwable t = this.getException();
         if (t != null) {
             LOG.error(t);
-            t.printStackTrace();
         }
         
         Platform.runLater(

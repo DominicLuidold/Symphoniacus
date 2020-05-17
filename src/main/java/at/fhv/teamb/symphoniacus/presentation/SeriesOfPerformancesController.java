@@ -2,9 +2,9 @@ package at.fhv.teamb.symphoniacus.presentation;
 
 import at.fhv.teamb.symphoniacus.application.MusicalPieceManager;
 import at.fhv.teamb.symphoniacus.application.SeriesOfPerformancesManager;
-import at.fhv.teamb.symphoniacus.persistence.model.InstrumentationEntity;
-import at.fhv.teamb.symphoniacus.persistence.model.MusicalPieceEntity;
-import at.fhv.teamb.symphoniacus.persistence.model.SectionInstrumentationEntity;
+import at.fhv.teamb.symphoniacus.application.dto.InstrumentationDto;
+import at.fhv.teamb.symphoniacus.application.dto.MusicalPieceDto;
+import at.fhv.teamb.symphoniacus.application.dto.SectionInstrumentationDto;
 import at.fhv.teamb.symphoniacus.presentation.internal.Parentable;
 import at.fhv.teamb.symphoniacus.presentation.internal.TabPaneEntry;
 import at.fhv.teamb.symphoniacus.presentation.internal.UkTimeFormatter;
@@ -61,16 +61,19 @@ public class SeriesOfPerformancesController
     private boolean itemChanged;
     private TabPaneController parentController;
     @FXML
-    private GridPane grid;
+    private GridPane grid1;
+
+    @FXML
+    private GridPane grid2;
 
     @FXML
     private JFXTextField nameOfSeries;
 
     @FXML
-    private CheckComboBox<MusicalPieceEntity> musicalPieceCheckComboBox;
+    private CheckComboBox<MusicalPieceDto> musicalPieceCheckComboBox;
 
     @FXML
-    private CheckComboBox<InstrumentationEntity> instrumentationCheckComboBox;
+    private CheckComboBox<InstrumentationDto> instrumentationCheckComboBox;
 
     /*
     This one is and will not be implemented.
@@ -115,6 +118,7 @@ public class SeriesOfPerformancesController
         this.instrumentationCheckComboBox.setTitle(
             resources.getString("seriesOfPerformances.instrumentations.placeholder")
         );
+        this.instrumentationCheckComboBox.setDisable(true);
         initMusicalPiecesCheckListView();
 
         RequiredFieldValidator fieldValidator = new RequiredFieldValidator();
@@ -163,8 +167,12 @@ public class SeriesOfPerformancesController
         addIcon.getStyleClass().addAll("button-icon");
         this.addModifyButton.setGraphic(addIcon);
 
+        // Set UK Time Format for DatePicker
         this.startingDate.setConverter(UkTimeFormatter.getUkTimeConverter());
         this.endingDate.setConverter(UkTimeFormatter.getUkTimeConverter());
+
+        // Set necessary string converters to each combobox
+        setComboboxConverters();
     }
 
     /**
@@ -173,35 +181,11 @@ public class SeriesOfPerformancesController
      * loadInstrumentationsFromChosenMusicalPieces is called.
      */
     public void initMusicalPiecesCheckListView() {
-        final ObservableList<MusicalPieceEntity> musicalPieces =
+        final ObservableList<MusicalPieceDto> musicalPieces =
             FXCollections.observableArrayList();
-        Set<MusicalPieceEntity> mp = this.musicalPieceManager.getAllMusicalPieces();
+        Set<MusicalPieceDto> mp = this.musicalPieceManager.getAllMusicalPieces();
         musicalPieces.addAll(mp);
 
-        final StringConverter<MusicalPieceEntity> musicalConverter =
-            new StringConverter<>() {
-                @Override
-                public String toString(MusicalPieceEntity piece) {
-                    return piece.getName();
-                }
-
-                @Override
-                public MusicalPieceEntity fromString(String nameOfPiece) {
-                    Optional<MusicalPieceEntity> piece = musicalPieceManager.getByName(
-                        nameOfPiece
-                    );
-                    if (piece.isPresent()) {
-                        return piece.get();
-                    } else {
-                        LOG.error(
-                            "Somehow the musicial piece couldn't get found by its"
-                                + " name in the SeriesOfPerformancesController");
-                        //Should never be able to get here
-                        return null;
-                    }
-                }
-            };
-        this.musicalPieceCheckComboBox.setConverter(musicalConverter);
         /*
         Der schlimmste Fehler meines Lebens!:
         https://stackoverflow.com/questions/30643979/checkcombobox-choices-are-empty
@@ -210,7 +194,7 @@ public class SeriesOfPerformancesController
 
         // Changes boolean to avoid unnecessary select statements
         this.musicalPieceCheckComboBox.getCheckModel().getCheckedItems().addListener(
-            (ListChangeListener<MusicalPieceEntity>) c -> this.itemChanged = true);
+            (ListChangeListener<MusicalPieceDto>) c -> this.itemChanged = true);
 
         // Call init Instrumentations, when Musical Pieces have been chosen
         this.musicalPieceCheckComboBox.addEventHandler(ComboBoxBase.ON_HIDDEN, event -> {
@@ -218,6 +202,11 @@ public class SeriesOfPerformancesController
                 loadInstrumentationsFromChosenMusicalPieces(
                     this.musicalPieceCheckComboBox.getCheckModel().getCheckedItems());
                 this.itemChanged = false;
+            }
+            if (!this.musicalPieceCheckComboBox.getCheckModel().getCheckedItems().isEmpty()) {
+                this.instrumentationCheckComboBox.setDisable(false);
+            } else {
+                this.instrumentationCheckComboBox.setDisable(true);
             }
         });
     }
@@ -229,37 +218,23 @@ public class SeriesOfPerformancesController
      * @param musicalPieces checked musicialPieces
      */
     private void loadInstrumentationsFromChosenMusicalPieces(
-        ObservableList<MusicalPieceEntity> musicalPieces
+        ObservableList<MusicalPieceDto> musicalPieces
     ) {
-        Set<MusicalPieceEntity> mp = new LinkedHashSet<>(musicalPieces);
+        Set<MusicalPieceDto> mp = new LinkedHashSet<>(musicalPieces);
 
-        Set<InstrumentationEntity> inst = this.musicalPieceManager.getInstrumentations(mp);
+        Set<InstrumentationDto> inst = this.musicalPieceManager.getInstrumentations(mp);
 
         // All Intrumentations of the checked musical pieces
-        ObservableSet<InstrumentationEntity> instrumentations = FXCollections.observableSet();
-        instrumentations.addAll(inst);
+        ObservableSet<InstrumentationDto> instrumentations = FXCollections.observableSet(inst);
 
-        final StringConverter<InstrumentationEntity> instrumentationConverter =
-            new StringConverter<>() {
-                @Override
-                public String toString(InstrumentationEntity instrumentation) {
-                    return instrumentation.getName() + " - "
-                        + instrumentation.getMusicalPiece().getName();
-                }
-
-                @Override
-                public InstrumentationEntity fromString(String nameOfPiece) {
-                    LOG.error(
-                        "Return NULL: SeriesOfPerformancesController fromString von instrumentation"
-                            + " wurde aufgerufen -> ist aber garnicht implementiert");
-                    return null;
-                }
-            };
-        ObservableList<InstrumentationEntity> currentItems =
+        ObservableList<InstrumentationDto> currentItems =
             this.instrumentationCheckComboBox.getItems();
 
         // Füge neu dazugekommene Instrumentations in die currentlist
-        for (InstrumentationEntity instrumentation : instrumentations) {
+        // TODO !-! hier wird ein Nullpointer von CheckComboboxSkin !EXTERNES PROG.! geworfen
+        //  vielleicht kann dieser noch zukünftig gefixt werden,
+        //  beeinträchtigt funktionalität momentan nicht
+        for (InstrumentationDto instrumentation : instrumentations) {
             if (!(currentItems.contains(instrumentation))) {
                 this.instrumentationCheckComboBox.getItems().add(instrumentation);
             }
@@ -267,16 +242,16 @@ public class SeriesOfPerformancesController
 
         // Alle Instrumentations die nach dem Hinzufügen nicht in der "neuen" Liste vorhanden sind
         // werden gelöscht und handling der CheckIndeces
-        Iterator<InstrumentationEntity> iterator =
+        Iterator<InstrumentationDto> iterator =
             this.instrumentationCheckComboBox.getItems().iterator();
         while (iterator.hasNext()) {
-            InstrumentationEntity tempInst = iterator.next();
+            InstrumentationDto tempInst = iterator.next();
             if (!(instrumentations.contains(tempInst))) {
                 this.instrumentationCheckComboBox.getCheckModel().clearCheck(tempInst);
                 // Speichere aktuelle checks in zwischenliste
-                List<InstrumentationEntity> tmp = new LinkedList<>(
+                List<InstrumentationDto> tmp = new LinkedList<>(
                     this.instrumentationCheckComboBox.getCheckModel().getCheckedItems());
-                ObservableList<InstrumentationEntity> tempList =
+                ObservableList<InstrumentationDto> tempList =
                     FXCollections.observableArrayList(tmp);
 
                 this.instrumentationCheckComboBox.getCheckModel().clearChecks();
@@ -285,7 +260,7 @@ public class SeriesOfPerformancesController
 
                 // Durch remove wurde die size der liste verändert und somit sind alle
                 // checkIndices falsche -> deshalb werden nach dem clearen die checks neu gesetzt
-                for (InstrumentationEntity instrumentation : tempList) {
+                for (InstrumentationDto instrumentation : tempList) {
                     if (this.instrumentationCheckComboBox.getItems().contains(instrumentation)) {
                         this.instrumentationCheckComboBox.getCheckModel().check(instrumentation);
                     }
@@ -307,7 +282,6 @@ public class SeriesOfPerformancesController
             }
         }
 
-        this.instrumentationCheckComboBox.setConverter(instrumentationConverter);
         this.instrumentationCheckComboBox.addEventHandler(
             ComboBoxBase.ON_HIDDEN,
             event -> loadSectionInstrumentationDescriptions()
@@ -319,15 +293,15 @@ public class SeriesOfPerformancesController
      * InstrumentationCheckComboBox fand displays them in a list view.
      */
     private void loadSectionInstrumentationDescriptions() {
-        ObservableList<InstrumentationEntity> instrumentations =
+        ObservableList<InstrumentationDto> instrumentations =
             this.instrumentationCheckComboBox.getCheckModel().getCheckedItems();
 
         List<String> desc = new LinkedList<>();
         StringBuilder sb;
-        for (InstrumentationEntity instrumentation : instrumentations) {
+        for (InstrumentationDto instrumentation : instrumentations) {
             sb = new StringBuilder();
             String prefix = "";
-            for (SectionInstrumentationEntity sectionInstrumentation : instrumentation
+            for (SectionInstrumentationDto sectionInstrumentation : instrumentation
                 .getSectionInstrumentations()) {
                 sb.append(prefix);
                 sb.append(sectionInstrumentation.getPredefinedSectionInstrumentation());
@@ -345,14 +319,64 @@ public class SeriesOfPerformancesController
     }
 
     /**
+     * Set necessary String converters for each Combobox.
+     */
+    private void setComboboxConverters() {
+        // Mucsical Pieces CheckCombobox
+        final StringConverter<MusicalPieceDto> musicalConverter =
+            new StringConverter<>() {
+                @Override
+                public String toString(MusicalPieceDto piece) {
+                    return piece.getName();
+                }
+
+                @Override
+                public MusicalPieceDto fromString(String nameOfPiece) {
+                    Optional<MusicalPieceDto> piece = musicalPieceManager.getByName(
+                        nameOfPiece
+                    );
+                    if (piece.isPresent()) {
+                        return piece.get();
+                    } else {
+                        LOG.error(
+                            "Somehow the musicial piece couldn't get found by its"
+                                + " name in the SeriesOfPerformancesController");
+                        //Should never be able to get here
+                        return null;
+                    }
+                }
+            };
+        this.musicalPieceCheckComboBox.setConverter(musicalConverter);
+
+        //Instrumentations CheckCombobox
+        final StringConverter<InstrumentationDto> instrumentationConverter =
+            new StringConverter<>() {
+                @Override
+                public String toString(InstrumentationDto instrumentation) {
+                    return instrumentation.getName() + " - "
+                        + instrumentation.getMusicalPiece().getName();
+                }
+
+                @Override
+                public InstrumentationDto fromString(String nameOfPiece) {
+                    LOG.error(
+                        "Return NULL: SeriesOfPerformancesController fromString von instrumentation"
+                            + " wurde aufgerufen -> ist aber garnicht implementiert");
+                    return null;
+                }
+            };
+        this.instrumentationCheckComboBox.setConverter(instrumentationConverter);
+    }
+
+    /**
      * persists after validated input the new seriesOfPerformances in the database.
      */
     private void save() {
         if (validateInputs()) {
             this.seriesManager.save(nameOfSeries.getText(),
-                new LinkedHashSet<>(
+                new LinkedHashSet<MusicalPieceDto>(
                     this.musicalPieceCheckComboBox.getCheckModel().getCheckedItems()),
-                new LinkedHashSet<>(
+                new LinkedHashSet<InstrumentationDto>(
                     this.instrumentationCheckComboBox.getCheckModel().getCheckedItems()),
                 this.startingDate.getValue(), endingDate.getValue(), isTour.isSelected()
             );
@@ -421,6 +445,15 @@ public class SeriesOfPerformancesController
                 this.resources.getString("global.button.ok")
             );
             return false;
+        } else if (this.musicalPieceCheckComboBox.getCheckModel().getCheckedItems().isEmpty()) {
+            MainController.showErrorAlert(
+                this.resources.getString("seriesOfPerformances.error.title"),
+                this.resources.getString(
+                    "seriesOfPerformances.error.noMusicalPieceSelected.message"
+                ),
+                this.resources.getString("global.button.ok")
+            );
+            return false;
         } else if (!isInstrumentationForMusicalPieceSelected()) {
             MainController.showErrorAlert(
                 this.resources.getString("seriesOfPerformances.error.title"),
@@ -430,9 +463,8 @@ public class SeriesOfPerformancesController
                 this.resources.getString("global.button.ok")
             );
             return false;
-        } else {
-            return true;
         }
+        return true;
     }
 
     private void cancel() {
@@ -453,13 +485,17 @@ public class SeriesOfPerformancesController
     }
 
     private boolean isInstrumentationForMusicalPieceSelected() {
-        for (MusicalPieceEntity m : this.musicalPieceCheckComboBox
+        for (MusicalPieceDto m : this.musicalPieceCheckComboBox
             .getCheckModel().getCheckedItems()) {
             boolean isSelected = false;
-            for (InstrumentationEntity i : m.getInstrumentations()) {
-                if (this.instrumentationCheckComboBox
-                    .getCheckModel().getCheckedItems().contains(i)) {
-                    isSelected = true;
+
+            for (InstrumentationDto i : m.getInstrumentations()) {
+                for (InstrumentationDto instDto : this.instrumentationCheckComboBox
+                    .getCheckModel().getCheckedItems()) {
+                    if (instDto.getInstrumentationId() == (i.getInstrumentationId())) {
+                        isSelected = true;
+                        break;
+                    }
                 }
             }
             if (!isSelected) {

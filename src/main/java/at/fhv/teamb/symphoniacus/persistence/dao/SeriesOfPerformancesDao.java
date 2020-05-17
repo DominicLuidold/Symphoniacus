@@ -1,42 +1,43 @@
 package at.fhv.teamb.symphoniacus.persistence.dao;
 
 import at.fhv.teamb.symphoniacus.persistence.BaseDao;
-import at.fhv.teamb.symphoniacus.persistence.model.DutyCategoryEntity;
+import at.fhv.teamb.symphoniacus.persistence.dao.interfaces.ISeriesOfPerformancesDao;
 import at.fhv.teamb.symphoniacus.persistence.model.SeriesOfPerformancesEntity;
+import at.fhv.teamb.symphoniacus.persistence.model.interfaces.ISeriesOfPerformancesEntity;
 import java.time.LocalDate;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Optional;
 import javax.persistence.TypedQuery;
 
-public class SeriesOfPerformancesDao extends BaseDao<SeriesOfPerformancesEntity> {
+public class SeriesOfPerformancesDao extends BaseDao<ISeriesOfPerformancesEntity>
+    implements ISeriesOfPerformancesDao {
 
     /**
      * {@inheritDoc}
      */
     @Override
-    public Optional<SeriesOfPerformancesEntity> find(Integer key) {
+    public Optional<ISeriesOfPerformancesEntity> find(Integer key) {
         return this.find(SeriesOfPerformancesEntity.class, key);
     }
 
     /**
-     * Returns all {@link SeriesOfPerformancesEntity} objects.
-     *
-     * @return A List of series of performances entities
+     * {@inheritDoc}
      */
-    public List<SeriesOfPerformancesEntity> getAll() {
+    public List<ISeriesOfPerformancesEntity> getAll() {
         TypedQuery<SeriesOfPerformancesEntity> query = entityManager.createQuery(
             "SELECT sop FROM SeriesOfPerformancesEntity sop",
             SeriesOfPerformancesEntity.class
         );
 
-        return query.getResultList();
+        return new LinkedList<>(query.getResultList());
     }
 
     /**
      * {@inheritDoc}
      */
     @Override
-    public Optional<SeriesOfPerformancesEntity> persist(SeriesOfPerformancesEntity elem) {
+    public Optional<ISeriesOfPerformancesEntity> persist(ISeriesOfPerformancesEntity elem) {
         return this.persist(SeriesOfPerformancesEntity.class, elem);
     }
 
@@ -44,22 +45,17 @@ public class SeriesOfPerformancesDao extends BaseDao<SeriesOfPerformancesEntity>
      * {@inheritDoc}
      */
     @Override
-    public Optional<SeriesOfPerformancesEntity> update(SeriesOfPerformancesEntity elem) {
+    public Optional<ISeriesOfPerformancesEntity> update(ISeriesOfPerformancesEntity elem) {
         return this.update(SeriesOfPerformancesEntity.class, elem);
     }
 
     @Override
-    public boolean remove(SeriesOfPerformancesEntity elem) {
+    public boolean remove(ISeriesOfPerformancesEntity elem) {
         return false;
     }
 
     /**
-     * Checks if a searched seriesOfPerformances already exists.
-     *
-     * @param title        The tile of the given seriesOfPerformance
-     * @param startingDate The starting Date of the given seriesOfPerformance
-     * @param endingDate   The ending Date of the given seriesOfPerformance
-     * @return returns true if a seriesOfPerformance is found with the given inputs
+     * {@inheritDoc}
      */
     public boolean doesSeriesAlreadyExist(
         String title,
@@ -78,6 +74,7 @@ public class SeriesOfPerformancesDao extends BaseDao<SeriesOfPerformancesEntity>
         query.setParameter("sDate", startingDate);
         query.setParameter("eDate", endingDate);
 
+        System.out.println(query.getSingleResult());
         return (query.getSingleResult() >= 1);
     }
 }

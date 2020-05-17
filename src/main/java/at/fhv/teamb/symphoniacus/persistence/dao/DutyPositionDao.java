@@ -1,11 +1,13 @@
 package at.fhv.teamb.symphoniacus.persistence.dao;
 
 import at.fhv.teamb.symphoniacus.persistence.BaseDao;
-import at.fhv.teamb.symphoniacus.persistence.model.DutyEntity;
+import at.fhv.teamb.symphoniacus.persistence.dao.interfaces.IDutyPositionDao;
 import at.fhv.teamb.symphoniacus.persistence.model.DutyPositionEntity;
-import at.fhv.teamb.symphoniacus.persistence.model.MusicianEntity;
-import at.fhv.teamb.symphoniacus.persistence.model.SectionEntity;
-import at.fhv.teamb.symphoniacus.persistence.model.SectionMonthlyScheduleEntity;
+import at.fhv.teamb.symphoniacus.persistence.model.interfaces.IDutyEntity;
+import at.fhv.teamb.symphoniacus.persistence.model.interfaces.IDutyPositionEntity;
+import at.fhv.teamb.symphoniacus.persistence.model.interfaces.ISectionEntity;
+import at.fhv.teamb.symphoniacus.persistence.model.interfaces.ISectionMonthlyScheduleEntity;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Optional;
 import javax.persistence.TypedQuery;
@@ -15,27 +17,24 @@ import javax.persistence.TypedQuery;
  *
  * @author Dominic Luidold
  */
-public class DutyPositionDao extends BaseDao<DutyPositionEntity> {
+public class DutyPositionDao extends BaseDao<IDutyPositionEntity>
+    implements IDutyPositionDao {
 
     /**
      * {@inheritDoc}
      */
     @Override
-    public Optional<DutyPositionEntity> find(Integer key) {
+    public Optional<IDutyPositionEntity> find(Integer key) {
         return this.find(DutyPositionEntity.class, key);
     }
 
     /**
-     * Finds all {@link DutyPositionEntity} objects based on provided {@link DutyEntity} and
-     * {@link SectionEntity}.
-     *
-     * @param duty    The duty to use
-     * @param section The section to use
-     * @return A List of corresponding DutyPosition entities
+     * {@inheritDoc}
      */
-    public List<DutyPositionEntity> findCorrespondingPositions(
-        DutyEntity duty,
-        SectionEntity section
+    @Override
+    public List<IDutyPositionEntity> findCorrespondingPositions(
+        IDutyEntity duty,
+        ISectionEntity section
     ) {
         TypedQuery<DutyPositionEntity> query = entityManager.createQuery(
             "SELECT p FROM DutyPositionEntity p "
@@ -50,18 +49,15 @@ public class DutyPositionDao extends BaseDao<DutyPositionEntity> {
         query.setParameter("duty", duty);
         query.setParameter("section", section);
 
-        return query.getResultList();
+        return new LinkedList<>(query.getResultList());
     }
 
     /**
-     * Finds all {@link DutyPositionEntity} objects based on provided
-     * {@link SectionMonthlyScheduleEntity} that do not have any {@link MusicianEntity} set.
-     *
-     * @param sms The section monthly schedule to use
-     * @return A List of corresponding DutyPosition entities
+     * {@inheritDoc}
      */
+    @Override
     public Long findCorrespondingPositionsWithoutMusician(
-        SectionMonthlyScheduleEntity sms
+        ISectionMonthlyScheduleEntity sms
     ) {
         TypedQuery<Long> query = entityManager.createQuery(
             "SELECT COUNT(p) FROM DutyPositionEntity p "
@@ -82,7 +78,7 @@ public class DutyPositionDao extends BaseDao<DutyPositionEntity> {
      * {@inheritDoc}
      */
     @Override
-    public Optional<DutyPositionEntity> persist(DutyPositionEntity elem) {
+    public Optional<IDutyPositionEntity> persist(IDutyPositionEntity elem) {
         return this.persist(DutyPositionEntity.class, elem);
     }
 
@@ -90,12 +86,12 @@ public class DutyPositionDao extends BaseDao<DutyPositionEntity> {
      * {@inheritDoc}
      */
     @Override
-    public Optional<DutyPositionEntity> update(DutyPositionEntity elem) {
+    public Optional<IDutyPositionEntity> update(IDutyPositionEntity elem) {
         return this.update(DutyPositionEntity.class, elem);
     }
 
     @Override
-    public boolean remove(DutyPositionEntity elem) {
+    public boolean remove(IDutyPositionEntity elem) {
         return false;
     }
 }

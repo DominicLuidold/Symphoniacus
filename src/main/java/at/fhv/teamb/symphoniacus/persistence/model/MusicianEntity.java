@@ -1,5 +1,15 @@
 package at.fhv.teamb.symphoniacus.persistence.model;
 
+import at.fhv.teamb.symphoniacus.persistence.model.interfaces.IContractualObligationEntity;
+import at.fhv.teamb.symphoniacus.persistence.model.interfaces.IDutyPositionEntity;
+import at.fhv.teamb.symphoniacus.persistence.model.interfaces.IMusicianEntity;
+import at.fhv.teamb.symphoniacus.persistence.model.interfaces.IMusicianRole;
+import at.fhv.teamb.symphoniacus.persistence.model.interfaces.INegativeDateWishEntity;
+import at.fhv.teamb.symphoniacus.persistence.model.interfaces.INegativeDutyWishEntity;
+import at.fhv.teamb.symphoniacus.persistence.model.interfaces.IPositiveWishEntity;
+import at.fhv.teamb.symphoniacus.persistence.model.interfaces.ISectionEntity;
+import at.fhv.teamb.symphoniacus.persistence.model.interfaces.IUserEntity;
+import at.fhv.teamb.symphoniacus.persistence.model.interfaces.IVacationEntity;
 import java.util.LinkedList;
 import java.util.List;
 import javax.persistence.CascadeType;
@@ -29,24 +39,24 @@ import javax.persistence.Table;
         @NamedAttributeNode("musicianRoles")
     }
 )
-public class MusicianEntity {
+public class MusicianEntity implements IMusicianEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "musicianId")
     private Integer musicianId;
 
-    @OneToOne(fetch = FetchType.LAZY)
+    @OneToOne(fetch = FetchType.LAZY, targetEntity = UserEntity.class)
     @JoinColumn(name = "userId")
-    private UserEntity user;
+    private IUserEntity user;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.LAZY, targetEntity = SectionEntity.class)
     @JoinColumn(name = "sectionId")
-    private SectionEntity section;
+    private ISectionEntity section;
 
-    @OneToMany(mappedBy = "musician")
-    private List<ContractualObligationEntity> contractualObligations = new LinkedList<>();
+    @OneToMany(mappedBy = "musician", targetEntity = ContractualObligationEntity.class)
+    private List<IContractualObligationEntity> contractualObligations = new LinkedList<>();
 
-    @ManyToMany
+    @ManyToMany(targetEntity = MusicianRole.class)
     @JoinTable(
         name = "musicianRole_musician",
         joinColumns = {
@@ -56,168 +66,200 @@ public class MusicianEntity {
             @JoinColumn(name = "musicianRoleId")
         }
     )
-    private List<MusicianRole> musicianRoles = new LinkedList<>();
+    private List<IMusicianRole> musicianRoles = new LinkedList<>();
 
-    @OneToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE}, mappedBy = "musician")
-    private List<DutyPositionEntity> dutyPositions = new LinkedList<>();
+    @OneToMany(
+        mappedBy = "musician",
+        cascade = {CascadeType.PERSIST, CascadeType.MERGE},
+        targetEntity = DutyPositionEntity.class
+    )
+    private List<IDutyPositionEntity> dutyPositions = new LinkedList<>();
 
-    @OneToMany(mappedBy = "musician")
-    private List<PositiveWishEntity> positiveWishes = new LinkedList<>();
+    @OneToMany(mappedBy = "musician", targetEntity = PositiveWishEntity.class)
+    private List<IPositiveWishEntity> positiveWishes = new LinkedList<>();
 
-    @OneToMany(mappedBy = "musician")
-    private List<NegativeDutyWishEntity> negativeDutyWishes = new LinkedList<>();
+    @OneToMany(mappedBy = "musician", targetEntity = NegativeDutyWishEntity.class)
+    private List<INegativeDutyWishEntity> negativeDutyWishes = new LinkedList<>();
 
-    @OneToMany(mappedBy = "musician")
-    private List<VacationEntity> vacations = new LinkedList<>();
+    @OneToMany(mappedBy = "musician", targetEntity = VacationEntity.class)
+    private List<IVacationEntity> vacations = new LinkedList<>();
 
-    @OneToMany(mappedBy = "musician")
-    private List<NegativeDateWishEntity> negativeDateWishes = new LinkedList<>();
+    @OneToMany(mappedBy = "musician", targetEntity = NegativeDateWishEntity.class)
+    private List<INegativeDateWishEntity> negativeDateWishes = new LinkedList<>();
 
-    public void addPositiveWish(PositiveWishEntity positiveWish) {
+    @Override
+    public void addPositiveWish(IPositiveWishEntity positiveWish) {
         this.positiveWishes.add(positiveWish);
         positiveWish.setMusician(this);
     }
 
-    public void removePositiveWish(PositiveWishEntity positiveWish) {
+    @Override
+    public void removePositiveWish(IPositiveWishEntity positiveWish) {
         this.positiveWishes.remove(positiveWish);
         positiveWish.setMusician(null);
     }
 
-    public void addNegativeDutyWish(NegativeDutyWishEntity negativeWish) {
+    @Override
+    public void addNegativeDutyWish(INegativeDutyWishEntity negativeWish) {
         this.negativeDutyWishes.add(negativeWish);
         negativeWish.setMusician(this);
     }
 
-    public void removeNegativeDutyWish(NegativeDutyWishEntity negativeWish) {
+    @Override
+    public void removeNegativeDutyWish(INegativeDutyWishEntity negativeWish) {
         this.negativeDutyWishes.remove(negativeWish);
         negativeWish.setMusician(null);
     }
 
-    public void addNegativeDateWish(NegativeDateWishEntity negativeWish) {
+    @Override
+    public void addNegativeDateWish(INegativeDateWishEntity negativeWish) {
         this.negativeDateWishes.add(negativeWish);
         negativeWish.setMusician(this);
     }
 
-    public void removeNegativeDateWish(NegativeDateWishEntity negativeWish) {
+    @Override
+    public void removeNegativeDateWish(INegativeDateWishEntity negativeWish) {
         this.negativeDateWishes.remove(negativeWish);
         negativeWish.setMusician(null);
     }
 
+    @Override
     public void setContractualObligations(
-        List<ContractualObligationEntity> contractualObligations) {
+        List<IContractualObligationEntity> contractualObligations
+    ) {
         this.contractualObligations = contractualObligations;
     }
 
-    public List<NegativeDutyWishEntity> getNegativeDutyWishes() {
+    @Override
+    public List<INegativeDutyWishEntity> getNegativeDutyWishes() {
         return negativeDutyWishes;
     }
 
-    public void setNegativeDutyWishes(
-        List<NegativeDutyWishEntity> negativeDutyWishes) {
+    @Override
+    public void setNegativeDutyWishes(List<INegativeDutyWishEntity> negativeDutyWishes) {
         this.negativeDutyWishes = negativeDutyWishes;
     }
 
-    public void setMusicianRoles(
-        List<MusicianRole> musicianRoles) {
+    @Override
+    public void setMusicianRoles(List<IMusicianRole> musicianRoles) {
         this.musicianRoles = musicianRoles;
     }
 
-    public void setDutyPositions(
-        List<DutyPositionEntity> dutyPositions) {
+    @Override
+    public void setDutyPositions(List<IDutyPositionEntity> dutyPositions) {
         this.dutyPositions = dutyPositions;
     }
 
-    public List<PositiveWishEntity> getPositiveWishes() {
+    @Override
+    public List<IPositiveWishEntity> getPositiveWishes() {
         return positiveWishes;
     }
 
-    public void setPositiveWishes(
-        List<PositiveWishEntity> positiveWishes) {
+    @Override
+    public void setPositiveWishes(List<IPositiveWishEntity> positiveWishes) {
         this.positiveWishes = positiveWishes;
     }
 
 
-    public void setVacations(
-        List<VacationEntity> vacations) {
+    @Override
+    public void setVacations(List<IVacationEntity> vacations) {
         this.vacations = vacations;
     }
 
+    @Override
     public Integer getMusicianId() {
         return this.musicianId;
     }
 
+    @Override
     public void setMusicianId(Integer musicianId) {
         this.musicianId = musicianId;
     }
 
-    public UserEntity getUser() {
+    @Override
+    public IUserEntity getUser() {
         return this.user;
     }
 
-    public void setUser(UserEntity user) {
+    @Override
+    public void setUser(IUserEntity user) {
         this.user = user;
     }
 
-    public SectionEntity getSection() {
+    @Override
+    public ISectionEntity getSection() {
         return section;
     }
 
-    public void setSection(SectionEntity section) {
+    @Override
+    public void setSection(ISectionEntity section) {
         this.section = section;
     }
 
-    public List<ContractualObligationEntity> getContractualObligations() {
+    @Override
+    public List<IContractualObligationEntity> getContractualObligations() {
         return this.contractualObligations;
     }
 
-    public void addContractualObligation(ContractualObligationEntity contractualObligation) {
+    @Override
+    public void addContractualObligation(IContractualObligationEntity contractualObligation) {
         this.contractualObligations.add(contractualObligation);
         contractualObligation.setMusician(this);
     }
 
-    public void removeContractualObligation(ContractualObligationEntity contractualObligation) {
+    @Override
+    public void removeContractualObligation(IContractualObligationEntity contractualObligation) {
         this.contractualObligations.remove(contractualObligation);
         contractualObligation.setMusician(null);
     }
 
-    public List<MusicianRole> getMusicianRoles() {
+    @Override
+    public List<IMusicianRole> getMusicianRoles() {
         return this.musicianRoles;
     }
 
-    public void addMusicianRole(MusicianRole role) {
+    @Override
+    public void addMusicianRole(IMusicianRole role) {
         this.musicianRoles.add(role);
         role.addMusician(this);
     }
 
-    public void removeMusicianRole(MusicianRole role) {
+    @Override
+    public void removeMusicianRole(IMusicianRole role) {
         this.musicianRoles.remove(role);
         role.removeMusician(this);
     }
 
-    public List<DutyPositionEntity> getDutyPositions() {
+    @Override
+    public List<IDutyPositionEntity> getDutyPositions() {
         return this.dutyPositions;
     }
 
-    public void addDutyPosition(DutyPositionEntity position) {
+    @Override
+    public void addDutyPosition(IDutyPositionEntity position) {
         this.dutyPositions.add(position);
         position.setMusician(this);
     }
 
-    public void removeDutyPosition(DutyPositionEntity position) {
+    @Override
+    public void removeDutyPosition(IDutyPositionEntity position) {
         this.dutyPositions.remove(position);
         position.setMusician(null);
     }
 
-    public List<VacationEntity> getVacations() {
+    @Override
+    public List<IVacationEntity> getVacations() {
         return this.vacations;
     }
 
-    public void addVacation(VacationEntity vacation) {
+    @Override
+    public void addVacation(IVacationEntity vacation) {
         this.vacations.add(vacation);
         vacation.setMusician(this);
     }
 
-    public void removeVacation(VacationEntity vacation) {
+    @Override
+    public void removeVacation(IVacationEntity vacation) {
         this.vacations.remove(vacation);
         vacation.setMusician(null);
     }

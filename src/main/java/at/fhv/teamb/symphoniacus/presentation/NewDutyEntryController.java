@@ -3,23 +3,26 @@ package at.fhv.teamb.symphoniacus.presentation;
 import at.fhv.teamb.symphoniacus.application.DutyCategoryManager;
 import at.fhv.teamb.symphoniacus.application.DutyManager;
 import at.fhv.teamb.symphoniacus.application.SeriesOfPerformancesManager;
-import at.fhv.teamb.symphoniacus.domain.Duty;
+import at.fhv.teamb.symphoniacus.application.dto.DutyCategoryChangeLogDto;
+import at.fhv.teamb.symphoniacus.application.dto.DutyCategoryDto;
+import at.fhv.teamb.symphoniacus.application.dto.DutyDto;
+import at.fhv.teamb.symphoniacus.application.dto.InstrumentationDto;
+import at.fhv.teamb.symphoniacus.application.dto.SeriesOfPerformancesDto;
 import at.fhv.teamb.symphoniacus.domain.DutyCategory;
 import at.fhv.teamb.symphoniacus.persistence.PersistenceState;
-import at.fhv.teamb.symphoniacus.persistence.dao.SeriesOfPerformancesDao;
-import at.fhv.teamb.symphoniacus.persistence.model.DutyCategoryChangelogEntity;
-import at.fhv.teamb.symphoniacus.persistence.model.InstrumentationEntity;
-import at.fhv.teamb.symphoniacus.persistence.model.SeriesOfPerformancesEntity;
 import at.fhv.teamb.symphoniacus.presentation.internal.Parentable;
 import at.fhv.teamb.symphoniacus.presentation.internal.TabPaneEntry;
+import at.fhv.teamb.symphoniacus.presentation.internal.UkTimeFormatter;
 import com.jfoenix.controls.JFXDatePicker;
 import com.jfoenix.controls.JFXTextField;
 import com.jfoenix.controls.JFXTimePicker;
 import com.jfoenix.validation.RequiredFieldValidator;
 import java.net.URL;
 import java.time.LocalTime;
+import java.time.format.FormatStyle;
 import java.util.LinkedHashSet;
 import java.util.List;
+import java.util.Locale;
 import java.util.Optional;
 import java.util.ResourceBundle;
 import java.util.Set;
@@ -37,20 +40,15 @@ import javafx.scene.control.ComboBox;
 import javafx.scene.control.ComboBoxBase;
 import javafx.scene.control.Label;
 import javafx.scene.image.ImageView;
-import javafx.scene.layout.AnchorPane;
-import javafx.scene.layout.Border;
-import javafx.scene.layout.BorderStroke;
-import javafx.scene.layout.BorderStrokeStyle;
-import javafx.scene.layout.BorderWidths;
-import javafx.scene.layout.CornerRadii;
-import javafx.scene.paint.Paint;
 import javafx.util.StringConverter;
+import javafx.util.converter.LocalTimeStringConverter;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.controlsfx.control.CheckComboBox;
 import org.kordamp.ikonli.fontawesome.FontAwesome;
 import org.kordamp.ikonli.javafx.FontIcon;
-import shadow.org.codehaus.plexus.util.StringUtils;
+
 
 /**
  * GUI Controller responsible for creating a new Duty Entry.
@@ -64,7 +62,7 @@ public class NewDutyEntryController implements Initializable, Parentable<Calenda
     private static final Logger LOG = LogManager.getLogger(NewDutyEntryController.class);
     private Parentable parentController;
     private ResourceBundle resources;
-    private Duty duty;
+    private DutyDto duty;
     private DutyManager dutyManager;
     private DutyCategoryManager dutyCategoryManager;
     private SeriesOfPerformancesManager seriesOfPerformancesManager;
@@ -73,19 +71,20 @@ public class NewDutyEntryController implements Initializable, Parentable<Calenda
     private AtomicBoolean validCategory = new AtomicBoolean(false);
     private AtomicBoolean validStartTime = new AtomicBoolean(false);
     private AtomicBoolean validEndTime = new AtomicBoolean(false);
+    private AtomicBoolean validSoP = new AtomicBoolean(false);
     private boolean userEditedPoints;
 
     @FXML
-    private AnchorPane newDutyEntryPane;
-
-    @FXML
-    private ComboBox<SeriesOfPerformancesEntity> seriesOfPerformancesSelect;
+    private ComboBox<SeriesOfPerformancesDto> seriesOfPerformancesSelect;
 
     @FXML
     private Button newSeriesOfPerformancesBtn;
 
     @FXML
-    private ComboBox<DutyCategory> dutyCategorySelect;
+    private Button editDutyPointsBtn;
+
+    @FXML
+    private ComboBox<DutyCategoryDto> dutyCategorySelect;
 
     @FXML
     private JFXTextField dutyPointsInput;
@@ -109,10 +108,10 @@ public class NewDutyEntryController implements Initializable, Parentable<Calenda
     private Button scheduleSaveBtn;
 
     @FXML
-    private Button scheduleBackBtn;
+    private Button scheduleCancelBtn;
 
     @FXML
-    private CheckComboBox<InstrumentationEntity> instrumentationsSelect;
+    private CheckComboBox<InstrumentationDto> instrumentationsSelect;
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
@@ -124,11 +123,11 @@ public class NewDutyEntryController implements Initializable, Parentable<Calenda
 
         // Init combo boxes with data
         this.initCategoryComboBox();
-        this.initSeriesOfPerformancesComboBox();
 
         // Disable non-editable/pressable elements
         this.scheduleSaveBtn.setDisable(true);
         this.dutyPointsInput.setDisable(true);
+        this.seriesOfPerformancesSelect.setDisable(true);
 
         // Set input validators
         this.setInputValidators();
@@ -138,6 +137,26 @@ public class NewDutyEntryController implements Initializable, Parentable<Calenda
 
         // Set event handlers
         this.setEventHandlers();
+
+        // Set UK Time Format for DatePicker
+        this.dutyStartDateInput.setConverter(UkTimeFormatter.getUkTimeConverter());
+        this.dutyEndDateInput.setConverter(UkTimeFormatter.getUkTimeConverter());
+
+        // Hier könnte man zukünftig das Format frei wählbar machen
+        setTimeConverter(Locale.UK);
+
+        setComboboxConverters();
+    }
+
+    private void setTimeConverter(Locale format) {
+        StringConverter<LocalTime> converter =
+            new LocalTimeStringConverter(FormatStyle.SHORT, format);
+        this.dutyStartTimeInput.setConverter(converter);
+        this.dutyEndTimeInput.setConverter(converter);
+        if (format.equals(Locale.UK)) {
+            this.dutyStartTimeInput.set24HourView(true);
+            this.dutyEndTimeInput.set24HourView(true);
+        }
     }
 
     /**
@@ -149,12 +168,6 @@ public class NewDutyEntryController implements Initializable, Parentable<Calenda
             (observable, oldValue, newValue) -> userEditedPoints = true
         );
 
-        // Add event handler for initializing sop combo box
-        this.seriesOfPerformancesSelect.addEventHandler(
-            ComboBoxBase.ON_SHOWING,
-            event -> initSeriesOfPerformancesComboBox()
-        );
-
         // Show instrumentations of a selected series
         this.seriesOfPerformancesSelect.addEventHandler(ComboBoxBase.ON_HIDDEN, event -> {
             if (this.seriesOfPerformancesSelect.getSelectionModel().isEmpty()) {
@@ -163,7 +176,15 @@ public class NewDutyEntryController implements Initializable, Parentable<Calenda
                 initInstrumentationsCheckComboBox();
                 this.instrumentationsSelect.setDisable(false);
             }
+            setSaveButtonStatus();
         });
+
+        // Update series of performances after creating new one in other tab
+        this.seriesOfPerformancesSelect.addEventHandler(ComboBoxBase.ON_SHOWING, event -> {
+            initSeriesOfPerformancesComboBox();
+            setSaveButtonStatus();
+        });
+
     }
 
     /**
@@ -174,13 +195,18 @@ public class NewDutyEntryController implements Initializable, Parentable<Calenda
         this.scheduleSaveBtn.setOnAction(event -> saveNewDutyEntry());
 
         // Cancel button
-        this.scheduleBackBtn.setOnAction(e -> confirmTabClosure());
+        this.scheduleCancelBtn.setOnAction(e -> confirmTabClosure());
 
         // Button to open new series of performances tabs
         this.newSeriesOfPerformancesBtn.setOnAction(e -> openNewSopTab());
         FontIcon addIcon = new FontIcon(FontAwesome.PLUS);
         addIcon.getStyleClass().addAll("button-icon");
         this.newSeriesOfPerformancesBtn.setGraphic(addIcon);
+
+        this.editDutyPointsBtn.setOnAction(e -> setDutyPointsInputEditability());
+        FontIcon editIcon = new FontIcon(FontAwesome.EDIT);
+        addIcon.getStyleClass().addAll("button-icon");
+        this.editDutyPointsBtn.setGraphic(editIcon);
     }
 
     /**
@@ -194,6 +220,15 @@ public class NewDutyEntryController implements Initializable, Parentable<Calenda
             setSaveButtonStatus();
         });
 
+        //Validate Combobox seriesOfPerformance
+        this.seriesOfPerformancesSelect.valueProperty()
+            .addListener((observable, oldValue, newValue) -> {
+
+                this.validSoP.set(!this.seriesOfPerformancesSelect.getSelectionModel().isEmpty());
+                setSaveButtonStatus();
+            });
+
+
         // Validate start date
         RequiredFieldValidator dateValidator = new RequiredFieldValidator();
         dateValidator.setMessage(this.resources.getString("tab.duty.new.entry.error.datemissing"));
@@ -201,6 +236,16 @@ public class NewDutyEntryController implements Initializable, Parentable<Calenda
         this.dutyStartDateInput.valueProperty().addListener((observable, oldValue, newValue) -> {
             this.validStartDate.set(this.dutyStartDateInput.validate());
             updatePointsField();
+            if (newValue != null) {
+                initSeriesOfPerformancesComboBox();
+                this.seriesOfPerformancesSelect.setDisable(false);
+            } else {
+                this.seriesOfPerformancesSelect.getItems().clear();
+                this.seriesOfPerformancesSelect.setDisable(true);
+            }
+            //Instrumentations will always be reset if you choose a new date
+            this.instrumentationsSelect.getItems().clear();
+            this.instrumentationsSelect.setDisable(true);
             setSaveButtonStatus();
         });
 
@@ -233,30 +278,17 @@ public class NewDutyEntryController implements Initializable, Parentable<Calenda
      * Initializes the {@link #seriesOfPerformancesSelect} combo box with data.
      */
     private void initSeriesOfPerformancesComboBox() {
-        List<SeriesOfPerformancesEntity> seriesOfPerformancesList =
-            new SeriesOfPerformancesDao().getAll();
+        List<SeriesOfPerformancesDto> seriesOfPerformancesList =
+            this.seriesOfPerformancesManager.getFilteredSeries(this.dutyStartDateInput.getValue());
         LOG.debug("Found {} series of performances", seriesOfPerformancesList.size());
 
-        final ObservableList<SeriesOfPerformancesEntity> observableList =
+        final ObservableList<SeriesOfPerformancesDto> observableList =
             FXCollections.observableArrayList();
 
         observableList.addAll(seriesOfPerformancesList);
-        this.seriesOfPerformancesSelect.getItems().setAll(observableList);
-        this.seriesOfPerformancesSelect.setConverter(new StringConverter<>() {
-            @Override
-            public String toString(SeriesOfPerformancesEntity seriesOfPerformancesEntity) {
-                return seriesOfPerformancesEntity.getDescription()
-                    + " | " + " (" + seriesOfPerformancesEntity.getStartDate().toString()
-                    + ")-(" + seriesOfPerformancesEntity.getEndDate().toString() + ")";
-            }
+        this.seriesOfPerformancesSelect.getItems().removeAll();
+        this.seriesOfPerformancesSelect.getItems().addAll(observableList);
 
-            @Override
-            public SeriesOfPerformancesEntity fromString(String title) {
-                return observableList.stream()
-                    .filter(item -> item.getDescription().equals(title))
-                    .collect(Collectors.toList()).get(0);
-            }
-        });
     }
 
     /**
@@ -264,28 +296,45 @@ public class NewDutyEntryController implements Initializable, Parentable<Calenda
      */
     private void initInstrumentationsCheckComboBox() {
         this.instrumentationsSelect.getCheckModel().clearChecks();
-        final ObservableSet<InstrumentationEntity> observInstrumentations =
+        final ObservableSet<InstrumentationDto> observInstrumentations =
             FXCollections.observableSet();
 
-        Set<InstrumentationEntity> instrumentations =
+        Set<InstrumentationDto> instrumentations =
             this.seriesOfPerformancesManager.getAllInstrumentations(
                 this.seriesOfPerformancesSelect.getSelectionModel().getSelectedItem()
             );
         observInstrumentations.addAll(instrumentations);
 
-        ObservableList<InstrumentationEntity> oldList = this.instrumentationsSelect.getItems();
+        ObservableList<InstrumentationDto> oldList = this.instrumentationsSelect.getItems();
         this.instrumentationsSelect.getItems().removeAll(oldList);
         this.instrumentationsSelect.getItems().addAll(instrumentations);
+
+    }
+
+    /**
+     * Initializes the {@link #dutyCategorySelect} combo box with data.
+     */
+    private void initCategoryComboBox() {
+        List<DutyCategoryDto> dutyCategoryList = this.dutyCategoryManager.getDutyCategories();
+        LOG.debug("Found {} duty categories", dutyCategoryList.size());
+        this.dutyCategorySelect.getItems().setAll(dutyCategoryList);
+    }
+
+    /**
+     * Set necessary String converters for each Combobox.
+     */
+    private void setComboboxConverters() {
+        // Instrumentation Combobox
         this.instrumentationsSelect.setConverter(
             new StringConverter<>() {
                 @Override
-                public String toString(InstrumentationEntity inst) {
+                public String toString(InstrumentationDto inst) {
                     return (inst.getName() + " - "
                         + inst.getMusicalPiece().getName());
                 }
 
                 @Override
-                public InstrumentationEntity fromString(String nameOfInst) {
+                public InstrumentationDto fromString(String nameOfInst) {
                     LOG.error(
                         "Somehow the instrumentation couldn't get found by its"
                             + " name in the NewDutyEntryController");
@@ -293,29 +342,41 @@ public class NewDutyEntryController implements Initializable, Parentable<Calenda
                     return null;
                 }
             });
-    }
 
-    /**
-     * Initializes the {@link #dutyCategorySelect} combo box with data.
-     */
-    private void initCategoryComboBox() {
-        List<DutyCategory> dutyCategoryList = this.dutyCategoryManager.getDutyCategories();
-        LOG.debug("Found {} duty categories", dutyCategoryList.size());
-
-        this.dutyCategorySelect.getItems().setAll(dutyCategoryList);
-        this.dutyCategorySelect.setConverter(new StringConverter<>() {
+        // Series of Performances Combobox
+        this.seriesOfPerformancesSelect.setConverter(new StringConverter<>() {
             @Override
-            public String toString(DutyCategory dutyCategory) {
-                return dutyCategory.getEntity().getType();
+            public String toString(SeriesOfPerformancesDto seriesOfPerformancesEntity) {
+                return seriesOfPerformancesEntity.getDescription()
+                    + " | " + " (" + seriesOfPerformancesEntity.getStartDate().toString()
+                    + ")-(" + seriesOfPerformancesEntity.getEndDate().toString() + ")";
             }
 
             @Override
-            public DutyCategory fromString(String title) {
-                DutyCategory result = dutyCategoryList.stream()
-                    .filter(item -> item.getEntity().getType().equals(title))
+            public SeriesOfPerformancesDto fromString(String title) {
+                ObservableList<SeriesOfPerformancesDto> observableList =
+                    seriesOfPerformancesSelect.getItems();
+                return observableList.stream()
+                    .filter(item -> item.getDescription().equals(title))
+                    .collect(Collectors.toList()).get(0);
+            }
+        });
+
+        // Duty Category Combobox
+        this.dutyCategorySelect.setConverter(new StringConverter<>() {
+            @Override
+            public String toString(DutyCategoryDto dutyCategory) {
+                return dutyCategory.getType();
+            }
+
+            @Override
+            public DutyCategoryDto fromString(String title) {
+                ObservableList<DutyCategoryDto> dutyCategoryList = dutyCategorySelect.getItems();
+                DutyCategoryDto result = dutyCategoryList.stream()
+                    .filter(item -> item.getType().equals(title))
                     .collect(Collectors.toList()).get(0);
                 LOG.debug("Category Combobox from String -> {}",
-                    result.getEntity().getDutyCategoryId());
+                    result.getDutyCategoryId());
                 return result;
             }
         });
@@ -327,11 +388,9 @@ public class NewDutyEntryController implements Initializable, Parentable<Calenda
     private void updatePointsField() {
         // Check if a valid start date is set to calculate points
         if (this.validStartDate.get() && validCategory.get()) {
-            this.dutyPointsInput.setDisable(false);
             this.fillPointsField();
         } else {
             this.dutyPointsInput.clear();
-            this.dutyPointsInput.setDisable(true);
         }
     }
 
@@ -340,10 +399,10 @@ public class NewDutyEntryController implements Initializable, Parentable<Calenda
      * selected {@link DutyCategory}.
      */
     private void fillPointsField() {
-        DutyCategoryChangelogEntity temp = null;
+        DutyCategoryChangeLogDto temp = null;
         int points = 0;
-        for (DutyCategoryChangelogEntity dcl : this.dutyCategorySelect.getSelectionModel()
-            .getSelectedItem().getEntity().getDutyCategoryChangelogs()
+        for (DutyCategoryChangeLogDto dcl : this.dutyCategorySelect.getSelectionModel()
+            .getSelectedItem().getChangeLogs()
         ) {
             if (temp == null || (dcl.getStartDate().isAfter(temp.getStartDate())
                 && this.dutyStartDateInput.getValue().isAfter(dcl.getStartDate()))
@@ -415,11 +474,18 @@ public class NewDutyEntryController implements Initializable, Parentable<Calenda
                 .getCheckModel().getCheckedItems(), this.dutyStartDateInput.getValue()
                 .atTime(this.dutyStartTimeInput.getValue()),
             this.dutyEndDateInput.getValue().atTime(this.dutyEndTimeInput.getValue()),
-            this.dutyCategorySelect.getSelectionModel().getSelectedItem().getEntity())
+            this.dutyCategorySelect.getSelectionModel().getSelectedItem())
         ) {
             MainController.showErrorAlert(
                 this.resources.getString("tab.duty.new.entry.error.title"),
                 this.resources.getString("tab.duty.new.entry.error.duty.title"),
+                this.resources.getString("global.button.ok")
+            );
+            return false;
+        } else if (this.instrumentationsSelect.getCheckModel().getCheckedItems().isEmpty()) {
+            MainController.showErrorAlert(
+                this.resources.getString("tab.duty.new.entry.error.title"),
+                this.resources.getString("tab.duty.new.entry.error.instrumentation.title"),
                 this.resources.getString("global.button.ok")
             );
             return false;
@@ -428,6 +494,7 @@ public class NewDutyEntryController implements Initializable, Parentable<Calenda
         }
     }
 
+
     /**
      * Disables the {@link #scheduleSaveBtn} if not all requirements have been met.
      * Makes the button clickable otherwise.
@@ -435,22 +502,11 @@ public class NewDutyEntryController implements Initializable, Parentable<Calenda
     private void setSaveButtonStatus() {
         if (this.dutyCategorySelect.getSelectionModel().isEmpty()) {
             this.validCategory.set(false);
-            this.dutyCategorySelect.setBorder(
-                new Border(
-                    new BorderStroke(
-                        Paint.valueOf("red"),
-                        BorderStrokeStyle.SOLID,
-                        CornerRadii.EMPTY,
-                        BorderWidths.DEFAULT
-                    )
-                )
-            );
             this.scheduleSaveBtn.setDisable(true);
         } else {
-            this.dutyCategorySelect.setBorder(null);
             if (this.validCategory.get() && this.validStartDate.get()
                 && this.validEndDate.get() && this.validStartTime.get()
-                && this.validEndTime.get()
+                && this.validEndTime.get() && this.validSoP.get()
             ) {
                 this.scheduleSaveBtn.setDisable(false);
             } else {
@@ -462,50 +518,66 @@ public class NewDutyEntryController implements Initializable, Parentable<Calenda
     /**
      * Persists a new duty.
      */
+
     private void saveNewDutyEntry() {
         if (validateInputs()) {
+            Set<InstrumentationDto> instrumentations = new LinkedHashSet<>(
+                this.instrumentationsSelect.getCheckModel().getCheckedItems()
+            );
             // Delegate domain object creation to manager
-            this.duty = this.dutyManager.createDuty(
+            this.duty = this.dutyManager.save(
+                this.userEditedPoints,
+                Integer.parseInt(this.dutyPointsInput.getText()),
+                instrumentations,
+                this.seriesOfPerformancesSelect.getValue(),
                 this.dutyCategorySelect.getValue(),
                 this.dutyDescriptionInput.getText(),
                 this.calculateTimeOfDay(this.dutyStartTimeInput.getValue()),
                 this.dutyStartDateInput.getValue().atTime(this.dutyStartTimeInput.getValue()),
-                this.dutyEndDateInput.getValue().atTime(this.dutyEndTimeInput.getValue()),
-                this.seriesOfPerformancesSelect.getValue()
+                this.dutyEndDateInput.getValue().atTime(this.dutyEndTimeInput.getValue())
             );
 
-            Set<InstrumentationEntity> instrumentations = new LinkedHashSet<>(
-                this.instrumentationsSelect.getCheckModel().getCheckedItems()
-            );
-            // Delegate saving to manager
-            this.dutyManager.save(
-                this.duty,
-                this.userEditedPoints,
-                Integer.parseInt(this.dutyPointsInput.getText()),
-                instrumentations
-            );
-            this.getParentController().addDuty(this.duty);
-            // Show success alert
-            Alert successAlert = new Alert(Alert.AlertType.INFORMATION);
-            successAlert.setTitle(this.resources.getString("tab.duty.new.entry.success.title"));
-            successAlert.setContentText(
-                this.resources.getString("tab.duty.new.entry.success.dutySaved")
-            );
-            successAlert.getButtonTypes().setAll(
-                new ButtonType(this.resources.getString("global.button.ok"))
-            );
+            if (this.duty.getPersistenceState() != null) {
+                if (this.duty.getPersistenceState() == PersistenceState.PERSISTED) {
+                    this.getParentController().addDuty(this.duty);
+                    // Show success alert
+                    Alert successAlert = new Alert(Alert.AlertType.INFORMATION);
+                    successAlert.setTitle(this.resources
+                        .getString("tab.duty.new.entry.success.title"));
+                    successAlert.setContentText(
+                        this.resources.getString("tab.duty.new.entry.success.dutySaved")
+                    );
+                    successAlert.getButtonTypes().setAll(
+                        new ButtonType(this.resources.getString("global.button.ok"))
+                    );
+                    // Get custom success icon
+                    ImageView icon = new ImageView("images/successIcon.png");
+                    icon.setFitHeight(48);
+                    icon.setFitWidth(48);
+                    successAlert.setGraphic(icon);
+                    successAlert.setHeaderText(
+                        this.resources.getString("tab.duty.new.entry.success.header")
+                    );
+                    successAlert.show();
+                } else {
+                    MainController.showErrorAlert(
+                        this.resources.getString("tab.duty.new.entry.error.title"),
+                        this.resources.getString("tab.duty.new.entry.error.notPossibleSave"),
+                        this.resources.getString("global.button.ok")
+                    );
+                }
+            }
 
-            // Get custom success icon
-            ImageView icon = new ImageView("images/successIcon.png");
-            icon.setFitHeight(48);
-            icon.setFitWidth(48);
-            successAlert.setGraphic(icon);
-            successAlert.setHeaderText(
-                this.resources.getString("tab.duty.new.entry.success.header")
-            );
-            successAlert.show();
         } else {
             LOG.error("New Duty could not be saved");
+        }
+    }
+
+    private void setDutyPointsInputEditability() {
+        if (this.dutyPointsInput.isDisable() && this.validStartDate.get() && validCategory.get()) {
+            this.dutyPointsInput.setDisable(false);
+        } else {
+            this.dutyPointsInput.setDisable(true);
         }
     }
 
@@ -542,7 +614,6 @@ public class NewDutyEntryController implements Initializable, Parentable<Calenda
         alert.setHeaderText(this.resources.getString("alert.close.without.saving.message"));
 
         Optional<ButtonType> option = alert.showAndWait();
-
         // this should be rewritten
         if (option.isEmpty()) {
             buttonType = ButtonType.CLOSE;
@@ -555,6 +626,7 @@ public class NewDutyEntryController implements Initializable, Parentable<Calenda
         }
         return buttonType;
     }
+
 
     /**
      * Calculates the time of day String for a given time.
@@ -574,12 +646,14 @@ public class NewDutyEntryController implements Initializable, Parentable<Calenda
         return "EVENING";
     }
 
+
     /**
      * Opens a new series of performances tab.
      */
     private void openNewSopTab() {
         this.getParentController().getParentController().addTab(TabPaneEntry.ADD_SOP);
     }
+
 
     /**
      * Closes the current tab.
@@ -591,6 +665,7 @@ public class NewDutyEntryController implements Initializable, Parentable<Calenda
             .selectTab(TabPaneEntry.ORG_OFFICER_CALENDAR_VIEW);
     }
 
+
     /**
      * {@inheritDoc}
      */
@@ -599,14 +674,15 @@ public class NewDutyEntryController implements Initializable, Parentable<Calenda
         this.parentController = controller;
     }
 
+
     /**
      * {@inheritDoc}
-     * @return
      */
     @Override
     public CalendarController getParentController() {
         return (CalendarController) this.parentController;
     }
+
 
     /**
      * {@inheritDoc}
@@ -616,3 +692,4 @@ public class NewDutyEntryController implements Initializable, Parentable<Calenda
         // Intentionally empty - currently not needed
     }
 }
+

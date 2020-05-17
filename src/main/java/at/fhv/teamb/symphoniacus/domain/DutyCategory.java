@@ -3,6 +3,7 @@ package at.fhv.teamb.symphoniacus.domain;
 import at.fhv.teamb.symphoniacus.persistence.PersistenceState;
 import at.fhv.teamb.symphoniacus.persistence.model.DutyCategoryChangelogEntity;
 import at.fhv.teamb.symphoniacus.persistence.model.DutyCategoryEntity;
+import at.fhv.teamb.symphoniacus.persistence.model.interfaces.IDutyCategoryEntity;
 import java.util.Collections;
 import java.util.List;
 
@@ -12,7 +13,7 @@ import java.util.List;
  * @author Dominic Luidold
  */
 public class DutyCategory {
-    private final DutyCategoryEntity entity;
+    private final IDutyCategoryEntity entity;
     private final List<DutyCategoryChangelog> changelogList;
     private PersistenceState persistenceState;
 
@@ -23,7 +24,7 @@ public class DutyCategory {
      * @param entity        The entity to use
      * @param changelogList The List of DutyCategoryChangelog to use
      */
-    public DutyCategory(DutyCategoryEntity entity, List<DutyCategoryChangelog> changelogList) {
+    public DutyCategory(IDutyCategoryEntity entity, List<DutyCategoryChangelog> changelogList) {
         this.entity = entity;
         this.changelogList = Collections.unmodifiableList(changelogList);
         this.persistenceState = PersistenceState.PERSISTED;
@@ -41,7 +42,7 @@ public class DutyCategory {
         this.persistenceState = persistenceState;
     }
 
-    public DutyCategoryEntity getEntity() {
+    public IDutyCategoryEntity getEntity() {
         return this.entity;
     }
 

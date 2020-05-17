@@ -3,6 +3,7 @@ package at.fhv.teamb.symphoniacus.domain;
 import at.fhv.teamb.symphoniacus.persistence.model.DutyCategoryEntity;
 import at.fhv.teamb.symphoniacus.persistence.model.DutyEntity;
 import at.fhv.teamb.symphoniacus.persistence.model.SeriesOfPerformancesEntity;
+import at.fhv.teamb.symphoniacus.persistence.model.interfaces.IDutyCategoryEntity;
 import java.time.LocalDateTime;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
@@ -29,7 +30,7 @@ public class DutyTest {
             );
 
         Mockito.when(de.getDescription()).thenReturn("TV");
-        DutyCategoryEntity dc = new DutyCategoryEntity();
+        IDutyCategoryEntity dc = new DutyCategoryEntity();
         dc.setIsRehearsal(true);
         dc.setType("Konzert-Probe");
         Mockito.when(de.getDutyCategory()).thenReturn(dc);
@@ -61,7 +62,7 @@ public class DutyTest {
                 )
             );
 
-        DutyCategoryEntity dc = new DutyCategoryEntity();
+        IDutyCategoryEntity dc = new DutyCategoryEntity();
         dc.setIsRehearsal(false);
         dc.setType("Nicht-musikalischer Dienst");
         Mockito.when(de.getDutyCategory()).thenReturn(dc);

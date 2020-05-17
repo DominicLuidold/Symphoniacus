@@ -1,5 +1,8 @@
 package at.fhv.teamb.symphoniacus.persistence.model;
 
+import at.fhv.teamb.symphoniacus.persistence.model.interfaces.IContractualObligationEntity;
+import at.fhv.teamb.symphoniacus.persistence.model.interfaces.IInstrumentCategoryEntity;
+import at.fhv.teamb.symphoniacus.persistence.model.interfaces.IMusicianEntity;
 import java.time.LocalDate;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -13,7 +16,7 @@ import javax.persistence.Table;
 
 @Entity
 @Table(name = "contractualObligation")
-public class ContractualObligationEntity {
+public class ContractualObligationEntity implements IContractualObligationEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "contractNr")
@@ -31,69 +34,81 @@ public class ContractualObligationEntity {
     @Column(name = "endDate")
     private LocalDate endDate;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.LAZY, targetEntity = MusicianEntity.class)
     @JoinColumn(name = "musicianId")
-    private MusicianEntity musician;
+    private IMusicianEntity musician;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.LAZY, targetEntity = InstrumentCategoryEntity.class)
     @JoinColumn(name = "instrumentCategoryId")
-    private InstrumentCategoryEntity instrumentCategory;
+    private IInstrumentCategoryEntity instrumentCategory;
 
+    @Override
     public Integer getContractNr() {
         return this.contractNr;
     }
 
+    @Override
     public void setContractNr(Integer contractNr) {
         this.contractNr = contractNr;
     }
 
+    @Override
     public String getPosition() {
         return this.position;
     }
 
+    @Override
     public void setPosition(String position) {
         this.position = position;
     }
 
+    @Override
     public Integer getPointsPerMonth() {
         return this.pointsPerMonth;
     }
 
+    @Override
     public void setPointsPerMonth(Integer pointsPerMonth) {
         this.pointsPerMonth = pointsPerMonth;
     }
 
+    @Override
     public LocalDate getStartDate() {
         return this.startDate;
     }
 
+    @Override
     public void setStartDate(LocalDate startDate) {
         this.startDate = startDate;
     }
 
+    @Override
     public LocalDate getEndDate() {
         return this.endDate;
     }
 
+    @Override
     public void setEndDate(LocalDate endDate) {
         this.endDate = endDate;
     }
 
-    public MusicianEntity getMusician() {
+    @Override
+    public IMusicianEntity getMusician() {
         return this.musician;
     }
 
-    public void setMusician(MusicianEntity musician) {
+    @Override
+    public void setMusician(IMusicianEntity musician) {
         this.musician = musician;
     }
 
-    public InstrumentCategoryEntity getInstrumentCategory() {
+    @Override
+    public IInstrumentCategoryEntity getInstrumentCategory() {
         return this.instrumentCategory;
     }
 
-    public void setInstrumentCategory(
-        InstrumentCategoryEntity instrumentCategory
-    ) {
+    @Override
+    public void setInstrumentCategory(IInstrumentCategoryEntity instrumentCategory) {
         this.instrumentCategory = instrumentCategory;
     }
 }

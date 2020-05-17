@@ -3,9 +3,9 @@ package at.fhv.teamb.symphoniacus.persistence.dao;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
-import at.fhv.teamb.symphoniacus.persistence.model.ContractualObligationEntity;
+import at.fhv.teamb.symphoniacus.persistence.dao.interfaces.IContractualObligationDao;
 import at.fhv.teamb.symphoniacus.persistence.model.MusicianEntity;
-import java.util.Optional;
+import at.fhv.teamb.symphoniacus.persistence.model.interfaces.IContractualObligationEntity;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.junit.jupiter.api.BeforeAll;
@@ -20,7 +20,7 @@ import org.junit.jupiter.api.TestInstance;
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 class ContractualObligationDaoTest {
     private static final Logger LOG = LogManager.getLogger(ContractualObligationDaoTest.class);
-    private ContractualObligationDao dao;
+    private IContractualObligationDao dao;
 
     @BeforeAll
     void initialize() {
@@ -40,7 +40,7 @@ class ContractualObligationDaoTest {
         musicianEntity.setMusicianId(1);
 
         // When
-        ContractualObligationEntity conEntity = this.dao.getContractualObligation(musicianEntity);
+        IContractualObligationEntity conEntity = this.dao.getContractualObligation(musicianEntity);
 
         // Then
         assertNotNull(conEntity);

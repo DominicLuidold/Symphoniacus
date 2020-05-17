@@ -1,10 +1,12 @@
 package at.fhv.teamb.symphoniacus.persistence.dao;
 
 import at.fhv.teamb.symphoniacus.persistence.BaseDao;
-import at.fhv.teamb.symphoniacus.persistence.model.ContractualObligationEntity;
+import at.fhv.teamb.symphoniacus.persistence.dao.interfaces.IMusicianDao;
 import at.fhv.teamb.symphoniacus.persistence.model.MusicianEntity;
-import at.fhv.teamb.symphoniacus.persistence.model.SectionEntity;
+import at.fhv.teamb.symphoniacus.persistence.model.interfaces.IMusicianEntity;
+import at.fhv.teamb.symphoniacus.persistence.model.interfaces.ISectionEntity;
 import java.time.LocalDate;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Optional;
 import javax.persistence.TypedQuery;
@@ -16,24 +18,22 @@ import javax.persistence.TypedQuery;
  * @author Theresa Gierer
  * @author Dominic Luidold
  */
-public class MusicianDao extends BaseDao<MusicianEntity> {
+public class MusicianDao extends BaseDao<IMusicianEntity>
+    implements IMusicianDao {
 
     /**
      * {@inheritDoc}
      */
     @Override
-    public Optional<MusicianEntity> find(Integer key) {
+    public Optional<IMusicianEntity> find(Integer key) {
         return this.find(MusicianEntity.class, key);
     }
 
     /**
-     * Finds all {@link MusicianEntity} objects with an active {@link ContractualObligationEntity}
-     * based on provided {@link SectionEntity}.
-     *
-     * @param section The section to use
-     * @return A List of active musicians belonging to the section
+     * {@inheritDoc}
      */
-    public List<MusicianEntity> findAllWithSectionAndActiveContract(SectionEntity section) {
+    @Override
+    public List<IMusicianEntity> findAllWithSectionAndActiveContract(ISectionEntity section) {
         TypedQuery<MusicianEntity> query = entityManager.createQuery(
             "SELECT m FROM MusicianEntity m "
                 + "JOIN FETCH m.user "
@@ -48,17 +48,14 @@ public class MusicianDao extends BaseDao<MusicianEntity> {
         query.setParameter("startDate", LocalDate.now());
         query.setParameter("endDate", LocalDate.now());
 
-        return query.getResultList();
+        return new LinkedList<>(query.getResultList());
     }
 
     /**
-     * Finds all {@link MusicianEntity} objects that represent an external musician placeholder
-     * based on provided {@link SectionEntity}.
-     *
-     * @param section The section to use
-     * @return A List of external musicians belonging to the section
+     * {@inheritDoc}
      */
-    public List<MusicianEntity> findExternalsWithSection(SectionEntity section) {
+    @Override
+    public List<IMusicianEntity> findExternalsWithSection(ISectionEntity section) {
         TypedQuery<MusicianEntity> query = entityManager.createQuery(
             "SELECT m FROM MusicianEntity m "
                 + "JOIN FETCH m.user u "
@@ -71,14 +68,14 @@ public class MusicianDao extends BaseDao<MusicianEntity> {
         query.setParameter("firstName", "Extern");
         query.setParameter("section", section);
 
-        return query.getResultList();
+        return new LinkedList<>(query.getResultList());
     }
 
     /**
      * {@inheritDoc}
      */
     @Override
-    public Optional<MusicianEntity> persist(MusicianEntity elem) {
+    public Optional<IMusicianEntity> persist(IMusicianEntity elem) {
         return this.persist(MusicianEntity.class, elem);
     }
 
@@ -86,12 +83,12 @@ public class MusicianDao extends BaseDao<MusicianEntity> {
      * {@inheritDoc}
      */
     @Override
-    public Optional<MusicianEntity> update(MusicianEntity elem) {
+    public Optional<IMusicianEntity> update(IMusicianEntity elem) {
         return this.update(MusicianEntity.class, elem);
     }
 
     @Override
-    public boolean remove(MusicianEntity elem) {
+    public boolean remove(IMusicianEntity elem) {
         return false;
     }
 }

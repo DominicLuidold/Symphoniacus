@@ -1,5 +1,9 @@
 package at.fhv.teamb.symphoniacus.persistence.model;
 
+import at.fhv.teamb.symphoniacus.persistence.model.interfaces.IInstrumentationEntity;
+import at.fhv.teamb.symphoniacus.persistence.model.interfaces.IInstrumentationPositionEntity;
+import at.fhv.teamb.symphoniacus.persistence.model.interfaces.ISectionEntity;
+import at.fhv.teamb.symphoniacus.persistence.model.interfaces.ISectionInstrumentationEntity;
 import java.util.LinkedList;
 import java.util.List;
 import javax.persistence.Column;
@@ -15,70 +19,85 @@ import javax.persistence.Table;
 
 @Entity
 @Table(name = "sectionInstrumentation")
-public class SectionInstrumentationEntity {
+public class SectionInstrumentationEntity implements ISectionInstrumentationEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "sectionInstrumentationId")
     private Integer sectionInstrumentationId;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.LAZY, targetEntity = InstrumentationEntity.class)
     @JoinColumn(name = "instrumentationId")
-    private InstrumentationEntity instrumentation;
+    private IInstrumentationEntity instrumentation;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.LAZY, targetEntity = SectionEntity.class)
     @JoinColumn(name = "sectionId")
-    private SectionEntity section;
+    private ISectionEntity section;
 
     @Column(name = "predefinedSectionInstrumentation")
     private String predefinedSectionInstrumentation;
 
-    @OneToMany(mappedBy = "sectionInstrumentation", orphanRemoval = true)
-    private List<InstrumentationPositionEntity> instrumentationPositions = new LinkedList<>();
+    @OneToMany(
+        mappedBy = "sectionInstrumentation",
+        orphanRemoval = true,
+        targetEntity = InstrumentationPositionEntity.class
+    )
+    private List<IInstrumentationPositionEntity> instrumentationPositions = new LinkedList<>();
 
+    @Override
     public Integer getSectionInstrumentationId() {
         return this.sectionInstrumentationId;
     }
 
+    @Override
     public void setSectionInstrumentationId(Integer sectionInstrumentationId) {
         this.sectionInstrumentationId = sectionInstrumentationId;
     }
 
-    public InstrumentationEntity getInstrumentation() {
+    @Override
+    public IInstrumentationEntity getInstrumentation() {
         return instrumentation;
     }
 
+    @Override
     public void setInstrumentation(
-        InstrumentationEntity instrumentation) {
+        IInstrumentationEntity instrumentation) {
         this.instrumentation = instrumentation;
     }
 
-    public SectionEntity getSection() {
+    @Override
+    public ISectionEntity getSection() {
         return section;
     }
 
-    public void setSection(SectionEntity section) {
+    @Override
+    public void setSection(ISectionEntity section) {
         this.section = section;
     }
 
+    @Override
     public String getPredefinedSectionInstrumentation() {
         return this.predefinedSectionInstrumentation;
     }
 
+    @Override
     public void setPredefinedSectionInstrumentation(String predefinedSectionInstrumentation) {
         this.predefinedSectionInstrumentation = predefinedSectionInstrumentation;
     }
 
-    public List<InstrumentationPositionEntity> getInstrumentationPositions() {
+    @Override
+    public List<IInstrumentationPositionEntity> getInstrumentationPositions() {
         return this.instrumentationPositions;
     }
 
-    public void addInstrumentationPosition(InstrumentationPositionEntity instrumentationPosition) {
+    @Override
+    public void addInstrumentationPosition(IInstrumentationPositionEntity instrumentationPosition) {
         this.instrumentationPositions.add(instrumentationPosition);
         instrumentationPosition.setSectionInstrumentation(this);
     }
 
+    @Override
     public void removeInstrumentationPosition(
-        InstrumentationPositionEntity instrumentationPosition
+        IInstrumentationPositionEntity instrumentationPosition
     ) {
         this.instrumentationPositions.remove(instrumentationPosition);
         instrumentationPosition.setSectionInstrumentation(null);

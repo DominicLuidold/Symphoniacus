@@ -1,9 +1,12 @@
 package at.fhv.teamb.symphoniacus.persistence.dao;
 
 import at.fhv.teamb.symphoniacus.persistence.BaseDao;
-import at.fhv.teamb.symphoniacus.persistence.model.DutyEntity;
+import at.fhv.teamb.symphoniacus.persistence.dao.interfaces.IMusicalPieceDao;
 import at.fhv.teamb.symphoniacus.persistence.model.MusicalPieceEntity;
+import at.fhv.teamb.symphoniacus.persistence.model.interfaces.IDutyEntity;
+import at.fhv.teamb.symphoniacus.persistence.model.interfaces.IMusicalPieceEntity;
 import java.util.LinkedHashSet;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
@@ -11,7 +14,8 @@ import javax.persistence.TypedQuery;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-public class MusicalPieceDao extends BaseDao<MusicalPieceEntity> {
+public class MusicalPieceDao extends BaseDao<IMusicalPieceEntity>
+    implements IMusicalPieceDao {
 
     private static final Logger LOG = LogManager.getLogger(MusicalPieceDao.class);
 
@@ -19,16 +23,15 @@ public class MusicalPieceDao extends BaseDao<MusicalPieceEntity> {
      * {@inheritDoc}
      */
     @Override
-    public Optional<MusicalPieceEntity> find(Integer key) {
+    public Optional<IMusicalPieceEntity> find(Integer key) {
         return this.find(MusicalPieceEntity.class, key);
     }
 
     /**
-     * Fetches all {@link MusicalPieceEntity} objects.
-     *
-     * @return A Set of MusicalPieceEntity
+     * {@inheritDoc}
      */
-    public Set<MusicalPieceEntity> getAll() {
+    @Override
+    public Set<IMusicalPieceEntity> getAll() {
         TypedQuery<MusicalPieceEntity> query = entityManager.createQuery(
             "SELECT mp FROM MusicalPieceEntity mp",
             MusicalPieceEntity.class
@@ -38,12 +41,10 @@ public class MusicalPieceDao extends BaseDao<MusicalPieceEntity> {
     }
 
     /**
-     * Returns all {@link MusicalPieceEntity} objects for a given name.
-     *
-     * @param name The name to search for
-     * @return A musical piece with the same name
+     * {@inheritDoc}
      */
-    public Optional<MusicalPieceEntity> getMusicalPieceFromName(String name) {
+    @Override
+    public Optional<IMusicalPieceEntity> getMusicalPieceFromName(String name) {
         TypedQuery<MusicalPieceEntity> query = entityManager.createQuery(
             "SELECT mp FROM MusicalPieceEntity mp "
                 + "WHERE mp.name = :nameOfPiece",
@@ -59,7 +60,7 @@ public class MusicalPieceDao extends BaseDao<MusicalPieceEntity> {
      * {@inheritDoc}
      */
     @Override
-    public Optional<MusicalPieceEntity> persist(MusicalPieceEntity elem) {
+    public Optional<IMusicalPieceEntity> persist(IMusicalPieceEntity elem) {
         return this.persist(MusicalPieceEntity.class, elem);
     }
 
@@ -67,12 +68,12 @@ public class MusicalPieceDao extends BaseDao<MusicalPieceEntity> {
      * {@inheritDoc}
      */
     @Override
-    public Optional<MusicalPieceEntity> update(MusicalPieceEntity elem) {
+    public Optional<IMusicalPieceEntity> update(IMusicalPieceEntity elem) {
         return this.update(MusicalPieceEntity.class, elem);
     }
 
     @Override
-    public boolean remove(MusicalPieceEntity elem) {
+    public boolean remove(IMusicalPieceEntity elem) {
         return false;
     }
 
@@ -82,7 +83,7 @@ public class MusicalPieceDao extends BaseDao<MusicalPieceEntity> {
      * @param dutyEntity The duty for which the musical pieces should be loaded
      * @return List of {@link MusicalPieceEntity} objects (empty when no series of performances)
      */
-    public List<MusicalPieceEntity> getMusicalPiecesOfDuty(DutyEntity dutyEntity) {
+    public List<IMusicalPieceEntity> getMusicalPiecesOfDuty(IDutyEntity dutyEntity) {
         TypedQuery<MusicalPieceEntity> query = entityManager.createQuery(
             "SELECT m from DutyEntity d "
             + "INNER JOIN d.seriesOfPerformances sop "
@@ -95,6 +96,6 @@ public class MusicalPieceDao extends BaseDao<MusicalPieceEntity> {
         LOG.debug("{} Musical pieces for duty found", result.size());
 
 
-        return result;
+        return new LinkedList<>(result);
     }
 }

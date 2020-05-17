@@ -2,11 +2,10 @@ package at.fhv.teamb.symphoniacus.application;
 
 import at.fhv.teamb.symphoniacus.application.dto.SectionDto;
 import at.fhv.teamb.symphoniacus.persistence.dao.SectionDao;
-import at.fhv.teamb.symphoniacus.persistence.model.SectionEntity;
+import at.fhv.teamb.symphoniacus.persistence.dao.interfaces.ISectionDao;
+import at.fhv.teamb.symphoniacus.persistence.model.interfaces.ISectionEntity;
 import java.util.LinkedList;
 import java.util.List;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
 
 /**
  * Manager for Section.
@@ -14,21 +13,33 @@ import org.apache.logging.log4j.Logger;
  * @author Tobias Moser
  */
 public class SectionManager {
-    private static final Logger LOG = LogManager.getLogger(MusicianManager.class);
-    private SectionDao sectionDao;
+    private final ISectionDao sectionDao;
 
+    /**
+     * Initializes the SectionManager (usage for Team B only).
+     */
     public SectionManager() {
         this.sectionDao = new SectionDao();
     }
 
     /**
+     * Initializes the SectionManager (usage for Team C only).
+     *
+     * @param sectionDao The SectionDao used in this manager.
+     */
+    public SectionManager(ISectionDao sectionDao) {
+        this.sectionDao = sectionDao;
+    }
+
+    /**
      * Will return a list of all Section as Dtos.
+     *
      * @return List of all Sections
      */
     public List<SectionDto> getAll() {
-        List<SectionEntity> sectionEntities = this.sectionDao.getAll();
+        List<ISectionEntity> sectionEntities = this.sectionDao.getAll();
         List<SectionDto> sections = new LinkedList<>();
-        for (SectionEntity se : sectionEntities) {
+        for (ISectionEntity se : sectionEntities) {
             SectionDto.SectionDtoBuilder dtob = new SectionDto.SectionDtoBuilder(se.getSectionId());
             dtob.withSectionShortcut(se.getSectionShortcut());
             dtob.withDescription(se.getDescription());

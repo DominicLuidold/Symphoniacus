@@ -2,6 +2,7 @@ package at.fhv.teamb.symphoniacus.domain;
 
 import at.fhv.teamb.symphoniacus.persistence.PersistenceState;
 import at.fhv.teamb.symphoniacus.persistence.model.DutyEntity;
+import at.fhv.teamb.symphoniacus.persistence.model.interfaces.IDutyEntity;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.LinkedList;
@@ -21,13 +22,13 @@ import org.apache.logging.log4j.Logger;
  */
 public class Duty {
     private static final Logger LOG = LogManager.getLogger(Duty.class);
-    private DutyEntity entity;
-    private List<DutyPosition> dutyPositions = new LinkedList<>(); // prevent NPE
+    private IDutyEntity entity;
+    private List<DutyPosition> dutyPositions;
     private String title;
     private PersistenceState persistenceState;
     private List<MusicalPiece> musicalPieces = new LinkedList<>(); // prevent NPE
 
-    public Duty(DutyEntity entity) {
+    public Duty(IDutyEntity entity) {
         this(entity, null, null);
     }
 
@@ -38,11 +39,9 @@ public class Duty {
      * @param entity        The entity to use
      * @param dutyPositions The List of DutyPositions to use
      */
-    public Duty(
-        DutyEntity entity,
-        List<DutyPosition> dutyPositions,
-        List<MusicalPiece> musicalPieces
-    ) {
+    public Duty(IDutyEntity entity, List<DutyPosition> dutyPositions,
+                List<MusicalPiece> musicalPieces) {
+
         this.entity = entity;
         if (dutyPositions != null) {
             this.dutyPositions = Collections.unmodifiableList(dutyPositions);
@@ -111,7 +110,7 @@ public class Duty {
      * Generates a calendar-friendly title for Duty.
      *
      * @return String that looks like this: CATEGORY for SERIES (DESCRIPTION), where the
-     *     "for SERIES", "(DESCRIPTION)" parts are optional.
+     *      "for SERIES", "(DESCRIPTION)" parts are optional.
      */
     public String getTitle() {
         if (this.title == null) {
@@ -161,7 +160,7 @@ public class Duty {
         return Objects.requireNonNullElseGet(this.dutyPositions, LinkedList::new);
     }
 
-    public DutyEntity getEntity() {
+    public IDutyEntity getEntity() {
         return this.entity;
     }
 

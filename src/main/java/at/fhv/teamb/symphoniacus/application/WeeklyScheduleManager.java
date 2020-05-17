@@ -1,7 +1,9 @@
 package at.fhv.teamb.symphoniacus.application;
 
 import at.fhv.teamb.symphoniacus.persistence.dao.WeeklyScheduleDao;
+import at.fhv.teamb.symphoniacus.persistence.dao.interfaces.IWeeklyScheduleDao;
 import at.fhv.teamb.symphoniacus.persistence.model.WeeklyScheduleEntity;
+import at.fhv.teamb.symphoniacus.persistence.model.interfaces.IWeeklyScheduleEntity;
 import java.time.DayOfWeek;
 import java.time.LocalDate;
 import java.util.Optional;
@@ -10,10 +12,22 @@ import org.apache.logging.log4j.Logger;
 
 public class WeeklyScheduleManager {
     private static final Logger LOG = LogManager.getLogger(WeeklyScheduleManager.class);
-    private final WeeklyScheduleDao weeklyScheduleDao;
+    private final IWeeklyScheduleDao weeklyScheduleDao;
 
+    /**
+     * Initializes the WeeklyScheduleManager (usage for Team B only).
+     */
     public WeeklyScheduleManager() {
         this.weeklyScheduleDao = new WeeklyScheduleDao();
+    }
+
+    /**
+     * Initializes the WeeklyScheduleManager (usage for Team C only).
+     *
+     * @param weeklyScheduleDao The WeeklyScheduleDao used in this manager
+     */
+    public WeeklyScheduleManager(IWeeklyScheduleDao weeklyScheduleDao) {
+        this.weeklyScheduleDao = weeklyScheduleDao;
     }
 
     /**
@@ -24,9 +38,9 @@ public class WeeklyScheduleManager {
      * @param year The year to use
      * @return A weekly schedule entity
      */
-    public WeeklyScheduleEntity createIfNotExists(LocalDate day, int year) {
+    public IWeeklyScheduleEntity createIfNotExists(LocalDate day, int year) {
         // Fetch weekly schedule from database
-        Optional<WeeklyScheduleEntity> optional =
+        Optional<IWeeklyScheduleEntity> optional =
             this.weeklyScheduleDao.findForDayAndYear(day, year);
         if (optional.isPresent()) {
             // Return weekly schedule if present
@@ -34,7 +48,7 @@ public class WeeklyScheduleManager {
             return optional.get();
         } else {
             // Create new weekly schedule and return
-            WeeklyScheduleEntity wsEntity = new WeeklyScheduleEntity();
+            IWeeklyScheduleEntity wsEntity = new WeeklyScheduleEntity();
             wsEntity.setYear(year);
             wsEntity.setStartDate(day.with(DayOfWeek.MONDAY));
             wsEntity.setEndDate(day.with(DayOfWeek.SUNDAY));

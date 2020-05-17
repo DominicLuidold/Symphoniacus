@@ -1,12 +1,11 @@
 package at.fhv.teamb.symphoniacus.domain;
 
 import at.fhv.teamb.symphoniacus.domain.type.WishRequestType;
-import at.fhv.teamb.symphoniacus.persistence.model.DutyEntity;
-import at.fhv.teamb.symphoniacus.persistence.model.MusicianEntity;
 import at.fhv.teamb.symphoniacus.persistence.model.NegativeDateWishEntity;
 import at.fhv.teamb.symphoniacus.persistence.model.NegativeDutyWishEntity;
 import at.fhv.teamb.symphoniacus.persistence.model.PositiveWishEntity;
 import at.fhv.teamb.symphoniacus.persistence.model.WishRequestable;
+import at.fhv.teamb.symphoniacus.persistence.model.interfaces.IMusicianEntity;
 import java.util.Optional;
 import java.util.Set;
 import org.apache.logging.log4j.LogManager;
@@ -49,7 +48,7 @@ public class WishRequest {
      * @return WishRequest or optional.empty if no wish was found
      */
     public static Optional<WishRequest> getWishRequestToMusician(
-        MusicianEntity musician,
+        IMusicianEntity musician,
         Set<WishRequestable> wishRequests
     ) {
         for (WishRequestable wish : wishRequests) {

@@ -7,9 +7,14 @@ import at.fhv.teamb.symphoniacus.persistence.PersistenceState;
 import at.fhv.teamb.symphoniacus.persistence.dao.DutyPositionDao;
 import at.fhv.teamb.symphoniacus.persistence.dao.SectionDao;
 import at.fhv.teamb.symphoniacus.persistence.dao.SectionMonthlyScheduleDao;
-import at.fhv.teamb.symphoniacus.persistence.model.MonthlyScheduleEntity;
+import at.fhv.teamb.symphoniacus.persistence.dao.interfaces.IDutyPositionDao;
+import at.fhv.teamb.symphoniacus.persistence.dao.interfaces.ISectionDao;
+import at.fhv.teamb.symphoniacus.persistence.dao.interfaces.ISectionMonthlyScheduleDao;
 import at.fhv.teamb.symphoniacus.persistence.model.SectionEntity;
 import at.fhv.teamb.symphoniacus.persistence.model.SectionMonthlyScheduleEntity;
+import at.fhv.teamb.symphoniacus.persistence.model.interfaces.IMonthlyScheduleEntity;
+import at.fhv.teamb.symphoniacus.persistence.model.interfaces.ISectionEntity;
+import at.fhv.teamb.symphoniacus.persistence.model.interfaces.ISectionMonthlyScheduleEntity;
 import java.time.Month;
 import java.time.Year;
 import java.util.HashSet;
@@ -27,17 +32,34 @@ import org.apache.logging.log4j.Logger;
  */
 public class SectionMonthlyScheduleManager {
     private static final Logger LOG = LogManager.getLogger(SectionMonthlyScheduleManager.class);
-    private final DutyPositionDao dutyPositionDao;
-    private final SectionDao sectionDao;
-    private final SectionMonthlyScheduleDao smsDao;
+    private final IDutyPositionDao dutyPositionDao;
+    private final ISectionDao sectionDao;
+    private final ISectionMonthlyScheduleDao smsDao;
 
     /**
-     * Initialize the SectionMonthlyScheduleManager.
+     * Initializes the SectionMonthlyScheduleManager (usage for Team B only).
      */
     public SectionMonthlyScheduleManager() {
         this.dutyPositionDao = new DutyPositionDao();
         this.sectionDao = new SectionDao();
         this.smsDao = new SectionMonthlyScheduleDao();
+    }
+
+    /**
+     * Initializes the SectionMonthlyScheduleManager (usage for Team C only).
+     *
+     * @param dutyPositionDao The DutyPositionDao used in this manager
+     * @param sectionDao      The SectionDao used in this manager
+     * @param smsDao          The SectionMonthlyScheduleDao used in this manager
+     */
+    public SectionMonthlyScheduleManager(
+        IDutyPositionDao dutyPositionDao,
+        ISectionDao sectionDao,
+        ISectionMonthlyScheduleDao smsDao
+    ) {
+        this.dutyPositionDao = dutyPositionDao;
+        this.sectionDao = sectionDao;
+        this.smsDao = smsDao;
     }
 
     /**
@@ -50,13 +72,13 @@ public class SectionMonthlyScheduleManager {
     public Set<SectionMonthlySchedule> getSectionMonthlySchedules(SectionDto section, Year year) {
         Set<SectionMonthlySchedule> sectionMonthlySchedules = new HashSet<>();
 
-        SectionEntity sectionEntity = new SectionEntity();
+        ISectionEntity sectionEntity = new SectionEntity();
         sectionEntity.setSectionId(section.getSectionId());
         sectionEntity.setSectionShortcut(section.getSectionShortcut());
         sectionEntity.setDescription(section.getDescription());
 
         // Fetch section monthly schedules from database
-        for (SectionMonthlyScheduleEntity smsEntity : this.smsDao
+        for (ISectionMonthlyScheduleEntity smsEntity : this.smsDao
             .findAllInYear(sectionEntity, year)
         ) {
             // Convert entity to domain object
@@ -82,7 +104,7 @@ public class SectionMonthlyScheduleManager {
         Month month
     ) {
         // Fetch section monthly schedule from database
-        SectionMonthlyScheduleEntity smsEntity =
+        ISectionMonthlyScheduleEntity smsEntity =
             this.smsDao.findAllInYearAndMonth(section.getEntity(), year, month);
 
         // Convert entity to domain object
@@ -113,7 +135,7 @@ public class SectionMonthlyScheduleManager {
         sectionMonthlySchedule.getEntity().setReadyForOrganisationManager(true);
 
         // Write update to database and set publish state
-        Optional<SectionMonthlyScheduleEntity> persisted =
+        Optional<ISectionMonthlyScheduleEntity> persisted =
             this.smsDao.update(sectionMonthlySchedule.getEntity());
         if (persisted.isPresent()) {
             sectionMonthlySchedule.setPublishState(
@@ -140,20 +162,20 @@ public class SectionMonthlyScheduleManager {
      * @param monthlySchedule The monthly schedule to set
      * @return A List of section monthly schedules
      */
-    public List<SectionMonthlyScheduleEntity> createIfNotExist(
+    public List<ISectionMonthlyScheduleEntity> createIfNotExist(
         int year,
         int month,
-        MonthlyScheduleEntity monthlySchedule
+        IMonthlyScheduleEntity monthlySchedule
     ) {
         // Fetch section monthly schedules from database
-        List<SectionMonthlyScheduleEntity> sectionMonthlySchedules =
+        List<ISectionMonthlyScheduleEntity> sectionMonthlySchedules =
             this.smsDao.findAllInYearAndMonth(Year.of(year), Month.of(month));
 
         // Create section monthly schedules for every section
         if (sectionMonthlySchedules.isEmpty()) {
-            for (SectionEntity section : this.sectionDao.getAll()) {
+            for (ISectionEntity section : this.sectionDao.getAll()) {
                 // Create new section monthly schedule
-                SectionMonthlyScheduleEntity sms = new SectionMonthlyScheduleEntity();
+                ISectionMonthlyScheduleEntity sms = new SectionMonthlyScheduleEntity();
                 sms.setMonthlySchedule(monthlySchedule);
                 sms.setSection(section);
                 sms.setReadyForDutyScheduler(false);
@@ -175,7 +197,7 @@ public class SectionMonthlyScheduleManager {
      */
     private void setPersistenceState(SectionMonthlySchedule sms) {
         // Get entity from domain object
-        SectionMonthlyScheduleEntity entity = sms.getEntity();
+        ISectionMonthlyScheduleEntity entity = sms.getEntity();
 
         // Set appropriate PublishState
         if (entity.isReadyForDutyScheduler()) {

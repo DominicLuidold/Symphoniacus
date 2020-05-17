@@ -1,16 +1,16 @@
 package at.fhv.teamb.symphoniacus.domain;
 
-import at.fhv.teamb.symphoniacus.persistence.model.AdministrativeAssistantEntity;
+import at.fhv.teamb.symphoniacus.persistence.model.interfaces.IAdministrativeAssistantEntity;
 
 public class AdministrativeAssistant {
 
-    private  AdministrativeAssistantEntity administrativeAssistantEntity;
+    private IAdministrativeAssistantEntity administrativeAssistantEntity;
 
-    public AdministrativeAssistant(AdministrativeAssistantEntity administrativeAssistantEntity) {
+    public AdministrativeAssistant(IAdministrativeAssistantEntity administrativeAssistantEntity) {
         this.administrativeAssistantEntity = administrativeAssistantEntity;
     }
 
-    public AdministrativeAssistantEntity getAdministrativeAssistantEntity() {
+    public IAdministrativeAssistantEntity getAdministrativeAssistantEntity() {
         return administrativeAssistantEntity;
     }
 }

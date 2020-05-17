@@ -1,5 +1,10 @@
 package at.fhv.teamb.symphoniacus.persistence.model;
 
+import at.fhv.teamb.symphoniacus.persistence.model.interfaces.IDutyPositionEntity;
+import at.fhv.teamb.symphoniacus.persistence.model.interfaces.IMusicianEntity;
+import at.fhv.teamb.symphoniacus.persistence.model.interfaces.ISectionEntity;
+import at.fhv.teamb.symphoniacus.persistence.model.interfaces.ISectionInstrumentationEntity;
+import at.fhv.teamb.symphoniacus.persistence.model.interfaces.ISectionMonthlyScheduleEntity;
 import java.util.LinkedList;
 import java.util.List;
 import javax.persistence.Column;
@@ -12,7 +17,7 @@ import javax.persistence.Table;
 
 @Entity
 @Table(name = "section")
-public class SectionEntity {
+public class SectionEntity implements ISectionEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "sectionId")
@@ -24,94 +29,120 @@ public class SectionEntity {
     @Column(name = "description")
     private String description;
 
-    @OneToMany(mappedBy = "section", orphanRemoval = true)
-    private List<SectionMonthlyScheduleEntity> sectionMonthlySchedules = new LinkedList<>();
+    @OneToMany(
+        mappedBy = "section",
+        orphanRemoval = true,
+        targetEntity = SectionMonthlyScheduleEntity.class
+    )
+    private List<ISectionMonthlyScheduleEntity> sectionMonthlySchedules = new LinkedList<>();
 
-    @OneToMany(mappedBy = "section", orphanRemoval = true)
-    private List<MusicianEntity> musicians = new LinkedList<>();
+    @OneToMany(mappedBy = "section", orphanRemoval = true, targetEntity = MusicianEntity.class)
+    private List<IMusicianEntity> musicians = new LinkedList<>();
 
-    @OneToMany(mappedBy = "section", orphanRemoval = true)
-    private List<DutyPositionEntity> dutyPositions = new LinkedList<>();
+    @OneToMany(mappedBy = "section", orphanRemoval = true, targetEntity = DutyPositionEntity.class)
+    private List<IDutyPositionEntity> dutyPositions = new LinkedList<>();
 
-    @OneToMany(mappedBy = "section", orphanRemoval = true)
-    private List<SectionInstrumentationEntity> sectionInstrumentations = new LinkedList<>();
+    @OneToMany(
+        mappedBy = "section",
+        orphanRemoval = true,
+        targetEntity = SectionInstrumentationEntity.class
+    )
+    private List<ISectionInstrumentationEntity> sectionInstrumentations = new LinkedList<>();
 
+    @Override
     public Integer getSectionId() {
         return this.sectionId;
     }
 
+    @Override
     public void setSectionId(Integer sectionId) {
         this.sectionId = sectionId;
     }
 
+    @Override
     public String getSectionShortcut() {
         return this.sectionShortcut;
     }
 
+    @Override
     public void setSectionShortcut(String sectionShortcut) {
         this.sectionShortcut = sectionShortcut;
     }
 
+    @Override
     public String getDescription() {
         return this.description;
     }
 
+    @Override
     public void setDescription(String description) {
         this.description = description;
     }
 
-    public List<SectionMonthlyScheduleEntity> getSectionMonthlySchedules() {
+    @Override
+    public List<ISectionMonthlyScheduleEntity> getSectionMonthlySchedules() {
         return this.sectionMonthlySchedules;
     }
 
-    public void addSectionMonthlySchedule(SectionMonthlyScheduleEntity sectionMonthlySchedule) {
+    @Override
+    public void addSectionMonthlySchedule(ISectionMonthlyScheduleEntity sectionMonthlySchedule) {
         this.sectionMonthlySchedules.add(sectionMonthlySchedule);
         sectionMonthlySchedule.setSection(this);
     }
 
-    public void removeSectionMonthlySchedule(SectionMonthlyScheduleEntity sectionMonthlySchedule) {
+    @Override
+    public void removeSectionMonthlySchedule(ISectionMonthlyScheduleEntity sectionMonthlySchedule) {
         this.sectionMonthlySchedules.remove(sectionMonthlySchedule);
         sectionMonthlySchedule.setMonthlySchedule(null);
     }
 
-    public List<MusicianEntity> getMusicians() {
+    @Override
+    public List<IMusicianEntity> getMusicians() {
         return this.musicians;
     }
 
-    public void addMusician(MusicianEntity musician) {
+    @Override
+    public void addMusician(IMusicianEntity musician) {
         this.musicians.add(musician);
         musician.setSection(this);
     }
 
-    public void removeMusician(MusicianEntity musician) {
+    @Override
+    public void removeMusician(IMusicianEntity musician) {
         this.musicians.remove(musician);
         musician.setSection(null);
     }
 
-    public List<DutyPositionEntity> getDutyPositions() {
+    @Override
+    public List<IDutyPositionEntity> getDutyPositions() {
         return this.dutyPositions;
     }
 
-    public void addDutyPosition(DutyPositionEntity dutyPosition) {
+    @Override
+    public void addDutyPosition(IDutyPositionEntity dutyPosition) {
         this.dutyPositions.add(dutyPosition);
         dutyPosition.setSection(this);
     }
 
-    public void removeDutyPosition(DutyPositionEntity dutyPosition) {
+    @Override
+    public void removeDutyPosition(IDutyPositionEntity dutyPosition) {
         this.dutyPositions.remove(dutyPosition);
         dutyPosition.setSection(null);
     }
 
-    public List<SectionInstrumentationEntity> getSectionInstrumentations() {
+    @Override
+    public List<ISectionInstrumentationEntity> getSectionInstrumentations() {
         return this.sectionInstrumentations;
     }
 
-    public void addSectionInstrumentation(SectionInstrumentationEntity sectionInstrumentation) {
+    @Override
+    public void addSectionInstrumentation(ISectionInstrumentationEntity sectionInstrumentation) {
         this.sectionInstrumentations.add(sectionInstrumentation);
         sectionInstrumentation.setSection(this);
     }
 
-    public void removeSectionInstrumentation(SectionInstrumentationEntity sectionInstrumentation) {
+    @Override
+    public void removeSectionInstrumentation(ISectionInstrumentationEntity sectionInstrumentation) {
         this.sectionInstrumentations.remove(sectionInstrumentation);
         sectionInstrumentation.setSection(null);
     }

@@ -5,8 +5,11 @@ import at.fhv.teamb.symphoniacus.domain.WishRequest;
 import at.fhv.teamb.symphoniacus.persistence.dao.NegativeDateWishDao;
 import at.fhv.teamb.symphoniacus.persistence.dao.NegativeDutyWishDao;
 import at.fhv.teamb.symphoniacus.persistence.dao.PositiveWishDao;
-import at.fhv.teamb.symphoniacus.persistence.model.DutyEntity;
+import at.fhv.teamb.symphoniacus.persistence.dao.interfaces.INegativeDateWishDao;
+import at.fhv.teamb.symphoniacus.persistence.dao.interfaces.INegativeDutyWishDao;
+import at.fhv.teamb.symphoniacus.persistence.dao.interfaces.IPositiveWishDao;
 import at.fhv.teamb.symphoniacus.persistence.model.WishRequestable;
+import at.fhv.teamb.symphoniacus.persistence.model.interfaces.IDutyEntity;
 import java.util.LinkedHashSet;
 import java.util.Optional;
 import java.util.Set;
@@ -18,13 +21,13 @@ import java.util.Set;
  * @author Nino Heinzle
  */
 public class WishRequestManager {
-    private final PositiveWishDao positiveWishDao;
-    private final NegativeDutyWishDao negDutyWishDao;
-    private final NegativeDateWishDao negDateWishDao;
+    private final IPositiveWishDao positiveWishDao;
+    private final INegativeDutyWishDao negDutyWishDao;
+    private final INegativeDateWishDao negDateWishDao;
     private Set<WishRequestable> allWishRequests;
 
     /**
-     * Constructor.
+     * Initializes the WishRequestManager (usage for Team B only).
      */
     public WishRequestManager() {
         this.positiveWishDao = new PositiveWishDao();
@@ -33,11 +36,28 @@ public class WishRequestManager {
     }
 
     /**
+     * Initializes the WishRequestManager (usage for Team C only).
+     *
+     * @param positiveWishDao The PositiveWishDao used in this manager
+     * @param negDutyWishDao  The NegativeDutyWishDao used in this manager
+     * @param negDateWishDao  The NegativeDateWishDao used in this manager
+     */
+    public WishRequestManager(
+        IPositiveWishDao positiveWishDao,
+        INegativeDutyWishDao negDutyWishDao,
+        INegativeDateWishDao negDateWishDao
+    ) {
+        this.positiveWishDao = positiveWishDao;
+        this.negDutyWishDao = negDutyWishDao;
+        this.negDateWishDao = negDateWishDao;
+    }
+
+    /**
      * Preloads all WishRequests that exist for a given duty.
      *
      * @param duty duty
      */
-    public void loadAllWishRequests(DutyEntity duty) {
+    public void loadAllWishRequests(IDutyEntity duty) {
         allWishRequests = new LinkedHashSet<>();
         this.allWishRequests.addAll(positiveWishDao.getAllPositiveWishes(duty));
         this.allWishRequests.addAll(negDateWishDao.getAllNegativeDateWishes(duty));
@@ -50,7 +70,7 @@ public class WishRequestManager {
      * @param musician given musician domain object
      * @return the same musician
      */
-    public Musician setMusicianWishRequest(Musician musician, DutyEntity duty) {
+    public Musician setMusicianWishRequest(Musician musician, IDutyEntity duty) {
         // Beware! if allWish isn't loaded this method will load
         // the wishes individually from the DAO
         if (this.allWishRequests == null) {

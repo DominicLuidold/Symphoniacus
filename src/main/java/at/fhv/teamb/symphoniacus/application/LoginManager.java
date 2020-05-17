@@ -4,20 +4,21 @@ import at.fhv.teamb.symphoniacus.application.dto.LoginUserDto;
 import at.fhv.teamb.symphoniacus.application.type.DomainUserType;
 import at.fhv.teamb.symphoniacus.domain.User;
 import at.fhv.teamb.symphoniacus.persistence.dao.UserDao;
-import at.fhv.teamb.symphoniacus.persistence.model.UserEntity;
+import at.fhv.teamb.symphoniacus.persistence.dao.interfaces.IUserDao;
+import at.fhv.teamb.symphoniacus.persistence.model.interfaces.IUserEntity;
 import java.security.NoSuchAlgorithmException;
 import java.util.Optional;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 /**
- * This class is responsible for handling the login for {@link UserEntity}s.
+ * This class is responsible for handling the login for {@link IUserEntity}s.
  *
  * @author Valentin Goronjic
  */
 public class LoginManager {
     private static final Logger LOG = LogManager.getLogger(LoginManager.class);
-    protected UserDao userDao;
+    protected IUserDao userDao;
     protected User currentLoggedInUser;
 
     public LoginManager() {
@@ -25,7 +26,7 @@ public class LoginManager {
     }
 
     /**
-     * Returns a {@link UserEntity} object if the provided credentials match a known user.
+     * Returns a {@link IUserEntity} object if the provided credentials match a known user.
      *
      * @param dto UserDto filled with shortcut and password
      * @return A User matching provided credentials
@@ -38,7 +39,7 @@ public class LoginManager {
         }
 
         // Get User
-        Optional<UserEntity> userEntity = this.userDao.loadUser(dto.getUserShortcut());
+        Optional<IUserEntity> userEntity = this.userDao.loadUser(dto.getUserShortcut());
         if (userEntity.isEmpty()) {
             LOG.error("Credentials incorrect");
             return Optional.empty();
@@ -46,7 +47,7 @@ public class LoginManager {
         LOG.debug("Loaded user");
 
         // Generate Hash
-        UserEntity entity = userEntity.get();
+        IUserEntity entity = userEntity.get();
         Optional<String> inputPasswordHash = entity.getHashFromPlaintext(dto.getPassword());
         if (inputPasswordHash.isEmpty()) {
             LOG.error("Login not possible");
@@ -81,7 +82,7 @@ public class LoginManager {
             this.currentLoggedInUser.getType()
         );
 
-        UserEntity e = this.currentLoggedInUser.getUserEntity();
+        IUserEntity e = this.currentLoggedInUser.getUserEntity();
 
         // create DTO
         LoginUserDto resultDto = new LoginUserDto.UserDtoBuilder(e.getUserId())

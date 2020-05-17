@@ -1,11 +1,14 @@
 package at.fhv.teamb.symphoniacus.application;
 
+import at.fhv.teamb.symphoniacus.application.dto.DutyCategoryChangeLogDto;
+import at.fhv.teamb.symphoniacus.application.dto.DutyCategoryDto;
 import at.fhv.teamb.symphoniacus.domain.DutyCategory;
 import at.fhv.teamb.symphoniacus.domain.DutyCategoryChangelog;
 import at.fhv.teamb.symphoniacus.persistence.PersistenceState;
 import at.fhv.teamb.symphoniacus.persistence.dao.DutyCategoryDao;
-import at.fhv.teamb.symphoniacus.persistence.model.DutyCategoryChangelogEntity;
-import at.fhv.teamb.symphoniacus.persistence.model.DutyCategoryEntity;
+import at.fhv.teamb.symphoniacus.persistence.dao.interfaces.IDutyCategoryDao;
+import at.fhv.teamb.symphoniacus.persistence.model.interfaces.IDutyCategoryChangelogEntity;
+import at.fhv.teamb.symphoniacus.persistence.model.interfaces.IDutyCategoryEntity;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Optional;
@@ -14,12 +17,24 @@ import org.apache.logging.log4j.Logger;
 
 public class DutyCategoryManager {
     private static final Logger LOG = LogManager.getLogger(DutyCategoryManager.class);
-    private final DutyCategoryDao categoryDao;
+    private final IDutyCategoryDao categoryDao;
     private List<DutyCategory> dutyCategories;
-    private List<DutyCategoryEntity> dutyCategoryEntities;
+    private List<IDutyCategoryEntity> dutyCategoryEntities;
 
+    /**
+     * Initializes the DutyCategoryManager (usage for Team B only).
+     */
     public DutyCategoryManager() {
         this.categoryDao = new DutyCategoryDao();
+    }
+
+    /**
+     * Initializes the DutyCategoryManager (usage for Team C only).
+     *
+     * @param categoryDao The DutyCategoryDao used in this manager
+     */
+    public DutyCategoryManager(IDutyCategoryDao categoryDao) {
+        this.categoryDao = categoryDao;
     }
 
     /**
@@ -27,7 +42,7 @@ public class DutyCategoryManager {
      *
      * @return A List of duty category objects
      */
-    public List<DutyCategory> getDutyCategories() {
+    public List<DutyCategoryDto> getDutyCategories() {
         // Fetch duty categories from database if not present
         if (this.dutyCategories == null) {
             // Get duty category entities from database
@@ -37,10 +52,10 @@ public class DutyCategoryManager {
             }
 
             // Convert duty category entities to domain objects
-            for (DutyCategoryEntity entity : this.dutyCategoryEntities) {
+            for (IDutyCategoryEntity entity : this.dutyCategoryEntities) {
                 // Convert duty category changelog entities to domain objects
                 List<DutyCategoryChangelog> changelogList = new LinkedList<>();
-                for (DutyCategoryChangelogEntity changelogEntity :
+                for (IDutyCategoryChangelogEntity changelogEntity :
                     entity.getDutyCategoryChangelogs()
                 ) {
                     changelogList.add(new DutyCategoryChangelog(changelogEntity));
@@ -50,7 +65,35 @@ public class DutyCategoryManager {
                 this.dutyCategories.add(new DutyCategory(entity, changelogList));
             }
         }
-        return this.dutyCategories;
+        return convertCategoriesToDto(this.dutyCategories);
+    }
+
+    private List<DutyCategoryDto> convertCategoriesToDto(List<DutyCategory> cats) {
+        List<DutyCategoryDto> dutyCategoryDtos = new LinkedList<>();
+        for (DutyCategory d : cats) {
+            DutyCategoryDto dc = new DutyCategoryDto
+                .DutyCategoryDtoBuilder(d.getEntity().getDutyCategoryId())
+                .withType(d.getEntity().getType())
+                .withChangeLogs(convertChangeLogToDto(d.getChangelogList())).build();
+            dutyCategoryDtos.add(dc);
+        }
+        return dutyCategoryDtos;
+    }
+
+    private List<DutyCategoryChangeLogDto> convertChangeLogToDto(
+        List<DutyCategoryChangelog> changelogList
+    ) {
+        List<DutyCategoryChangeLogDto> changeLog = new LinkedList<>();
+        for (DutyCategoryChangelog cl : changelogList) {
+            DutyCategoryChangeLogDto clDto = new DutyCategoryChangeLogDto
+                .DutyCategoryChangeLogDtoBuilder(cl.getEntity().getDutyCategoryChangelogId())
+                .withPoints(cl.getEntity().getPoints())
+                .withDutyCategory(convertCategoryEntityToDto(cl.getEntity().getDutyCategory()))
+                .withStartDate(cl.getEntity().getStartDate())
+                .build();
+            changeLog.add(clDto);
+        }
+        return changeLog;
     }
 
     /**
@@ -63,7 +106,7 @@ public class DutyCategoryManager {
      * @param dutyCategory The duty category to persist
      */
     public void persist(DutyCategory dutyCategory) {
-        Optional<DutyCategoryEntity> persisted = this.categoryDao.update(dutyCategory.getEntity());
+        Optional<IDutyCategoryEntity> persisted = this.categoryDao.update(dutyCategory.getEntity());
 
         if (persisted.isPresent()) {
             dutyCategory.setPersistenceState(PersistenceState.PERSISTED);
@@ -79,5 +122,10 @@ public class DutyCategoryManager {
                 dutyCategory.getEntity().getType()
             );
         }
+    }
+
+    private DutyCategoryDto convertCategoryEntityToDto(IDutyCategoryEntity dutyCat) {
+        return new DutyCategoryDto.DutyCategoryDtoBuilder(dutyCat.getDutyCategoryId())
+            .withPoints(dutyCat.getPoints()).withType(dutyCat.getType()).build();
     }
 }

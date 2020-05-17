@@ -1,7 +1,7 @@
 package at.fhv.teamb.symphoniacus.domain;
 
-import at.fhv.teamb.symphoniacus.persistence.model.MonthlyScheduleEntity;
-import at.fhv.teamb.symphoniacus.persistence.model.SectionMonthlyScheduleEntity;
+import at.fhv.teamb.symphoniacus.persistence.model.interfaces.IMonthlyScheduleEntity;
+import at.fhv.teamb.symphoniacus.persistence.model.interfaces.ISectionMonthlyScheduleEntity;
 import java.util.Objects;
 
 /**
@@ -30,11 +30,11 @@ public class SectionMonthlySchedule {
         PUBLISHED
     }
 
-    private final MonthlyScheduleEntity monthlyScheduleEntity;
-    private final SectionMonthlyScheduleEntity entity;
+    private final IMonthlyScheduleEntity monthlyScheduleEntity;
+    private final ISectionMonthlyScheduleEntity entity;
     private PublishState publishState;
 
-    public SectionMonthlySchedule(SectionMonthlyScheduleEntity entity) {
+    public SectionMonthlySchedule(ISectionMonthlyScheduleEntity entity) {
         this.entity = entity;
         this.monthlyScheduleEntity = entity.getMonthlySchedule();
     }
@@ -60,7 +60,7 @@ public class SectionMonthlySchedule {
         this.publishState = publishState;
     }
 
-    public SectionMonthlyScheduleEntity getEntity() {
+    public ISectionMonthlyScheduleEntity getEntity() {
         return this.entity;
     }
 

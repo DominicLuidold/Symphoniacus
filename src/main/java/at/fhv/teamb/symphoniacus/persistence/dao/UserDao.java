@@ -1,9 +1,9 @@
 package at.fhv.teamb.symphoniacus.persistence.dao;
 
 import at.fhv.teamb.symphoniacus.persistence.BaseDao;
-import at.fhv.teamb.symphoniacus.persistence.model.AdministrativeAssistantEntity;
-import at.fhv.teamb.symphoniacus.persistence.model.MusicianEntity;
+import at.fhv.teamb.symphoniacus.persistence.dao.interfaces.IUserDao;
 import at.fhv.teamb.symphoniacus.persistence.model.UserEntity;
+import at.fhv.teamb.symphoniacus.persistence.model.interfaces.IUserEntity;
 import java.util.List;
 import java.util.Optional;
 import javax.persistence.TypedQuery;
@@ -16,14 +16,15 @@ import org.apache.logging.log4j.Logger;
  * @author Danijel Antonijevic
  * @author Valentin Goronjic
  */
-public class UserDao extends BaseDao<UserEntity> {
+public class UserDao extends BaseDao<IUserEntity>
+    implements IUserDao {
     private static final Logger LOG = LogManager.getLogger(UserDao.class);
 
     /**
      * {@inheritDoc}
      */
     @Override
-    public Optional<UserEntity> find(Integer key) {
+    public Optional<IUserEntity> find(Integer key) {
         return this.find(UserEntity.class, key);
     }
 
@@ -31,7 +32,7 @@ public class UserDao extends BaseDao<UserEntity> {
      * {@inheritDoc}
      */
     @Override
-    public Optional<UserEntity> persist(UserEntity elem) {
+    public Optional<IUserEntity> persist(IUserEntity elem) {
         return this.persist(UserEntity.class, elem);
     }
 
@@ -39,22 +40,20 @@ public class UserDao extends BaseDao<UserEntity> {
      * {@inheritDoc}
      */
     @Override
-    public Optional<UserEntity> update(UserEntity elem) {
+    public Optional<IUserEntity> update(IUserEntity elem) {
         return this.update(UserEntity.class, elem);
     }
 
     @Override
-    public boolean remove(UserEntity elem) {
+    public boolean remove(IUserEntity elem) {
         return false;
     }
 
     /**
-     * Returns a {@link UserEntity} if provided shortcut and password match a database entry.
-     *
-     * @param userShortCut The shortcut to identify the user
-     * @return A user matching provided credentials
+     * {@inheritDoc}
      */
-    public Optional<UserEntity> loadUser(String userShortCut) {
+    @Override
+    public Optional<IUserEntity> loadUser(String userShortCut) {
         List<UserEntity> result = null;
         TypedQuery<UserEntity> query = entityManager.createQuery(
             "SELECT u FROM UserEntity u WHERE u.shortcut = :shortc",
@@ -72,11 +71,9 @@ public class UserDao extends BaseDao<UserEntity> {
     }
 
     /**
-     * Checks whether the given userShortcut + password hash are valid.
-     * @param userShortCut current user's shortcut
-     * @param inputPasswordHash current user's password hash
-     * @return true if credentials are correct
+     * {@inheritDoc}
      */
+    @Override
     public boolean isLoginCorrect(String userShortCut, String inputPasswordHash) {
         TypedQuery<Long> query = entityManager.createQuery(
             "SELECT COUNT(u) FROM UserEntity u "
@@ -97,12 +94,10 @@ public class UserDao extends BaseDao<UserEntity> {
     }
 
     /**
-     * Checks whether the provided {@link UserEntity} is a {@link MusicianEntity}.
-     *
-     * @param currentUser The user to check
-     * @return True if user is a musician, false otherwise
+     * {@inheritDoc}
      */
-    public boolean isUserMusician(UserEntity currentUser) {
+    @Override
+    public boolean isUserMusician(IUserEntity currentUser) {
         Optional<Long> result = Optional.empty();
         TypedQuery<Long> query = entityManager.createQuery(
             "SELECT COUNT(m) FROM MusicianEntity m WHERE m.user = :user",
@@ -124,12 +119,10 @@ public class UserDao extends BaseDao<UserEntity> {
     }
 
     /**
-     * Checks whether the provided {@link UserEntity} is a {@link AdministrativeAssistantEntity}.
-     *
-     * @param currentUser The user to check
-     * @return True if user is a AdministrativeAssistant, false otherwise
+     * {@inheritDoc}
      */
-    public boolean isUserAdministrativeAssistant(UserEntity currentUser) {
+    @Override
+    public boolean isUserAdministrativeAssistant(IUserEntity currentUser) {
         Optional<Long> result = Optional.empty();
         TypedQuery<Long> query = entityManager.createQuery(
             "SELECT COUNT(aae) FROM AdministrativeAssistantEntity aae WHERE aae.user = :user",

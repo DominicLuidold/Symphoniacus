@@ -2,9 +2,10 @@ package at.fhv.teamb.symphoniacus.persistence.dao;
 
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
-import at.fhv.teamb.symphoniacus.persistence.model.DutyEntity;
+import at.fhv.teamb.symphoniacus.persistence.dao.interfaces.IDutyDao;
 import at.fhv.teamb.symphoniacus.persistence.model.MusicianEntity;
 import at.fhv.teamb.symphoniacus.persistence.model.SectionEntity;
+import at.fhv.teamb.symphoniacus.persistence.model.interfaces.IDutyEntity;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
@@ -17,7 +18,7 @@ import org.junit.jupiter.api.TestInstance;
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 class DutyEntityDaoTest {
     private static final Logger LOG = LogManager.getLogger(DutyEntityDaoTest.class);
-    private DutyDao dao;
+    private IDutyDao dao;
 
     @BeforeAll
     void initialize() {
@@ -27,7 +28,7 @@ class DutyEntityDaoTest {
     @Test
     void testFindAllDutiesForWeek_ShouldReturnNotNull() {
         // When
-        List<DutyEntity> list = this.dao.findAllInRange(
+        List<IDutyEntity> list = this.dao.findAllInRange(
             LocalDateTime.of(2020, 3, 30, 0, 0, 0),
             LocalDateTime.of(2020, 4, 5, 0, 0, 0)
         );
@@ -43,7 +44,7 @@ class DutyEntityDaoTest {
         s.setSectionId(1);
 
         // When
-        List<DutyEntity> list = this.dao.findAllInRangeWithSection(s,
+        List<IDutyEntity> list = this.dao.findAllInRangeWithSection(s,
             LocalDateTime.of(2020, 5, 1, 0, 0, 0),
             LocalDateTime.of(2020, 5, 1, 14, 0, 0),
             true, false, false);
@@ -61,7 +62,7 @@ class DutyEntityDaoTest {
         LocalDate month = LocalDate.of(2020,5,1);
 
         //When
-        List<DutyEntity> list = this.dao.getAllDutiesInRangeFromMusician(musician, month);
+        List<IDutyEntity> list = this.dao.getAllDutiesInRangeFromMusician(musician, month);
 
         //Then
         LOG.debug("Result size? " + list.size());

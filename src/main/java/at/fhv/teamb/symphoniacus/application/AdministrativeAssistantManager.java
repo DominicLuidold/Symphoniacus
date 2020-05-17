@@ -2,9 +2,10 @@ package at.fhv.teamb.symphoniacus.application;
 
 import at.fhv.teamb.symphoniacus.domain.AdministrativeAssistant;
 import at.fhv.teamb.symphoniacus.persistence.dao.AdministrativeAssistantDao;
-import at.fhv.teamb.symphoniacus.persistence.model.AdministrativeAssistantEntity;
+import at.fhv.teamb.symphoniacus.persistence.dao.interfaces.IAdministrativeAssistantDao;
 import at.fhv.teamb.symphoniacus.persistence.model.MusicianEntity;
-import at.fhv.teamb.symphoniacus.persistence.model.UserEntity;
+import at.fhv.teamb.symphoniacus.persistence.model.interfaces.IAdministrativeAssistantEntity;
+import at.fhv.teamb.symphoniacus.persistence.model.interfaces.IUserEntity;
 import java.util.Optional;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -17,21 +18,21 @@ import org.apache.logging.log4j.Logger;
  */
 public class AdministrativeAssistantManager {
     private static final Logger LOG = LogManager.getLogger(AdministrativeAssistantManager.class);
-    private AdministrativeAssistantDao aad;
+    private IAdministrativeAssistantDao aad;
 
     public AdministrativeAssistantManager() {
         this.aad = new AdministrativeAssistantDao();
     }
 
     /**
-     * Returns a {@link MusicianEntity} based on provided {@link UserEntity}.
+     * Returns a {@link MusicianEntity} based on provided {@link IUserEntity}.
      *
      * <p>In case of the user not being a musician, an empty {@link Optional} will be returned.
      *
      * @param user The user to use
      * @return A Musician object representing the provided User
      */
-    public Optional<AdministrativeAssistant> loadAdministrativeAssistant(UserEntity user) {
+    public Optional<AdministrativeAssistant> loadAdministrativeAssistant(IUserEntity user) {
         if (user == null) {
             LOG.error("Cannot load musician with null user.");
             return Optional.empty();
@@ -41,11 +42,12 @@ public class AdministrativeAssistantManager {
 
     /**
      * Loads a {@link MusicianEntity} by its identifier.
+     *
      * @param userId The userId of this Musician (NOT musicianId!)
      * @return Optional which is filled when loading worked, else empty
      */
     public Optional<AdministrativeAssistant> loadAdministrativeAssistant(int userId) {
-        Optional<AdministrativeAssistantEntity> aa = this.aad.find(userId);
+        Optional<IAdministrativeAssistantEntity> aa = this.aad.find(userId);
 
         // Load attempt failed
         if (aa.isEmpty()) {

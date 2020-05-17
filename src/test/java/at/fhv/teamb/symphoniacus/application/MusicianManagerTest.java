@@ -3,8 +3,8 @@ package at.fhv.teamb.symphoniacus.application;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import at.fhv.teamb.symphoniacus.domain.Musician;
-import at.fhv.teamb.symphoniacus.persistence.model.MusicianEntity;
 import at.fhv.teamb.symphoniacus.persistence.model.UserEntity;
+import at.fhv.teamb.symphoniacus.persistence.model.interfaces.IUserEntity;
 import java.util.Optional;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
@@ -22,7 +22,7 @@ class MusicianManagerTest {
     @Test
     void findLoadMusician_shouldReturnAMusician() {
         // Given
-        UserEntity u = new UserEntity();
+        IUserEntity u = new UserEntity();
         u.setUserId(1);
 
         // When

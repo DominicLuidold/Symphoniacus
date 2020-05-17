@@ -1,29 +1,29 @@
 package at.fhv.teamb.symphoniacus.persistence.dao;
 
 import at.fhv.teamb.symphoniacus.persistence.BaseDao;
+import at.fhv.teamb.symphoniacus.persistence.dao.interfaces.IWeeklyScheduleDao;
 import at.fhv.teamb.symphoniacus.persistence.model.WeeklyScheduleEntity;
+import at.fhv.teamb.symphoniacus.persistence.model.interfaces.IWeeklyScheduleEntity;
 import java.time.LocalDate;
 import java.util.Optional;
 import javax.persistence.TypedQuery;
 
-public class WeeklyScheduleDao extends BaseDao<WeeklyScheduleEntity> {
+public class WeeklyScheduleDao extends BaseDao<IWeeklyScheduleEntity>
+    implements IWeeklyScheduleDao {
 
     /**
      * {@inheritDoc}
      */
     @Override
-    public Optional<WeeklyScheduleEntity> find(Integer key) {
+    public Optional<IWeeklyScheduleEntity> find(Integer key) {
         return this.find(WeeklyScheduleEntity.class, key);
     }
 
     /**
-     * Returns the {@link WeeklyScheduleEntity} for a given day and year.
-     *
-     * @param day  The day to use
-     * @param year The year to use
-     * @return A weekly schedule, if any
+     * {@inheritDoc}
      */
-    public Optional<WeeklyScheduleEntity> findForDayAndYear(LocalDate day, int year) {
+    @Override
+    public Optional<IWeeklyScheduleEntity> findForDayAndYear(LocalDate day, int year) {
         TypedQuery<WeeklyScheduleEntity> query = entityManager.createQuery(
             "SELECT w FROM WeeklyScheduleEntity w "
                 + "WHERE :day BETWEEN w.startDate AND w.endDate "
@@ -45,7 +45,7 @@ public class WeeklyScheduleDao extends BaseDao<WeeklyScheduleEntity> {
      * {@inheritDoc}
      */
     @Override
-    public Optional<WeeklyScheduleEntity> persist(WeeklyScheduleEntity elem) {
+    public Optional<IWeeklyScheduleEntity> persist(IWeeklyScheduleEntity elem) {
         return this.persist(WeeklyScheduleEntity.class, elem);
     }
 
@@ -53,12 +53,12 @@ public class WeeklyScheduleDao extends BaseDao<WeeklyScheduleEntity> {
      * {@inheritDoc}
      */
     @Override
-    public Optional<WeeklyScheduleEntity> update(WeeklyScheduleEntity elem) {
+    public Optional<IWeeklyScheduleEntity> update(IWeeklyScheduleEntity elem) {
         return this.update(WeeklyScheduleEntity.class, elem);
     }
 
     @Override
-    public boolean remove(WeeklyScheduleEntity elem) {
+    public boolean remove(IWeeklyScheduleEntity elem) {
         return false;
     }
 }

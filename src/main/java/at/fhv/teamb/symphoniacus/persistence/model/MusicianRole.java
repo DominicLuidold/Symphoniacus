@@ -1,6 +1,8 @@
 package at.fhv.teamb.symphoniacus.persistence.model;
 
 import at.fhv.teamb.symphoniacus.application.type.MusicianRoleType;
+import at.fhv.teamb.symphoniacus.persistence.model.interfaces.IMusicianEntity;
+import at.fhv.teamb.symphoniacus.persistence.model.interfaces.IMusicianRole;
 import java.util.LinkedList;
 import java.util.List;
 import javax.persistence.Column;
@@ -15,7 +17,7 @@ import javax.persistence.Table;
 
 @Entity
 @Table(name = "musicianRole")
-public class MusicianRole {
+public class MusicianRole implements IMusicianRole {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "musicianRoleId")
@@ -25,29 +27,35 @@ public class MusicianRole {
     @Column(name = "description")
     private MusicianRoleType description;
 
-    @ManyToMany(mappedBy = "musicianRoles")
-    private List<MusicianEntity> musicians = new LinkedList<>();
+    @ManyToMany(mappedBy = "musicianRoles", targetEntity = MusicianEntity.class)
+    private List<IMusicianEntity> musicians = new LinkedList<>();
 
-    public void addMusician(MusicianEntity m) {
+    @Override
+    public void addMusician(IMusicianEntity m) {
         musicians.add(m);
     }
 
-    public void removeMusician(MusicianEntity m) {
+    @Override
+    public void removeMusician(IMusicianEntity m) {
         musicians.remove(m);
     }
 
+    @Override
     public Integer getMusicianRoleId() {
         return this.musicianRoleId;
     }
 
+    @Override
     public void setMusicianRoleId(Integer musicianRoleId) {
         this.musicianRoleId = musicianRoleId;
     }
 
+    @Override
     public MusicianRoleType getDescription() {
         return this.description;
     }
 
+    @Override
     public void setDescription(MusicianRoleType description) {
         this.description = description;
     }
