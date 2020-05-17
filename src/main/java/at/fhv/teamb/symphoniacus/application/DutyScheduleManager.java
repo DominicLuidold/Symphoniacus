@@ -75,7 +75,7 @@ public class DutyScheduleManager {
      *  @param dutyDao            The DutyDao used in this manager
      * @param dutyPositionDao    The DutyPositionDao used in this manager
      * @param musicianDao        The MusicianDao used in this manager
-     * @param musicalPieceDao
+     * @param musicalPieceDao   The MuscialPieceDao used in this manager
      * @param pointsManager      The PointsManager used in this manager
      * @param wishRequestManager The WishRequestManager used in this manager
      */

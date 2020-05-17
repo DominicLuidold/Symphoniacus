@@ -39,8 +39,9 @@ public class Duty {
      * @param entity        The entity to use
      * @param dutyPositions The List of DutyPositions to use
      */
-    public Duty(IDutyEntity entity, List<DutyPosition> dutyPositions, List<MusicalPiece> musicalPieces) {
-        
+    public Duty(IDutyEntity entity, List<DutyPosition> dutyPositions,
+                List<MusicalPiece> musicalPieces) {
+
         this.entity = entity;
         if (dutyPositions != null) {
             this.dutyPositions = Collections.unmodifiableList(dutyPositions);
@@ -109,7 +110,7 @@ public class Duty {
      * Generates a calendar-friendly title for Duty.
      *
      * @return String that looks like this: CATEGORY for SERIES (DESCRIPTION), where the
-     *     "for SERIES", "(DESCRIPTION)" parts are optional.
+     *      "for SERIES", "(DESCRIPTION)" parts are optional.
      */
     public String getTitle() {
         if (this.title == null) {

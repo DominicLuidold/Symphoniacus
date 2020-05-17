@@ -7,10 +7,9 @@ import at.fhv.teamb.symphoniacus.application.dto.SectionDto;
 import at.fhv.teamb.symphoniacus.domain.ActualSectionInstrumentation;
 import at.fhv.teamb.symphoniacus.domain.Duty;
 import at.fhv.teamb.symphoniacus.domain.DutyPosition;
-import at.fhv.teamb.symphoniacus.persistence.model.interfaces.IInstrumentationEntity;
 import at.fhv.teamb.symphoniacus.domain.MusicalPiece;
 import at.fhv.teamb.symphoniacus.domain.Points;
-import at.fhv.teamb.symphoniacus.persistence.model.InstrumentationEntity;
+import at.fhv.teamb.symphoniacus.persistence.model.interfaces.IInstrumentationEntity;
 import at.fhv.teamb.symphoniacus.presentation.DutyPopoverController;
 import com.calendarfx.model.Entry;
 import com.calendarfx.view.DateControl;
@@ -186,11 +185,11 @@ public class CustomDutyPopoverNode extends PopOverContentPane {
                 for (DutyPosition dp : dps) {
                     if (
                         dp.getEntity()
-                        .getInstrumentationPosition()
-                        .getInstrumentation()
-                        .getMusicalPiece()
-                        .getName()
-                        .equals(mp.getEntity().getName())
+                            .getInstrumentationPosition()
+                            .getInstrumentation()
+                            .getMusicalPiece()
+                            .getName()
+                            .equals(mp.getEntity().getName())
                     ) {
                         if (dp.getAssignedMusician().isPresent()) {
                             Label l = new Label(
