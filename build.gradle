@@ -67,6 +67,8 @@ test {
 checkstyle {
     toolVersion = '8.32'
 }
+checkstyleMain.exclude '**/at/fhv/orchestraria/**'
+checkstyleTest.exclude '**/at/fhv/orchestraria/**'
 
 /* JavaFX configuration */
 javafx {
