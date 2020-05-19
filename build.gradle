@@ -44,6 +44,9 @@ dependencies {
     testCompile 'org.mockito:mockito-core:3.3.3'
     testCompile 'org.testfx:testfx-core:4.0.16-alpha'
     testCompile 'org.testfx:testfx-junit5:4.0.16-alpha'
+
+    /* Team C specific dependencies */
+    compile 'de.jensd:fontawesomefx:8.2'
 }
 
 application {
@@ -73,7 +76,7 @@ checkstyleTest.exclude '**/at/fhv/orchestraria/**'
 /* JavaFX configuration */
 javafx {
     version = '14'
-    modules = ['javafx.controls', 'javafx.fxml', 'javafx.graphics']
+    modules = ['javafx.controls', 'javafx.fxml', 'javafx.graphics', 'javafx.media']
 }
 
 /* JaCoCo configuration */
