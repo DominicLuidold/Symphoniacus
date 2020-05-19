@@ -1,0 +1,20 @@
+/*disable the arrow on the root cell*/
+.tree-table-row-cell > .tree-disclosure-node > .arrow {
+    -fx-background-color: green;
+    -fx-padding: 0.4em 0.4em 0.4em 0.4em; /* 4 */
+    -fx-shape: "M24 10h-10v-10h-4v10h-10v4h10v10h4v-10h10z";
+}
+
+.tree-table-row-cell > .tree-disclosure-node {
+
+    -fx-border-color: transparent;
+    -fx-border-width: 5;
+}
+
+.tree-table-row-cell:first-row {
+    -fx-font-weight: bold;
+}
+
+.tree-table-row-cell:selected{
+    -fx-background-color: E1CDD5;
+}

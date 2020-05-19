@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import de.jensd.fx.glyphs.fontawesome.FontAwesomeIcon?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.layout.ColumnConstraints?>
+<?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.RowConstraints?>
+
+<GridPane fx:id="gridPane" alignment="CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="18.0" prefWidth="236.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1">
+    <columnConstraints>
+        <ColumnConstraints />
+        <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" maxWidth="70.0" minWidth="10.0" prefWidth="52.0" />
+        <ColumnConstraints hgrow="SOMETIMES" maxWidth="204.0" minWidth="10.0" prefWidth="52.0" />
+        <ColumnConstraints hgrow="SOMETIMES" maxWidth="208.0" minWidth="1.0" prefWidth="52.0" />
+      <ColumnConstraints hgrow="SOMETIMES" maxWidth="145.0" minWidth="10.0" prefWidth="52.0" />
+    </columnConstraints>
+    <rowConstraints>
+        <RowConstraints />
+      <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+    </rowConstraints>
+    <children>
+        <Label fx:id="shortcutLabel" alignment="CENTER" contentDisplay="CENTER" styleClass="shortcutLabel" text="Shortcut" GridPane.columnIndex="2" GridPane.rowIndex="1" />
+      <Label fx:id="pointsLabel" styleClass="pointsLabel" text="Points" GridPane.columnIndex="3" GridPane.rowIndex="1" />
+      <FontAwesomeIcon fx:id="princIcon" glyphName="MUSIC" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+      <FontAwesomeIcon fx:id="wishIcon" fill="TRANSPARENT" glyphName="THUMBS_UP" GridPane.columnIndex="4" GridPane.rowIndex="1" />
+
+    </children>
+</GridPane>

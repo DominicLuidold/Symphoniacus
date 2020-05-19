@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import com.jfoenix.controls.JFXButton?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.VBox?>
+
+<AnchorPane prefHeight="167.0" prefWidth="364.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="at.fhv.orchestraria.UserInterface.Roster.PopOverDutySchedulerController">
+   <children>
+      <VBox layoutX="14.0" layoutY="19.0" prefHeight="149.0" prefWidth="91.0" spacing="5.0">
+         <children>
+            <Label text="Start:" />
+            <Label text="End:" />
+            <Label text="Musical Piece: " />
+            <Label text="Composer: " />
+            <Label text="Duty-Category: " />
+            <Label text="Instrumentation: " />
+         </children>
+      </VBox>
+      <JFXButton buttonType="RAISED" layoutX="313.0" layoutY="19.0" onAction="#editPopOver" style="-fx-background-color: lightgrey;" text="Edit" />
+      <VBox layoutX="110.0" layoutY="19.0" prefHeight="149.0" prefWidth="195.0" spacing="5.0">
+         <children>
+            <Label id="labelFrom" fx:id="labelStart" />
+            <Label id="labelFrom" fx:id="labelEnd" />
+            <Label fx:id="labelMusicalPiece" />
+            <Label fx:id="labelComposer" />
+            <Label fx:id="labelDutyCategory" />
+            <Label fx:id="labelInstrumentation" />
+         </children>
+      </VBox>
+   </children>
+</AnchorPane>
