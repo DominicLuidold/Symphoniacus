@@ -169,7 +169,7 @@ public class UserTableWindowController {
             }
         });
         JFXloadingBar.setVisible(false);
-
+        treeTableView.scrollTo(0);
         searchFunctionality();
     }
 
