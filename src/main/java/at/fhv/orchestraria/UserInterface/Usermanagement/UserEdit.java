@@ -31,11 +31,12 @@ public class UserEdit extends Application {
     @Override
     public void start(Stage primaryStage) throws Exception{
         Locale.setDefault(Locale.ENGLISH);
-        FXMLLoader loader = new FXMLLoader(getClass().getResource("/UserEdit.fxml"));
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("/view/team-c/UserEdit.fxml"));
         Parent root = loader.load();
 
         primaryStage.setTitle("Edit User");
-        primaryStage.getIcons().add(new Image(UserTable.class.getResourceAsStream("/orchestraria_icon.png")));
+        primaryStage.getIcons().add(new Image(UserTable.class.getResourceAsStream(
+            "/images/team-c/orchestraria_icon.png")));
         Scene scene = new Scene(root);
         primaryStage.setScene(scene);
 

@@ -15,7 +15,7 @@
 <?import javafx.scene.shape.Circle?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="388.0" minWidth="895.0" prefHeight="678.0" prefWidth="895.0" stylesheets="@userTable_style.css" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="at.fhv.orchestraria.UserInterface.Usermanagement.UserTableWindowController">
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="388.0" minWidth="895.0" prefHeight="678.0" prefWidth="895.0" stylesheets="@../../css/team-c/userTable_style.css" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="at.fhv.orchestraria.UserInterface.Usermanagement.UserTableWindowController">
    <children>
       <AnchorPane layoutX="-4.0" layoutY="-1.0" minHeight="110.0" minWidth="614.0" prefHeight="110.0" prefWidth="614.0" style="-fx-background-color: B491A1;" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0">
          <children>
@@ -30,7 +30,7 @@
                   <Font name="Vladimir Script" size="48.0" />
                </font>
             </Label>
-            <HBox alignment="CENTER_RIGHT" layoutX="10.0" layoutY="70.0" prefHeight="34.0" prefWidth="438.0" spacing="5.0" stylesheets="@ui_style.css" AnchorPane.leftAnchor="10.0">
+            <HBox alignment="CENTER_RIGHT" layoutX="10.0" layoutY="70.0" prefHeight="34.0" prefWidth="438.0" spacing="5.0" stylesheets="@../../css/team-c/ui_style.css" AnchorPane.leftAnchor="10.0">
                <children>
                   <ToggleButton fx:id="home_navBttn" mnemonicParsing="false" onAction="#notAvailableAlert" prefHeight="25.0" prefWidth="89.0" text="Home" textAlignment="CENTER">
                      <toggleGroup>
@@ -43,7 +43,7 @@
                   <ToggleButton fx:id="substitutes_navBttn" mnemonicParsing="false" onAction="#notAvailableAlert" prefHeight="25.0" prefWidth="93.0" text="Points" toggleGroup="$navigation1" />
                </children>
             </HBox>
-            <HBox alignment="CENTER_RIGHT" layoutX="457.0" layoutY="70.0" prefHeight="34.0" prefWidth="438.0" spacing="7.0" stylesheets="@ui_style.css" AnchorPane.leftAnchor="457.0" AnchorPane.rightAnchor="0.0">
+            <HBox alignment="CENTER_RIGHT" layoutX="457.0" layoutY="70.0" prefHeight="34.0" prefWidth="438.0" spacing="7.0" stylesheets="@../../css/team-c/ui_style.css" AnchorPane.leftAnchor="457.0" AnchorPane.rightAnchor="0.0">
                <children>
                   <ToggleButton fx:id="profile_navBttn" mnemonicParsing="false" onAction="#notAvailableAlert" prefHeight="25.0" prefWidth="89.0" text="Profile" textAlignment="CENTER" toggleGroup="$navigation1" />
                   <ToggleButton fx:id="logout_navBttn" mnemonicParsing="false" onAction="#logout" prefHeight="25.0" prefWidth="89.0" text="Logout" textAlignment="CENTER">
@@ -58,7 +58,7 @@
             </HBox>
             <ImageView fitHeight="56.0" fitWidth="56.0" layoutX="34.0" layoutY="5.0" pickOnBounds="true" preserveRatio="true" AnchorPane.topAnchor="5.0">
                <image>
-                  <Image url="@orchestraria_icon.png" />
+                  <Image url="@../../images/team-c/orchestraria_icon.png" />
                </image>
             </ImageView>
          </children>

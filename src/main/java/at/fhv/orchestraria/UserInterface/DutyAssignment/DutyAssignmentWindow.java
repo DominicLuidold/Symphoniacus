@@ -4,11 +4,7 @@ import at.fhv.orchestraria.UserInterface.MainWindow.MainWindow;
 import at.fhv.orchestraria.UserInterface.Roster.AssignmentRosterThread;
 import at.fhv.orchestraria.UserInterface.Roster.OrchestraEntry;
 import at.fhv.orchestraria.application.DutyAssignmentController;
-import com.jfoenix.controls.JFXHamburger;
 import javafx.application.Application;
-import javafx.application.Platform;
-import javafx.concurrent.Service;
-import javafx.concurrent.Task;
 import javafx.fxml.FXMLLoader;
 import javafx.geometry.Rectangle2D;
 import javafx.scene.Parent;
@@ -19,7 +15,6 @@ import javafx.stage.Stage;
 
 import java.io.IOException;
 import java.util.Locale;
-import java.util.concurrent.CountDownLatch;
 
 public class DutyAssignmentWindow extends Application {
 
@@ -102,7 +97,8 @@ public class DutyAssignmentWindow extends Application {
 
 
             primaryStage.setTitle("Duty Assignment");
-            primaryStage.getIcons().add(new Image(MainWindow.class.getResourceAsStream("/orchestraria_icon.png")));
+            primaryStage.getIcons().add(new Image(MainWindow.class.getResourceAsStream(
+                "/images/team-c/orchestraria_icon.png")));
             Scene scene = new Scene(root);
             primaryStage.setScene(scene);
 

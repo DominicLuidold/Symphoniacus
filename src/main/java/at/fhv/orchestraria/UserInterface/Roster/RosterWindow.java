@@ -1,6 +1,5 @@
 package at.fhv.orchestraria.UserInterface.Roster;
 
-import at.fhv.orchestraria.UserInterface.MainWindow.MainWindowController;
 import javafx.application.Application;
 import javafx.application.Platform;
 import javafx.fxml.FXMLLoader;
@@ -19,7 +18,8 @@ public class RosterWindow extends Application {
 
 
             Locale.setDefault(Locale.ENGLISH);
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/DutyRoster.fxml"));
+            FXMLLoader loader = new FXMLLoader(getClass().getResource(
+                "/view/team-c/DutyRoster.fxml"));
 
             Parent root = loader.load();
 

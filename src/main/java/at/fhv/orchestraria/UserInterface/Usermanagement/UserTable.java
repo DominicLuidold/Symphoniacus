@@ -42,7 +42,8 @@ public class UserTable extends Application {
                     protected Void call() {
                         //Background work
                         try {
-                            FXMLLoader loader = new FXMLLoader(getClass().getResource("/UserTable.fxml"));
+                            FXMLLoader loader = new FXMLLoader(getClass().getResource(
+                                "/view/team-c/UserTable.fxml"));
                             Parent root = loader.load();
                             _userTableWindowController = loader.getController();
                             _userTableWindowController.setLoggedInUserName(LoginWindowController.getLoggedInUser());
@@ -56,7 +57,8 @@ public class UserTable extends Application {
 
                                         Locale.setDefault(Locale.ENGLISH);
                                         primaryStage.setTitle("User Management");
-                                        primaryStage.getIcons().add(new Image(UserTable.class.getResourceAsStream("/orchestraria_icon.png")));
+                                        primaryStage.getIcons().add(new Image(UserTable.class.getResourceAsStream(
+                                            "/images/team-c/orchestraria_icon.png")));
                                         Scene scene = new Scene(root);
                                         primaryStage.setScene(scene);
                                         primaryStage.setOnHidden(e -> Platform.exit());

@@ -16,7 +16,8 @@ public class MainWindow extends Application {
         Parent root = loader.load();
 
         primaryStage.setTitle("Orchestraria");
-        primaryStage.getIcons().add(new Image(MainWindow.class.getResourceAsStream("/orchestraria_icon.png")));
+        primaryStage.getIcons().add(new Image(MainWindow.class.getResourceAsStream(
+            "/images/team-c/orchestraria_icon.png")));
         primaryStage.setScene(new Scene(root));
 
         MainWindowController mainWindowController = loader.getController();

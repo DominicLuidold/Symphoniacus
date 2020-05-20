@@ -21,7 +21,8 @@ public class LoginWindow extends Application {
         Parent root = loader.load();
 
         stage.setTitle("Login");
-        stage.getIcons().add(new Image(MainWindow.class.getResourceAsStream("/orchestraria_icon.png")));
+        stage.getIcons().add(new Image(MainWindow.class.getResourceAsStream(
+            "/images/team-c/orchestraria_icon.png")));
 
         LoginWindowController loginWindowController = loader.getController();
         loginWindowController.setMain(this);
