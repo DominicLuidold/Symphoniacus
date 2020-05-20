@@ -51,7 +51,7 @@ public class DutyAdapter implements IntegratableDuty {
             }
 
             if (count > 1) {
-                musicalPieceStr += " + " + (count - 1) + "other";
+                musicalPieceStr += " + " + (count - 1) + " other";
                 if (count > 2) {
                     musicalPieceStr += "s";
                 }
@@ -75,7 +75,7 @@ public class DutyAdapter implements IntegratableDuty {
             }
 
             if (composers.size() > 1) {
-                composerStr += " + " + (composers.size() - 1) + "other";
+                composerStr += " + " + (composers.size() - 1) + " other";
                 if (composers.size() > 2) {
                     composerStr += "s";
                 }
@@ -109,7 +109,7 @@ public class DutyAdapter implements IntegratableDuty {
             }
 
             if (instrumentations.size() > 1) {
-                instrumentationStr += " + " + (instrumentations.size() - 1) + "other";
+                instrumentationStr += " + " + (instrumentations.size() - 1) + " other";
                 if (instrumentations.size() > 2) {
                     instrumentationStr += "s";
                 }
