@@ -1,5 +1,6 @@
 package at.fhv.teamb.symphoniacus.persistence;
 
+import java.util.List;
 import java.util.Optional;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
@@ -81,5 +82,9 @@ public abstract class BaseDao<T> implements Dao<T> {
             LOG.error("Could not update element", e);
         }
         return Optional.empty();
+    }
+
+    protected List<T> getAll(Class<?> clazz) {
+        return entityManager.createQuery("Select t from " + clazz.getSimpleName() + " t").getResultList();
     }
 }

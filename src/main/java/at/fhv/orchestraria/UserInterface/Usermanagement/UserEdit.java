@@ -48,11 +48,9 @@ public class UserEdit extends Application implements Parentable<TabPaneControlle
          */
 
         this.parentController.addTab(TabPaneEntry.USER_EDIT);
-        /*
-        _userEditWindowController = parentController.getController();
+        //_userEditWindowController = parentController.getController();
         _userEditWindowController.setParameter(_ue, listviewindex, _parentTreeTable, isNewUser);
         _userEditWindowController.init();
-         */
         //primaryStage.show();
     }
 

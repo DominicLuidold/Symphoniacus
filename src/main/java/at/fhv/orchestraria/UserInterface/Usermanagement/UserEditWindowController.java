@@ -2,7 +2,6 @@ package at.fhv.orchestraria.UserInterface.Usermanagement;
 
 import at.fhv.orchestraria.application.FormValidator;
 import at.fhv.orchestraria.application.UserManagementController;
-import at.fhv.orchestraria.domain.Imodel.IInstrumentCategory;
 import at.fhv.orchestraria.domain.Imodel.IMusicianRole;
 import at.fhv.orchestraria.domain.Imodel.ISection;
 import at.fhv.orchestraria.domain.model.AdministrativeAssistantEntity;
@@ -41,7 +40,7 @@ import javafx.stage.Stage;
 public class UserEditWindowController implements Parentable<TabPaneController> {
     private IUserEntity userToEdit;
     private Collection<IMusicianRole> allMusicianRoles;
-    private Collection<IInstrumentCategory> allInstrumentCategories;
+    private Collection<IInstrumentCategoryEntity> allInstrumentCategories;
     private int listviewindex;
     private UserTableWindowController parentTreeTable;
     private boolean isNewUser;
@@ -227,7 +226,7 @@ public class UserEditWindowController implements Parentable<TabPaneController> {
         }
         roleDropDown.getItems().addAll(musicianRoles);
         List<CustomMenuItem> instrumentCategories = FXCollections.observableArrayList();
-        for (IInstrumentCategory ice : allInstrumentCategories) {
+        for (IInstrumentCategoryEntity ice : allInstrumentCategories) {
             CheckBox cBox = new CheckBox(ice.getDescription());
             cBox.focusedProperty().addListener(((observable, oldValue, newValue) -> {
                 setMenuButtonPrompt(instrumentDropDown);

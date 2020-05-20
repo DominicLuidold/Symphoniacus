@@ -3,7 +3,6 @@ package at.fhv.orchestraria.application;
 import at.fhv.orchestraria.UserInterface.Exceptions.NoValidShortcutException;
 import at.fhv.orchestraria.UserInterface.Usermanagement.UserDTO;
 import at.fhv.orchestraria.domain.Imodel.IAdministrativeAssistant;
-import at.fhv.orchestraria.domain.Imodel.IInstrumentCategory;
 import at.fhv.orchestraria.domain.Imodel.IMusicianRole;
 import at.fhv.orchestraria.domain.Imodel.IMusicianRoleMusician;
 import at.fhv.orchestraria.domain.Imodel.ISection;
@@ -18,8 +17,13 @@ import at.fhv.orchestraria.domain.model.SectionEntity;
 import at.fhv.orchestraria.domain.model.UserEntity;
 import at.fhv.orchestraria.persistence.dao.DBFacade;
 import at.fhv.orchestraria.persistence.dao.UserDAO;
+import at.fhv.teamb.symphoniacus.persistence.dao.InstrumentCategoryDao;
+import at.fhv.teamb.symphoniacus.persistence.dao.MusicianRoleDao;
 import at.fhv.teamb.symphoniacus.persistence.dao.UserDao;
+import at.fhv.teamb.symphoniacus.persistence.dao.interfaces.IInstrumentCategoryDao;
+import at.fhv.teamb.symphoniacus.persistence.dao.interfaces.IMusicianRoleDao;
 import at.fhv.teamb.symphoniacus.persistence.dao.interfaces.IUserDao;
+import at.fhv.teamb.symphoniacus.persistence.model.interfaces.IInstrumentCategoryEntity;
 import at.fhv.teamb.symphoniacus.persistence.model.interfaces.IUserEntity;
 import java.util.Collection;
 import java.util.Collections;
@@ -33,20 +37,22 @@ public class UserManagementController {
     private final static Logger LOGGER = Logger.getLogger(UserManagementController.class.getName());
     private DBFacade _facade;
     private IUserDao userDao;
+    private IInstrumentCategoryDao categoryDao;
+    private IMusicianRoleDao musicianRoleDao;
 
     public UserManagementController() {
         //_facade = DBFacade.getInstance();
         this.userDao = new UserDao();
+        this.categoryDao = new InstrumentCategoryDao();
+        this.musicianRoleDao = new MusicianRoleDao();
     }
 
-    public Collection<IInstrumentCategory> getIInstrumentCategory() {
-        return Collections
-            .unmodifiableCollection(_facade.getDAO(InstrumentCategoryEntity.class).getAll());
+    public Collection<IInstrumentCategoryEntity> getIInstrumentCategory() {
+        return Collections.unmodifiableCollection(this.categoryDao.getAll());
     }
 
     public Collection<IMusicianRole> getIMusicianRole() {
-        return Collections
-            .unmodifiableCollection(_facade.getDAO(MusicianRoleEntity.class).getAll());
+        return musicianRoleDao.getAll();
     }
 
     public Collection<ISection> getISections() {
@@ -54,7 +60,7 @@ public class UserManagementController {
     }
 
     public Collection<IUserEntity> getUsers() {
-        return this.userDao.getAll();
+        return Collections.unmodifiableCollection(this.userDao.getAll());
     }
 
     public UserEntity updateUser(UserEntity ue) {
