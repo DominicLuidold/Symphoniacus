@@ -34,7 +34,7 @@ public abstract class CalendarController implements Initializable, Parentable<Ta
     /**
      * Default interval end date represents {@link LocalDate#now()} plus two months.
      */
-    protected static final LocalDate DEFAULT_INTERVAL_END = LocalDate.now().plusMonths(2);
+    protected static final LocalDate DEFAULT_INTERVAL_END = LocalDate.now().plusMonths(3);
 
     protected DutyManager dutyManager;
 
