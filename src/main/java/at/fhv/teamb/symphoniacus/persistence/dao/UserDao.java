@@ -145,7 +145,8 @@ public class UserDao extends BaseDao<IUserEntity>
     }
 
     @Override
-    public List<IUserEntity> getAll() {
+    public synchronized List<IUserEntity> getAll() {
+        this.entityManager.getTransaction().begin();
         TypedQuery<UserEntity> query = this.entityManager.createQuery("SELECT a FROM UserEntity a",
                 UserEntity.class);
 
@@ -156,6 +157,7 @@ public class UserDao extends BaseDao<IUserEntity>
         for (UserEntity d : result) {
             wrappedusers.add(d);
         }
+        this.entityManager.getTransaction().commit();
         return wrappedusers;
     }
 
