@@ -128,18 +128,22 @@ public class MainController implements Initializable {
             LOG.debug("No default view for Musician atm");
 
             for (IMusicianRole role : m.getEntity().getMusicianRoles()) {
+                // Duty Scheduler
                 if (role.getDescription().equals(MusicianRoleType.DUTY_SCHEDULER)) {
-                    result.add(
-                        TabPaneEntry.DUTY_SCHEDULER_CALENDAR_VIEW
-                    );
+                    result.add(TabPaneEntry.DUTY_SCHEDULER_CALENDAR_VIEW);
+                }
+
+                // Section Principal & Tutti
+                if (role.getDescription().equals(MusicianRoleType.SECTION_PRINCIPAL)
+                    || role.getDescription().equals(MusicianRoleType.TUTTI)
+                ) {
+                    result.add(TabPaneEntry.MUSICIAN_CALENDAR_VIEW);
                 }
             }
-            // Organizational Officer
-        } else if (m == null) {
+        } else if (m == null) { // Organizational Officer
             LOG.debug("Getting permittedTabs for Administrative Assistant");
-            result.add(
-                TabPaneEntry.ORG_OFFICER_CALENDAR_VIEW
-            );
+            result.add(TabPaneEntry.ORG_OFFICER_CALENDAR_VIEW);
+            result.add(TabPaneEntry.USER_MANAGEMENT);
         }
 
         if (result.isEmpty()) {
