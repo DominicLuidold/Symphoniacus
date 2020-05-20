@@ -9,7 +9,7 @@ import java.util.LinkedList;
 import java.util.List;
 
 public class SectionAdapter implements IntegratableSection {
-    private ISectionEntity section;
+    private final ISectionEntity section;
 
     public SectionAdapter(ISectionEntity section) {
         this.section = section;
