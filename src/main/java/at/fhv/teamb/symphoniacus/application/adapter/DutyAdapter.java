@@ -2,11 +2,13 @@ package at.fhv.teamb.symphoniacus.application.adapter;
 
 import at.fhv.orchestraria.domain.integrationInterfaces.IntegratableDuty;
 import at.fhv.orchestraria.domain.integrationInterfaces.IntegratableSeriesOfPerformances;
+import at.fhv.teamb.symphoniacus.persistence.model.DutyEntity;
 import at.fhv.teamb.symphoniacus.persistence.model.interfaces.IDutyEntity;
 import at.fhv.teamb.symphoniacus.persistence.model.interfaces.IInstrumentationEntity;
 import at.fhv.teamb.symphoniacus.persistence.model.interfaces.IMusicalPieceEntity;
 import java.time.LocalDateTime;
 import java.util.HashSet;
+import java.util.Objects;
 import java.util.Set;
 
 public class DutyAdapter implements IntegratableDuty {
@@ -121,5 +123,28 @@ public class DutyAdapter implements IntegratableDuty {
     @Override
     public int getDutyId() {
         return this.duty.getDutyId();
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
+        DutyAdapter that = (DutyAdapter) o;
+        return Objects.equals(getDutyId(), that.getDutyId())
+            && Objects.equals(getStart(), that.getStart())
+            && Objects.equals(getEnd(), that.getEnd());
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(
+            this.duty.getDutyId(),
+            this.duty.getStart(),
+            this.duty.getEnd()
+        );
     }
 }

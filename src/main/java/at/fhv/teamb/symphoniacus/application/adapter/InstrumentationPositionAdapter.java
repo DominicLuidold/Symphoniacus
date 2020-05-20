@@ -12,6 +12,7 @@ public class InstrumentationPositionAdapter implements IntegratableInstrumentati
 
     @Override
     public String getPositionDescription() {
-        return this.instrumentationPosition.getPositionDescription();
+        // Cruel way to make things work with Team C's code
+        return " : " + this.instrumentationPosition.getPositionDescription();
     }
 }
