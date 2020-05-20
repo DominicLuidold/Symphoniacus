@@ -5,14 +5,21 @@ import at.fhv.orchestraria.UserInterface.Login.LoginWindowController;
 import at.fhv.orchestraria.UserInterface.MainWindow.MainWindow;
 import at.fhv.orchestraria.UserInterface.Roster.RosterWindow;
 import at.fhv.orchestraria.application.UserManagementController;
-import at.fhv.orchestraria.domain.Imodel.IContractualObligation;
-import at.fhv.orchestraria.domain.Imodel.IMusicianRoleMusician;
-import at.fhv.orchestraria.domain.Imodel.IUser;
 import at.fhv.orchestraria.domain.model.MusicianEntity;
+import at.fhv.teamb.symphoniacus.persistence.model.interfaces.IAdministrativeAssistantEntity;
+import at.fhv.teamb.symphoniacus.persistence.model.interfaces.IContractualObligationEntity;
+import at.fhv.teamb.symphoniacus.persistence.model.interfaces.IMusicianRole;
+import at.fhv.teamb.symphoniacus.persistence.model.interfaces.IUserEntity;
+import at.fhv.teamb.symphoniacus.presentation.TabPaneController;
+import at.fhv.teamb.symphoniacus.presentation.internal.Parentable;
 import com.jfoenix.controls.JFXProgressBar;
 import com.jfoenix.controls.JFXTextField;
 import com.jfoenix.controls.JFXTreeTableView;
 import com.jfoenix.controls.datamodels.treetable.RecursiveTreeObject;
+import java.awt.event.ActionEvent;
+import java.util.LinkedList;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javafx.application.Platform;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
@@ -23,22 +30,25 @@ import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.scene.Node;
 import javafx.scene.Scene;
-import javafx.scene.control.*;
+import javafx.scene.control.Alert;
+import javafx.scene.control.Label;
+import javafx.scene.control.ToggleButton;
+import javafx.scene.control.ToggleGroup;
+import javafx.scene.control.TreeItem;
+import javafx.scene.control.TreeTableColumn;
+import javafx.scene.control.TreeTableRow;
 import javafx.scene.control.cell.TreeItemPropertyValueFactory;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 
-import java.awt.event.ActionEvent;
-import java.util.LinkedList;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-
-public class UserTableWindowController {
+public class UserTableWindowController implements Parentable<TabPaneController> {
     public TreeItem newUserRow = new TreeItem(new UserWrapper("Add new User", "", "", "", ""));
     private UserTableWindowController controller = this;
     private final static Logger LOGGER = Logger.getLogger(UserTableWindowController.class.getName());
     private UserManagementController uManagementController;
     private  LinkedList<TreeItem<UserWrapper>> removedItems = new LinkedList<>();
+
+    private TabPaneController parentController;
   //TODO remove this line; created for testing purposes
     public void bestfunction(){
         System.out.println("This is the best function ever!");
@@ -140,10 +150,10 @@ public class UserTableWindowController {
     }
 
     public void init() {
-        setLoggedInUserName(LoginWindowController.getLoggedInUser());
+        //setLoggedInUserName(LoginWindowController.getLoggedInUser());
         uManagementController = new UserManagementController();
         JFXloadingBar.setVisible(true);
-        setLoggedInUserName(LoginWindowController.getLoggedInUser());
+        //setLoggedInUserName(LoginWindowController.getLoggedInUser());
         loadMusiciansIntoTable();
 
 
@@ -209,7 +219,7 @@ public class UserTableWindowController {
             }
         });
 
-        for (IUser ue : uManagementController.getUsers()) {
+        for (IUserEntity ue : uManagementController.getUsers()) {
             if (ue.getUserId() != MusicianEntity.EXTERNAL_MUSICIAN_ID) {
                 TreeItem ti = new TreeItem(new UserWrapper(ue));
                 newUserRow.getChildren().add(ti);
@@ -238,12 +248,43 @@ public class UserTableWindowController {
         });
     }
 
-    public void updateRow(int index, IUser ue) {
+    public void updateRow(int index, IUserEntity ue) {
         treeTableView.getSelectionModel().getModelItem(index).setValue(new UserWrapper(ue));
     }
 
-    public void insertNewRow(IUser ue) {
+    public void insertNewRow(IUserEntity ue) {
         newUserRow.getChildren().add(0, new TreeItem(new UserWrapper(ue)));
+    }
+
+    /**
+     * Sets this controller's parent controller.
+     *
+     * @param controller The controller to be set as parent
+     */
+    @Override
+    public void setParentController(TabPaneController controller) {
+         this.parentController = controller;
+    }
+
+    /**
+     * Returns this controller's parent controller.
+     *
+     * @return Parent controller
+     */
+    @Override
+    public TabPaneController getParentController() {
+        return this.parentController;
+    }
+
+    /**
+     * Calls the controller initialization AFTER the parent controller has been set by
+     * {@link TabPaneController}.
+     */
+    @Override
+    public void initializeWithParent() {
+        // No implementation needed in this class.
+        this.init();
+        System.out.println(("Initialized TabPaneController with parent"));
     }
 
     public class UserWrapper extends RecursiveTreeObject<UserWrapper> {
@@ -253,7 +294,7 @@ public class UserTableWindowController {
         private String role;
         private String contractEnd;
         private boolean isBlankForUserCreation = false;
-        private IUser user;
+        private IUserEntity user;
 
         public UserWrapper(String fname, String lname, String section, String role, String contractEnd) {
             this.fname = fname;
@@ -264,14 +305,22 @@ public class UserTableWindowController {
             this.isBlankForUserCreation = true;
         }
 
-        public UserWrapper(IUser ue) {
+        public UserWrapper(IUserEntity ue) {
             user = ue;
             fname = ue.getFirstName();
             lname = ue.getLastName();
             if (ue.getMusician() == null) {
                 section = "-";
-                if (ue.getAdministrativeAssistant() != null) {
-                    role = ue.getAdministrativeAssistant().getDescription();
+                if (ue.getAdministrativeAssistants() != null) {
+                    StringBuilder sb = new StringBuilder();
+                    for (IAdministrativeAssistantEntity ass : ue.getAdministrativeAssistants()) {
+                        sb.append(ass.getDescription());
+                        sb.append(" | ");
+                    }
+                    sb.deleteCharAt(sb.length()-1);
+                    sb.deleteCharAt(sb.length()-1);
+                    sb.deleteCharAt(sb.length()-1);
+                    role = sb.toString();
                 } else {
                     role = "-";
                 }
@@ -283,11 +332,11 @@ public class UserTableWindowController {
                     section = "-";
                 }
                 role = "-";
-                for (IMusicianRoleMusician mrme : ue.getMusician().getIMusicianRoleMusicians()) {
-                    role = mrme.getMusicianRole().getDescription();
+                for (IMusicianRole mrme : ue.getMusician().getMusicianRoles()) {
+                    role = mrme.getDescription().toString();
                 }
                 contractEnd = "-";
-                for (IContractualObligation coe : ue.getMusician().getIContractualObligations()) {
+                for (IContractualObligationEntity coe : ue.getMusician().getContractualObligations()) {
                     contractEnd = coe.getEndDate().toString();
                 }
             }
@@ -333,7 +382,7 @@ public class UserTableWindowController {
             return contractEnd;
         }
 
-        public IUser getUser() {
+        public IUserEntity getUser() {
             return user;
         }
     }
@@ -359,7 +408,10 @@ public class UserTableWindowController {
         }
     }
 
+    /*
     public void setLoggedInUserName(IUser user){
         _loggedInUserName.setText(user.getFirstName() + " " + user.getLastName());
     }
+
+     */
 }

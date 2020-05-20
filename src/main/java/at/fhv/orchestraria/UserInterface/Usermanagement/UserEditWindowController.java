@@ -4,6 +4,10 @@ import at.fhv.orchestraria.application.FormValidator;
 import at.fhv.orchestraria.application.UserManagementController;
 import at.fhv.orchestraria.domain.Imodel.*;
 import at.fhv.orchestraria.domain.model.*;
+import at.fhv.teamb.symphoniacus.persistence.model.interfaces.IAdministrativeAssistantEntity;
+import at.fhv.teamb.symphoniacus.persistence.model.interfaces.IContractualObligationEntity;
+import at.fhv.teamb.symphoniacus.persistence.model.interfaces.IInstrumentCategoryEntity;
+import at.fhv.teamb.symphoniacus.persistence.model.interfaces.IUserEntity;
 import com.jfoenix.controls.*;
 import com.jfoenix.validation.RequiredFieldValidator;
 import com.jfoenix.validation.base.ValidatorBase;
@@ -23,7 +27,7 @@ import java.util.*;
 import java.util.logging.Logger;
 
 public class UserEditWindowController {
-    private IUser userToEdit;
+    private IUserEntity userToEdit;
     private Collection<IMusicianRole> allMusicianRoles;
     private Collection<IInstrumentCategory> allInstrumentCategories;
     private int listviewindex;
@@ -152,25 +156,25 @@ public class UserEditWindowController {
             _administrativeVBox.setVisible(false);
             musicianAdministrativeToggle.setSelected(false);
 
-            for (IMusicianRoleMusician mrme : userToEdit.getMusician().getIMusicianRoleMusicians()) {
+            for (at.fhv.teamb.symphoniacus.persistence.model.interfaces.IMusicianRole mrme : userToEdit.getMusician().getMusicianRoles()) {
                 for (MenuItem mi : roleDropDown.getItems()) {
                     CustomMenuItem item = (CustomMenuItem) mi;
                     CheckBox cb = (CheckBox) item.getContent();
-                    if (mrme.getMusicianRole().getDescription().compareToIgnoreCase(cb.getText()) == 0) {
+                    if (mrme.getDescription().toString().compareToIgnoreCase(cb.getText()) == 0) {
                         cb.setSelected(true);
                     }
                 }
             }
-            for (IInstrumentCategoryMusician icme : userToEdit.getMusician().getIInstrumentCategoryMusicians()) {
+            for (IInstrumentCategoryEntity icme : userToEdit.getMusician().getInstrumentCategories()) {
                 for (MenuItem mi : instrumentDropDown.getItems()) {
                     CustomMenuItem item = (CustomMenuItem) mi;
                     CheckBox cb = (CheckBox) item.getContent();
-                    if (icme.getInstrumentCategory().getDescription().compareToIgnoreCase(cb.getText()) == 0) {
+                    if (icme.getDescription().compareToIgnoreCase(cb.getText()) == 0) {
                         cb.setSelected(true);
                     }
                 }
             }
-            for (IContractualObligation coe : userToEdit.getMusician().getIContractualObligations()) {
+            for (IContractualObligationEntity coe : userToEdit.getMusician().getContractualObligations()) {
                 contractEndPicker.setValue(coe.getEndDate());
                 pointsPerMonthField.setText(Integer.toString(coe.getPointsPerMonth()));
                 specialField.setText(coe.getPosition());
@@ -181,7 +185,10 @@ public class UserEditWindowController {
             musicianAdministrativeToggle.setSelected(true);
             _administrativeVBox.setVisible(true);
             _musicianVBox.setVisible(false);
-            adminRoleDropDown.setValue(userToEdit.getAdministrativeAssistant().getDescription());
+            for (IAdministrativeAssistantEntity ass : userToEdit.getAdministrativeAssistants()) {
+                adminRoleDropDown.getItems().add(ass.getDescription().toString());
+            }
+
         }
         setMenuButtonPrompt(roleDropDown);
         setMenuButtonPrompt(instrumentDropDown);
@@ -218,7 +225,7 @@ public class UserEditWindowController {
         instrumentDropDown.getItems().addAll(instrumentCategories);
     }
 
-    public void setParameter(IUser ue, int listindex, UserTableWindowController _parentTreeTable, boolean _newUser) {
+    public void setParameter(IUserEntity ue, int listindex, UserTableWindowController _parentTreeTable, boolean _newUser) {
         uManagementController = new UserManagementController(); //TODO: Verletzung der SchichtenRegeln: UI kennt nicht persistenz
         userToEdit = ue;
         listviewindex = listindex;
@@ -575,7 +582,7 @@ public class UserEditWindowController {
                 streetField.getText(), streetNrField.getText(), adminRoleDropDown.getValue(), sectionDropDown.getValue(),roles,
                 instruments, pointsPerMonthField.getText(),specialField.getText(),contractStartPicker.getValue(), contractEndPicker.getValue());
 
-        userToEdit = uManagementController.saveGeneral(userToEdit,userDTO);
+        userToEdit = (IUserEntity)uManagementController.saveGeneral(userToEdit,userDTO);
 
         }
 

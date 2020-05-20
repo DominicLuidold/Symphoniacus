@@ -4,6 +4,7 @@ import at.fhv.teamb.symphoniacus.persistence.BaseDao;
 import at.fhv.teamb.symphoniacus.persistence.dao.interfaces.IUserDao;
 import at.fhv.teamb.symphoniacus.persistence.model.UserEntity;
 import at.fhv.teamb.symphoniacus.persistence.model.interfaces.IUserEntity;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import javax.persistence.TypedQuery;
@@ -142,4 +143,21 @@ public class UserDao extends BaseDao<IUserEntity>
         LOG.debug("No results for query isUserAdministrativeAssistant found");
         return false;
     }
+
+    @Override
+    public synchronized List<IUserEntity> getAll() {
+
+        List<UserEntity> user = this.entityManager.createQuery("SELECT a FROM UserEntity a",
+                UserEntity.class).getResultList();
+
+        List<IUserEntity> wrappedusers =
+            new ArrayList<>(user.size());
+
+        for (UserEntity d : user) {
+            wrappedusers.add(d);
+        }
+
+        return wrappedusers;
+    }
+
 }

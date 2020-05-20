@@ -2,6 +2,7 @@ package at.fhv.teamb.symphoniacus.persistence.model;
 
 import at.fhv.teamb.symphoniacus.persistence.model.interfaces.IContractualObligationEntity;
 import at.fhv.teamb.symphoniacus.persistence.model.interfaces.IDutyPositionEntity;
+import at.fhv.teamb.symphoniacus.persistence.model.interfaces.IInstrumentCategoryEntity;
 import at.fhv.teamb.symphoniacus.persistence.model.interfaces.IMusicianEntity;
 import at.fhv.teamb.symphoniacus.persistence.model.interfaces.IMusicianRole;
 import at.fhv.teamb.symphoniacus.persistence.model.interfaces.INegativeDateWishEntity;
@@ -67,6 +68,18 @@ public class MusicianEntity implements IMusicianEntity {
         }
     )
     private List<IMusicianRole> musicianRoles = new LinkedList<>();
+
+    @ManyToMany(targetEntity = InstrumentCategoryEntity.class)
+    @JoinTable(
+        name = "instrumentationCategory_musician",
+        joinColumns = {
+            @JoinColumn(name = "musicianId")
+        },
+        inverseJoinColumns = {
+            @JoinColumn(name = "instrumentCategoryId")
+        }
+    )
+    private List<IInstrumentCategoryEntity> instrumentCategories = new LinkedList<>();
 
     @OneToMany(
         mappedBy = "musician",
@@ -196,6 +209,15 @@ public class MusicianEntity implements IMusicianEntity {
         this.section = section;
     }
 
+    public List<IInstrumentCategoryEntity> getInstrumentCategories() {
+        return this.instrumentCategories;
+    }
+
+    public void setInstrumentCategories(
+        List<IInstrumentCategoryEntity> instrumentCategories) {
+        this.instrumentCategories = instrumentCategories;
+    }
+
     @Override
     public List<IContractualObligationEntity> getContractualObligations() {
         return this.contractualObligations;
@@ -262,5 +284,17 @@ public class MusicianEntity implements IMusicianEntity {
     public void removeVacation(IVacationEntity vacation) {
         this.vacations.remove(vacation);
         vacation.setMusician(null);
+    }
+
+    @Override
+    public void addInstrumentCategory(IInstrumentCategoryEntity inst) {
+        this.instrumentCategories.add(inst);
+        inst.addMusician(this);
+    }
+
+    @Override
+    public void removeInstrumentCategory(IInstrumentCategoryEntity inst) {
+        this.instrumentCategories.remove(inst);
+        inst.removeMusician(null);
     }
 }

@@ -66,4 +66,13 @@ public interface IMusicianEntity {
     void addVacation(IVacationEntity vacation);
 
     void removeVacation(IVacationEntity vacation);
+
+    void addInstrumentCategory(IInstrumentCategoryEntity inst);
+
+    void removeInstrumentCategory(IInstrumentCategoryEntity inst);
+
+    List<IInstrumentCategoryEntity> getInstrumentCategories();
+
+    void setInstrumentCategories(
+        List<IInstrumentCategoryEntity> instrumentCategories);
 }
