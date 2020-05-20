@@ -6,8 +6,19 @@ import at.fhv.orchestraria.UserInterface.MainWindow.MainWindow;
 import at.fhv.orchestraria.application.DutyAssignmentController;
 import at.fhv.orchestraria.domain.Imodel.IDuty;
 import at.fhv.orchestraria.domain.Imodel.IUser;
+import at.fhv.teamb.symphoniacus.application.type.DomainUserType;
+import at.fhv.teamb.symphoniacus.application.adapter.MusicianAdapter;
+import at.fhv.teamb.symphoniacus.presentation.TabPaneController;
+import at.fhv.teamb.symphoniacus.presentation.internal.Parentable;
 import com.calendarfx.view.CalendarView;
 import com.calendarfx.view.DayViewBase;
+import java.time.DayOfWeek;
+import java.time.LocalDate;
+import java.time.LocalTime;
+import java.time.temporal.WeekFields;
+import java.util.HashMap;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -20,16 +31,7 @@ import javafx.scene.control.ToggleGroup;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 
-import java.time.DayOfWeek;
-import java.time.LocalDate;
-import java.time.LocalTime;
-import java.time.temporal.WeekFields;
-import java.util.HashMap;
-import java.util.logging.Logger;
-import java.util.logging.Level;
-
-
-public class RosterWindowController {
+public class RosterWindowController implements Parentable<TabPaneController> {
     //Logger
     private final static Logger LOGGER = Logger.getLogger(RosterWindowController.class.getName());
     //Views
@@ -83,18 +85,32 @@ public class RosterWindowController {
 
     private RosterThread _rosterThread;
 
+    private TabPaneController parentController;
+
     public void setMain(RosterWindow main, boolean isAssignment) {
 
         if(isAssignment){
             _rosterThread = new AssignmentRosterThread(this,cview);
         }else{
-            _rosterThread = new ViewRosterThread(cview);
+            if (this.parentController.getParentController().getLoginUserType().equals(DomainUserType.DOMAIN_MUSICIAN)) {
+                _rosterThread = new ViewRosterThread(
+                    cview,
+                    new MusicianAdapter(
+                        this.parentController.getParentController().getCurrentMusician().getEntity()
+                    )
+                );
+            } else {
+                // If Team C had a logger, we would have used it.. lol
+                return;
+            }
         }
 
-        if(LoginWindowController.getLoggedInUser().getMusician().isDutyScheduler()){
-            dynamic_navBttn.setText("Assignment Roster");
-            dynamic_navBttn.setPrefWidth(120);
-        }
+        /* Not used in integration
+            if(LoginWindowController.getLoggedInUser().getMusician().isDutyScheduler()){
+                dynamic_navBttn.setText("Assignment Roster");
+                dynamic_navBttn.setPrefWidth(120);
+            }
+         */
 
         cview.showWeekPage();
         cview.getWeekPage().getDetailedWeekView().setHourHeight(40);
@@ -103,7 +119,6 @@ public class RosterWindowController {
 
         //Remove Standard Calendar
         cview.getCalendarSources().remove(0);
-
 
         Thread roster = new Thread(_rosterThread);
         roster.start();
@@ -114,13 +129,15 @@ public class RosterWindowController {
         _rosterWindow = main;
 
         // select the duty roster button
-        if(isAssignment){
-            dynamic_navBttn.setSelected(true);
-        }else{
-            roster_navBttn.setSelected(true);
-        }
+        /* Not used in integration
+            if(isAssignment){
+                dynamic_navBttn.setSelected(true);
+            }else{
+                roster_navBttn.setSelected(true);
+            }
 
-        setLoggedInUserName(LoginWindowController.getLoggedInUser());
+            setLoggedInUserName(LoginWindowController.getLoggedInUser());
+         */
     }
 
 
@@ -227,4 +244,18 @@ public class RosterWindowController {
         _loggedInUserName.setText(user.getFirstName() + " " + user.getLastName());
     }
 
+    @Override
+    public TabPaneController getParentController() {
+        return this.parentController;
+    }
+
+    @Override
+    public void setParentController(TabPaneController controller) {
+        this.parentController = controller;
+    }
+
+    @Override
+    public void initializeWithParent() {
+       this.setMain(null, false);
+    }
 }

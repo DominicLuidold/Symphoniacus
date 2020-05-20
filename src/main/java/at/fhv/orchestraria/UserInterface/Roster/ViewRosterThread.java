@@ -1,16 +1,11 @@
 package at.fhv.orchestraria.UserInterface.Roster;
 
-import at.fhv.orchestraria.UserInterface.Login.LoginWindowController;
-import at.fhv.orchestraria.domain.Imodel.IDuty;
-import at.fhv.orchestraria.domain.Imodel.IDutyPosition;
-import at.fhv.orchestraria.domain.Imodel.IMusician;
 import at.fhv.orchestraria.domain.integrationInterfaces.IntegratableDuty;
 import at.fhv.orchestraria.domain.integrationInterfaces.IntegratableDutyPosition;
 import at.fhv.orchestraria.domain.integrationInterfaces.IntegratableMusician;
 import com.calendarfx.model.Calendar;
 import com.calendarfx.model.CalendarSource;
 import com.calendarfx.view.CalendarView;
-
 import java.util.HashSet;
 
 public class ViewRosterThread extends RosterThread {
@@ -33,9 +28,10 @@ public class ViewRosterThread extends RosterThread {
     private Calendar _performanceDuties = new Calendar("Performances");
 
 
-    public ViewRosterThread(CalendarView cview) {
+    public ViewRosterThread(CalendarView cview, IntegratableMusician musician) {
         super();
         _cview = cview;
+        _musicianEntity = musician;
     }
 
 
@@ -45,8 +41,9 @@ public class ViewRosterThread extends RosterThread {
     @Override
     public void run() {
 
-        _musicianEntity = (IntegratableMusician)LoginWindowController.getLoggedInUser().getMusician();
-
+        /* Not used in integration
+            _musicianEntity = (IntegratableMusician) LoginWindowController.getLoggedInUser().getMusician();
+         */
 
         enterEntries();
 
