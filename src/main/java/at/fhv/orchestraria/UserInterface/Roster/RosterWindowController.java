@@ -6,6 +6,8 @@ import at.fhv.orchestraria.UserInterface.MainWindow.MainWindow;
 import at.fhv.orchestraria.application.DutyAssignmentController;
 import at.fhv.orchestraria.domain.Imodel.IDuty;
 import at.fhv.orchestraria.domain.Imodel.IUser;
+import at.fhv.teamb.symphoniacus.application.type.DomainUserType;
+import at.fhv.teamb.symphoniacus.application.adapter.MusicianAdapter;
 import at.fhv.teamb.symphoniacus.presentation.TabPaneController;
 import at.fhv.teamb.symphoniacus.presentation.internal.Parentable;
 import com.calendarfx.view.CalendarView;
@@ -83,15 +85,27 @@ public class RosterWindowController implements Parentable<TabPaneController> {
 
     private RosterThread _rosterThread;
 
+    private TabPaneController parentController;
+
     public void setMain(RosterWindow main, boolean isAssignment) {
 
         if(isAssignment){
             _rosterThread = new AssignmentRosterThread(this,cview);
         }else{
-            _rosterThread = new ViewRosterThread(cview);
+            if (this.parentController.getParentController().getLoginUserType().equals(DomainUserType.DOMAIN_MUSICIAN)) {
+                _rosterThread = new ViewRosterThread(
+                    cview,
+                    new MusicianAdapter(
+                        this.parentController.getParentController().getCurrentMusician().getEntity()
+                    )
+                );
+            } else {
+                // If Team C had a logger, we would have used it.. lol
+                return;
+            }
         }
 
-        /* TODO
+        /* Not used in integration
             if(LoginWindowController.getLoggedInUser().getMusician().isDutyScheduler()){
                 dynamic_navBttn.setText("Assignment Roster");
                 dynamic_navBttn.setPrefWidth(120);
@@ -231,13 +245,13 @@ public class RosterWindowController implements Parentable<TabPaneController> {
     }
 
     @Override
-    public void setParentController(TabPaneController controller) {
-        return;
+    public TabPaneController getParentController() {
+        return this.parentController;
     }
 
     @Override
-    public TabPaneController getParentController() {
-        return null;
+    public void setParentController(TabPaneController controller) {
+        this.parentController = controller;
     }
 
     @Override
