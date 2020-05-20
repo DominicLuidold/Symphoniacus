@@ -1,78 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import com.calendarfx.view.CalendarView?>
-<?import javafx.geometry.Insets?>
-<?import javafx.scene.control.Label?>
-<?import javafx.scene.control.ToggleButton?>
-<?import javafx.scene.control.ToggleGroup?>
-<?import javafx.scene.image.Image?>
-<?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.AnchorPane?>
-<?import javafx.scene.layout.HBox?>
-<?import javafx.scene.layout.VBox?>
-<?import javafx.scene.shape.Circle?>
-<?import javafx.scene.text.Font?>
 
-<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="388.0" minWidth="614.0" prefHeight="700.0" prefWidth="1050.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="at.fhv.orchestraria.UserInterface.Roster.RosterWindowController">
+<AnchorPane xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="at.fhv.orchestraria.UserInterface.Roster.RosterWindowController">
    <children>
-      <AnchorPane layoutX="-4.0" layoutY="-1.0" minHeight="110.0" minWidth="614.0" prefHeight="110.0" prefWidth="614.0" style="-fx-background-color: B491A1;" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0">
-         <children>
-            <Label fx:id="_loggedInUserName" alignment="CENTER_RIGHT" layoutX="661.0" layoutY="19.0" prefHeight="34.0" prefWidth="305.0" textAlignment="RIGHT" AnchorPane.rightAnchor="84.0">
-               <font>
-                  <Font name="System Bold Italic" size="14.0" />
-               </font>
-            </Label>
-            <Circle fill="#cbdceb" layoutX="599.0" layoutY="36.0" radius="28.0" stroke="BLACK" strokeType="INSIDE" AnchorPane.rightAnchor="20.0" />
-            <HBox alignment="CENTER_LEFT" layoutX="10.0" layoutY="70.0" prefHeight="34.0" prefWidth="536.0" spacing="5.0" stylesheets="@../../css/team-c/ui_style.css" AnchorPane.leftAnchor="10.0">
-               <children>
-                  <ToggleButton fx:id="home_navBttn" mnemonicParsing="false" onAction="#loadMainPage" prefHeight="25.0" prefWidth="89.0" text="Home" textAlignment="CENTER">
-                     <toggleGroup>
-                        <ToggleGroup fx:id="navigation1" />
-                     </toggleGroup>
-                  </ToggleButton>
-                  <ToggleButton fx:id="roster_navBttn" mnemonicParsing="false" onAction="#changeScreenDutyRoster" prefHeight="25.0" prefWidth="89.0" text="Duty Roster" textAlignment="CENTER" toggleGroup="$navigation1" />
-                  <ToggleButton fx:id="dynamic_navBttn" mnemonicParsing="false" onAction="#redirectByMusicianRole" prefHeight="25.0" prefWidth="89.0" text="Wishes" toggleGroup="$navigation1" HBox.hgrow="ALWAYS" />
-                  <ToggleButton fx:id="points_navBttn" mnemonicParsing="false" onAction="#notAvailableAlert" prefHeight="25.0" prefWidth="89.0" text="Points" toggleGroup="$navigation1" />
-                  <ToggleButton fx:id="substitutes_navBttn" mnemonicParsing="false" onAction="#notAvailableAlert" prefHeight="25.0" prefWidth="89.0" text="Substitutes" toggleGroup="$navigation1" />
-               </children>
-            </HBox>
-            <HBox alignment="CENTER_RIGHT" layoutX="504.0" layoutY="70.0" prefHeight="34.0" prefWidth="546.0" spacing="7.0" stylesheets="@../../css/team-c/ui_style.css" AnchorPane.leftAnchor="504.0" AnchorPane.rightAnchor="0.0">
-               <children>
-                  <ToggleButton fx:id="profile_navBttn" mnemonicParsing="false" onAction="#notAvailableAlert" prefHeight="25.0" prefWidth="89.0" text="Profile" textAlignment="CENTER" toggleGroup="$navigation1" />
-                  <ToggleButton fx:id="logout_navBttn" mnemonicParsing="false" onAction="#logout" prefHeight="25.0" prefWidth="89.0" text="Logout" textAlignment="CENTER">
-                     <HBox.margin>
-                        <Insets right="10.0" />
-                     </HBox.margin>
-                     <toggleGroup>
-                        <ToggleGroup fx:id="navigation" />
-                     </toggleGroup>
-                  </ToggleButton>
-               </children>
-            </HBox>
-         </children>
-      </AnchorPane>
-      <AnchorPane layoutX="-2.0" layoutY="108.0" minHeight="280.0" minWidth="614.0" prefHeight="280.0" prefWidth="614.0" stylesheets="@../../css/team-c/ui_style.css" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="108.0">
-         <children>
-            <VBox alignment="CENTER" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="270.0" minWidth="614.0" prefHeight="280.0" prefWidth="614.0" spacing="20.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
-               <children>
-                  <HBox prefHeight="287.0" prefWidth="614.0" VBox.vgrow="ALWAYS">
-                     <children>
-                        <CalendarView id="cview" fx:id="cview" prefHeight="175.0" prefWidth="455.0" showAddCalendarButton="false" HBox.hgrow="ALWAYS" />
-                     </children>
-                  </HBox>
-               </children>
-            </VBox>
-         </children>
-      </AnchorPane>
-      <Label layoutX="101.0" layoutY="-1.0" prefHeight="66.0" prefWidth="221.0" text="Orchestraria" underline="true" AnchorPane.topAnchor="-1.0">
-         <font>
-            <Font name="Vladimir Script" size="48.0" />
-         </font>
-      </Label>
-      <ImageView fitHeight="56.0" fitWidth="56.0" layoutX="34.0" layoutY="4.0" pickOnBounds="true" preserveRatio="true" AnchorPane.topAnchor="4.0">
-         <image>
-            <Image url="@../../images/team-c/orchestraria_icon.png" />
-         </image>
-      </ImageView>
+      <CalendarView id="cview" fx:id="cview" showAddCalendarButton="false" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
    </children>
 </AnchorPane>
