@@ -2,31 +2,43 @@ package at.fhv.orchestraria.UserInterface.Usermanagement;
 
 import at.fhv.orchestraria.application.FormValidator;
 import at.fhv.orchestraria.application.UserManagementController;
-import at.fhv.orchestraria.domain.Imodel.*;
-import at.fhv.orchestraria.domain.model.*;
+import at.fhv.orchestraria.domain.Imodel.IInstrumentCategory;
+import at.fhv.orchestraria.domain.Imodel.IMusicianRole;
+import at.fhv.orchestraria.domain.Imodel.ISection;
+import at.fhv.orchestraria.domain.model.AdministrativeAssistantEntity;
 import at.fhv.teamb.symphoniacus.persistence.model.interfaces.IAdministrativeAssistantEntity;
 import at.fhv.teamb.symphoniacus.persistence.model.interfaces.IContractualObligationEntity;
 import at.fhv.teamb.symphoniacus.persistence.model.interfaces.IInstrumentCategoryEntity;
 import at.fhv.teamb.symphoniacus.persistence.model.interfaces.IUserEntity;
-import com.jfoenix.controls.*;
+import at.fhv.teamb.symphoniacus.presentation.TabPaneController;
+import at.fhv.teamb.symphoniacus.presentation.internal.Parentable;
+import com.jfoenix.controls.JFXComboBox;
+import com.jfoenix.controls.JFXDatePicker;
+import com.jfoenix.controls.JFXTextField;
+import com.jfoenix.controls.JFXToggleButton;
 import com.jfoenix.validation.RequiredFieldValidator;
 import com.jfoenix.validation.base.ValidatorBase;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.logging.Logger;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.Node;
-import javafx.scene.control.*;
+import javafx.scene.control.Alert;
+import javafx.scene.control.CheckBox;
+import javafx.scene.control.CustomMenuItem;
 import javafx.scene.control.Label;
+import javafx.scene.control.MenuButton;
 import javafx.scene.control.MenuItem;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 
-import java.util.*;
-import java.util.logging.Logger;
-
-public class UserEditWindowController {
+public class UserEditWindowController implements Parentable<TabPaneController> {
     private IUserEntity userToEdit;
     private Collection<IMusicianRole> allMusicianRoles;
     private Collection<IInstrumentCategory> allInstrumentCategories;
@@ -36,6 +48,8 @@ public class UserEditWindowController {
     boolean validateForm = true;
     private final static Logger LOGGER = Logger.getLogger(UserEditWindowController.class.getName());
     private UserManagementController uManagementController;
+
+    private TabPaneController parentController;
 
     @FXML
     private Label _user1;
@@ -595,5 +609,34 @@ public class UserEditWindowController {
     private void setIsValidatedColor(JFXTextField tfield){
         tfield.setFocusColor(Color.GREEN);
         tfield.setUnFocusColor(Color.GREEN);
+    }
+
+    /**
+     * Sets this controller's parent controller.
+     *
+     * @param controller The controller to be set as parent
+     */
+    @Override
+    public void setParentController(TabPaneController controller) {
+        this.parentController = controller;
+    }
+
+    /**
+     * Returns this controller's parent controller.
+     *
+     * @return Parent controller
+     */
+    @Override
+    public TabPaneController getParentController() {
+        return this.parentController;
+    }
+
+    /**
+     * Calls the controller initialization AFTER the parent controller has been set by
+     * {@link TabPaneController}.
+     */
+    @Override
+    public void initializeWithParent() {
+
     }
 }

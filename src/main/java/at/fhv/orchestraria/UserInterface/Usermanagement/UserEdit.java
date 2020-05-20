@@ -1,17 +1,13 @@
 package at.fhv.orchestraria.UserInterface.Usermanagement;
 
 import at.fhv.teamb.symphoniacus.persistence.model.interfaces.IUserEntity;
-import java.util.Locale;
+import at.fhv.teamb.symphoniacus.presentation.TabPaneController;
+import at.fhv.teamb.symphoniacus.presentation.internal.Parentable;
+import at.fhv.teamb.symphoniacus.presentation.internal.TabPaneEntry;
 import javafx.application.Application;
-import javafx.fxml.FXMLLoader;
-import javafx.geometry.Rectangle2D;
-import javafx.scene.Parent;
-import javafx.scene.Scene;
-import javafx.scene.image.Image;
-import javafx.stage.Screen;
 import javafx.stage.Stage;
 
-public class UserEdit extends Application {
+public class UserEdit extends Application implements Parentable<TabPaneController> {
 
 
     private UserEditWindowController _userEditWindowController;
@@ -19,6 +15,8 @@ public class UserEdit extends Application {
     private int listviewindex;
     private UserTableWindowController _parentTreeTable;
     private boolean isNewUser;
+
+    private TabPaneController parentController;
 
     public void setParameter(UserEditWindowController userEditWindowController, IUserEntity ue, int listindex, UserTableWindowController parentTreeTable, boolean _isNewUser){
         _userEditWindowController = userEditWindowController;
@@ -30,11 +28,13 @@ public class UserEdit extends Application {
 
     @Override
     public void start(Stage primaryStage) throws Exception{
-        Locale.setDefault(Locale.ENGLISH);
+        //Locale.setDefault(Locale.ENGLISH);
+        /*
         FXMLLoader loader = new FXMLLoader(getClass().getResource("/view/team-c/UserEdit.fxml"));
         Parent root = loader.load();
 
         primaryStage.setTitle("Edit User");
+
         primaryStage.getIcons().add(new Image(UserTable.class.getResourceAsStream(
             "/images/team-c/orchestraria_icon.png")));
         Scene scene = new Scene(root);
@@ -45,17 +45,48 @@ public class UserEdit extends Application {
         double width = 738;
 
         primaryStage.setX((primScreenBounds.getWidth() - width) / 2);
+         */
 
-        _userEditWindowController = loader.getController();
+        this.parentController.addTab(TabPaneEntry.USER_EDIT);
+        /*
+        _userEditWindowController = parentController.getController();
         _userEditWindowController.setParameter(_ue, listviewindex, _parentTreeTable, isNewUser);
         _userEditWindowController.init();
-
-        primaryStage.show();
+         */
+        //primaryStage.show();
     }
 
     public static void main(String[] args) {
         launch(args);
     }
 
+    /**
+     * Sets this controller's parent controller.
+     *
+     * @param controller The controller to be set as parent
+     */
+    @Override
+    public void setParentController(TabPaneController controller) {
+        this.parentController = controller;
+    }
+
+    /**
+     * Returns this controller's parent controller.
+     *
+     * @return Parent controller
+     */
+    @Override
+    public TabPaneController getParentController() {
+        return this.parentController;
+    }
+
+    /**
+     * Calls the controller initialization AFTER the parent controller has been set by
+     * {@link TabPaneController}.
+     */
+    @Override
+    public void initializeWithParent() {
+
+    }
 }
 

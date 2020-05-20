@@ -61,11 +61,11 @@ public class TabPaneController implements Initializable, Parentable<MainControll
 
 
 
-    protected Optional<Parentable<TabPaneController>> addTab(TabPaneEntry entry) {
+    public Optional<Parentable<TabPaneController>> addTab(TabPaneEntry entry) {
         return addTab(entry, null);
     }
 
-    protected Optional<Parentable<TabPaneController>> addTab(
+    public Optional<Parentable<TabPaneController>> addTab(
         TabPaneEntry entry,
         Parentable parent
     ) {

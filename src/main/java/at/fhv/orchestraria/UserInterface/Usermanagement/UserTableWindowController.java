@@ -44,13 +44,15 @@ import javafx.stage.StageStyle;
 public class UserTableWindowController implements Parentable<TabPaneController> {
     public TreeItem newUserRow = new TreeItem(new UserWrapper("Add new User", "", "", "", ""));
     private UserTableWindowController controller = this;
-    private final static Logger LOGGER = Logger.getLogger(UserTableWindowController.class.getName());
+    private final static Logger LOGGER =
+        Logger.getLogger(UserTableWindowController.class.getName());
     private UserManagementController uManagementController;
-    private  LinkedList<TreeItem<UserWrapper>> removedItems = new LinkedList<>();
+    private LinkedList<TreeItem<UserWrapper>> removedItems = new LinkedList<>();
 
     private TabPaneController parentController;
-  //TODO remove this line; created for testing purposes
-    public void bestfunction(){
+
+    //TODO remove this line; created for testing purposes
+    public void bestfunction() {
         System.out.println("This is the best function ever!");
     }
 
@@ -162,7 +164,8 @@ public class UserTableWindowController implements Parentable<TabPaneController> 
             public void handle(javafx.scene.input.MouseEvent event) {
                 if (event.getClickCount() == 2) {
                     boolean newUser;
-                    if (treeTableView.getSelectionModel().getSelectedItem().getChildren().size() > 0) {
+                    if (treeTableView.getSelectionModel().getSelectedItem().getChildren().size() >
+                        0) {
                         newUser = true;
                     } else {
                         newUser = false;
@@ -170,7 +173,11 @@ public class UserTableWindowController implements Parentable<TabPaneController> 
                     UserEdit uEWindow = new UserEdit();
                     Stage window = new Stage();
                     try {
-                        uEWindow.setParameter(new UserEditWindowController(), treeTableView.getSelectionModel().getSelectedItem().getValue().getUser(), treeTableView.getSelectionModel().getFocusedIndex(), controller, newUser);
+                        uEWindow.setParameter(new UserEditWindowController(),
+                            treeTableView.getSelectionModel().getSelectedItem().getValue()
+                                .getUser(), treeTableView.getSelectionModel().getFocusedIndex(),
+                            controller, newUser);
+                        uEWindow.setParentController(parentController);
                         uEWindow.start(window);
                     } catch (Exception e) {
                         LOGGER.log(Level.INFO, "Exception ", e);
@@ -189,11 +196,16 @@ public class UserTableWindowController implements Parentable<TabPaneController> 
         Platform.runLater(new Runnable() {
             @Override
             public void run() {
-                fnameCol.setCellValueFactory(new TreeItemPropertyValueFactory<UserWrapper, String>("fname"));
-                lnameCol.setCellValueFactory(new TreeItemPropertyValueFactory<UserWrapper, String>("lname"));
-                sectionCol.setCellValueFactory(new TreeItemPropertyValueFactory<UserWrapper, String>("section"));
-                roleCol.setCellValueFactory(new TreeItemPropertyValueFactory<UserWrapper, String>("role"));
-                contractCol.setCellValueFactory(new TreeItemPropertyValueFactory<UserWrapper, String>("contractEnd"));
+                fnameCol.setCellValueFactory(
+                    new TreeItemPropertyValueFactory<UserWrapper, String>("fname"));
+                lnameCol.setCellValueFactory(
+                    new TreeItemPropertyValueFactory<UserWrapper, String>("lname"));
+                sectionCol.setCellValueFactory(
+                    new TreeItemPropertyValueFactory<UserWrapper, String>("section"));
+                roleCol.setCellValueFactory(
+                    new TreeItemPropertyValueFactory<UserWrapper, String>("role"));
+                contractCol.setCellValueFactory(
+                    new TreeItemPropertyValueFactory<UserWrapper, String>("contractEnd"));
 
 
                 treeTableView.setRoot(newUserRow);
@@ -205,7 +217,8 @@ public class UserTableWindowController implements Parentable<TabPaneController> 
                 treeTableView.setRowFactory(treeTable -> {
                     TreeTableRow row = new TreeTableRow<>();
                     row.treeItemProperty().addListener((ov, oldTreeItem, newTreeItem) ->
-                            row.pseudoClassStateChanged(firstRowClass, newTreeItem == treeTable.getRoot()));
+                        row.pseudoClassStateChanged(firstRowClass,
+                            newTreeItem == treeTable.getRoot()));
                     return row;
                 });
 
@@ -227,20 +240,29 @@ public class UserTableWindowController implements Parentable<TabPaneController> 
         }
     }
 
-    private void searchFunctionality(){
+    private void searchFunctionality() {
         input.textProperty().addListener(new ChangeListener<String>() {
             @Override
-            public void changed(ObservableValue<? extends String> observable, String oldValue, String newValue) {
+            public void changed(ObservableValue<? extends String> observable, String oldValue,
+                                String newValue) {
                 int i = 1;
                 newValue = newValue.toLowerCase();
                 treeTableView.getRoot().getChildren().addAll(removedItems);
                 removedItems.clear();
-                while(treeTableView.getTreeItem(i)!= null) {
-                    if(!(treeTableView.getTreeItem(i).getValue().getFname().toLowerCase().contains(newValue)||treeTableView.getTreeItem(i).getValue().getLname().toLowerCase().contains(newValue)||treeTableView.getTreeItem(i).getValue().getRole().toLowerCase().contains(newValue)||treeTableView.getTreeItem(i).getValue().getSection().toLowerCase().contains(newValue)||treeTableView.getTreeItem(i).getValue().getContractEnd().toLowerCase().contains(newValue))) {
+                while (treeTableView.getTreeItem(i) != null) {
+                    if (!(treeTableView.getTreeItem(i).getValue().getFname().toLowerCase()
+                        .contains(newValue) ||
+                        treeTableView.getTreeItem(i).getValue().getLname().toLowerCase()
+                            .contains(newValue) ||
+                        treeTableView.getTreeItem(i).getValue().getRole().toLowerCase()
+                            .contains(newValue) ||
+                        treeTableView.getTreeItem(i).getValue().getSection().toLowerCase()
+                            .contains(newValue) ||
+                        treeTableView.getTreeItem(i).getValue().getContractEnd().toLowerCase()
+                            .contains(newValue))) {
                         removedItems.add(treeTableView.getTreeItem(i));
                         treeTableView.getRoot().getChildren().remove(treeTableView.getTreeItem(i));
-                    }
-                    else {
+                    } else {
                         i++;
                     }
                 }
@@ -263,7 +285,8 @@ public class UserTableWindowController implements Parentable<TabPaneController> 
      */
     @Override
     public void setParentController(TabPaneController controller) {
-         this.parentController = controller;
+        this.parentController = controller;
+        System.out.println(controller);
     }
 
     /**
@@ -296,7 +319,8 @@ public class UserTableWindowController implements Parentable<TabPaneController> 
         private boolean isBlankForUserCreation = false;
         private IUserEntity user;
 
-        public UserWrapper(String fname, String lname, String section, String role, String contractEnd) {
+        public UserWrapper(String fname, String lname, String section, String role,
+                           String contractEnd) {
             this.fname = fname;
             this.lname = lname;
             this.section = section;
@@ -317,9 +341,9 @@ public class UserTableWindowController implements Parentable<TabPaneController> 
                         sb.append(ass.getDescription());
                         sb.append(" | ");
                     }
-                    sb.deleteCharAt(sb.length()-1);
-                    sb.deleteCharAt(sb.length()-1);
-                    sb.deleteCharAt(sb.length()-1);
+                    sb.deleteCharAt(sb.length() - 1);
+                    sb.deleteCharAt(sb.length() - 1);
+                    sb.deleteCharAt(sb.length() - 1);
                     role = sb.toString();
                 } else {
                     role = "-";
@@ -336,7 +360,8 @@ public class UserTableWindowController implements Parentable<TabPaneController> 
                     role = mrme.getDescription().toString();
                 }
                 contractEnd = "-";
-                for (IContractualObligationEntity coe : ue.getMusician().getContractualObligations()) {
+                for (IContractualObligationEntity coe : ue.getMusician()
+                    .getContractualObligations()) {
                     contractEnd = coe.getEndDate().toString();
                 }
             }
@@ -403,7 +428,7 @@ public class UserTableWindowController implements Parentable<TabPaneController> 
             undecoratedWindow.hide();
             homeWindowDecorated.hide();
             lw.start(undecoratedWindow);
-        }catch(Exception e){
+        } catch (Exception e) {
             LOGGER.log(Level.INFO, "Exception ", e);
         }
     }
