@@ -7,7 +7,7 @@ import at.fhv.orchestraria.application.DutyAssignmentController;
 import at.fhv.orchestraria.domain.Imodel.IDuty;
 import at.fhv.orchestraria.domain.Imodel.IUser;
 import at.fhv.teamb.symphoniacus.application.type.DomainUserType;
-import at.fhv.teamb.symphoniacus.application.adapter.MusicianAdapter;
+import at.fhv.teamb.symphoniacus.domain.adapter.MusicianAdapter;
 import at.fhv.teamb.symphoniacus.presentation.TabPaneController;
 import at.fhv.teamb.symphoniacus.presentation.internal.Parentable;
 import com.calendarfx.view.CalendarView;

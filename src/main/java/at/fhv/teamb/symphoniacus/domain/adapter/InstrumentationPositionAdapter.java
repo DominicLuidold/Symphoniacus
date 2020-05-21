@@ -1,4 +1,4 @@
-package at.fhv.teamb.symphoniacus.application.adapter;
+package at.fhv.teamb.symphoniacus.domain.adapter;
 
 import at.fhv.orchestraria.domain.integrationInterfaces.IntegratableInstrumentationPosition;
 import at.fhv.teamb.symphoniacus.persistence.model.interfaces.IInstrumentationPositionEntity;

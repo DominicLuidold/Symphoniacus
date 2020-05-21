@@ -1,8 +1,7 @@
-package at.fhv.teamb.symphoniacus.application.adapter;
+package at.fhv.teamb.symphoniacus.domain.adapter;
 
 import at.fhv.orchestraria.domain.integrationInterfaces.IntegratableDuty;
 import at.fhv.orchestraria.domain.integrationInterfaces.IntegratableSeriesOfPerformances;
-import at.fhv.teamb.symphoniacus.persistence.model.DutyEntity;
 import at.fhv.teamb.symphoniacus.persistence.model.interfaces.IDutyEntity;
 import at.fhv.teamb.symphoniacus.persistence.model.interfaces.IInstrumentationEntity;
 import at.fhv.teamb.symphoniacus.persistence.model.interfaces.IMusicalPieceEntity;

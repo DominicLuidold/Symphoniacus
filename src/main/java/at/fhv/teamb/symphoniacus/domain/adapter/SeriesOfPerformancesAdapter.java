@@ -1,4 +1,4 @@
-package at.fhv.teamb.symphoniacus.application.adapter;
+package at.fhv.teamb.symphoniacus.domain.adapter;
 
 import at.fhv.orchestraria.domain.Imodel.ISeriesOfPerformancesInstrumentation;
 import at.fhv.orchestraria.domain.integrationInterfaces.IntegratableSeriesOfPerformances;
