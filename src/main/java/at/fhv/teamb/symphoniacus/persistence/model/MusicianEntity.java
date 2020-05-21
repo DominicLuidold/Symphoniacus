@@ -58,7 +58,7 @@ public class MusicianEntity implements IMusicianEntity {
     @OneToMany(mappedBy = "musician", targetEntity = ContractualObligationEntity.class)
     private List<IContractualObligationEntity> contractualObligations = new LinkedList<>();
 
-    @ManyToMany(targetEntity = MusicianRole.class)
+    @ManyToMany(cascade = {CascadeType.MERGE},targetEntity = MusicianRole.class)
     @JoinTable(
         name = "musicianRole_musician",
         joinColumns = {
@@ -70,7 +70,7 @@ public class MusicianEntity implements IMusicianEntity {
     )
     private List<IMusicianRole> musicianRoles = new LinkedList<>();
 
-    @ManyToMany(targetEntity = InstrumentCategoryEntity.class)
+    @ManyToMany(cascade = {CascadeType.MERGE},targetEntity = InstrumentCategoryEntity.class)
     @JoinTable(
         name = "instrumentCategory_musician",
         joinColumns = {

@@ -358,6 +358,7 @@ public class UserTableWindowController implements Parentable<TabPaneController> 
                 }
                 role = "-";
                 for (IMusicianRole mrme : ue.getMusician().getMusicianRoles()) {
+                    if(mrme != null && mrme.getDescription() != null)
                     role = mrme.getDescription().toString();
                 }
                 contractEnd = "-";

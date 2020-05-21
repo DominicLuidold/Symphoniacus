@@ -251,17 +251,19 @@ public class UserManagementController {
                 updateMusician(me);
 
             } else {
+                for (IMusicianRole mrme : me.getMusicianRoles()) {
+                    //deleteMusicianRoleMusician(mrme);
+                    me.addMusicianRole(mrme);
+                }
                 saveUser(userToEdit);
                 saveMusician(me);
             }
 
             userToEdit.setMusician(me);
 
-            for (IMusicianRole mrme : me.getMusicianRoles()) {
-                deleteMusicianRoleMusician(mrme);
-            }
-            me.getMusicianRoles().clear();
 
+            //me.getMusicianRoles().clear();
+/*
             for (String role : userDTO.getSelectedRoles()) {
                 IMusicianRole mrme = new MusicianRole();
                 mrme.addMusician(me);
@@ -271,14 +273,14 @@ public class UserManagementController {
                 //me.getMusicianRoleMusicians().add(mrme);
                 if (!userDTO.isNewUser()) {
                     //updateMusicianRoleMusician(mrme);
-                    updateMusicianRole(mrme);
+                    //updateMusicianRole(mrme);
                 } else {
                     //saveMusicianRoleMusician(mrme);
-                    saveMusicianRole(mrme);
+                    //saveMusicianRole(mrme); //TODO WHY?
                 }
             }
 
-
+*/
             for (IInstrumentCategoryEntity icme : me.getInstrumentCategories()) {
                 deleteInstrumentCategoryMusician(icme);
             }
@@ -401,7 +403,6 @@ public class UserManagementController {
         }
         return returnme;
     }
-
  */
 
     @Transient

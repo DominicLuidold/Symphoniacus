@@ -593,9 +593,11 @@ public class UserEditWindowController implements Parentable<TabPaneController> {
                 parentTreeTable.updateRow(listviewindex, userToEdit);
             }
 
+            /*
             Node source = (Node) actionEvent.getSource();
             Stage stage = (Stage) source.getScene().getWindow();
             stage.close();
+             */
         }
     }
 
