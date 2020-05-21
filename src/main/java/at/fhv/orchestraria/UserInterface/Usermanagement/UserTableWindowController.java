@@ -158,6 +158,7 @@ public class UserTableWindowController implements Parentable<TabPaneController> 
         //setLoggedInUserName(LoginWindowController.getLoggedInUser());
         loadMusiciansIntoTable();
 
+        UserEdit uEWindow = new UserEdit();
 
         treeTableView.setOnMouseClicked(new EventHandler<javafx.scene.input.MouseEvent>() {
             @Override
@@ -170,7 +171,7 @@ public class UserTableWindowController implements Parentable<TabPaneController> 
                     } else {
                         newUser = false;
                     }
-                    UserEdit uEWindow = new UserEdit();
+
                     Stage window = new Stage();
                     try {
                         uEWindow.setParameter(new UserEditWindowController(),
@@ -431,6 +432,10 @@ public class UserTableWindowController implements Parentable<TabPaneController> 
         } catch (Exception e) {
             LOGGER.log(Level.INFO, "Exception ", e);
         }
+    }
+
+    public UserTableWindowController getController() {
+        return this;
     }
 
     /*

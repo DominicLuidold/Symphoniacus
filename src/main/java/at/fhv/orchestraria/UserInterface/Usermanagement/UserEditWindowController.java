@@ -3,11 +3,11 @@ package at.fhv.orchestraria.UserInterface.Usermanagement;
 import at.fhv.orchestraria.application.FormValidator;
 import at.fhv.orchestraria.application.UserManagementController;
 import at.fhv.orchestraria.domain.Imodel.IMusicianRole;
-import at.fhv.orchestraria.domain.Imodel.ISection;
 import at.fhv.orchestraria.domain.model.AdministrativeAssistantEntity;
 import at.fhv.teamb.symphoniacus.persistence.model.interfaces.IAdministrativeAssistantEntity;
 import at.fhv.teamb.symphoniacus.persistence.model.interfaces.IContractualObligationEntity;
 import at.fhv.teamb.symphoniacus.persistence.model.interfaces.IInstrumentCategoryEntity;
+import at.fhv.teamb.symphoniacus.persistence.model.interfaces.ISectionEntity;
 import at.fhv.teamb.symphoniacus.persistence.model.interfaces.IUserEntity;
 import at.fhv.teamb.symphoniacus.presentation.TabPaneController;
 import at.fhv.teamb.symphoniacus.presentation.internal.Parentable;
@@ -127,6 +127,7 @@ public class UserEditWindowController implements Parentable<TabPaneController> {
         }
     }
 
+
     /**
      * init initialize the UI with all the used content and also
      * set the propmt texts of the textfields and adds the Change Listeners
@@ -153,7 +154,8 @@ public class UserEditWindowController implements Parentable<TabPaneController> {
     }
 
     private void fillFieldsExisting() {
-        _userLabel.setText(userToEdit.getLastName() + " " + userToEdit.getFirstName() + " (" + userToEdit.getShortcut() + ")");
+        _userLabel.setText(userToEdit.getLastName() + " " + userToEdit.getFirstName() + " (" +
+            userToEdit.getShortcut() + ")");
         fnameField.setText(userToEdit.getFirstName());
         lnameField.setText(userToEdit.getLastName());
         emailField.setText(userToEdit.getEmail());
@@ -169,7 +171,8 @@ public class UserEditWindowController implements Parentable<TabPaneController> {
             _administrativeVBox.setVisible(false);
             musicianAdministrativeToggle.setSelected(false);
 
-            for (at.fhv.teamb.symphoniacus.persistence.model.interfaces.IMusicianRole mrme : userToEdit.getMusician().getMusicianRoles()) {
+            for (at.fhv.teamb.symphoniacus.persistence.model.interfaces.IMusicianRole mrme : userToEdit
+                .getMusician().getMusicianRoles()) {
                 for (MenuItem mi : roleDropDown.getItems()) {
                     CustomMenuItem item = (CustomMenuItem) mi;
                     CheckBox cb = (CheckBox) item.getContent();
@@ -178,7 +181,8 @@ public class UserEditWindowController implements Parentable<TabPaneController> {
                     }
                 }
             }
-            for (IInstrumentCategoryEntity icme : userToEdit.getMusician().getInstrumentCategories()) {
+            for (IInstrumentCategoryEntity icme : userToEdit.getMusician()
+                .getInstrumentCategories()) {
                 for (MenuItem mi : instrumentDropDown.getItems()) {
                     CustomMenuItem item = (CustomMenuItem) mi;
                     CheckBox cb = (CheckBox) item.getContent();
@@ -187,7 +191,8 @@ public class UserEditWindowController implements Parentable<TabPaneController> {
                     }
                 }
             }
-            for (IContractualObligationEntity coe : userToEdit.getMusician().getContractualObligations()) {
+            for (IContractualObligationEntity coe : userToEdit.getMusician()
+                .getContractualObligations()) {
                 contractEndPicker.setValue(coe.getEndDate());
                 pointsPerMonthField.setText(Integer.toString(coe.getPointsPerMonth()));
                 specialField.setText(coe.getPosition());
@@ -209,14 +214,17 @@ public class UserEditWindowController implements Parentable<TabPaneController> {
     }
 
     private void fillFields() {
-        ObservableList<String> adminRoles = FXCollections.observableArrayList(AdministrativeAssistantEntity.typeOrganisation, AdministrativeAssistantEntity.typeOrchestra, AdministrativeAssistantEntity.typeNote);
+        ObservableList<String> adminRoles = FXCollections
+            .observableArrayList(AdministrativeAssistantEntity.typeOrganisation,
+                AdministrativeAssistantEntity.typeOrchestra,
+                AdministrativeAssistantEntity.typeNote);
         adminRoleDropDown.setItems(adminRoles);
-        for (ISection se : uManagementController.getISections()) {
+        for (ISectionEntity se : uManagementController.getISections()) {
             sectionDropDown.getItems().addAll(se.getDescription());
         }
         List<CustomMenuItem> musicianRoles = FXCollections.observableArrayList();
         for (IMusicianRole mre : allMusicianRoles) {
-            CheckBox cBox = new CheckBox(mre.getDescription());
+            CheckBox cBox = new CheckBox(mre.getDescription().toString());
             cBox.focusedProperty().addListener(((observable, oldValue, newValue) -> {
                 setMenuButtonPrompt(roleDropDown);
             }));
@@ -238,8 +246,10 @@ public class UserEditWindowController implements Parentable<TabPaneController> {
         instrumentDropDown.getItems().addAll(instrumentCategories);
     }
 
-    public void setParameter(IUserEntity ue, int listindex, UserTableWindowController _parentTreeTable, boolean _newUser) {
-        uManagementController = new UserManagementController(); //TODO: Verletzung der SchichtenRegeln: UI kennt nicht persistenz
+    public void setParameter(IUserEntity ue, int listindex,
+                             UserTableWindowController _parentTreeTable, boolean _newUser) {
+        uManagementController =
+            new UserManagementController(); //TODO: Verletzung der SchichtenRegeln: UI kennt nicht persistenz
         userToEdit = ue;
         listviewindex = listindex;
         allInstrumentCategories = uManagementController.getIInstrumentCategory();
@@ -330,8 +340,9 @@ public class UserEditWindowController implements Parentable<TabPaneController> {
         };
 
         ObservableList<JFXTextField> textFieldList = FXCollections.<JFXTextField>observableArrayList
-                (fnameField, lnameField, emailField, phoneField, countryField, cityField, zipField, streetField,
-                        streetNrField, pointsPerMonthField);
+            (fnameField, lnameField, emailField, phoneField, countryField, cityField, zipField,
+                streetField,
+                streetNrField, pointsPerMonthField);
 
         for (JFXTextField textField : textFieldList) {
             textField.getValidators().add(validator);
@@ -367,8 +378,9 @@ public class UserEditWindowController implements Parentable<TabPaneController> {
      */
     public void checkGivenInput() {
         ObservableList<JFXTextField> textFieldList = FXCollections.<JFXTextField>observableArrayList
-                (fnameField, lnameField, emailField, phoneField, countryField, cityField, zipField, streetField,
-                        streetNrField, pointsPerMonthField);
+            (fnameField, lnameField, emailField, phoneField, countryField, cityField, zipField,
+                streetField,
+                streetNrField, pointsPerMonthField);
 
         for (JFXTextField textField : textFieldList) {
             textField.validate();
@@ -408,7 +420,7 @@ public class UserEditWindowController implements Parentable<TabPaneController> {
         }
         if (!formValidator.validatePhone(phoneField.getText())) {
             alerts.add("- Phone number is not in correct syntax\n" +
-                    "  Please start with prefix '+'\n\n");
+                "  Please start with prefix '+'\n\n");
             setIsNotValidatedColor(phoneField);
             validateForm = false;
         } else {
@@ -459,7 +471,7 @@ public class UserEditWindowController implements Parentable<TabPaneController> {
                     roleDropDown.setStyle("-fx-border-color:green");
                 }
             }
-            if(!cbSelect){
+            if (!cbSelect) {
                 validateForm = false;
                 roleDropDown.setStyle("-fx-border-color:red");
                 alerts.add("- Please select a musician role!\n\n");
@@ -483,7 +495,7 @@ public class UserEditWindowController implements Parentable<TabPaneController> {
                     instrumentDropDown.setStyle("-fx-border-color:green");
                 }
             }
-            if(!cbSelect){
+            if (!cbSelect) {
                 validateForm = false;
                 instrumentDropDown.setStyle("-fx-border-color:red");
                 alerts.add("- Please select an instrument!\n\n");
@@ -542,7 +554,6 @@ public class UserEditWindowController implements Parentable<TabPaneController> {
     }
 
 
-
     /**
      * saveMusiciansAssignment validates the form and checks if its a new or
      * existing user and then saves in to the database
@@ -590,22 +601,27 @@ public class UserEditWindowController implements Parentable<TabPaneController> {
             }
         }
 
-        UserDTO userDTO = new UserDTO(isNewUser,!musicianAdministrativeToggle.isSelected(),fnameField.getText(),lnameField.getText(),
-                emailField.getText(), phoneField.getText(),cityField.getText(), zipField.getText(), countryField.getText(),
-                streetField.getText(), streetNrField.getText(), adminRoleDropDown.getValue(), sectionDropDown.getValue(),roles,
-                instruments, pointsPerMonthField.getText(),specialField.getText(),contractStartPicker.getValue(), contractEndPicker.getValue());
+        UserDTO userDTO =
+            new UserDTO(isNewUser, !musicianAdministrativeToggle.isSelected(), fnameField.getText(),
+                lnameField.getText(),
+                emailField.getText(), phoneField.getText(), cityField.getText(), zipField.getText(),
+                countryField.getText(),
+                streetField.getText(), streetNrField.getText(), adminRoleDropDown.getValue(),
+                sectionDropDown.getValue(), roles,
+                instruments, pointsPerMonthField.getText(), specialField.getText(),
+                contractStartPicker.getValue(), contractEndPicker.getValue());
 
-        userToEdit = (IUserEntity)uManagementController.saveGeneral(userToEdit,userDTO);
+        userToEdit = (IUserEntity) uManagementController.saveGeneral(userToEdit, userDTO);
 
-        }
+    }
 
 
-    private void setIsNotValidatedColor(JFXTextField tfield){
+    private void setIsNotValidatedColor(JFXTextField tfield) {
         tfield.setFocusColor(Color.RED);
         tfield.setUnFocusColor(Color.RED);
     }
 
-    private void setIsValidatedColor(JFXTextField tfield){
+    private void setIsValidatedColor(JFXTextField tfield) {
         tfield.setFocusColor(Color.GREEN);
         tfield.setUnFocusColor(Color.GREEN);
     }
@@ -636,6 +652,6 @@ public class UserEditWindowController implements Parentable<TabPaneController> {
      */
     @Override
     public void initializeWithParent() {
-
+        //this.init();
     }
 }

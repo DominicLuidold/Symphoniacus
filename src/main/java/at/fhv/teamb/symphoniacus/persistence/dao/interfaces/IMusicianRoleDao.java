@@ -1,6 +1,6 @@
 package at.fhv.teamb.symphoniacus.persistence.dao.interfaces;
 
-import at.fhv.orchestraria.domain.Imodel.IMusicianRole;
+import at.fhv.teamb.symphoniacus.persistence.model.interfaces.IMusicianRole;
 import java.util.List;
 
 public interface IMusicianRoleDao {

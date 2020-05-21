@@ -4,6 +4,7 @@ import at.fhv.teamb.symphoniacus.persistence.model.interfaces.IUserEntity;
 import at.fhv.teamb.symphoniacus.presentation.TabPaneController;
 import at.fhv.teamb.symphoniacus.presentation.internal.Parentable;
 import at.fhv.teamb.symphoniacus.presentation.internal.TabPaneEntry;
+import java.util.Optional;
 import javafx.application.Application;
 import javafx.stage.Stage;
 
@@ -18,8 +19,9 @@ public class UserEdit extends Application implements Parentable<TabPaneControlle
 
     private TabPaneController parentController;
 
-    public void setParameter(UserEditWindowController userEditWindowController, IUserEntity ue, int listindex, UserTableWindowController parentTreeTable, boolean _isNewUser){
-        _userEditWindowController = userEditWindowController;
+    public void setParameter(UserEditWindowController userEditWindowController, IUserEntity ue,
+                             int listindex, UserTableWindowController parentTreeTable,
+                             boolean _isNewUser) {
         _ue = ue;
         listviewindex = listindex;
         _parentTreeTable = parentTreeTable;
@@ -27,7 +29,10 @@ public class UserEdit extends Application implements Parentable<TabPaneControlle
     }
 
     @Override
-    public void start(Stage primaryStage) throws Exception{
+    public void start(Stage primaryStage) throws Exception {
+        /*
+        Not used in integration
+         */
         //Locale.setDefault(Locale.ENGLISH);
         /*
         FXMLLoader loader = new FXMLLoader(getClass().getResource("/view/team-c/UserEdit.fxml"));
@@ -43,16 +48,22 @@ public class UserEdit extends Application implements Parentable<TabPaneControlle
         Rectangle2D primScreenBounds = Screen.getPrimary().getVisualBounds();
         primaryStage.setY(5);
         double width = 738;
-
         primaryStage.setX((primScreenBounds.getWidth() - width) / 2);
          */
 
-        this.parentController.addTab(TabPaneEntry.USER_EDIT);
+        Optional<Parentable<TabPaneController>> controller = this.parentController.addTab(TabPaneEntry.USER_EDIT);
+        if (controller.isPresent()) {
+            Parentable<TabPaneController> con = controller.get();
+            _userEditWindowController = (UserEditWindowController)con;
+        }
+
         //_userEditWindowController = parentController.getController();
+
         _userEditWindowController.setParameter(_ue, listviewindex, _parentTreeTable, isNewUser);
         _userEditWindowController.init();
         //primaryStage.show();
     }
+
 
     public static void main(String[] args) {
         launch(args);

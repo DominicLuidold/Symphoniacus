@@ -58,4 +58,5 @@ public class SectionDao extends BaseDao<ISectionEntity>
     public boolean remove(ISectionEntity elem) {
         return false;
     }
+
 }

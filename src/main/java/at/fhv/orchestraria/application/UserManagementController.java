@@ -5,7 +5,6 @@ import at.fhv.orchestraria.UserInterface.Usermanagement.UserDTO;
 import at.fhv.orchestraria.domain.Imodel.IAdministrativeAssistant;
 import at.fhv.orchestraria.domain.Imodel.IMusicianRole;
 import at.fhv.orchestraria.domain.Imodel.IMusicianRoleMusician;
-import at.fhv.orchestraria.domain.Imodel.ISection;
 import at.fhv.orchestraria.domain.model.AdministrativeAssistantEntity;
 import at.fhv.orchestraria.domain.model.ContractualObligationEntity;
 import at.fhv.orchestraria.domain.model.InstrumentCategoryEntity;
@@ -17,17 +16,22 @@ import at.fhv.orchestraria.domain.model.SectionEntity;
 import at.fhv.orchestraria.domain.model.UserEntity;
 import at.fhv.orchestraria.persistence.dao.DBFacade;
 import at.fhv.orchestraria.persistence.dao.UserDAO;
+import at.fhv.teamb.symphoniacus.application.adapter.MusicianRoleAdapter;
 import at.fhv.teamb.symphoniacus.persistence.dao.InstrumentCategoryDao;
 import at.fhv.teamb.symphoniacus.persistence.dao.MusicianRoleDao;
+import at.fhv.teamb.symphoniacus.persistence.dao.SectionDao;
 import at.fhv.teamb.symphoniacus.persistence.dao.UserDao;
 import at.fhv.teamb.symphoniacus.persistence.dao.interfaces.IInstrumentCategoryDao;
 import at.fhv.teamb.symphoniacus.persistence.dao.interfaces.IMusicianRoleDao;
+import at.fhv.teamb.symphoniacus.persistence.dao.interfaces.ISectionDao;
 import at.fhv.teamb.symphoniacus.persistence.dao.interfaces.IUserDao;
 import at.fhv.teamb.symphoniacus.persistence.model.interfaces.IInstrumentCategoryEntity;
+import at.fhv.teamb.symphoniacus.persistence.model.interfaces.ISectionEntity;
 import at.fhv.teamb.symphoniacus.persistence.model.interfaces.IUserEntity;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.LinkedList;
+import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.persistence.Transient;
@@ -36,15 +40,18 @@ public class UserManagementController {
 
     private final static Logger LOGGER = Logger.getLogger(UserManagementController.class.getName());
     private DBFacade _facade;
+
     private IUserDao userDao;
     private IInstrumentCategoryDao categoryDao;
     private IMusicianRoleDao musicianRoleDao;
+    private ISectionDao sectionDao;
 
     public UserManagementController() {
         //_facade = DBFacade.getInstance();
         this.userDao = new UserDao();
         this.categoryDao = new InstrumentCategoryDao();
         this.musicianRoleDao = new MusicianRoleDao();
+        this.sectionDao = new SectionDao();
     }
 
     public Collection<IInstrumentCategoryEntity> getIInstrumentCategory() {
@@ -52,11 +59,16 @@ public class UserManagementController {
     }
 
     public Collection<IMusicianRole> getIMusicianRole() {
-        return musicianRoleDao.getAll();
+        List<MusicianRoleAdapter> result = new LinkedList<>();
+        for (at.fhv.teamb.symphoniacus.persistence.model.interfaces.IMusicianRole role : musicianRoleDao.getAll()) {
+            MusicianRoleAdapter adapter = new MusicianRoleAdapter(role);
+            result.add(adapter);
+        }
+        return new LinkedList<>(result);
     }
 
-    public Collection<ISection> getISections() {
-        return Collections.unmodifiableCollection(_facade.getDAO(SectionEntity.class).getAll());
+    public Collection<ISectionEntity> getISections() {
+        return Collections.unmodifiableCollection(this.sectionDao.getAll());
     }
 
     public Collection<IUserEntity> getUsers() {

@@ -71,7 +71,7 @@ public class MusicianEntity implements IMusicianEntity {
 
     @ManyToMany(targetEntity = InstrumentCategoryEntity.class)
     @JoinTable(
-        name = "instrumentationCategory_musician",
+        name = "instrumentCategory_musician",
         joinColumns = {
             @JoinColumn(name = "musicianId")
         },
