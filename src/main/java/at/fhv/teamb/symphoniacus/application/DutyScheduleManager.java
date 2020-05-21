@@ -207,7 +207,8 @@ public class DutyScheduleManager {
             this.sectionMusicians,
             this.dutiesOfThisDay,
             this.setMusicians,
-            this.unsetMusicians
+            this.unsetMusicians,
+            position
         );
     }
 
