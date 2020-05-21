@@ -48,7 +48,15 @@ public class ViewRosterThread extends RosterThread {
         enterEntries();
 
         //Set Popover to custom Popover
-        _cview.setEntryDetailsPopOverContentCallback(param -> new PopOverMusician(param.getPopOver(), param.getDateControl(), param.getNode(), param.getEntry()));
+        _cview.setEntryDetailsPopOverContentCallback(
+            param -> new PopOverMusician(
+                param.getPopOver(),
+                param.getDateControl(),
+                param.getNode(),
+                param.getEntry(),
+                _musicianEntity
+            )
+        );
     }
 
     /**

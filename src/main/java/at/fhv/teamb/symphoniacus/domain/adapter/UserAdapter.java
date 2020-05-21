@@ -1,4 +1,4 @@
-package at.fhv.teamb.symphoniacus.application.adapter;
+package at.fhv.teamb.symphoniacus.domain.adapter;
 
 import at.fhv.orchestraria.domain.integrationInterfaces.IntegratableUser;
 import at.fhv.teamb.symphoniacus.persistence.model.interfaces.IMusicianEntity;

@@ -1,4 +1,4 @@
-package at.fhv.teamb.symphoniacus.application.adapter;
+package at.fhv.teamb.symphoniacus.domain.adapter;
 
 import at.fhv.orchestraria.domain.integrationInterfaces.IntegratableDuty;
 import at.fhv.orchestraria.domain.integrationInterfaces.IntegratableSeriesOfPerformances;
@@ -7,6 +7,7 @@ import at.fhv.teamb.symphoniacus.persistence.model.interfaces.IInstrumentationEn
 import at.fhv.teamb.symphoniacus.persistence.model.interfaces.IMusicalPieceEntity;
 import java.time.LocalDateTime;
 import java.util.HashSet;
+import java.util.Objects;
 import java.util.Set;
 
 public class DutyAdapter implements IntegratableDuty {
@@ -36,6 +37,12 @@ public class DutyAdapter implements IntegratableDuty {
         return this.duty.getDescription();
     }
 
+    /**
+     * Copied and adapted from
+     * {@link at.fhv.orchestraria.domain.model.DutyEntity#getMusicalPieceString}.
+     *
+     * @return the name of the musical piece as string
+     */
     @Override
     public String getMusicalPieceString() {
         String musicalPieceStr = "-";
@@ -51,7 +58,7 @@ public class DutyAdapter implements IntegratableDuty {
             }
 
             if (count > 1) {
-                musicalPieceStr += " + " + (count - 1) + "other";
+                musicalPieceStr += " + " + (count - 1) + " other";
                 if (count > 2) {
                     musicalPieceStr += "s";
                 }
@@ -60,6 +67,12 @@ public class DutyAdapter implements IntegratableDuty {
         return musicalPieceStr;
     }
 
+    /**
+     * Copied and adapted from
+     * {@link at.fhv.orchestraria.domain.model.DutyEntity#getComposerString}.
+     *
+     * @return the name of the composer as string
+     */
     @Override
     public String getComposerString() {
         Set<String> composers = new HashSet<>();
@@ -75,7 +88,7 @@ public class DutyAdapter implements IntegratableDuty {
             }
 
             if (composers.size() > 1) {
-                composerStr += " + " + (composers.size() - 1) + "other";
+                composerStr += " + " + (composers.size() - 1) + " other";
                 if (composers.size() > 2) {
                     composerStr += "s";
                 }
@@ -94,6 +107,12 @@ public class DutyAdapter implements IntegratableDuty {
         return this.duty.getEnd();
     }
 
+    /**
+     * Copied and adapted from
+     * {@link at.fhv.orchestraria.domain.model.DutyEntity#getInstrumentationString}.
+     *
+     * @return the instrumentation as string
+     */
     @Override
     public String getInstrumentationString() {
         String instrumentationStr = "-";
@@ -109,7 +128,7 @@ public class DutyAdapter implements IntegratableDuty {
             }
 
             if (instrumentations.size() > 1) {
-                instrumentationStr += " + " + (instrumentations.size() - 1) + "other";
+                instrumentationStr += " + " + (instrumentations.size() - 1) + " other";
                 if (instrumentations.size() > 2) {
                     instrumentationStr += "s";
                 }
@@ -121,5 +140,28 @@ public class DutyAdapter implements IntegratableDuty {
     @Override
     public int getDutyId() {
         return this.duty.getDutyId();
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
+        DutyAdapter that = (DutyAdapter) o;
+        return Objects.equals(getDutyId(), that.getDutyId())
+            && Objects.equals(getStart(), that.getStart())
+            && Objects.equals(getEnd(), that.getEnd());
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(
+            this.duty.getDutyId(),
+            this.duty.getStart(),
+            this.duty.getEnd()
+        );
     }
 }

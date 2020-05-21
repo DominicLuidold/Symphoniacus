@@ -113,7 +113,10 @@ public class TabPaneController implements Initializable, Parentable<MainControll
         }
 
         this.tabPane.getTabs().add(tab);
-        this.tabPane.getSelectionModel().select(tab);
+        // Only select temporary tabs -> always show tabs with order #1 when initializing
+        if (entry.isTemporary()) {
+            this.tabPane.getSelectionModel().select(tab);
+        }
 
         // FXML has no controller defined
         return Optional.ofNullable(controller);

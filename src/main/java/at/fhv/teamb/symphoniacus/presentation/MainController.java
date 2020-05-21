@@ -128,14 +128,15 @@ public class MainController implements Initializable {
             LOG.debug("No default view for Musician atm");
 
             for (IMusicianRole role : m.getEntity().getMusicianRoles()) {
-                // Duty Scheduler
+                // Duty Scheduler only
                 if (role.getDescription().equals(MusicianRoleType.DUTY_SCHEDULER)) {
                     result.add(TabPaneEntry.DUTY_SCHEDULER_CALENDAR_VIEW);
                 }
 
-                // Section Principal & Tutti
+                // Duty Scheduler, Section Principal & Tutti
                 if (role.getDescription().equals(MusicianRoleType.SECTION_PRINCIPAL)
                     || role.getDescription().equals(MusicianRoleType.TUTTI)
+                    ||  role.getDescription().equals(MusicianRoleType.DUTY_SCHEDULER)
                 ) {
                     result.add(TabPaneEntry.MUSICIAN_CALENDAR_VIEW);
                 }

@@ -1,4 +1,4 @@
-package at.fhv.teamb.symphoniacus.application.adapter;
+package at.fhv.teamb.symphoniacus.domain.adapter;
 
 import at.fhv.orchestraria.domain.integrationInterfaces.IntegratableInstrumentationPosition;
 import at.fhv.teamb.symphoniacus.persistence.model.interfaces.IInstrumentationPositionEntity;
@@ -12,6 +12,7 @@ public class InstrumentationPositionAdapter implements IntegratableInstrumentati
 
     @Override
     public String getPositionDescription() {
-        return this.instrumentationPosition.getPositionDescription();
+        // Cruel way to make things work with Team C's code
+        return " : " + this.instrumentationPosition.getPositionDescription();
     }
 }
