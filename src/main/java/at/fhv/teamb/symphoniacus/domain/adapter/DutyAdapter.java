@@ -37,6 +37,12 @@ public class DutyAdapter implements IntegratableDuty {
         return this.duty.getDescription();
     }
 
+    /**
+     * Copied and adapted from
+     * {@link at.fhv.orchestraria.domain.model.DutyEntity#getMusicalPieceString}.
+     *
+     * @return the name of the musical piece as string
+     */
     @Override
     public String getMusicalPieceString() {
         String musicalPieceStr = "-";
@@ -61,6 +67,12 @@ public class DutyAdapter implements IntegratableDuty {
         return musicalPieceStr;
     }
 
+    /**
+     * Copied and adapted from
+     * {@link at.fhv.orchestraria.domain.model.DutyEntity#getComposerString}.
+     *
+     * @return the name of the composer as string
+     */
     @Override
     public String getComposerString() {
         Set<String> composers = new HashSet<>();
@@ -95,6 +107,12 @@ public class DutyAdapter implements IntegratableDuty {
         return this.duty.getEnd();
     }
 
+    /**
+     * Copied and adapted from
+     * {@link at.fhv.orchestraria.domain.model.DutyEntity#getInstrumentationString}.
+     *
+     * @return the instrumentation as string
+     */
     @Override
     public String getInstrumentationString() {
         String instrumentationStr = "-";
