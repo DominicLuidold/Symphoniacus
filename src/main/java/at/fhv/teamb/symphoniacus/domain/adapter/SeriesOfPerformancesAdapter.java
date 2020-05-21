@@ -4,6 +4,7 @@ import at.fhv.orchestraria.domain.Imodel.ISeriesOfPerformancesInstrumentation;
 import at.fhv.orchestraria.domain.integrationInterfaces.IntegratableSeriesOfPerformances;
 import at.fhv.teamb.symphoniacus.persistence.model.interfaces.ISeriesOfPerformancesEntity;
 import java.util.Collection;
+import java.util.LinkedList;
 
 public class SeriesOfPerformancesAdapter implements IntegratableSeriesOfPerformances {
     private final ISeriesOfPerformancesEntity seriesOfPerformances;
@@ -21,6 +22,6 @@ public class SeriesOfPerformancesAdapter implements IntegratableSeriesOfPerforma
     public Collection<ISeriesOfPerformancesInstrumentation>
         getISeriesOfPerformancesInstrumentations() {
         // Only used in use cases that are not part of the integration
-        return null;
+        return new LinkedList<>();
     }
 }
