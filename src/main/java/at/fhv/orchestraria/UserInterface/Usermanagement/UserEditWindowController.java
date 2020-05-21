@@ -224,7 +224,12 @@ public class UserEditWindowController implements Parentable<TabPaneController> {
         }
         List<CustomMenuItem> musicianRoles = FXCollections.observableArrayList();
         for (IMusicianRole mre : allMusicianRoles) {
-            CheckBox cBox = new CheckBox(mre.getDescription().toString());
+            CheckBox cBox;
+            if (mre != null && mre.getDescription() != null) {
+                cBox = new CheckBox(mre.getDescription());
+            } else {
+                cBox = new CheckBox("-");
+            }
             cBox.focusedProperty().addListener(((observable, oldValue, newValue) -> {
                 setMenuButtonPrompt(roleDropDown);
             }));
@@ -248,6 +253,7 @@ public class UserEditWindowController implements Parentable<TabPaneController> {
 
     public void setParameter(IUserEntity ue, int listindex,
                              UserTableWindowController _parentTreeTable, boolean _newUser) {
+        tearDown();
         uManagementController =
             new UserManagementController(); //TODO: Verletzung der SchichtenRegeln: UI kennt nicht persistenz
         userToEdit = ue;
@@ -256,6 +262,20 @@ public class UserEditWindowController implements Parentable<TabPaneController> {
         allMusicianRoles = uManagementController.getIMusicianRole();
         parentTreeTable = _parentTreeTable;
         isNewUser = _newUser;
+    }
+
+    /**
+     * Method for Integration.
+     */
+    public void tearDown() {
+        if(this.allMusicianRoles != null && this.allInstrumentCategories != null) {
+            this.allMusicianRoles = new LinkedList<>();
+            this.allInstrumentCategories = new LinkedList<>();
+        }
+        this.sectionDropDown.getItems().removeAll(this.sectionDropDown.getItems());
+        this.adminRoleDropDown.getItems().removeAll(this.adminRoleDropDown.getItems());
+        this.instrumentDropDown.getItems().removeAll(this.instrumentDropDown.getItems());
+        this.roleDropDown.getItems().removeAll(this.roleDropDown.getItems());
     }
 
     /**

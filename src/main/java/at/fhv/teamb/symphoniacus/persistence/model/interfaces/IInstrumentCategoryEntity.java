@@ -20,4 +20,9 @@ public interface IInstrumentCategoryEntity {
     void addMusician(IMusicianEntity musician);
 
     void removeMusician(IMusicianEntity musician);
+
+    List<IMusicianEntity> getMusicians();
+
+    void setMusicians(
+        List<IMusicianEntity> musicians);
 }

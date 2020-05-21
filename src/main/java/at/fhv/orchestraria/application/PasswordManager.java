@@ -109,7 +109,11 @@ public class PasswordManager {
         if(hashedPassword == null){
             throw new PasswordException("Password could not be created");
         }
-        user.setPassword(hashedPassword);
+        try {
+            user.setPassword(hashedPassword);
+        }catch (Exception e) {
+            System.out.println("lul");
+        }
     }
 
 

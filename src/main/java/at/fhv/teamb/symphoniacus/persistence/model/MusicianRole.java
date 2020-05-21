@@ -32,12 +32,16 @@ public class MusicianRole implements IMusicianRole {
 
     @Override
     public void addMusician(IMusicianEntity m) {
-        musicians.add(m);
+        this.musicians.add(m);
+        if (!m.getMusicianRoles().contains(this)) {
+            m.addMusicianRole(this);
+        }
     }
 
     @Override
     public void removeMusician(IMusicianEntity m) {
-        musicians.remove(m);
+        this.musicians.remove(m);
+        m.removeMusicianRole(this);
     }
 
     @Override

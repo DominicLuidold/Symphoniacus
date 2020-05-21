@@ -19,7 +19,12 @@ public class MusicianRoleAdapter implements IMusicianRole {
 
     @Override
     public String getDescription() {
-        return musicianRole.getDescription().toString();
+        // Solange in Table description nullable ist...
+        if (musicianRole.getDescription() != null) {
+            return musicianRole.getDescription().toString();
+        }else {
+            return "-";
+        }
     }
 
     /**

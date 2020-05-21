@@ -9,6 +9,7 @@ import at.fhv.teamb.symphoniacus.persistence.model.interfaces.INegativeDateWishE
 import at.fhv.teamb.symphoniacus.persistence.model.interfaces.INegativeDutyWishEntity;
 import at.fhv.teamb.symphoniacus.persistence.model.interfaces.IPositiveWishEntity;
 import at.fhv.teamb.symphoniacus.persistence.model.interfaces.ISectionEntity;
+import at.fhv.teamb.symphoniacus.persistence.model.interfaces.ISubstitute;
 import at.fhv.teamb.symphoniacus.persistence.model.interfaces.IUserEntity;
 import at.fhv.teamb.symphoniacus.persistence.model.interfaces.IVacationEntity;
 import java.util.LinkedList;
@@ -99,6 +100,9 @@ public class MusicianEntity implements IMusicianEntity {
 
     @OneToMany(mappedBy = "musician", targetEntity = NegativeDateWishEntity.class)
     private List<INegativeDateWishEntity> negativeDateWishes = new LinkedList<>();
+
+    @OneToMany(mappedBy = "musician", targetEntity = Substitute.class)
+    private List<ISubstitute> substitutes = new LinkedList<>();
 
     @Override
     public void addPositiveWish(IPositiveWishEntity positiveWish) {
@@ -289,12 +293,30 @@ public class MusicianEntity implements IMusicianEntity {
     @Override
     public void addInstrumentCategory(IInstrumentCategoryEntity inst) {
         this.instrumentCategories.add(inst);
-        inst.addMusician(this);
+        inst.getMusicians().add(this);
     }
 
     @Override
     public void removeInstrumentCategory(IInstrumentCategoryEntity inst) {
         this.instrumentCategories.remove(inst);
         inst.removeMusician(null);
+    }
+
+    public List<INegativeDateWishEntity> getNegativeDateWishes() {
+        return negativeDateWishes;
+    }
+
+    public void setNegativeDateWishes(
+        List<INegativeDateWishEntity> negativeDateWishes) {
+        this.negativeDateWishes = negativeDateWishes;
+    }
+
+    public List<ISubstitute> getSubstitutes() {
+        return substitutes;
+    }
+
+    public void setSubstitutes(
+        List<ISubstitute> substitutes) {
+        this.substitutes = substitutes;
     }
 }

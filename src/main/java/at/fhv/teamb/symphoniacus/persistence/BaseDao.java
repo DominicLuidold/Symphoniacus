@@ -84,7 +84,7 @@ public abstract class BaseDao<T> implements Dao<T> {
         return Optional.empty();
     }
 
-    protected List<T> getAll(Class<?> clazz) {
+    public List<T> getAll(Class<?> clazz) {
         return entityManager.createQuery("Select t from " + clazz.getSimpleName() + " t")
             .getResultList();
     }

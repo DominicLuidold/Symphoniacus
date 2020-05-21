@@ -71,12 +71,21 @@ public class InstrumentCategoryEntity implements IInstrumentCategoryEntity {
     @Override
     public void addMusician(IMusicianEntity musician) {
         this.musicians.add(musician);
-        musician.addInstrumentCategory(this);
+        musician.getInstrumentCategories().add(this);
     }
 
     @Override
     public void removeMusician(IMusicianEntity musician) {
         this.musicians.remove(musician);
         musician.removeInstrumentCategory(this);
+    }
+
+    public List<IMusicianEntity> getMusicians() {
+        return musicians;
+    }
+
+    public void setMusicians(
+        List<IMusicianEntity> musicians) {
+        this.musicians = musicians;
     }
 }

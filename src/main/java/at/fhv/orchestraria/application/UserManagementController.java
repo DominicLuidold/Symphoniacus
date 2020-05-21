@@ -2,36 +2,45 @@ package at.fhv.orchestraria.application;
 
 import at.fhv.orchestraria.UserInterface.Exceptions.NoValidShortcutException;
 import at.fhv.orchestraria.UserInterface.Usermanagement.UserDTO;
-import at.fhv.orchestraria.domain.Imodel.IAdministrativeAssistant;
-import at.fhv.orchestraria.domain.Imodel.IMusicianRole;
 import at.fhv.orchestraria.domain.Imodel.IMusicianRoleMusician;
-import at.fhv.orchestraria.domain.model.AdministrativeAssistantEntity;
-import at.fhv.orchestraria.domain.model.ContractualObligationEntity;
-import at.fhv.orchestraria.domain.model.InstrumentCategoryEntity;
-import at.fhv.orchestraria.domain.model.InstrumentCategoryMusicianEntity;
-import at.fhv.orchestraria.domain.model.MusicianEntity;
-import at.fhv.orchestraria.domain.model.MusicianRoleEntity;
 import at.fhv.orchestraria.domain.model.MusicianRoleMusicianEntity;
-import at.fhv.orchestraria.domain.model.SectionEntity;
-import at.fhv.orchestraria.domain.model.UserEntity;
 import at.fhv.orchestraria.persistence.dao.DBFacade;
 import at.fhv.orchestraria.persistence.dao.UserDAO;
 import at.fhv.teamb.symphoniacus.application.adapter.MusicianRoleAdapter;
+import at.fhv.teamb.symphoniacus.application.type.AdministrativeAssistantType;
+import at.fhv.teamb.symphoniacus.persistence.dao.AdministrativeAssistantDao;
+import at.fhv.teamb.symphoniacus.persistence.dao.ContractualObligationDao;
 import at.fhv.teamb.symphoniacus.persistence.dao.InstrumentCategoryDao;
+import at.fhv.teamb.symphoniacus.persistence.dao.MusicianDao;
 import at.fhv.teamb.symphoniacus.persistence.dao.MusicianRoleDao;
 import at.fhv.teamb.symphoniacus.persistence.dao.SectionDao;
 import at.fhv.teamb.symphoniacus.persistence.dao.UserDao;
+import at.fhv.teamb.symphoniacus.persistence.dao.interfaces.IAdministrativeAssistantDao;
+import at.fhv.teamb.symphoniacus.persistence.dao.interfaces.IContractualObligationDao;
 import at.fhv.teamb.symphoniacus.persistence.dao.interfaces.IInstrumentCategoryDao;
+import at.fhv.teamb.symphoniacus.persistence.dao.interfaces.IMusicianDao;
 import at.fhv.teamb.symphoniacus.persistence.dao.interfaces.IMusicianRoleDao;
 import at.fhv.teamb.symphoniacus.persistence.dao.interfaces.ISectionDao;
 import at.fhv.teamb.symphoniacus.persistence.dao.interfaces.IUserDao;
+import at.fhv.teamb.symphoniacus.persistence.model.AdministrativeAssistantEntity;
+import at.fhv.teamb.symphoniacus.persistence.model.ContractualObligationEntity;
+import at.fhv.teamb.symphoniacus.persistence.model.InstrumentCategoryEntity;
+import at.fhv.teamb.symphoniacus.persistence.model.MusicianEntity;
+import at.fhv.teamb.symphoniacus.persistence.model.MusicianRole;
+import at.fhv.teamb.symphoniacus.persistence.model.SectionEntity;
+import at.fhv.teamb.symphoniacus.persistence.model.UserEntity;
+import at.fhv.teamb.symphoniacus.persistence.model.interfaces.IAdministrativeAssistantEntity;
+import at.fhv.teamb.symphoniacus.persistence.model.interfaces.IContractualObligationEntity;
 import at.fhv.teamb.symphoniacus.persistence.model.interfaces.IInstrumentCategoryEntity;
+import at.fhv.teamb.symphoniacus.persistence.model.interfaces.IMusicianEntity;
+import at.fhv.teamb.symphoniacus.persistence.model.interfaces.IMusicianRole;
 import at.fhv.teamb.symphoniacus.persistence.model.interfaces.ISectionEntity;
 import at.fhv.teamb.symphoniacus.persistence.model.interfaces.IUserEntity;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Optional;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.persistence.Transient;
@@ -45,6 +54,10 @@ public class UserManagementController {
     private IInstrumentCategoryDao categoryDao;
     private IMusicianRoleDao musicianRoleDao;
     private ISectionDao sectionDao;
+    private IMusicianDao musicianDao;
+    private IAdministrativeAssistantDao administrativeAssistantDao;
+    private IInstrumentCategoryDao instrumentCategoryDao;
+    private IContractualObligationDao contractualObligationDao;
 
     public UserManagementController() {
         //_facade = DBFacade.getInstance();
@@ -52,13 +65,18 @@ public class UserManagementController {
         this.categoryDao = new InstrumentCategoryDao();
         this.musicianRoleDao = new MusicianRoleDao();
         this.sectionDao = new SectionDao();
+        this.musicianRoleDao = new MusicianRoleDao();
+        this.musicianDao = new MusicianDao();
+        this.administrativeAssistantDao = new AdministrativeAssistantDao();
+        this.instrumentCategoryDao = new InstrumentCategoryDao();
+        this.contractualObligationDao = new ContractualObligationDao();
     }
 
     public Collection<IInstrumentCategoryEntity> getIInstrumentCategory() {
         return Collections.unmodifiableCollection(this.categoryDao.getAll());
     }
 
-    public Collection<IMusicianRole> getIMusicianRole() {
+    public Collection<at.fhv.orchestraria.domain.Imodel.IMusicianRole> getIMusicianRole() {
         List<MusicianRoleAdapter> result = new LinkedList<>();
         for (at.fhv.teamb.symphoniacus.persistence.model.interfaces.IMusicianRole role : musicianRoleDao.getAll()) {
             MusicianRoleAdapter adapter = new MusicianRoleAdapter(role);
@@ -76,62 +94,68 @@ public class UserManagementController {
     }
 
     public UserEntity updateUser(UserEntity ue) {
-        return _facade.getDAO(UserEntity.class).update(ue);
+        Optional<IUserEntity> temp = this.userDao.update(ue);
+        if (temp.isPresent()) {
+            return (UserEntity)temp.get();
+        } else {
+            LOGGER.warning("Userentity from dao is empty @ update");
+            return null;
+        }
     }
 
-    public MusicianEntity updateMusician(MusicianEntity me) {
-        return _facade.getDAO(MusicianEntity.class).update(me);
+    public void updateMusician(IMusicianEntity me) {
+        musicianDao.update(me);
     }
 
     public void saveUser(UserEntity ue) {
-        _facade.getDAO(UserEntity.class).save(ue);
+        this.userDao.persist(ue);
     }
 
-    public void saveMusician(MusicianEntity me) {
-        _facade.getDAO(MusicianEntity.class).save(me);
+    public void saveMusician(IMusicianEntity me) {
+        musicianDao.persist(me);
     }
 
     public IMusicianRoleMusician updateMusicianRoleMusician(MusicianRoleMusicianEntity mrme) {
         return _facade.getDAO(MusicianRoleMusicianEntity.class).update(mrme);
     }
 
-    public IMusicianRole updateMusicianRole(MusicianRoleEntity mre) {
-        return _facade.getDAO(MusicianRoleEntity.class).update(mre);
+    public void updateMusicianRole(IMusicianRole mre) {
+        musicianRoleDao.update(mre);
     }
 
     public void saveMusicianRoleMusician(MusicianRoleMusicianEntity mrme) {
         _facade.getDAO(MusicianRoleMusicianEntity.class).save(mrme);
     }
 
-    public void saveMusicianRole(MusicianRoleEntity mre) {
-        _facade.getDAO(MusicianRoleEntity.class).save(mre);
+    public void saveMusicianRole(IMusicianRole mre) {
+        musicianRoleDao.persist(mre);
     }
 
-    public IAdministrativeAssistant updateAdministrativeAssistant(
-        AdministrativeAssistantEntity aae) {
-        return _facade.getDAO(AdministrativeAssistantEntity.class).update(aae);
+    public void updateAdministrativeAssistant(
+        IAdministrativeAssistantEntity aae) {
+        administrativeAssistantDao.update(aae);
     }
 
-    public void saveAdministrativeAssistant(AdministrativeAssistantEntity aae) {
-        _facade.getDAO(AdministrativeAssistantEntity.class).save(aae);
+    public void saveAdministrativeAssistant(IAdministrativeAssistantEntity aae) {
+        administrativeAssistantDao.persist(aae);
     }
 
-    public InstrumentCategoryMusicianEntity updateInstrumentCategoryMusician(
-        InstrumentCategoryMusicianEntity icme) {
-        return _facade.getDAO(InstrumentCategoryMusicianEntity.class).update(icme);
+    public void updateInstrumentCategoryMusician(
+        IInstrumentCategoryEntity icme) {
+        instrumentCategoryDao.update(icme);
     }
 
-    public void saveInstrumentCategoryMusician(InstrumentCategoryMusicianEntity icme) {
-        _facade.getDAO(InstrumentCategoryMusicianEntity.class).save(icme);
+    public void saveInstrumentCategoryMusician(IInstrumentCategoryEntity icme) {
+        instrumentCategoryDao.persist(icme);
     }
 
-    public ContractualObligationEntity updateContractualObligation(
-        ContractualObligationEntity coe) {
-        return _facade.getDAO(ContractualObligationEntity.class).update(coe);
+    public void updateContractualObligation(
+        IContractualObligationEntity coe) {
+        contractualObligationDao.update(coe);
     }
 
-    public void saveContractualObligation(ContractualObligationEntity coe) {
-        _facade.getDAO(ContractualObligationEntity.class).save(coe);
+    public void saveContractualObligation(IContractualObligationEntity coe) {
+        contractualObligationDao.persist(coe);
     }
 
 
@@ -177,30 +201,31 @@ public class UserManagementController {
         if (!userDTO.isMusician()) {
             //toggle is on Admin
             AdministrativeAssistantEntity aae = null;
-            if (userToEdit.getAdministrativeAssistant() != null) {
-                userToEdit.getAdministrativeAssistant().setDescription(userDTO.getAdminRole());
-                aae = userToEdit.getAdministrativeAssistant();
+            if (userToEdit.getAdministrativeAssistants().get(0) != null) {
+                userToEdit.getAdministrativeAssistants().get(0).setDescription(
+                    AdministrativeAssistantType.valueOf(userDTO.getAdminRole()));
+                aae = (AdministrativeAssistantEntity) userToEdit.getAdministrativeAssistants().get(0);
             } else {
                 aae = new AdministrativeAssistantEntity();
-                aae.setDescription(userDTO.getAdminRole());
+                aae.setDescription(AdministrativeAssistantType.valueOf(userDTO.getAdminRole()));
                 aae.setUser(userToEdit);
             }
 
             if (!userDTO.isNewUser()) {
                 updateUser(userToEdit);
-                userToEdit.setAdministrativeAssistant(aae);
-                updateAdministrativeAssistant(userToEdit.getAdministrativeAssistant());
+                userToEdit.addAdministrativeAssistant(aae);
+                updateAdministrativeAssistant(userToEdit.getAdministrativeAssistants().get(0));
             } else {
                 userToEdit = updateUser(userToEdit);
-                userToEdit.setAdministrativeAssistant(aae);
+                userToEdit.addAdministrativeAssistant(aae);
                 aae.setUser(userToEdit);
-                aae.setUserId((userToEdit).getUserId());
-                saveAdministrativeAssistant(userToEdit.getAdministrativeAssistant());
+                aae.setUser((userToEdit));
+                saveAdministrativeAssistant(userToEdit.getAdministrativeAssistants().get(0));
             }
 
         } else {
             //toggle is on Musician
-            MusicianEntity me;
+            IMusicianEntity me;
             if (userToEdit.getMusician() != null) {
                 me = userToEdit.getMusician();
             } else {
@@ -213,8 +238,8 @@ public class UserManagementController {
                 me.setSubstitutes(new LinkedList<>());
                 me.setContractualObligations(new LinkedList<>());
                 me.setUser((UserEntity) userToEdit);
-                me.setMusicianRoleMusicians(new LinkedList<>());
-                me.setInstrumentCategoryMusicians(new LinkedList<>());
+                me.setMusicianRoles(new LinkedList<>());
+                me.setInstrumentCategories(new LinkedList<>());
             }
 
 
@@ -232,55 +257,58 @@ public class UserManagementController {
 
             userToEdit.setMusician(me);
 
-            for (MusicianRoleMusicianEntity mrme : me.getMusicianRoleMusicians()) {
+            for (IMusicianRole mrme : me.getMusicianRoles()) {
                 deleteMusicianRoleMusician(mrme);
             }
-            me.getMusicianRoleMusicians().clear();
+            me.getMusicianRoles().clear();
 
             for (String role : userDTO.getSelectedRoles()) {
-                MusicianRoleMusicianEntity mrme = new MusicianRoleMusicianEntity();
-                mrme.setMusician(me);
-                mrme.setMusicianRole(findMusicianRoleByRoleString(role));
-                mrme.getMusicianRole().getMusicianRoleMusicians().add(mrme);
-                me.getMusicianRoleMusicians().add(mrme);
+                IMusicianRole mrme = new MusicianRole();
+                mrme.addMusician(me);
+                // weil bidirectional
+                //mrme.setMusicianRole(findMusicianRoleByRoleString(role));
+                //mrme.getMusicianRole().getMusicianRoleMusicians().add(mrme);
+                //me.getMusicianRoleMusicians().add(mrme);
                 if (!userDTO.isNewUser()) {
-                    updateMusicianRoleMusician(mrme);
-                    updateMusicianRole(mrme.getMusicianRole());
+                    //updateMusicianRoleMusician(mrme);
+                    updateMusicianRole(mrme);
                 } else {
-                    saveMusicianRoleMusician(mrme);
-                    saveMusicianRole(mrme.getMusicianRole());
+                    //saveMusicianRoleMusician(mrme);
+                    saveMusicianRole(mrme);
                 }
             }
 
 
-            for (InstrumentCategoryMusicianEntity icme : me.getInstrumentCategoryMusicians()) {
+            for (IInstrumentCategoryEntity icme : me.getInstrumentCategories()) {
                 deleteInstrumentCategoryMusician(icme);
             }
-            me.getInstrumentCategoryMusicians().clear();
+            me.getInstrumentCategories().clear();
 
 
-            for (ContractualObligationEntity obligation : me.getContractualObligations()) {
+            for (IContractualObligationEntity obligation : me.getContractualObligations()) {
                 deleteContractualObligation(obligation);
             }
-            me.getInstrumentCategoryMusicians().clear();
+            me.getContractualObligations().clear();
 
 
             for (String instrumentCat : userDTO.getSelectedInstrumentCats()) {
-                InstrumentCategoryMusicianEntity icme = new InstrumentCategoryMusicianEntity();
-                InstrumentCategoryEntity ice =
+                //IInstrumentCategoryEntity icme = new InstrumentCategoryEntity();
+                IInstrumentCategoryEntity ice =
                     findInstrumentCategoryByInstrumentString(instrumentCat);
-                icme.setMusician(me);
-                icme.setInstrumentCategory(ice);
-                ice.getInstrumentCategoryMusicians().add(icme);
+                //icme.setMusician(me);
+                //icme.setInstrumentCategory(ice);
+                ice.addMusician(me);
+                me.addInstrumentCategory(ice);
 
                 if (!userDTO.isNewUser()) {
-                    me.getInstrumentCategoryMusicians().add(updateInstrumentCategoryMusician(icme));
+                    updateInstrumentCategoryMusician(ice);
+                    //me.getInstrumentCategoryMusicians().add(updateInstrumentCategoryMusician(icme));
                 } else {
-                    saveInstrumentCategoryMusician(icme);
+                    saveInstrumentCategoryMusician(ice);
                 }
 
 
-                ContractualObligationEntity contract = new ContractualObligationEntity();
+                IContractualObligationEntity contract = new ContractualObligationEntity();
                 contract.setMusician(me);
                 contract.setPointsPerMonth(Integer.parseInt(userDTO.getPointsOfMonth()));
                 contract.setPosition(userDTO.getSpecial());
@@ -289,7 +317,9 @@ public class UserManagementController {
                 contract.setInstrumentCategory(ice);
 
                 if (!userDTO.isNewUser()) {
-                    me.getContractualObligations().add(updateContractualObligation(contract));
+                    //me.addContractualObligation(contract);
+                    updateContractualObligation(contract);
+                    //me.getContractualObligations().add(updateContractualObligation(contract));
                 } else {
                     saveContractualObligation(contract);
                 }
@@ -332,26 +362,35 @@ public class UserManagementController {
      * @return true if it exists, false if it doesn't
      */
     public boolean checkExistingUserShortcut(String shortcut) {
+        /*
         UserDAO uDAO = (UserDAO) _facade.getDAO(UserEntity.class);
         if (uDAO.getByShortcut(shortcut).isPresent()) {
             return true;
         }
         return false;
+
+         */
+        IUserDao dao = new UserDao();
+        if (dao.loadUser(shortcut).isPresent()) {
+            return true;
+        }
+        return false;
     }
 
-    public void deleteMusicianRoleMusician(MusicianRoleMusicianEntity mrme) {
-        _facade.getDAO(MusicianRoleMusicianEntity.class).delete(mrme);
+    public void deleteMusicianRoleMusician(IMusicianRole mrme) {
+        IMusicianRoleDao dao = new MusicianRoleDao();
+        dao.remove(mrme);
     }
 
-    public void deleteInstrumentCategoryMusician(InstrumentCategoryMusicianEntity icme) {
-        _facade.getDAO(InstrumentCategoryMusicianEntity.class).delete(icme);
+    public void deleteInstrumentCategoryMusician(IInstrumentCategoryEntity icme) {
+        instrumentCategoryDao.remove(icme);
     }
 
-    private void deleteContractualObligation(ContractualObligationEntity obligation) {
-        _facade.getDAO(ContractualObligationEntity.class).delete(obligation);
+    private void deleteContractualObligation(IContractualObligationEntity obligation) {
+        contractualObligationDao.remove(obligation);
     }
 
-
+/*
     @Transient
     public MusicianRoleEntity findMusicianRoleByRoleString(String role) {
         MusicianRoleEntity returnme = null;
@@ -363,10 +402,13 @@ public class UserManagementController {
         return returnme;
     }
 
+ */
+
     @Transient
-    public SectionEntity findSectionByString(String section) {
-        SectionEntity returnme = null;
-        for (SectionEntity se : _facade.getDAO(SectionEntity.class).getAll()) {
+    public ISectionEntity findSectionByString(String section) {
+        SectionDao sectionDao = new SectionDao();
+        ISectionEntity returnme = null;
+        for (ISectionEntity se : sectionDao.getAll(SectionEntity.class)) {
             if (se.getDescription().compareToIgnoreCase(section) == 0) {
                 returnme = se;
                 break;
@@ -376,10 +418,10 @@ public class UserManagementController {
     }
 
     @Transient
-    public InstrumentCategoryEntity findInstrumentCategoryByInstrumentString(String instrument) {
-        InstrumentCategoryEntity returnme = null;
-        for (InstrumentCategoryEntity ice : _facade.getDAO(InstrumentCategoryEntity.class)
-            .getAll()) {
+    public IInstrumentCategoryEntity findInstrumentCategoryByInstrumentString(String instrument) {
+        IInstrumentCategoryEntity returnme = null;
+        InstrumentCategoryDao instrumentCategoryDao = new InstrumentCategoryDao();
+        for (IInstrumentCategoryEntity ice : instrumentCategoryDao.getAll(InstrumentCategoryEntity.class)) {
             if (ice.getDescription().compareToIgnoreCase(instrument) == 0) {
                 returnme = ice;
             }
