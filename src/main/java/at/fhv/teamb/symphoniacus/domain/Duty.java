@@ -33,21 +33,24 @@ public class Duty {
     }
 
     /**
-     * Initializes the Duty object based on provided {@link DutyEntity} and List of
-     * {@link DutyPosition}s.
+     * Initializes the Duty object based on provided {@link DutyEntity}, List of
+     * {@link DutyPosition}s and {@link MusicalPiece}s.
      *
      * @param entity        The entity to use
      * @param dutyPositions The List of DutyPositions to use
+     * @param musicalPieces The List of MusicalPieces to use
      */
-    public Duty(IDutyEntity entity, List<DutyPosition> dutyPositions,
-                List<MusicalPiece> musicalPieces) {
-
+    public Duty(
+        IDutyEntity entity,
+        List<DutyPosition> dutyPositions,
+        List<MusicalPiece> musicalPieces
+    ) {
         this.entity = entity;
         if (dutyPositions != null) {
             this.dutyPositions = Collections.unmodifiableList(dutyPositions);
         }
         if (musicalPieces != null) {
-            this.musicalPieces = musicalPieces;
+            this.musicalPieces = Collections.unmodifiableList(musicalPieces);
         }
     }
 
@@ -59,13 +62,15 @@ public class Duty {
      * @param dutiesOfThisDay       A List of duties
      * @param locallySetMusicians   A Set of musicians locally assigned to a duty position
      * @param locallyUnsetMusicians A Set of musicians locally removed from a duty position
+     * @param selectedPosition      The selected duty position from the GUI
      * @return A Set of musicians that are available for a given position
      */
     public Set<Musician> determineAvailableMusicians(
         Set<Musician> allSectionMusicians,
         List<Duty> dutiesOfThisDay,
         Set<Musician> locallySetMusicians,
-        Set<Musician> locallyUnsetMusicians
+        Set<Musician> locallyUnsetMusicians,
+        DutyPosition selectedPosition
     ) {
         Set<Musician> availableMusicians = new HashSet<>(allSectionMusicians);
 
@@ -73,8 +78,13 @@ public class Duty {
         dutiesOfThisDay.remove(this);
 
         // Mark all musicians as unavailable that are already assigned to another duty position
+        // when the there's either only one musical piece or the piece equals the conflict's one
         for (DutyPosition possibleConflict : this.getDutyPositions()) {
-            if (possibleConflict.getAssignedMusician().isPresent()) {
+            if ((this.musicalPieces.size() == 1
+                && possibleConflict.getAssignedMusician().isPresent())
+                || (possibleConflict.getMusicalPiece().equals(selectedPosition.getMusicalPiece())
+                && possibleConflict.getAssignedMusician().isPresent())
+            ) {
                 availableMusicians.remove(possibleConflict.getAssignedMusician().get());
             }
         }

@@ -10,7 +10,8 @@ import java.util.Optional;
  * @author Dominic Luidold
  */
 public class DutyPosition {
-    private IDutyPositionEntity entity;
+    private final IDutyPositionEntity entity;
+    private final MusicalPiece musicalPiece;
     private int positionNumber;
     private String positionDescription;
 
@@ -21,6 +22,9 @@ public class DutyPosition {
      */
     public DutyPosition(IDutyPositionEntity entity) {
         this.entity = entity;
+        this.musicalPiece = new MusicalPiece(
+            entity.getInstrumentationPosition().getInstrumentation().getMusicalPiece()
+        );
     }
 
     /**
@@ -38,6 +42,10 @@ public class DutyPosition {
 
     public IDutyPositionEntity getEntity() {
         return this.entity;
+    }
+
+    public MusicalPiece getMusicalPiece() {
+        return this.musicalPiece;
     }
 
     public int getPositionNumber() {
