@@ -16,7 +16,7 @@ public enum TabPaneEntry {
         false
     ),
     UNSUPPORTED(1, "Unsupported", "/view/unsupportedTab.fxml", false),
-    DUTY_SCHEDULER_CALENDAR_VIEW(1, "Duty Roster", "/view/dutySchedulerCalendar.fxml", false),
+    DUTY_SCHEDULER_CALENDAR_VIEW(1, "Assignment Roster", "/view/dutySchedulerCalendar.fxml", false),
     /* Team C */
     MUSICIAN_CALENDAR_VIEW(1, "Duty Roster", "/view/team-c/DutyRoster.fxml", false),
     USER_MANAGEMENT(1, "User Management", "/view/team-c/UserTable.fxml", false),
