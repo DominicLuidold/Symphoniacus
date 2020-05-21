@@ -7,7 +7,8 @@ import java.util.Collection;
 public class MusicianRoleAdapter implements IMusicianRole {
     private final at.fhv.teamb.symphoniacus.persistence.model.interfaces.IMusicianRole musicianRole;
 
-    public MusicianRoleAdapter(at.fhv.teamb.symphoniacus.persistence.model.interfaces.IMusicianRole role) {
+    public MusicianRoleAdapter(
+        at.fhv.teamb.symphoniacus.persistence.model.interfaces.IMusicianRole role) {
         musicianRole = role;
     }
 
@@ -22,7 +23,10 @@ public class MusicianRoleAdapter implements IMusicianRole {
     }
 
     /**
-     * @return Returns unmodifiable collection of musician roles of the musicians by musician role ID.
+     * Blub.
+     *
+     * @return Returns unmodifiable collection of musician roles of
+     *      the musicians by musician role ID
      */
     @Override
     public Collection<IMusicianRoleMusician> getIMusicianRoleMusicians() {

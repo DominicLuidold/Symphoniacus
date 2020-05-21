@@ -1,10 +1,10 @@
 package at.fhv.teamb.symphoniacus.persistence.dao;
+
 import at.fhv.teamb.symphoniacus.persistence.BaseDao;
 import at.fhv.teamb.symphoniacus.persistence.dao.interfaces.IMusicianRoleDao;
 import at.fhv.teamb.symphoniacus.persistence.model.MusicianRole;
 import at.fhv.teamb.symphoniacus.persistence.model.interfaces.IMusicianEntity;
 import at.fhv.teamb.symphoniacus.persistence.model.interfaces.IMusicianRole;
-import java.util.Collection;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Optional;
@@ -18,7 +18,7 @@ public class MusicianRoleDao extends BaseDao<IMusicianRole> implements IMusician
      */
     @Override
     public Optional<IMusicianRole> find(Integer key) {
-        return this.find(IMusicianEntity.class,key);
+        return this.find(IMusicianEntity.class, key);
     }
 
     /**
@@ -29,7 +29,7 @@ public class MusicianRoleDao extends BaseDao<IMusicianRole> implements IMusician
      */
     @Override
     public Optional<IMusicianRole> persist(IMusicianRole elem) {
-        return this.persist(IMusicianRole.class,elem);
+        return this.persist(IMusicianRole.class, elem);
     }
 
     /**
@@ -40,7 +40,7 @@ public class MusicianRoleDao extends BaseDao<IMusicianRole> implements IMusician
      */
     @Override
     public Optional<IMusicianRole> update(IMusicianRole elem) {
-        return this.update(IMusicianRole.class,elem);
+        return this.update(IMusicianRole.class, elem);
     }
 
     @Override

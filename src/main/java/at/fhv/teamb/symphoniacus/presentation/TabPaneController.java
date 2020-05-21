@@ -60,11 +60,18 @@ public class TabPaneController implements Initializable, Parentable<MainControll
     }
 
 
-
     public Optional<Parentable<TabPaneController>> addTab(TabPaneEntry entry) {
         return addTab(entry, null);
     }
 
+    /**
+     * Responsible for adding a new Tab to the Tabpane.
+     *
+     * @param entry  entry
+     * @param parent parentTab of the entry
+     * @return The Controller of the Tab if the tab is created, returns optional.empty
+     *          if tab already exists
+     */
     public Optional<Parentable<TabPaneController>> addTab(
         TabPaneEntry entry,
         Parentable parent
