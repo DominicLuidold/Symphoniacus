@@ -276,6 +276,20 @@ public class UserEditWindowController implements Parentable<TabPaneController> {
         this.adminRoleDropDown.getItems().removeAll(this.adminRoleDropDown.getItems());
         this.instrumentDropDown.getItems().removeAll(this.instrumentDropDown.getItems());
         this.roleDropDown.getItems().removeAll(this.roleDropDown.getItems());
+
+        fnameField.clear();
+        lnameField.clear();
+        emailField.clear();
+        phoneField.clear();
+        countryField.clear();
+        cityField.clear();
+        zipField.clear();
+        streetField.clear();
+        streetNrField.clear();
+        contractStartPicker.setValue(null);
+        contractEndPicker.setValue(null);
+        pointsPerMonthField.clear();
+
     }
 
     /**
