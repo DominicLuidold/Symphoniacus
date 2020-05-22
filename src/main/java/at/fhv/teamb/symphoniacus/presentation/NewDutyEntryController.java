@@ -664,15 +664,15 @@ public class NewDutyEntryController implements Initializable, Parentable<Calenda
             .getParentController()
             .addTab(TabPaneEntry.ADD_SOP);
 
-        childController.ifPresentOrElse(controller -> {
-            SeriesOfPerformancesController sopController =
-                (SeriesOfPerformancesController) controller;
-            sopController.getStartingDate().setValue(
-                this.getParentController().calendarView.getDate()
-            );
-        }, () -> {
-            LOG.error("No SOP controller found");
-        });
+        childController.ifPresentOrElse(
+            controller -> {
+                SeriesOfPerformancesController sopController =
+                    (SeriesOfPerformancesController) controller;
+                sopController.getStartingDate().setValue(
+                    this.getParentController().calendarView.getDate()
+                );
+            }, () -> LOG.error("No SOP controller found")
+        );
     }
 
     /**
