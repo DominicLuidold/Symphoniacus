@@ -243,7 +243,16 @@ public class NewDutyEntryController implements Initializable, Parentable<Calenda
                 this.seriesOfPerformancesSelect.getItems().clear();
                 this.seriesOfPerformancesSelect.setDisable(true);
             }
-            //Instrumentations will always be reset if you choose a new date
+            // SeriesOfPerformances will always be reset when you choose a new date
+            this.seriesOfPerformancesSelect.getItems().removeAll(
+                this.seriesOfPerformancesSelect.getItems()
+            );
+            this.seriesOfPerformancesSelect.getItems().clear();
+
+            // Instrumentations will always be reset when you choose a new date
+            this.instrumentationsSelect.getItems().removeAll(
+                this.instrumentationsSelect.getItems()
+            );
             this.instrumentationsSelect.getItems().clear();
             this.instrumentationsSelect.setDisable(true);
             setSaveButtonStatus();
