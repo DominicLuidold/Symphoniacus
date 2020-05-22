@@ -36,8 +36,10 @@ public class UserTable extends Application {
                 return new Task<Void>() {
                     @Override
                     protected Void call() {
+
                         //Background work
                         try {
+
                             FXMLLoader loader = new FXMLLoader(getClass().getResource(
                                 "/view/team-c/UserTable.fxml"));
                             Parent root = loader.load();
@@ -76,7 +78,7 @@ public class UserTable extends Application {
                             //Keep with the background work
 
 
-                            _userTableWindowController.init();
+                            //_userTableWindowController.init();
 
 
                         }catch ( IOException | InterruptedException ex){

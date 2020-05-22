@@ -151,7 +151,7 @@ public class UserTableWindowController implements Parentable<TabPaneController> 
         rw.start(window);
     }
 
-    public void init() {
+    public synchronized void init() {
         //setLoggedInUserName(LoginWindowController.getLoggedInUser());
         uManagementController = new UserManagementController();
         JFXloadingBar.setVisible(true);
@@ -187,7 +187,8 @@ public class UserTableWindowController implements Parentable<TabPaneController> 
             }
         });
         JFXloadingBar.setVisible(false);
-        treeTableView.scrollTo(0);
+        treeTableView.refresh();
+        //treeTableView.scrollTo(0);
         searchFunctionality();
     }
 
@@ -237,6 +238,7 @@ public class UserTableWindowController implements Parentable<TabPaneController> 
             if (ue.getUserId() != MusicianEntity.EXTERNAL_MUSICIAN_ID) {
                 TreeItem ti = new TreeItem(new UserWrapper(ue));
                 newUserRow.getChildren().add(ti);
+                treeTableView.refresh();
             }
         }
     }
@@ -306,8 +308,9 @@ public class UserTableWindowController implements Parentable<TabPaneController> 
      */
     @Override
     public void initializeWithParent() {
-        // No implementation needed in this class.
-        this.init();
+        // Task here
+        UserTableThread thread = new UserTableThread();
+        thread.start();
         System.out.println(("Initialized TabPaneController with parent"));
     }
 
@@ -448,4 +451,12 @@ public class UserTableWindowController implements Parentable<TabPaneController> 
     }
 
      */
+
+    private class UserTableThread extends Thread {
+
+        @Override
+        public void run() {
+                init();
+        }
+    }
 }
