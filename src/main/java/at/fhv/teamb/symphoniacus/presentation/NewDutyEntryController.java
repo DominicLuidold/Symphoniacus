@@ -235,6 +235,7 @@ public class NewDutyEntryController implements Initializable, Parentable<Calenda
         this.dutyStartDateInput.getValidators().add(dateValidator);
         this.dutyStartDateInput.valueProperty().addListener((observable, oldValue, newValue) -> {
             this.validStartDate.set(this.dutyStartDateInput.validate());
+            this.dutyEndDateInput.setValue(newValue);
             updatePointsField();
             if (newValue != null) {
                 initSeriesOfPerformancesComboBox();
@@ -655,14 +656,24 @@ public class NewDutyEntryController implements Initializable, Parentable<Calenda
         return "EVENING";
     }
 
-
     /**
      * Opens a new series of performances tab.
      */
     private void openNewSopTab() {
-        this.getParentController().getParentController().addTab(TabPaneEntry.ADD_SOP);
-    }
+        Optional<Parentable<?>> childController = this.getParentController()
+            .getParentController()
+            .addTab(TabPaneEntry.ADD_SOP);
 
+        childController.ifPresentOrElse(
+            controller -> {
+                SeriesOfPerformancesController sopController =
+                    (SeriesOfPerformancesController) controller;
+                sopController.getStartingDate().setValue(
+                    this.getParentController().calendarView.getDate()
+                );
+            }, () -> LOG.error("No SOP controller found")
+        );
+    }
 
     /**
      * Closes the current tab.
@@ -674,6 +685,13 @@ public class NewDutyEntryController implements Initializable, Parentable<Calenda
             .selectTab(TabPaneEntry.ORG_OFFICER_CALENDAR_VIEW);
     }
 
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public CalendarController getParentController() {
+        return (CalendarController) this.parentController;
+    }
 
     /**
      * {@inheritDoc}
@@ -683,22 +701,13 @@ public class NewDutyEntryController implements Initializable, Parentable<Calenda
         this.parentController = controller;
     }
 
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public CalendarController getParentController() {
-        return (CalendarController) this.parentController;
-    }
-
-
     /**
      * {@inheritDoc}
      */
     @Override
     public void initializeWithParent() {
-        // Intentionally empty - currently not needed
+        // Set starting date to date from calendar
+        this.dutyStartDateInput.setValue(this.getParentController().calendarView.getDate());
     }
 }
 

@@ -194,6 +194,7 @@ public class OrganizationalOfficerCalendarSkin extends SkinBase<CalendarView> {
         FontIcon publishIcon = new FontIcon(FontAwesome.ARROW_CIRCLE_UP);
         publishIcon.getStyleClass().addAll("button-icon"); //$NON-NLS-1$ //$NON-NLS-2$
         this.publishButton.setGraphic(publishIcon);
+        this.publishButton.setDisable(true);
 
         //Add SOP btn
         this.addButton = new MenuButton();
