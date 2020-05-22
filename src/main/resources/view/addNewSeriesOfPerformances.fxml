@@ -153,7 +153,7 @@
                   <HBox fx:id="tabsBottomButtonHbox" alignment="CENTER" spacing="30.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
                      <children>
                         <Button fx:id="saveButton" alignment="CENTER" defaultButton="true" minHeight="40.0" mnemonicParsing="false" prefHeight="40" prefWidth="150.0" text="%global.button.save" />
-                      <Button fx:id="cancelButton" alignment="CENTER" cancelButton="true" contentDisplay="CENTER" minHeight="40.0" mnemonicParsing="false" prefHeight="40" prefWidth="150.0" text="%global.button.cancel" />
+                      <Button fx:id="cancelButton" alignment="CENTER" cancelButton="true" contentDisplay="CENTER" minHeight="40.0" mnemonicParsing="false" prefHeight="40" prefWidth="150.0" text="%global.button.back" />
                      </children>
                      <opaqueInsets>
                         <Insets />
