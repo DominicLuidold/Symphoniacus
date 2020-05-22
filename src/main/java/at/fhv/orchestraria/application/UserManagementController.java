@@ -111,8 +111,8 @@ public class UserManagementController {
         this.userDao.persist(ue);
     }
 
-    public void saveMusician(IMusicianEntity me) {
-        musicianDao.persist(me);
+    public Optional<IMusicianEntity> saveMusician(IMusicianEntity me) {
+        return musicianDao.persist(me);
     }
 
     public IMusicianRoleMusician updateMusicianRoleMusician(MusicianRoleMusicianEntity mrme) {
@@ -208,19 +208,19 @@ public class UserManagementController {
             } else {
                 aae = new AdministrativeAssistantEntity();
                 aae.setDescription(AdministrativeAssistantType.valueOf(userDTO.getAdminRole()));
-                aae.setUser(userToEdit);
+                //aae.setUser(userToEdit);
             }
 
             if (!userDTO.isNewUser()) {
-                updateUser(userToEdit);
+                //updateUser(userToEdit);
                 userToEdit.addAdministrativeAssistant(aae);
-                updateAdministrativeAssistant(userToEdit.getAdministrativeAssistants().get(0));
+                //updateAdministrativeAssistant(userToEdit.getAdministrativeAssistants().get(0));
             } else {
-                userToEdit = updateUser(userToEdit);
+                //userToEdit = updateUser(userToEdit);
                 userToEdit.addAdministrativeAssistant(aae);
-                aae.setUser(userToEdit);
-                aae.setUser((userToEdit));
-                saveAdministrativeAssistant(userToEdit.getAdministrativeAssistants().get(0));
+                //aae.setUser(userToEdit);
+                //aae.setUser((userToEdit));
+                //saveAdministrativeAssistant(userToEdit.getAdministrativeAssistants().get(0));
             }
 
         } else {
@@ -244,7 +244,7 @@ public class UserManagementController {
 
 
             me.setSection(findSectionByString(userDTO.getSection()));
-
+/*
             if (!userDTO.isNewUser()) {
                 updateUser(userToEdit);
                 updateMusician(me);
@@ -265,8 +265,22 @@ public class UserManagementController {
 
             userToEdit.setMusician(me);
 
+*/
+            me.removeAllMusicianRoles();
+            for (String role : userDTO.getSelectedRoles()) {
+                if (role != null) {
+                    IMusicianRole temp = (findMusicianRoleByRoleString(role));
+                    if (temp != null) {
+                        me.addMusicianRole(temp);
+                    }
+                }
+            }
+            /*
+            if (!userDTO.isNewUser()) {
+                updateMusician(me);
+            }
+*/
 
-            //me.getMusicianRoles().clear();
 /*
             for (String role : userDTO.getSelectedRoles()) {
                 IMusicianRole mrme = new MusicianRole();
@@ -284,19 +298,57 @@ public class UserManagementController {
                 }
             }
 
-*/
-            for (IInstrumentCategoryEntity icme : me.getInstrumentCategories()) {
-                deleteInstrumentCategoryMusician(icme);
+ */
+
+
+            me.removeAllInstrumentCategories();
+            me.removeAllContractualObligations();
+            for (String icme : userDTO.getSelectedInstrumentCats()) {
+                IInstrumentCategoryEntity cat = findInstrumentCategoryByInstrumentString(icme);
+                if (cat != null) {
+                    me.addInstrumentCategory(cat);
+                    IContractualObligationEntity contract = new ContractualObligationEntity();
+                    contract.setPointsPerMonth(Integer.parseInt(userDTO.getPointsOfMonth()));
+                    contract.setPosition(userDTO.getSpecial());
+                    contract.setStartDate(userDTO.getStartDate());
+                    contract.setEndDate(userDTO.getEndDate());
+                    contract.setInstrumentCategory(cat);
+                    me.addContractualObligation(contract);
+                } else {
+                    LOGGER.warning("returned null cat @ findInstrumentCategoryByInstrumentString");
+                }
             }
-            me.getInstrumentCategories().clear();
 
+            if (userDTO.isNewUser()) {
+                if (userDTO.isMusician()) {
 
-            for (IContractualObligationEntity obligation : me.getContractualObligations()) {
-                deleteContractualObligation(obligation);
+                    Optional<IMusicianEntity> savedMusician = saveMusician(me);
+                    if (savedMusician.isPresent()) {
+                        userToEdit.setMusician(savedMusician.get());
+                        //me.setUser(userToEdit);
+                    }
+                    //userToEdit.setMusician(me);
+
+                } else {
+                    if (userToEdit.getAdministrativeAssistants().get(0) != null) {
+                        saveAdministrativeAssistant(userToEdit.getAdministrativeAssistants().get(0));
+                    }
+                }
+                saveUser(userToEdit);
+            } else {
+                if (userDTO.isMusician()) {
+                    //userToEdit.setMusician(me);
+                    updateMusician(me);
+                } else {
+                    if (userToEdit.getAdministrativeAssistants().get(0) != null) {
+                        updateAdministrativeAssistant(userToEdit.getAdministrativeAssistants().get(0));
+                    }
+                }
+                updateUser(userToEdit);
             }
-            me.getContractualObligations().clear();
 
 
+            /*
             for (String instrumentCat : userDTO.getSelectedInstrumentCats()) {
                 //IInstrumentCategoryEntity icme = new InstrumentCategoryEntity();
                 IInstrumentCategoryEntity ice =
@@ -330,6 +382,7 @@ public class UserManagementController {
                     saveContractualObligation(contract);
                 }
             }
+             */
         }
         return userToEdit;
     }

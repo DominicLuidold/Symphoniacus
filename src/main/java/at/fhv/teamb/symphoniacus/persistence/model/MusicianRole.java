@@ -63,4 +63,13 @@ public class MusicianRole implements IMusicianRole {
     public void setDescription(MusicianRoleType description) {
         this.description = description;
     }
+
+    public List<IMusicianEntity> getMusicians() {
+        return musicians;
+    }
+
+    public void setMusicians(
+        List<IMusicianEntity> musicians) {
+        this.musicians = musicians;
+    }
 }

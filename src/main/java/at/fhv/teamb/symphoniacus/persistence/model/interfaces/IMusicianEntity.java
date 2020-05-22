@@ -85,4 +85,10 @@ public interface IMusicianEntity {
 
     void setSubstitutes(
         List<ISubstitute> substitutes);
+
+    void removeAllMusicianRoles();
+
+    void removeAllInstrumentCategories();
+
+    void removeAllContractualObligations();
 }

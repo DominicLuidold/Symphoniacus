@@ -1,6 +1,7 @@
 package at.fhv.teamb.symphoniacus.persistence.model.interfaces;
 
 import at.fhv.teamb.symphoniacus.application.type.MusicianRoleType;
+import java.util.List;
 
 public interface IMusicianRole {
     void addMusician(IMusicianEntity m);
@@ -14,4 +15,9 @@ public interface IMusicianRole {
     MusicianRoleType getDescription();
 
     void setDescription(MusicianRoleType description);
+
+    List<IMusicianEntity> getMusicians();
+
+    void setMusicians(
+        List<IMusicianEntity> musicians);
 }

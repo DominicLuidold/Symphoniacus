@@ -319,4 +319,25 @@ public class MusicianEntity implements IMusicianEntity {
         List<ISubstitute> substitutes) {
         this.substitutes = substitutes;
     }
+
+    public void removeAllMusicianRoles() {
+        for (IMusicianRole role : this.musicianRoles) {
+            role.getMusicians().clear();
+        }
+        this.musicianRoles.clear();
+    }
+
+    public void removeAllInstrumentCategories() {
+        for (IInstrumentCategoryEntity cat : this.instrumentCategories) {
+            cat.getMusicians().clear();
+        }
+        this.instrumentCategories.clear();
+    }
+
+    public void removeAllContractualObligations() {
+        for (IContractualObligationEntity contract : this.contractualObligations) {
+            contract.setMusician(null);
+        }
+        this.contractualObligations.clear();
+    }
 }
