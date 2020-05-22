@@ -168,16 +168,23 @@ public class UserManagementController {
 
         if (userToEdit == null) {
             userToEdit = new UserEntity();
-
+            /*
             try {
                 PasswordManager.setNewPassword(userToEdit, "PW_" + userToEdit.getShortcut()); //TODO SALT
             } catch (Exception e) {
                 LOGGER.log(Level.INFO, "Exception ", e);
             }
+
+             */
         }
 
         userToEdit.setFirstName(userDTO.getFirstName());
         userToEdit.setLastName(userDTO.getLastName());
+        try {
+            userToEdit.setPassword("test");
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
         // changes shortcut if it already exists
         if (checkExistingUserShortcut(
             userDTO.getFirstName().substring(0, 3) + userDTO.getLastName().substring(0, 3))) {
