@@ -690,7 +690,8 @@ public class NewDutyEntryController implements Initializable, Parentable<Calenda
      */
     @Override
     public void initializeWithParent() {
-        // Intentionally empty - currently not needed
+        // Set starting date to date from calendar
+        this.dutyStartDateInput.setValue(this.getParentController().calendarView.getDate());
     }
 }
 
