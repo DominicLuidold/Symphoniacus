@@ -302,12 +302,13 @@ public class UserManagementController {
 
 
             me.removeAllInstrumentCategories();
+
             me.removeAllContractualObligations();
             for (String icme : userDTO.getSelectedInstrumentCats()) {
                 IInstrumentCategoryEntity cat = findInstrumentCategoryByInstrumentString(icme);
                 if (cat != null) {
                     me.addInstrumentCategory(cat);
-                    IContractualObligationEntity contract = new ContractualObligationEntity();
+                    IContractualObligationEntity contract = findContractualObligationByInstAndMusician(me);
                     contract.setPointsPerMonth(Integer.parseInt(userDTO.getPointsOfMonth()));
                     contract.setPosition(userDTO.getSpecial());
                     contract.setStartDate(userDTO.getStartDate());
@@ -318,6 +319,7 @@ public class UserManagementController {
                     LOGGER.warning("returned null cat @ findInstrumentCategoryByInstrumentString");
                 }
             }
+
 
             if (userDTO.isNewUser()) {
                 if (userDTO.isMusician()) {
@@ -447,6 +449,13 @@ public class UserManagementController {
 
     private void deleteContractualObligation(IContractualObligationEntity obligation) {
         contractualObligationDao.remove(obligation);
+    }
+
+    /*
+    For integration
+     */
+    public IContractualObligationEntity findContractualObligationByInstAndMusician(IMusicianEntity musician) {
+        return contractualObligationDao.getContractualObligation(musician);
     }
 
 

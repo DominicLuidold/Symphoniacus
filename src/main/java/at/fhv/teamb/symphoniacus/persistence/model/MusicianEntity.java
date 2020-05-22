@@ -320,6 +320,9 @@ public class MusicianEntity implements IMusicianEntity {
         this.substitutes = substitutes;
     }
 
+    /**
+     *  checkstyle -.-
+     */
     public void removeAllMusicianRoles() {
         for (IMusicianRole role : this.musicianRoles) {
             role.getMusicians().clear();
@@ -327,6 +330,9 @@ public class MusicianEntity implements IMusicianEntity {
         this.musicianRoles.clear();
     }
 
+    /**
+     *  checkstyle -.-
+     */
     public void removeAllInstrumentCategories() {
         for (IInstrumentCategoryEntity cat : this.instrumentCategories) {
             cat.getMusicians().clear();
@@ -334,6 +340,9 @@ public class MusicianEntity implements IMusicianEntity {
         this.instrumentCategories.clear();
     }
 
+    /**
+     *  checkstyle -.-
+     */
     public void removeAllContractualObligations() {
         for (IContractualObligationEntity contract : this.contractualObligations) {
             contract.setMusician(null);

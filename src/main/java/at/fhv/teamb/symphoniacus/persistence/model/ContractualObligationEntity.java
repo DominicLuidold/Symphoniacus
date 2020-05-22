@@ -4,6 +4,7 @@ import at.fhv.teamb.symphoniacus.persistence.model.interfaces.IContractualObliga
 import at.fhv.teamb.symphoniacus.persistence.model.interfaces.IInstrumentCategoryEntity;
 import at.fhv.teamb.symphoniacus.persistence.model.interfaces.IMusicianEntity;
 import java.time.LocalDate;
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -34,7 +35,8 @@ public class ContractualObligationEntity implements IContractualObligationEntity
     @Column(name = "endDate")
     private LocalDate endDate;
 
-    @ManyToOne(fetch = FetchType.LAZY, targetEntity = MusicianEntity.class)
+    @ManyToOne(cascade = {
+        CascadeType.MERGE}, fetch = FetchType.LAZY, targetEntity = MusicianEntity.class)
     @JoinColumn(name = "musicianId")
     private IMusicianEntity musician;
 
