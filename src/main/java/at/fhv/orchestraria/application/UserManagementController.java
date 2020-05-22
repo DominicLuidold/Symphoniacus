@@ -168,8 +168,9 @@ public class UserManagementController {
 
         if (userToEdit == null) {
             userToEdit = new UserEntity();
+
             try {
-                PasswordManager.setNewPassword(userToEdit, "PW_" + userToEdit.getShortcut());
+                PasswordManager.setNewPassword(userToEdit, "PW_" + userToEdit.getShortcut()); //TODO SALT
             } catch (Exception e) {
                 LOGGER.log(Level.INFO, "Exception ", e);
             }

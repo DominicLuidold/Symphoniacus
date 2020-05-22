@@ -12,6 +12,7 @@ import at.fhv.teamb.symphoniacus.persistence.model.interfaces.ISectionEntity;
 import at.fhv.teamb.symphoniacus.persistence.model.interfaces.IUserEntity;
 import at.fhv.teamb.symphoniacus.presentation.TabPaneController;
 import at.fhv.teamb.symphoniacus.presentation.internal.Parentable;
+import at.fhv.teamb.symphoniacus.presentation.internal.TabPaneEntry;
 import com.jfoenix.controls.JFXComboBox;
 import com.jfoenix.controls.JFXDatePicker;
 import com.jfoenix.controls.JFXTextField;
@@ -608,6 +609,8 @@ public class UserEditWindowController implements Parentable<TabPaneController> {
                 parentTreeTable.updateRow(listviewindex, userToEdit);
             }
 
+            this.parentController.removeTab(TabPaneEntry.USER_EDIT);
+            this.parentController.selectTab(TabPaneEntry.USER_MANAGEMENT);
             /*
             Node source = (Node) actionEvent.getSource();
             Stage stage = (Stage) source.getScene().getWindow();
