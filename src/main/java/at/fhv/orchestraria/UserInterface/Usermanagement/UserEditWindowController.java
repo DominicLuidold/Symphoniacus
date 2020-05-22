@@ -4,6 +4,7 @@ import at.fhv.orchestraria.application.FormValidator;
 import at.fhv.orchestraria.application.UserManagementController;
 import at.fhv.orchestraria.domain.Imodel.IMusicianRole;
 import at.fhv.orchestraria.domain.model.AdministrativeAssistantEntity;
+import at.fhv.teamb.symphoniacus.application.type.AdministrativeAssistantType;
 import at.fhv.teamb.symphoniacus.persistence.model.interfaces.IAdministrativeAssistantEntity;
 import at.fhv.teamb.symphoniacus.persistence.model.interfaces.IContractualObligationEntity;
 import at.fhv.teamb.symphoniacus.persistence.model.interfaces.IInstrumentCategoryEntity;
@@ -215,9 +216,9 @@ public class UserEditWindowController implements Parentable<TabPaneController> {
 
     private void fillFields() {
         ObservableList<String> adminRoles = FXCollections
-            .observableArrayList(AdministrativeAssistantEntity.typeOrganisation,
-                AdministrativeAssistantEntity.typeOrchestra,
-                AdministrativeAssistantEntity.typeNote);
+            .observableArrayList(AdministrativeAssistantType.ORGANIZATIONAL_OFFICER.toString(),
+                AdministrativeAssistantType.ORCHESTRA_LIBRARIAN.toString(),
+                AdministrativeAssistantType.MUSIC_LIBRARIAN.toString());
         adminRoleDropDown.setItems(adminRoles);
         for (ISectionEntity se : uManagementController.getISections()) {
             sectionDropDown.getItems().addAll(se.getDescription());
