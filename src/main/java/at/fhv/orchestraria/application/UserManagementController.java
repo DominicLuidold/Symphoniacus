@@ -5,7 +5,6 @@ import at.fhv.orchestraria.UserInterface.Usermanagement.UserDTO;
 import at.fhv.orchestraria.domain.Imodel.IMusicianRoleMusician;
 import at.fhv.orchestraria.domain.model.MusicianRoleMusicianEntity;
 import at.fhv.orchestraria.persistence.dao.DBFacade;
-import at.fhv.orchestraria.persistence.dao.UserDAO;
 import at.fhv.teamb.symphoniacus.application.adapter.MusicianRoleAdapter;
 import at.fhv.teamb.symphoniacus.application.type.AdministrativeAssistantType;
 import at.fhv.teamb.symphoniacus.persistence.dao.AdministrativeAssistantDao;
@@ -26,7 +25,6 @@ import at.fhv.teamb.symphoniacus.persistence.model.AdministrativeAssistantEntity
 import at.fhv.teamb.symphoniacus.persistence.model.ContractualObligationEntity;
 import at.fhv.teamb.symphoniacus.persistence.model.InstrumentCategoryEntity;
 import at.fhv.teamb.symphoniacus.persistence.model.MusicianEntity;
-import at.fhv.teamb.symphoniacus.persistence.model.MusicianRole;
 import at.fhv.teamb.symphoniacus.persistence.model.SectionEntity;
 import at.fhv.teamb.symphoniacus.persistence.model.UserEntity;
 import at.fhv.teamb.symphoniacus.persistence.model.interfaces.IAdministrativeAssistantEntity;
@@ -372,6 +370,10 @@ public class UserManagementController {
 
                 if (userDTO.isMusician()) {
                     Optional<IMusicianEntity> savedMusician = saveMusician(me);
+                    if (savedMusician.isPresent()) {
+                        userToEdit.setMusician(savedMusician.get());
+                    }
+
                     if (savedMusician.isPresent()) {
                         //userToEdit.setMusician(savedMusician.get());
 
