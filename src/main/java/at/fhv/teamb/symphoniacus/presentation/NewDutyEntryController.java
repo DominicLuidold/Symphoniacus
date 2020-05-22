@@ -656,14 +656,24 @@ public class NewDutyEntryController implements Initializable, Parentable<Calenda
         return "EVENING";
     }
 
-
     /**
      * Opens a new series of performances tab.
      */
     private void openNewSopTab() {
-        this.getParentController().getParentController().addTab(TabPaneEntry.ADD_SOP);
-    }
+        Optional<Parentable<?>> childController = this.getParentController()
+            .getParentController()
+            .addTab(TabPaneEntry.ADD_SOP);
 
+        childController.ifPresentOrElse(controller -> {
+            SeriesOfPerformancesController sopController =
+                (SeriesOfPerformancesController) controller;
+            sopController.getStartingDate().setValue(
+                this.getParentController().calendarView.getDate()
+            );
+        }, () -> {
+            LOG.error("No SOP controller found");
+        });
+    }
 
     /**
      * Closes the current tab.
@@ -675,16 +685,6 @@ public class NewDutyEntryController implements Initializable, Parentable<Calenda
             .selectTab(TabPaneEntry.ORG_OFFICER_CALENDAR_VIEW);
     }
 
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public void setParentController(CalendarController controller) {
-        this.parentController = controller;
-    }
-
-
     /**
      * {@inheritDoc}
      */
@@ -693,6 +693,13 @@ public class NewDutyEntryController implements Initializable, Parentable<Calenda
         return (CalendarController) this.parentController;
     }
 
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public void setParentController(CalendarController controller) {
+        this.parentController = controller;
+    }
 
     /**
      * {@inheritDoc}

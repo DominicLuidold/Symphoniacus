@@ -506,6 +506,10 @@ public class SeriesOfPerformancesController
         return true;
     }
 
+    public JFXDatePicker getStartingDate() {
+        return this.startingDate;
+    }
+
     @Override
     public TabPaneController getParentController() {
         return this.parentController;
