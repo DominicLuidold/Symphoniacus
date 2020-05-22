@@ -235,6 +235,7 @@ public class NewDutyEntryController implements Initializable, Parentable<Calenda
         this.dutyStartDateInput.getValidators().add(dateValidator);
         this.dutyStartDateInput.valueProperty().addListener((observable, oldValue, newValue) -> {
             this.validStartDate.set(this.dutyStartDateInput.validate());
+            this.dutyEndDateInput.setValue(newValue);
             updatePointsField();
             if (newValue != null) {
                 initSeriesOfPerformancesComboBox();

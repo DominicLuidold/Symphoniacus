@@ -144,6 +144,7 @@ public class SeriesOfPerformancesController
         this.startingDate.valueProperty().addListener(
             (observable, oldValue, newValue) -> {
                 this.start.set(this.startingDate.validate());
+                this.endingDate.setValue(newValue);
                 checkButtonVisibility();
             }
         );
