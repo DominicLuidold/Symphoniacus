@@ -65,7 +65,7 @@ public class OrganizationalOfficerCalendarController extends CalendarController 
             );
             this.calendarView.addEventHandler(
                 CustomCalendarButtonEvent.ADD_SERIES_OF_PERFORMANCES,
-                addDutyEvent -> this.openNewSopTab()
+                addSOPEvent -> this.openNewSopTab()
             );
             this.calendarView.addEventHandler(
                 CustomCalendarButtonEvent.ADD_DUTY,
