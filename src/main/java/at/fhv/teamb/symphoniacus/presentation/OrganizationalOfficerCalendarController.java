@@ -3,6 +3,7 @@ package at.fhv.teamb.symphoniacus.presentation;
 import at.fhv.teamb.symphoniacus.application.type.DomainUserType;
 import at.fhv.teamb.symphoniacus.domain.AdministrativeAssistant;
 import at.fhv.teamb.symphoniacus.presentation.internal.CustomCalendarButtonEvent;
+import at.fhv.teamb.symphoniacus.presentation.internal.Parentable;
 import at.fhv.teamb.symphoniacus.presentation.internal.TabPaneEntry;
 import at.fhv.teamb.symphoniacus.presentation.internal.popover.CustomDutyPopoverNode;
 import at.fhv.teamb.symphoniacus.presentation.internal.skin.OrganizationalOfficerCalendarSkin;
@@ -10,6 +11,7 @@ import at.fhv.teamb.symphoniacus.presentation.internal.tasks.FindAllInRangeTask;
 import com.calendarfx.model.Calendar;
 import java.net.URL;
 import java.time.LocalDate;
+import java.util.Optional;
 import java.util.ResourceBundle;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -63,7 +65,7 @@ public class OrganizationalOfficerCalendarController extends CalendarController 
             );
             this.calendarView.addEventHandler(
                 CustomCalendarButtonEvent.ADD_SERIES_OF_PERFORMANCES,
-                addSOPEvent -> this.parentController.addTab(TabPaneEntry.ADD_SOP)
+                addDutyEvent -> this.openNewSopTab()
             );
             this.calendarView.addEventHandler(
                 CustomCalendarButtonEvent.ADD_DUTY,
@@ -117,4 +119,20 @@ public class OrganizationalOfficerCalendarController extends CalendarController 
     public void setParentController(TabPaneController controller) {
         this.parentController = controller;
     }
+
+    private void openNewSopTab() {
+        Optional<Parentable<?>> childController = this.getParentController()
+            .addTab(TabPaneEntry.ADD_SOP);
+
+        childController.ifPresentOrElse(
+            controller -> {
+                SeriesOfPerformancesController sopController =
+                    (SeriesOfPerformancesController) controller;
+                sopController.getStartingDate().setValue(
+                    this.calendarView.getDate()
+                );
+            }, () -> LOG.error("No SOP controller found")
+        );
+    }
+
 }
