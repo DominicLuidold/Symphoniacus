@@ -19,11 +19,6 @@ public class Substitute implements ISubstitute {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "substituteId")
     private Integer substituteId;
-/*
-    @Column(name = "musicianId")
-    private Integer musicianId;
-
- */
 
     @Column(name = "firstName")
     private String firstName;
@@ -61,18 +56,6 @@ public class Substitute implements ISubstitute {
     public void setSubstituteId(Integer substituteId) {
         this.substituteId = substituteId;
     }
-/*
-    @Override
-    public Integer getMusicianId() {
-        return this.musicianId;
-    }
-
-    @Override
-    public void setMusicianId(Integer musicianId) {
-        this.musicianId = musicianId;
-    }
-
- */
 
     @Override
     public String getFirstName() {

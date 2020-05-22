@@ -4,12 +4,6 @@ public interface ISubstitute {
     Integer getSubstituteId();
 
     void setSubstituteId(Integer substituteId);
-/*
-    Integer getMusicianId();
-
-    void setMusicianId(Integer musicianId);
-
- */
 
     public IMusicianEntity getMusician();
 

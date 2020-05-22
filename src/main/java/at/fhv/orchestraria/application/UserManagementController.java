@@ -245,16 +245,20 @@ public class UserManagementController {
 
             me.setSection(findSectionByString(userDTO.getSection()));
 
-
             if (!userDTO.isNewUser()) {
                 updateUser(userToEdit);
                 updateMusician(me);
 
             } else {
-                for (IMusicianRole mrme : me.getMusicianRoles()) {
-                    //deleteMusicianRoleMusician(mrme);
-                    me.addMusicianRole(mrme);
+                for (String role : userDTO.getSelectedRoles()) {
+                    if(role != null) {
+                        IMusicianRole temp = (findMusicianRoleByRoleString(role));
+                        if (temp != null) {
+                            me.addMusicianRole(temp);
+                        }
+                    }
                 }
+                    //me.addMusicianRole(mrme);
                 saveUser(userToEdit);
                 saveMusician(me);
             }
@@ -392,18 +396,22 @@ public class UserManagementController {
         contractualObligationDao.remove(obligation);
     }
 
-/*
+
     @Transient
-    public MusicianRoleEntity findMusicianRoleByRoleString(String role) {
-        MusicianRoleEntity returnme = null;
-        for (MusicianRoleEntity mre : _facade.getDAO(MusicianRoleEntity.class).getAll()) {
-            if (mre.getDescription().compareToIgnoreCase(role) == 0) {
-                returnme = mre;
+    public IMusicianRole findMusicianRoleByRoleString(String role) {
+        IMusicianRole returnme = null;
+        for (IMusicianRole mre : this.musicianRoleDao.getAll()) {
+            if(mre.getDescription() != null) {
+                if (mre.getDescription().toString().equals(role)) {
+                    returnme = mre;
+                }
+            }else {
+                LOGGER.warning("Musician Role is null  @findMusicianRoleByRoleString ");
             }
         }
         return returnme;
     }
- */
+
 
     @Transient
     public ISectionEntity findSectionByString(String section) {

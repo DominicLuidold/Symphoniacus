@@ -22,7 +22,7 @@ public class MusicianRoleAdapter implements IMusicianRole {
         // Solange in Table description nullable ist...
         if (musicianRole.getDescription() != null) {
             return musicianRole.getDescription().toString();
-        }else {
+        } else {
             return "-";
         }
     }

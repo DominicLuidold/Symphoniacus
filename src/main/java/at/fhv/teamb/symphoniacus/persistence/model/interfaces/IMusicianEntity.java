@@ -75,6 +75,7 @@ public interface IMusicianEntity {
 
     void setInstrumentCategories(
         List<IInstrumentCategoryEntity> instrumentCategories);
+
     void setNegativeDateWishes(
         List<INegativeDateWishEntity> negativeDateWishes);
 

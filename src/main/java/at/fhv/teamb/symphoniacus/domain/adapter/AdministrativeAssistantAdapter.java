@@ -13,7 +13,7 @@ public class AdministrativeAssistantAdapter implements
     public AdministrativeAssistantAdapter(
         IUser user,
         IAdministrativeAssistantEntity assistant
-        ) {
+    ) {
         this.user = user;
         this.assistant = assistant;
     }
