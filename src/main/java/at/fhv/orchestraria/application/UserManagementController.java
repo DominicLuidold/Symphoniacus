@@ -211,7 +211,7 @@ public class UserManagementController {
             // Due to our Passwords being SHA-512 hashed, we cannot read them from database again
             // after saving. There's currently no other way than doing this below.
             // it sucks hard, but it's time to hand in the project in ILIAS now, so...
-            userToEdit.setPassword("test");
+            userToEdit.setPassword("rbp");
         } catch (Exception e) {
             e.printStackTrace();
         }
