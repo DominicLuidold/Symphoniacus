@@ -2,7 +2,7 @@ package at.fhv.teamb.symphoniacus.persistence.model;
 
 import at.fhv.teamb.symphoniacus.application.type.MusicianRoleType;
 import at.fhv.teamb.symphoniacus.persistence.model.interfaces.IMusicianEntity;
-import at.fhv.teamb.symphoniacus.persistence.model.interfaces.IMusicianRole;
+import at.fhv.teamb.symphoniacus.persistence.model.interfaces.IMusicianRoleEntity;
 import java.util.LinkedList;
 import java.util.List;
 import javax.persistence.Column;
@@ -17,7 +17,7 @@ import javax.persistence.Table;
 
 @Entity
 @Table(name = "musicianRole")
-public class MusicianRole implements IMusicianRole {
+public class MusicianRoleEntity implements IMusicianRoleEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "musicianRoleId")

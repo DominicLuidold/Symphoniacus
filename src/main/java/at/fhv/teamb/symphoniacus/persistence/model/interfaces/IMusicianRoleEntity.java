@@ -3,7 +3,7 @@ package at.fhv.teamb.symphoniacus.persistence.model.interfaces;
 import at.fhv.teamb.symphoniacus.application.type.MusicianRoleType;
 import java.util.List;
 
-public interface IMusicianRole {
+public interface IMusicianRoleEntity {
     void addMusician(IMusicianEntity m);
 
     void removeMusician(IMusicianEntity m);

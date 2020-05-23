@@ -3,11 +3,11 @@ package at.fhv.orchestraria.UserInterface.Usermanagement;
 import at.fhv.orchestraria.application.FormValidator;
 import at.fhv.orchestraria.application.UserManagementController;
 import at.fhv.orchestraria.domain.Imodel.IMusicianRole;
-import at.fhv.orchestraria.domain.model.AdministrativeAssistantEntity;
 import at.fhv.teamb.symphoniacus.application.type.AdministrativeAssistantType;
 import at.fhv.teamb.symphoniacus.persistence.model.interfaces.IAdministrativeAssistantEntity;
 import at.fhv.teamb.symphoniacus.persistence.model.interfaces.IContractualObligationEntity;
 import at.fhv.teamb.symphoniacus.persistence.model.interfaces.IInstrumentCategoryEntity;
+import at.fhv.teamb.symphoniacus.persistence.model.interfaces.IMusicianRoleEntity;
 import at.fhv.teamb.symphoniacus.persistence.model.interfaces.ISectionEntity;
 import at.fhv.teamb.symphoniacus.persistence.model.interfaces.IUserEntity;
 import at.fhv.teamb.symphoniacus.presentation.TabPaneController;
@@ -28,7 +28,6 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
-import javafx.scene.Node;
 import javafx.scene.control.Alert;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.CustomMenuItem;
@@ -37,7 +36,6 @@ import javafx.scene.control.MenuButton;
 import javafx.scene.control.MenuItem;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
-import javafx.stage.Stage;
 
 public class UserEditWindowController implements Parentable<TabPaneController> {
     private IUserEntity userToEdit;
@@ -173,7 +171,7 @@ public class UserEditWindowController implements Parentable<TabPaneController> {
             _administrativeVBox.setVisible(false);
             musicianAdministrativeToggle.setSelected(false);
 
-            for (at.fhv.teamb.symphoniacus.persistence.model.interfaces.IMusicianRole mrme : userToEdit
+            for (IMusicianRoleEntity mrme : userToEdit
                 .getMusician().getMusicianRoles()) {
                 for (MenuItem mi : roleDropDown.getItems()) {
                     CustomMenuItem item = (CustomMenuItem) mi;

@@ -16,7 +16,7 @@
         <class>at.fhv.teamb.symphoniacus.persistence.model.MonthlyScheduleEntity</class>
         <class>at.fhv.teamb.symphoniacus.persistence.model.MusicalPieceEntity</class>
         <class>at.fhv.teamb.symphoniacus.persistence.model.MusicianEntity</class>
-        <class>at.fhv.teamb.symphoniacus.persistence.model.MusicianRole</class>
+        <class>at.fhv.teamb.symphoniacus.persistence.model.MusicianRoleEntity</class>
         <class>at.fhv.teamb.symphoniacus.persistence.model.NegativeDateWishEntity</class>
         <class>at.fhv.teamb.symphoniacus.persistence.model.NegativeDutyWishEntity</class>
         <class>at.fhv.teamb.symphoniacus.persistence.model.PositiveWishEntity</class>

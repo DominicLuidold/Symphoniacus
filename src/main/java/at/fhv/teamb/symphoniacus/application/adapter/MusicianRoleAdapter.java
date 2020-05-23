@@ -2,13 +2,14 @@ package at.fhv.teamb.symphoniacus.application.adapter;
 
 import at.fhv.orchestraria.domain.Imodel.IMusicianRole;
 import at.fhv.orchestraria.domain.Imodel.IMusicianRoleMusician;
+import at.fhv.teamb.symphoniacus.persistence.model.interfaces.IMusicianRoleEntity;
 import java.util.Collection;
 
 public class MusicianRoleAdapter implements IMusicianRole {
-    private final at.fhv.teamb.symphoniacus.persistence.model.interfaces.IMusicianRole musicianRole;
+    private final IMusicianRoleEntity musicianRole;
 
     public MusicianRoleAdapter(
-        at.fhv.teamb.symphoniacus.persistence.model.interfaces.IMusicianRole role) {
+        IMusicianRoleEntity role) {
         musicianRole = role;
     }
 

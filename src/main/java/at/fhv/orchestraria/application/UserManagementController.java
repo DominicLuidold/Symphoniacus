@@ -31,7 +31,7 @@ import at.fhv.teamb.symphoniacus.persistence.model.interfaces.IAdministrativeAss
 import at.fhv.teamb.symphoniacus.persistence.model.interfaces.IContractualObligationEntity;
 import at.fhv.teamb.symphoniacus.persistence.model.interfaces.IInstrumentCategoryEntity;
 import at.fhv.teamb.symphoniacus.persistence.model.interfaces.IMusicianEntity;
-import at.fhv.teamb.symphoniacus.persistence.model.interfaces.IMusicianRole;
+import at.fhv.teamb.symphoniacus.persistence.model.interfaces.IMusicianRoleEntity;
 import at.fhv.teamb.symphoniacus.persistence.model.interfaces.ISectionEntity;
 import at.fhv.teamb.symphoniacus.persistence.model.interfaces.IUserEntity;
 import java.util.Collection;
@@ -79,7 +79,7 @@ public class UserManagementController {
 
     public Collection<at.fhv.orchestraria.domain.Imodel.IMusicianRole> getIMusicianRole() {
         List<MusicianRoleAdapter> result = new LinkedList<>();
-        for (at.fhv.teamb.symphoniacus.persistence.model.interfaces.IMusicianRole role : musicianRoleDao
+        for (IMusicianRoleEntity role : musicianRoleDao
             .getAll()) {
             MusicianRoleAdapter adapter = new MusicianRoleAdapter(role);
             result.add(adapter);
@@ -127,7 +127,7 @@ public class UserManagementController {
     /**
      * Not integrated by Team-B
      */
-    public void updateMusicianRole(IMusicianRole mre) {
+    public void updateMusicianRole(IMusicianRoleEntity mre) {
         musicianRoleDao.update(mre);
     }
 
@@ -141,7 +141,7 @@ public class UserManagementController {
     /**
      * Not integrated by Team-B
      */
-    public void saveMusicianRole(IMusicianRole mre) {
+    public void saveMusicianRole(IMusicianRoleEntity mre) {
         musicianRoleDao.persist(mre);
     }
 
@@ -330,7 +330,7 @@ public class UserManagementController {
             me.removeAllMusicianRoles();
             for (String role : userDTO.getSelectedRoles()) {
                 if (role != null) {
-                    IMusicianRole temp = (findMusicianRoleByRoleString(role));
+                    IMusicianRoleEntity temp = (findMusicianRoleByRoleString(role));
                     if (temp != null) {
                         me.addMusicianRole(temp);
                     }
@@ -553,7 +553,7 @@ public class UserManagementController {
         return false;
     }
 
-    public void deleteMusicianRoleMusician(IMusicianRole mrme) {
+    public void deleteMusicianRoleMusician(IMusicianRoleEntity mrme) {
         IMusicianRoleDao dao = new MusicianRoleDao();
         dao.remove(mrme);
     }
@@ -576,9 +576,9 @@ public class UserManagementController {
 
 
     @Transient
-    public IMusicianRole findMusicianRoleByRoleString(String role) {
-        IMusicianRole returnme = null;
-        for (IMusicianRole mre : this.musicianRoleDao.getAll()) {
+    public IMusicianRoleEntity findMusicianRoleByRoleString(String role) {
+        IMusicianRoleEntity returnme = null;
+        for (IMusicianRoleEntity mre : this.musicianRoleDao.getAll()) {
             if (mre.getDescription() != null) {
                 if (mre.getDescription().toString().equals(role)) {
                     returnme = mre;

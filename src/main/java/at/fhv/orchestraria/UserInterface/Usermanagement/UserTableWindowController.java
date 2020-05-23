@@ -8,7 +8,7 @@ import at.fhv.orchestraria.application.UserManagementController;
 import at.fhv.orchestraria.domain.model.MusicianEntity;
 import at.fhv.teamb.symphoniacus.persistence.model.interfaces.IAdministrativeAssistantEntity;
 import at.fhv.teamb.symphoniacus.persistence.model.interfaces.IContractualObligationEntity;
-import at.fhv.teamb.symphoniacus.persistence.model.interfaces.IMusicianRole;
+import at.fhv.teamb.symphoniacus.persistence.model.interfaces.IMusicianRoleEntity;
 import at.fhv.teamb.symphoniacus.persistence.model.interfaces.IUserEntity;
 import at.fhv.teamb.symphoniacus.presentation.TabPaneController;
 import at.fhv.teamb.symphoniacus.presentation.internal.Parentable;
@@ -357,7 +357,7 @@ public class UserTableWindowController implements Parentable<TabPaneController> 
                     section = "-";
                 }
                 role = "-";
-                for (IMusicianRole mrme : ue.getMusician().getMusicianRoles()) {
+                for (IMusicianRoleEntity mrme : ue.getMusician().getMusicianRoles()) {
                     if(mrme != null && mrme.getDescription() != null)
                     role = mrme.getDescription().toString();
                 }
