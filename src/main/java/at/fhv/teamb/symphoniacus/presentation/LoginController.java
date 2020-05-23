@@ -143,11 +143,6 @@ public class LoginController implements Initializable {
                             "login.error.banned.user1"
                         )
                     )
-                        || dto.getUserShortcut().equalsIgnoreCase(
-                        resources.getString(
-                            "login.error.banned.user2"
-                        )
-                    )
                 ) {
                     Alert successAlert = new Alert(Alert.AlertType.ERROR);
                     successAlert.setTitle(resources.getString("login.error.failed.title"));
