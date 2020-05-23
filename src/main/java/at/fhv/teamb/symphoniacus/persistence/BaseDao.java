@@ -1,5 +1,6 @@
 package at.fhv.teamb.symphoniacus.persistence;
 
+import java.util.List;
 import java.util.Optional;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
@@ -29,6 +30,7 @@ public abstract class BaseDao<T> implements Dao<T> {
      * @param key   The primary key to use
      * @return The object
      */
+    @SuppressWarnings("unchecked")
     protected Optional<T> find(Class<?> clazz, Integer key) {
         // Disable cache because duty positions could be set.
         //entityManager.clear();
@@ -81,5 +83,21 @@ public abstract class BaseDao<T> implements Dao<T> {
             LOG.error("Could not update element", e);
         }
         return Optional.empty();
+    }
+
+    /**
+     * Returns all objects from a class.
+     *
+     * @param clazz Class of the object
+     * @return A List of objects
+     */
+    @SuppressWarnings("unchecked")
+    public List<T> getAll(Class<?> clazz) {
+        // Class simpleName can hopefully not be changed by the user
+        // so, we don't check for SQL injection here...
+        return (List<T>) entityManager.createQuery(
+            "Select t from " + clazz.getSimpleName() + " t",
+            clazz
+        ).getResultList();
     }
 }

@@ -5,14 +5,21 @@ import at.fhv.orchestraria.UserInterface.Login.LoginWindowController;
 import at.fhv.orchestraria.UserInterface.MainWindow.MainWindow;
 import at.fhv.orchestraria.UserInterface.Roster.RosterWindow;
 import at.fhv.orchestraria.application.UserManagementController;
-import at.fhv.orchestraria.domain.Imodel.IContractualObligation;
-import at.fhv.orchestraria.domain.Imodel.IMusicianRoleMusician;
-import at.fhv.orchestraria.domain.Imodel.IUser;
 import at.fhv.orchestraria.domain.model.MusicianEntity;
+import at.fhv.teamb.symphoniacus.persistence.model.interfaces.IAdministrativeAssistantEntity;
+import at.fhv.teamb.symphoniacus.persistence.model.interfaces.IContractualObligationEntity;
+import at.fhv.teamb.symphoniacus.persistence.model.interfaces.IMusicianRoleEntity;
+import at.fhv.teamb.symphoniacus.persistence.model.interfaces.IUserEntity;
+import at.fhv.teamb.symphoniacus.presentation.TabPaneController;
+import at.fhv.teamb.symphoniacus.presentation.internal.Parentable;
 import com.jfoenix.controls.JFXProgressBar;
 import com.jfoenix.controls.JFXTextField;
 import com.jfoenix.controls.JFXTreeTableView;
 import com.jfoenix.controls.datamodels.treetable.RecursiveTreeObject;
+import java.awt.event.ActionEvent;
+import java.util.LinkedList;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javafx.application.Platform;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
@@ -23,24 +30,29 @@ import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.scene.Node;
 import javafx.scene.Scene;
-import javafx.scene.control.*;
+import javafx.scene.control.Alert;
+import javafx.scene.control.Label;
+import javafx.scene.control.ToggleButton;
+import javafx.scene.control.ToggleGroup;
+import javafx.scene.control.TreeItem;
+import javafx.scene.control.TreeTableColumn;
+import javafx.scene.control.TreeTableRow;
 import javafx.scene.control.cell.TreeItemPropertyValueFactory;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 
-import java.awt.event.ActionEvent;
-import java.util.LinkedList;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-
-public class UserTableWindowController {
+public class UserTableWindowController implements Parentable<TabPaneController> {
     public TreeItem newUserRow = new TreeItem(new UserWrapper("Add new User", "", "", "", ""));
     private UserTableWindowController controller = this;
-    private final static Logger LOGGER = Logger.getLogger(UserTableWindowController.class.getName());
+    private final static Logger LOGGER =
+        Logger.getLogger(UserTableWindowController.class.getName());
     private UserManagementController uManagementController;
-    private  LinkedList<TreeItem<UserWrapper>> removedItems = new LinkedList<>();
-  //TODO remove this line; created for testing purposes
-    public void bestfunction(){
+    private LinkedList<TreeItem<UserWrapper>> removedItems = new LinkedList<>();
+
+    private TabPaneController parentController;
+
+    //TODO remove this line; created for testing purposes
+    public void bestfunction() {
         System.out.println("This is the best function ever!");
     }
 
@@ -139,28 +151,34 @@ public class UserTableWindowController {
         rw.start(window);
     }
 
-    public void init() {
-        setLoggedInUserName(LoginWindowController.getLoggedInUser());
+    public synchronized void init() {
+        //setLoggedInUserName(LoginWindowController.getLoggedInUser());
         uManagementController = new UserManagementController();
         JFXloadingBar.setVisible(true);
-        setLoggedInUserName(LoginWindowController.getLoggedInUser());
+        //setLoggedInUserName(LoginWindowController.getLoggedInUser());
         loadMusiciansIntoTable();
 
+        UserEdit uEWindow = new UserEdit();
 
         treeTableView.setOnMouseClicked(new EventHandler<javafx.scene.input.MouseEvent>() {
             @Override
             public void handle(javafx.scene.input.MouseEvent event) {
                 if (event.getClickCount() == 2) {
                     boolean newUser;
-                    if (treeTableView.getSelectionModel().getSelectedItem().getChildren().size() > 0) {
+                    if (treeTableView.getSelectionModel().getSelectedItem().getChildren().size() >
+                        0) {
                         newUser = true;
                     } else {
                         newUser = false;
                     }
-                    UserEdit uEWindow = new UserEdit();
+
                     Stage window = new Stage();
                     try {
-                        uEWindow.setParameter(new UserEditWindowController(), treeTableView.getSelectionModel().getSelectedItem().getValue().getUser(), treeTableView.getSelectionModel().getFocusedIndex(), controller, newUser);
+                        uEWindow.setParameter(new UserEditWindowController(),
+                            treeTableView.getSelectionModel().getSelectedItem().getValue()
+                                .getUser(), treeTableView.getSelectionModel().getFocusedIndex(),
+                            controller, newUser);
+                        uEWindow.setParentController(parentController);
                         uEWindow.start(window);
                     } catch (Exception e) {
                         LOGGER.log(Level.INFO, "Exception ", e);
@@ -169,7 +187,8 @@ public class UserTableWindowController {
             }
         });
         JFXloadingBar.setVisible(false);
-        treeTableView.scrollTo(0);
+        treeTableView.refresh();
+        //treeTableView.scrollTo(0);
         searchFunctionality();
     }
 
@@ -179,11 +198,16 @@ public class UserTableWindowController {
         Platform.runLater(new Runnable() {
             @Override
             public void run() {
-                fnameCol.setCellValueFactory(new TreeItemPropertyValueFactory<UserWrapper, String>("fname"));
-                lnameCol.setCellValueFactory(new TreeItemPropertyValueFactory<UserWrapper, String>("lname"));
-                sectionCol.setCellValueFactory(new TreeItemPropertyValueFactory<UserWrapper, String>("section"));
-                roleCol.setCellValueFactory(new TreeItemPropertyValueFactory<UserWrapper, String>("role"));
-                contractCol.setCellValueFactory(new TreeItemPropertyValueFactory<UserWrapper, String>("contractEnd"));
+                fnameCol.setCellValueFactory(
+                    new TreeItemPropertyValueFactory<UserWrapper, String>("fname"));
+                lnameCol.setCellValueFactory(
+                    new TreeItemPropertyValueFactory<UserWrapper, String>("lname"));
+                sectionCol.setCellValueFactory(
+                    new TreeItemPropertyValueFactory<UserWrapper, String>("section"));
+                roleCol.setCellValueFactory(
+                    new TreeItemPropertyValueFactory<UserWrapper, String>("role"));
+                contractCol.setCellValueFactory(
+                    new TreeItemPropertyValueFactory<UserWrapper, String>("contractEnd"));
 
 
                 treeTableView.setRoot(newUserRow);
@@ -195,7 +219,8 @@ public class UserTableWindowController {
                 treeTableView.setRowFactory(treeTable -> {
                     TreeTableRow row = new TreeTableRow<>();
                     row.treeItemProperty().addListener((ov, oldTreeItem, newTreeItem) ->
-                            row.pseudoClassStateChanged(firstRowClass, newTreeItem == treeTable.getRoot()));
+                        row.pseudoClassStateChanged(firstRowClass,
+                            newTreeItem == treeTable.getRoot()));
                     return row;
                 });
 
@@ -209,28 +234,38 @@ public class UserTableWindowController {
             }
         });
 
-        for (IUser ue : uManagementController.getUsers()) {
+        for (IUserEntity ue : uManagementController.getUsers()) {
             if (ue.getUserId() != MusicianEntity.EXTERNAL_MUSICIAN_ID) {
                 TreeItem ti = new TreeItem(new UserWrapper(ue));
                 newUserRow.getChildren().add(ti);
+                treeTableView.refresh();
             }
         }
     }
 
-    private void searchFunctionality(){
+    private void searchFunctionality() {
         input.textProperty().addListener(new ChangeListener<String>() {
             @Override
-            public void changed(ObservableValue<? extends String> observable, String oldValue, String newValue) {
+            public void changed(ObservableValue<? extends String> observable, String oldValue,
+                                String newValue) {
                 int i = 1;
                 newValue = newValue.toLowerCase();
                 treeTableView.getRoot().getChildren().addAll(removedItems);
                 removedItems.clear();
-                while(treeTableView.getTreeItem(i)!= null) {
-                    if(!(treeTableView.getTreeItem(i).getValue().getFname().toLowerCase().contains(newValue)||treeTableView.getTreeItem(i).getValue().getLname().toLowerCase().contains(newValue)||treeTableView.getTreeItem(i).getValue().getRole().toLowerCase().contains(newValue)||treeTableView.getTreeItem(i).getValue().getSection().toLowerCase().contains(newValue)||treeTableView.getTreeItem(i).getValue().getContractEnd().toLowerCase().contains(newValue))) {
+                while (treeTableView.getTreeItem(i) != null) {
+                    if (!(treeTableView.getTreeItem(i).getValue().getFname().toLowerCase()
+                        .contains(newValue) ||
+                        treeTableView.getTreeItem(i).getValue().getLname().toLowerCase()
+                            .contains(newValue) ||
+                        treeTableView.getTreeItem(i).getValue().getRole().toLowerCase()
+                            .contains(newValue) ||
+                        treeTableView.getTreeItem(i).getValue().getSection().toLowerCase()
+                            .contains(newValue) ||
+                        treeTableView.getTreeItem(i).getValue().getContractEnd().toLowerCase()
+                            .contains(newValue))) {
                         removedItems.add(treeTableView.getTreeItem(i));
                         treeTableView.getRoot().getChildren().remove(treeTableView.getTreeItem(i));
-                    }
-                    else {
+                    } else {
                         i++;
                     }
                 }
@@ -238,12 +273,45 @@ public class UserTableWindowController {
         });
     }
 
-    public void updateRow(int index, IUser ue) {
+    public void updateRow(int index, IUserEntity ue) {
         treeTableView.getSelectionModel().getModelItem(index).setValue(new UserWrapper(ue));
     }
 
-    public void insertNewRow(IUser ue) {
+    public void insertNewRow(IUserEntity ue) {
         newUserRow.getChildren().add(0, new TreeItem(new UserWrapper(ue)));
+    }
+
+    /**
+     * Sets this controller's parent controller.
+     *
+     * @param controller The controller to be set as parent
+     */
+    @Override
+    public void setParentController(TabPaneController controller) {
+        this.parentController = controller;
+        System.out.println(controller);
+    }
+
+    /**
+     * Returns this controller's parent controller.
+     *
+     * @return Parent controller
+     */
+    @Override
+    public TabPaneController getParentController() {
+        return this.parentController;
+    }
+
+    /**
+     * Calls the controller initialization AFTER the parent controller has been set by
+     * {@link TabPaneController}.
+     */
+    @Override
+    public void initializeWithParent() {
+        // Task here
+        UserTableThread thread = new UserTableThread();
+        thread.start();
+        System.out.println(("Initialized TabPaneController with parent"));
     }
 
     public class UserWrapper extends RecursiveTreeObject<UserWrapper> {
@@ -253,9 +321,10 @@ public class UserTableWindowController {
         private String role;
         private String contractEnd;
         private boolean isBlankForUserCreation = false;
-        private IUser user;
+        private IUserEntity user;
 
-        public UserWrapper(String fname, String lname, String section, String role, String contractEnd) {
+        public UserWrapper(String fname, String lname, String section, String role,
+                           String contractEnd) {
             this.fname = fname;
             this.lname = lname;
             this.section = section;
@@ -264,14 +333,19 @@ public class UserTableWindowController {
             this.isBlankForUserCreation = true;
         }
 
-        public UserWrapper(IUser ue) {
+        public UserWrapper(IUserEntity ue) {
             user = ue;
             fname = ue.getFirstName();
             lname = ue.getLastName();
             if (ue.getMusician() == null) {
                 section = "-";
-                if (ue.getAdministrativeAssistant() != null) {
-                    role = ue.getAdministrativeAssistant().getDescription();
+                if (ue.getAdministrativeAssistants() != null) {
+                    StringBuilder sb = new StringBuilder();
+                    for (IAdministrativeAssistantEntity ass : ue.getAdministrativeAssistants()) {
+                        sb.append(ass.getDescription());
+                        sb.append(" | ");
+                    }
+                    role = sb.toString();
                 } else {
                     role = "-";
                 }
@@ -283,11 +357,13 @@ public class UserTableWindowController {
                     section = "-";
                 }
                 role = "-";
-                for (IMusicianRoleMusician mrme : ue.getMusician().getIMusicianRoleMusicians()) {
-                    role = mrme.getMusicianRole().getDescription();
+                for (IMusicianRoleEntity mrme : ue.getMusician().getMusicianRoles()) {
+                    if(mrme != null && mrme.getDescription() != null)
+                    role = mrme.getDescription().toString();
                 }
                 contractEnd = "-";
-                for (IContractualObligation coe : ue.getMusician().getIContractualObligations()) {
+                for (IContractualObligationEntity coe : ue.getMusician()
+                    .getContractualObligations()) {
                     contractEnd = coe.getEndDate().toString();
                 }
             }
@@ -333,7 +409,7 @@ public class UserTableWindowController {
             return contractEnd;
         }
 
-        public IUser getUser() {
+        public IUserEntity getUser() {
             return user;
         }
     }
@@ -354,12 +430,30 @@ public class UserTableWindowController {
             undecoratedWindow.hide();
             homeWindowDecorated.hide();
             lw.start(undecoratedWindow);
-        }catch(Exception e){
+        } catch (Exception e) {
             LOGGER.log(Level.INFO, "Exception ", e);
         }
     }
 
+    public UserTableWindowController getController() {
+        return this;
+    }
+
+    /*
+    Not Integrated by Team - B
+     */
+    /*
     public void setLoggedInUserName(IUser user){
         _loggedInUserName.setText(user.getFirstName() + " " + user.getLastName());
+    }
+
+     */
+
+    private class UserTableThread extends Thread {
+
+        @Override
+        public void run() {
+                init();
+        }
     }
 }

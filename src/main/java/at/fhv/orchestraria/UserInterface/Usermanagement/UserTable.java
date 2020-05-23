@@ -1,6 +1,8 @@
 package at.fhv.orchestraria.UserInterface.Usermanagement;
 
-import at.fhv.orchestraria.UserInterface.Login.LoginWindowController;
+import java.io.IOException;
+import java.util.Locale;
+import java.util.concurrent.CountDownLatch;
 import javafx.application.Application;
 import javafx.application.Platform;
 import javafx.concurrent.Service;
@@ -12,12 +14,6 @@ import javafx.scene.Scene;
 import javafx.scene.image.Image;
 import javafx.stage.Screen;
 import javafx.stage.Stage;
-
-import java.io.IOException;
-import java.util.Locale;
-import java.util.concurrent.CountDownLatch;
-
-import static javafx.application.Application.launch;
 
 public class UserTable extends Application {
 
@@ -40,13 +36,15 @@ public class UserTable extends Application {
                 return new Task<Void>() {
                     @Override
                     protected Void call() {
+
                         //Background work
                         try {
+
                             FXMLLoader loader = new FXMLLoader(getClass().getResource(
                                 "/view/team-c/UserTable.fxml"));
                             Parent root = loader.load();
                             _userTableWindowController = loader.getController();
-                            _userTableWindowController.setLoggedInUserName(LoginWindowController.getLoggedInUser());
+                            //_userTableWindowController.setLoggedInUserName(LoginWindowController.getLoggedInUser());
 
 
                             final CountDownLatch latch = new CountDownLatch(1);
@@ -80,7 +78,7 @@ public class UserTable extends Application {
                             //Keep with the background work
 
 
-                            _userTableWindowController.init();
+                            //_userTableWindowController.init();
 
 
                         }catch ( IOException | InterruptedException ex){

@@ -1,11 +1,15 @@
 package at.fhv.teamb.symphoniacus.persistence.model;
 
+import at.fhv.teamb.symphoniacus.persistence.model.interfaces.IMusicianEntity;
 import at.fhv.teamb.symphoniacus.persistence.model.interfaces.ISubstitute;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
 @Entity
@@ -15,9 +19,6 @@ public class Substitute implements ISubstitute {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "substituteId")
     private Integer substituteId;
-
-    @Column(name = "musicianId")
-    private Integer musicianId;
 
     @Column(name = "firstName")
     private String firstName;
@@ -34,6 +35,18 @@ public class Substitute implements ISubstitute {
     @Column(name = "phone")
     private String phone;
 
+    @ManyToOne(fetch = FetchType.LAZY, targetEntity = MusicianEntity.class)
+    @JoinColumn(name = "musicianId")
+    private IMusicianEntity musician;
+
+    public IMusicianEntity getMusician() {
+        return musician;
+    }
+
+    public void setMusician(IMusicianEntity musician) {
+        this.musician = musician;
+    }
+
     @Override
     public Integer getSubstituteId() {
         return this.substituteId;
@@ -42,16 +55,6 @@ public class Substitute implements ISubstitute {
     @Override
     public void setSubstituteId(Integer substituteId) {
         this.substituteId = substituteId;
-    }
-
-    @Override
-    public Integer getMusicianId() {
-        return this.musicianId;
-    }
-
-    @Override
-    public void setMusicianId(Integer musicianId) {
-        this.musicianId = musicianId;
     }
 
     @Override

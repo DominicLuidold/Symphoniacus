@@ -21,7 +21,7 @@ public interface IMusicianEntity {
 
     void setNegativeDutyWishes(List<INegativeDutyWishEntity> negativeDutyWishes);
 
-    void setMusicianRoles(List<IMusicianRole> musicianRoles);
+    void setMusicianRoles(List<IMusicianRoleEntity> musicianRoles);
 
     void setDutyPositions(List<IDutyPositionEntity> dutyPositions);
 
@@ -49,11 +49,11 @@ public interface IMusicianEntity {
 
     void removeContractualObligation(IContractualObligationEntity contractualObligation);
 
-    List<IMusicianRole> getMusicianRoles();
+    List<IMusicianRoleEntity> getMusicianRoles();
 
-    void addMusicianRole(IMusicianRole role);
+    void addMusicianRole(IMusicianRoleEntity role);
 
-    void removeMusicianRole(IMusicianRole role);
+    void removeMusicianRole(IMusicianRoleEntity role);
 
     List<IDutyPositionEntity> getDutyPositions();
 
@@ -66,4 +66,29 @@ public interface IMusicianEntity {
     void addVacation(IVacationEntity vacation);
 
     void removeVacation(IVacationEntity vacation);
+
+    void addInstrumentCategory(IInstrumentCategoryEntity inst);
+
+    void removeInstrumentCategory(IInstrumentCategoryEntity inst);
+
+    List<IInstrumentCategoryEntity> getInstrumentCategories();
+
+    void setInstrumentCategories(
+        List<IInstrumentCategoryEntity> instrumentCategories);
+
+    void setNegativeDateWishes(
+        List<INegativeDateWishEntity> negativeDateWishes);
+
+    List<INegativeDateWishEntity> getNegativeDateWishes();
+
+    List<ISubstitute> getSubstitutes();
+
+    void setSubstitutes(
+        List<ISubstitute> substitutes);
+
+    void removeAllMusicianRoles();
+
+    void removeAllInstrumentCategories();
+
+    void removeAllContractualObligations();
 }

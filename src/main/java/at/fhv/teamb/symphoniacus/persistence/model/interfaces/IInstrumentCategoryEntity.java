@@ -16,4 +16,13 @@ public interface IInstrumentCategoryEntity {
     void addContractualObligation(IContractualObligationEntity contractualObligation);
 
     void removeContractualObligation(IContractualObligationEntity contractualObligation);
+
+    void addMusician(IMusicianEntity musician);
+
+    void removeMusician(IMusicianEntity musician);
+
+    List<IMusicianEntity> getMusicians();
+
+    void setMusicians(
+        List<IMusicianEntity> musicians);
 }

@@ -5,9 +5,9 @@ public interface ISubstitute {
 
     void setSubstituteId(Integer substituteId);
 
-    Integer getMusicianId();
+    public IMusicianEntity getMusician();
 
-    void setMusicianId(Integer musicianId);
+    void setMusician(IMusicianEntity musician);
 
     String getFirstName();
 

@@ -14,8 +14,7 @@ import javax.persistence.TypedQuery;
  *
  * @author Dominic Luidold
  */
-public class SectionDao extends BaseDao<ISectionEntity>
-    implements ISectionDao {
+public class SectionDao extends BaseDao<ISectionEntity> implements ISectionDao {
 
     /**
      * {@inheritDoc}
@@ -58,4 +57,5 @@ public class SectionDao extends BaseDao<ISectionEntity>
     public boolean remove(ISectionEntity elem) {
         return false;
     }
+
 }

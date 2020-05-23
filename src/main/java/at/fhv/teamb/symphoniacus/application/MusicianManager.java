@@ -46,7 +46,7 @@ public class MusicianManager {
      * @return Optional which is filled when loading worked, else empty
      */
     public Optional<Musician> loadMusician(int userId) {
-        Optional<IMusicianEntity> musicianEntity = this.musicianDao.find(userId);
+        Optional<IMusicianEntity> musicianEntity = this.musicianDao.findMusicianByUserId(userId);
 
         // Load attempt failed
         if (musicianEntity.isEmpty()) {

@@ -7,6 +7,7 @@ import at.fhv.teamb.symphoniacus.persistence.model.SectionEntity;
 import at.fhv.teamb.symphoniacus.persistence.model.interfaces.IMusicianEntity;
 import at.fhv.teamb.symphoniacus.persistence.model.interfaces.ISectionEntity;
 import java.util.List;
+import java.util.Optional;
 
 public interface IMusicianDao extends Dao<IMusicianEntity> {
 
@@ -27,4 +28,11 @@ public interface IMusicianDao extends Dao<IMusicianEntity> {
      * @return A List of external musicians belonging to the section
      */
     List<IMusicianEntity> findExternalsWithSection(ISectionEntity section);
+
+    /**
+     * Returns Musician matching given userId.
+     * @param id given User Id
+     * @return Musician
+     */
+    Optional<IMusicianEntity> findMusicianByUserId(int id);
 }
