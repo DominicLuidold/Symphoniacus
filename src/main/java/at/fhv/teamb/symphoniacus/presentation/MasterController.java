@@ -29,11 +29,10 @@ public class MasterController {
     private static final Logger LOG = LogManager.getLogger(MasterController.class);
     private static MasterController INSTANCE;
     private static final JFXSpinner SPINNER = new JFXSpinner();
-    private final Label statusTextField;
+    private static final Label statusTextField = new Label();
     private final Map<String, Initializable> map = new HashedMap<>();
 
     private MasterController() {
-        this.statusTextField = new Label();
     }
 
     /**
@@ -142,11 +141,11 @@ public class MasterController {
         this.statusTextField.setText("Loaded");
     }
 
-    public void showStatusBarLoading() {
-        this.statusTextField.setText("Loading");
+    public static void showStatusBarLoading() {
+        statusTextField.setText("Loading");
     }
 
-    public void showStatusBarLoaded() {
-        this.statusTextField.setText("Loaded");
+    public static void showStatusBarLoaded() {
+        statusTextField.setText("Loaded");
     }
 }

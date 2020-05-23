@@ -198,12 +198,19 @@ public class OrganizationalOfficerCalendarSkin extends SkinBase<CalendarView> {
 
         //Add SOP btn
         this.addButton = new MenuButton();
-        this.addButton.setText(bundle.getString("global.button.add"));
+        this.addButton.setText(bundle.getString("global.button.create"));
 
-        addSop = new MenuItem("Series of Performances");
-        addDuty = new MenuItem("Duty");
+        addSop = new MenuItem(
+            bundle.getString(
+                "skin.btn.create.sop.title"
+            )
+        );
+        addDuty = new MenuItem(
+            bundle.getString(
+                "skin.btn.create.duty.title"
+            )
+        );
         this.addButton.getItems().addAll(addSop, addDuty);
-        this.addButton.setContentDisplay(ContentDisplay.GRAPHIC_ONLY);
         this.addButton.setId("btnAdd");
         this.addButton.setGraphic(addIcon);
         addSop.setOnAction(evt -> add(addSop));
@@ -320,11 +327,7 @@ public class OrganizationalOfficerCalendarSkin extends SkinBase<CalendarView> {
         publishButton.setTooltip(
             new Tooltip(bundle.getString("skin.btn.publish.tooltip")) //$NON-NLS-1$
         );
-        addButton.setTooltip(
-            new Tooltip(
-                bundle.getString("global.button.add")
-            )
-        );
+        addButton.setTooltip(new Tooltip(bundle.getString("skin.btn.create.tooltip")));
         showDay.setTooltip(new Tooltip(
             Messages.getString("CalendarViewSkin.TOOLTIP_SHOW_DAY"))); //$NON-NLS-1$
         showWeek.setTooltip(new Tooltip(
