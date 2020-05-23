@@ -108,8 +108,9 @@ public class MainController implements Initializable {
             switch (this.currentAssistant.getAdministrativeAssistantEntity().getDescription()
                 .toString()) {
                 case "ORGANIZATIONAL_OFFICER":
-                role = this.resources.getString("global.label.user.role.organizational.officer");
-                break;
+                    role =
+                        this.resources.getString("global.label.user.role.organizational.officer");
+                    break;
                 case "MUSIC_LIBRARIAN":
                     role = this.resources.getString("global.label.user.role.music.librarian");
                     break;
