@@ -5,8 +5,11 @@ import at.fhv.teamb.symphoniacus.domain.WishRequest;
 import at.fhv.teamb.symphoniacus.persistence.dao.NegativeDateWishDao;
 import at.fhv.teamb.symphoniacus.persistence.dao.NegativeDutyWishDao;
 import at.fhv.teamb.symphoniacus.persistence.dao.PositiveWishDao;
-import at.fhv.teamb.symphoniacus.persistence.model.DutyEntity;
+import at.fhv.teamb.symphoniacus.persistence.dao.interfaces.INegativeDateWishDao;
+import at.fhv.teamb.symphoniacus.persistence.dao.interfaces.INegativeDutyWishDao;
+import at.fhv.teamb.symphoniacus.persistence.dao.interfaces.IPositiveWishDao;
 import at.fhv.teamb.symphoniacus.persistence.model.WishRequestable;
+import at.fhv.teamb.symphoniacus.persistence.model.interfaces.IDutyEntity;
 import java.util.LinkedHashSet;
 import java.util.Optional;
 import java.util.Set;
@@ -18,13 +21,13 @@ import java.util.Set;
  * @author Nino Heinzle
  */
 public class WishRequestManager {
-    private final PositiveWishDao positiveWishDao;
-    private final NegativeDutyWishDao negDutyWishDao;
-    private final NegativeDateWishDao negDateWishDao;
+    private final IPositiveWishDao positiveWishDao;
+    private final INegativeDutyWishDao negDutyWishDao;
+    private final INegativeDateWishDao negDateWishDao;
     private Set<WishRequestable> allWishRequests;
 
     /**
-     * Constructor.
+     * Initializes the WishRequestManager.
      */
     public WishRequestManager() {
         this.positiveWishDao = new PositiveWishDao();
@@ -37,7 +40,7 @@ public class WishRequestManager {
      *
      * @param duty duty
      */
-    public void loadAllWishRequests(DutyEntity duty) {
+    public void loadAllWishRequests(IDutyEntity duty) {
         allWishRequests = new LinkedHashSet<>();
         this.allWishRequests.addAll(positiveWishDao.getAllPositiveWishes(duty));
         this.allWishRequests.addAll(negDateWishDao.getAllNegativeDateWishes(duty));
@@ -50,7 +53,7 @@ public class WishRequestManager {
      * @param musician given musician domain object
      * @return the same musician
      */
-    public Musician setMusicianWishRequest(Musician musician, DutyEntity duty) {
+    public Musician setMusicianWishRequest(Musician musician, IDutyEntity duty) {
         // Beware! if allWish isn't loaded this method will load
         // the wishes individually from the DAO
         if (this.allWishRequests == null) {
@@ -59,7 +62,7 @@ public class WishRequestManager {
         } else {
             Optional<WishRequest> wishRequest =
                 WishRequest
-                    .getWishRequestToMusician(musician.getEntity(), this.allWishRequests, duty);
+                    .getWishRequestToMusician(musician.getEntity(), this.allWishRequests);
             if (wishRequest.isPresent()) {
                 musician.setWishRequest(wishRequest.get());
             } else {

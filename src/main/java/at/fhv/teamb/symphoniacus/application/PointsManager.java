@@ -4,18 +4,24 @@ import at.fhv.teamb.symphoniacus.domain.Points;
 import at.fhv.teamb.symphoniacus.persistence.dao.ContractualObligationDao;
 import at.fhv.teamb.symphoniacus.persistence.dao.DutyCategoryChangeLogDao;
 import at.fhv.teamb.symphoniacus.persistence.dao.DutyDao;
-import at.fhv.teamb.symphoniacus.persistence.model.DutyCategoryChangelogEntity;
+import at.fhv.teamb.symphoniacus.persistence.dao.interfaces.IContractualObligationDao;
+import at.fhv.teamb.symphoniacus.persistence.dao.interfaces.IDutyCategoryChangeLogDao;
+import at.fhv.teamb.symphoniacus.persistence.dao.interfaces.IDutyDao;
 import at.fhv.teamb.symphoniacus.persistence.model.DutyCategoryEntity;
 import at.fhv.teamb.symphoniacus.persistence.model.DutyEntity;
-import at.fhv.teamb.symphoniacus.persistence.model.DutyPositionEntity;
 import at.fhv.teamb.symphoniacus.persistence.model.MusicianEntity;
-import java.awt.Point;
+import at.fhv.teamb.symphoniacus.persistence.model.interfaces.IDutyCategoryChangelogEntity;
+import at.fhv.teamb.symphoniacus.persistence.model.interfaces.IDutyCategoryEntity;
+import at.fhv.teamb.symphoniacus.persistence.model.interfaces.IDutyEntity;
+import at.fhv.teamb.symphoniacus.persistence.model.interfaces.IDutyPositionEntity;
+import at.fhv.teamb.symphoniacus.persistence.model.interfaces.IMusicianEntity;
 import java.time.LocalDate;
 import java.util.LinkedHashSet;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Optional;
 import java.util.Set;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 /**
  * UseCase Controller responsible for delivering all requested Points of a musician w/ timespan.
@@ -24,13 +30,14 @@ import java.util.Set;
  * @author Nino Heinzle
  */
 public class PointsManager {
-    private final ContractualObligationDao conDao;
-    private final DutyCategoryChangeLogDao dutyCatChangeDao;
-    private final DutyDao dutyDao;
-    private Set<DutyEntity> allDuties;
+    private static final Logger LOG = LogManager.getLogger(PointsManager.class);
+    private final IContractualObligationDao conDao;
+    private final IDutyCategoryChangeLogDao dutyCatChangeDao;
+    private final IDutyDao dutyDao;
+    private Set<IDutyEntity> allDuties;
 
     /**
-     * Initialize PointsManager.
+     * Initializes the PointsManager.
      */
     public PointsManager() {
         this.conDao = new ContractualObligationDao();
@@ -45,71 +52,82 @@ public class PointsManager {
      * @param musicians List of MusicianEntity
      * @param month     LocalDate any day of a month represents the whole month
      */
-    public void loadAllDutiesOfMusicians(List<MusicianEntity> musicians, LocalDate month) {
+    public void loadAllDutiesOfMusicians(List<IMusicianEntity> musicians, LocalDate month) {
         this.allDuties = this.dutyDao.getAllDutiesOfMusicians(musicians, month);
     }
 
     /**
-     * Responsible for giving the Debit (Soll-Punkte)
-     * Points from a given Musician as a Points Object (implements getValue).
+     * Responsible for returning the debit points ("Soll-Punkte") from a given
+     * {@link MusicianEntity} as a {@link Points} object.
      *
-     * @param musician point of interest
-     * @return Points domain object containing the number of Points (getValue)
+     * @param musician The musician to use
+     * @return Points domain object containing the number of points
+     * @see Points#getValue()
      */
-    public Optional<Points> getDebitPointsFromMusician(MusicianEntity musician) {
-        if (!isMusicianExternal(musician)) {
-            return Points.calcDebitPoints(this.conDao.getContractualObligation(musician));
-        } else {
+    public Points getDebitPointsFromMusician(IMusicianEntity musician) {
+        if (isMusicianExternal(musician)) {
             return Points.getZeroPoints();
+        } else {
+            // DutyDAO has been modified so that in this case, only one CO
+            // should be loaded at this point. However, we need to double-check.
+            if (musician.getContractualObligations().size() != 1) {
+                LOG.error("More than one contractual obligation is not supported "
+                    + "at this stage for musician {}", musician.getUser().getShortcut());
+                return Points.getZeroPoints();
+            }
+            return Points.calcDebitPoints(musician.getContractualObligations().get(0));
         }
-
     }
 
     /**
-     * Responsible for giving the Gained (Ist-Punkte)
-     * Points from a given musician+month as a Points Object (implements getValue).
+     * Responsible for returning the gained points ("Ist-Punkte") from a given
+     * {@link MusicianEntity} and month as a {@link Points} object.
      *
-     * @param musician point of interest
-     * @param month    LocalDate any day of a month represents the whole month
-     * @return Points domain object containing the number of Points (getValue)
+     * @param musician The musician to use
+     * @param month    Any day of a month, representing the complete month
+     * @return Points domain object containing the number of points
+     * @see Points#getValue()
      */
-    public Optional<Points> getGainedPointsForMonthFromMusician(
-        MusicianEntity musician,
+    public Points getGainedPointsForMonthFromMusician(
+        IMusicianEntity musician,
         LocalDate month
     ) {
-
-        if (!isMusicianExternal(musician)) {
-            List<DutyEntity> listOfDutiesFromMusician;
-            // Beware! if allDuties isn't loaded this method will load
+        if (isMusicianExternal(musician)) {
+            return Points.getZeroPoints();
+        } else {
+            // Beware! If allDuties isn't loaded this method will load
             // the musicians individually from the DAO
-            if (this.allDuties == null) {
-                listOfDutiesFromMusician =
-                    this.dutyDao.getAllDutiesInRangeFromMusician(musician, month);
-            } else {
-                listOfDutiesFromMusician = this.getAllDutiesFromMusician(musician);
-            }
-            Set<DutyCategoryEntity> dutyCategories = new LinkedHashSet<>();
+            List<IDutyEntity> listOfDutiesFromMusician = this.getDutiesFromMusician(
+                musician,
+                month
+            );
 
-            // get all dutyCategories to all duties
-            for (DutyEntity d : listOfDutiesFromMusician) {
-                dutyCategories.add(d.getDutyCategory());
+            // Return 0 points if musician has no duties
+            if (listOfDutiesFromMusician.isEmpty()) {
+                return Points.getZeroPoints();
             }
 
-            List<DutyCategoryChangelogEntity> dutyCategoryChangelogs = new LinkedList<>();
-
-            // get all dutyCategoryChangelogs to all dutyCategories
-            for (DutyCategoryEntity dc : dutyCategories) {
-                List<DutyCategoryChangelogEntity> changelogEntityList =
-                    this.dutyCatChangeDao.getDutyCategoryChangeLog(dc);
+            // Get all dutyCategoryChangelogs to all dutyCategories
+            List<IDutyCategoryChangelogEntity> dutyCategoryChangelogs = new LinkedList<>();
+            for (IDutyCategoryEntity dc : this.getAllDutyCategories(listOfDutiesFromMusician)) {
+                List<IDutyCategoryChangelogEntity> changelogEntityList =
+                    this.dutyCatChangeDao.getDutyCategoryChangelogs(dc);
                 if (changelogEntityList != null) {
                     dutyCategoryChangelogs.addAll(changelogEntityList);
                 }
             }
-            return (Points.calcGainedPoints(listOfDutiesFromMusician, dutyCategoryChangelogs));
-        } else {
-            return Points.getZeroPoints();
-        }
 
+            return Points.calcGainedPoints(listOfDutiesFromMusician, dutyCategoryChangelogs);
+        }
+    }
+
+    /**
+     * Gives the correct number of Points of a duty observing its startDate.
+     * @param duty given duty
+     * @return the correct number of Points of given Duty at a given Date
+     */
+    public Points getPointsOfDuty(IDutyEntity duty) {
+        return Points.getPointsOfDuty(duty);
     }
 
     /**
@@ -119,10 +137,10 @@ public class PointsManager {
      * @param musician given musician
      * @return List of DutyEntities from the given musician
      */
-    private List<DutyEntity> getAllDutiesFromMusician(MusicianEntity musician) {
-        List<DutyEntity> duties = new LinkedList<>();
-        for (DutyEntity duty : this.allDuties) {
-            for (DutyPositionEntity dp : duty.getDutyPositions()) {
+    private List<IDutyEntity> getAllDutiesFromMusician(IMusicianEntity musician) {
+        List<IDutyEntity> duties = new LinkedList<>();
+        for (IDutyEntity duty : this.allDuties) {
+            for (IDutyPositionEntity dp : duty.getDutyPositions()) {
                 if (dp.getMusician() != null
                     && dp.getMusician().getMusicianId().equals(musician.getMusicianId())
                 ) {
@@ -134,38 +152,74 @@ public class PointsManager {
     }
 
     /**
-     * Responsible for giving the Gained (Saldo-Punkte)
-     * Points from a given musician+month as a Points Object (implements getValue).
+     * Responsible for returning the gained points ("Saldo-Punkte") from a given
+     * {@link MusicianEntity} and month as a {@link Points} object.
      *
-     * @param musician point of interest
-     * @param month    LocalDate any day of a month represents the whole month
-     * @return Points domain object containing the number of Points (getValue)
+     * @param musician The musician to use
+     * @param month    Any day of a month, representing the complete month
+     * @return Points domain object containing the number of points
+     * @see Points#getValue()
      */
-    public Optional<Points> getBalanceFromMusician(MusicianEntity musician, LocalDate month) {
-        if (!isMusicianExternal(musician)) {
-            List<DutyEntity> listOfDutiesFromMusician;
-            // Beware! if allDuties isn't loaded this method will load
-            // the musicians individually from the DAO
-            if (this.allDuties == null) {
-                listOfDutiesFromMusician =
-                    this.dutyDao.getAllDutiesInRangeFromMusician(musician, month);
-            } else {
-                listOfDutiesFromMusician = this.getAllDutiesFromMusician(musician);
-            }
-            Set<DutyCategoryEntity> dutyCategories = new LinkedHashSet<>();
-
-            // get all dutyCategories to all duties
-            for (DutyEntity d : listOfDutiesFromMusician) {
-                dutyCategories.add(d.getDutyCategory());
-            }
-            return Points.calcBalancePoints(listOfDutiesFromMusician, dutyCategories);
-        } else {
+    public Points getBalanceFromMusician(IMusicianEntity musician, LocalDate month) {
+        if (isMusicianExternal(musician)) {
             return Points.getZeroPoints();
-        }
+        } else {
+            // Beware! If allDuties isn't loaded this method will load
+            // the musicians individually from the DAO
+            List<IDutyEntity> listOfDutiesFromMusician = this.getDutiesFromMusician(
+                musician,
+                month
+            );
 
+            // Return 0 points if musician has no duties
+            if (listOfDutiesFromMusician.isEmpty()) {
+                return Points.getZeroPoints();
+            }
+
+            return Points.calcBalancePoints(
+                listOfDutiesFromMusician,
+                this.getAllDutyCategories(listOfDutiesFromMusician)
+            );
+        }
     }
 
-    private boolean isMusicianExternal(MusicianEntity musician) {
-        return (musician.getUser().getFirstName().equals("Extern"));
+    private boolean isMusicianExternal(IMusicianEntity musician) {
+        return musician.getUser().getFirstName().equals("Extern");
+    }
+
+    /**
+     * Returns a List of {@link DutyEntity} objects that the musician is assigned to for
+     * a given month.
+     *
+     * @param musician The musician to use
+     * @param month    The month to use
+     * @return A List of DutyEntity objects
+     */
+    private List<IDutyEntity> getDutiesFromMusician(IMusicianEntity musician, LocalDate month) {
+        List<IDutyEntity> listOfDutiesFromMusician;
+        if (this.allDuties == null) {
+            listOfDutiesFromMusician = this.dutyDao.getAllDutiesInRangeFromMusician(
+                musician,
+                month
+            );
+        } else {
+            listOfDutiesFromMusician = this.getAllDutiesFromMusician(musician);
+        }
+        return listOfDutiesFromMusician;
+    }
+
+    /**
+     * Returns a List of {@link DutyCategoryEntity} objects for a given List of
+     * {@link DutyEntity} objects.
+     *
+     * @param duties The duties to use
+     * @return A List of DutyCategoryEntity objects
+     */
+    private Set<IDutyCategoryEntity> getAllDutyCategories(List<IDutyEntity> duties) {
+        Set<IDutyCategoryEntity> dutyCategories = new LinkedHashSet<>();
+        for (IDutyEntity d : duties) {
+            dutyCategories.add(d.getDutyCategory());
+        }
+        return dutyCategories;
     }
 }

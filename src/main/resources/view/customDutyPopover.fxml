@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import com.calendarfx.view.popover.PopOverContentPane?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.BorderPane?>
+
+
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.ScrollPane?>
+<PopOverContentPane fx:controller="at.fhv.teamb.symphoniacus.presentation.DutyPopoverController"
+                    prefHeight="450" prefWidth="410"
+                    xmlns="http://javafx.com/javafx/11.0.1"
+                    xmlns:fx="http://javafx.com/fxml/1">
+    <center>
+        <AnchorPane BorderPane.alignment="CENTER">
+            <children>
+                <VBox AnchorPane.leftAnchor="10.0" AnchorPane.topAnchor="10.0" AnchorPane.rightAnchor="10">
+                    <ScrollPane prefHeight="380" prefWidth="260">
+                        <VBox>
+                            <padding>
+                                <Insets top="10" bottom="10" right="10" left="10">
+                                </Insets>
+                            </padding>
+
+                            <Label style="-fx-font-weight: bold" text="%global.label.title"/>
+                            <VBox>
+                                <padding>
+                                    <Insets bottom="8" left="25">
+                                    </Insets>
+                                </padding>
+                                <Label fx:id="titleText" />
+                            </VBox>
+
+
+                            <Label style="-fx-font-weight: bold" text="%global.label.description"/>
+                            <VBox>
+                                <padding>
+                                    <Insets bottom="8" left="25">
+                                    </Insets>
+                                </padding>
+                                <Label fx:id="descriptionText"/>
+                            </VBox>
+
+
+                            <Label style="-fx-font-weight: bold" text="%global.label.points"/>
+                            <VBox>
+                                <padding>
+                                    <Insets bottom="8" left="25">
+                                    </Insets>
+                                </padding>
+                                <Label fx:id="pointsText"/>
+                            </VBox>
+
+
+                            <Label style="-fx-font-weight: bold" text="%global.label.instumentation"/>
+                            <VBox fx:id="instrumentationsVBox">
+                                <padding>
+                                    <Insets bottom="8" left="25">
+                                    </Insets>
+                                </padding>
+                            </VBox>
+
+                            <Label style="-fx-font-weight: bold" text="%global.label.status"/>
+                            <VBox fx:id="instrumentationStatus" >
+                                <padding>
+                                    <Insets bottom="8" left="25">
+                                    </Insets>
+                                </padding>
+                                <Label fx:id="section1Text" text="%gloabl.label.section.vl1"/>
+                                <Label fx:id="section2Text" text="%gloabl.label.section.vl2"/>
+                                <Label fx:id="section3Text" text="%gloabl.label.section.vla"/>
+                                <Label fx:id="section4Text" text="%gloabl.label.section.vc"/>
+                                <Label fx:id="section5Text" text="%gloabl.label.section.kb"/>
+                                <Label fx:id="section6Text" text="%gloabl.label.section.Fl/Ob/Kl/Fg"/>
+                                <Label fx:id="section7Text" text="%gloabl.label.section.Hr/Trp/Pos/Tb"/>
+                                <Label fx:id="section8Text" text="%gloabl.label.section.Pk/Schlw/Hf"/>
+                            </VBox>
+                        </VBox>
+                    </ScrollPane>
+                    <HBox spacing="25">
+                        <padding>
+                            <Insets right="15" top="15" bottom="15">
+                            </Insets>
+                        </padding>
+                        <Button fx:id="editScheduleBtn" AnchorPane.bottomAnchor="15.0" mnemonicParsing="false"
+                                text="%organizationalOfficerPopover.button.editSchedule"/>
+                        <Button fx:id="editDutyBtn" AnchorPane.bottomAnchor="15.0" mnemonicParsing="false"
+                                text="%organizationalOfficerPopover.button.editDuty"/>
+                    </HBox>
+                </VBox>
+
+            </children>
+        </AnchorPane>
+    </center>
+</PopOverContentPane>

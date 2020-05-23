@@ -1,0 +1,203 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import com.jfoenix.controls.JFXButton?>
+<?import com.jfoenix.controls.JFXComboBox?>
+<?import com.jfoenix.controls.JFXDatePicker?>
+<?import com.jfoenix.controls.JFXTextField?>
+<?import com.jfoenix.controls.JFXToggleButton?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.MenuButton?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.StackPane?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
+
+<AnchorPane xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="at.fhv.orchestraria.UserInterface.Usermanagement.UserEditWindowController">
+   <children>
+      <BorderPane fx:id="borderPane" layoutX="10.0" layoutY="10.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+         <top>
+            <HBox alignment="CENTER" prefHeight="64.0" prefWidth="738.0" spacing="15.0" style="-fx-background-color: rgba(39, 73, 109, 0.5);">
+               <children>
+                  <Label fx:id="_user1" style="-fx-font-weight: bolder;" text="User ">
+                     <font>
+                        <Font size="18.0" />
+                     </font>
+                  </Label>
+                  <Label fx:id="_userLabel" style="-fx-font-weight: bold;" text="fname lname">
+                     <font>
+                        <Font size="18.0" />
+                     </font>
+                  </Label>
+               </children>
+            </HBox>
+         </top>
+         <bottom>
+            <AnchorPane prefHeight="33.0" prefWidth="727.0" style="-fx-border-color: grey; -fx-border-width: 1px 0px 0px 0px;" stylesheets="@../../css/team-c/ui_style.css" BorderPane.alignment="CENTER">
+               <children>
+                  <HBox alignment="CENTER_RIGHT" layoutX="533.0" layoutY="4.0" prefHeight="38.0" prefWidth="180.0" AnchorPane.rightAnchor="14.0">
+                     <children>
+                        <JFXButton fx:id="_save_bttn" buttonType="RAISED" layoutX="499.0" layoutY="429.0" onAction="#saveMusiciansAssignment" prefHeight="25.0" prefWidth="87.0" ripplerFill="BLACK" text="Save" AnchorPane.bottomAnchor="10.0" AnchorPane.rightAnchor="10.0" />
+                     </children>
+                  </HBox>
+               </children>
+            </AnchorPane>
+         </bottom>
+         <left>
+            <VBox prefHeight="201.0" prefWidth="430.0" BorderPane.alignment="CENTER">
+               <children>
+                  <AnchorPane maxHeight="60.0" prefHeight="120.0" prefWidth="430.0" style="-fx-background-color: #c7c7c7;">
+                     <children>
+                        <Label layoutX="149.0" prefHeight="60.0" text="General Information" textAlignment="CENTER">
+                           <font>
+                              <Font size="15.0" />
+                           </font>
+                        </Label>
+                     </children>
+                  </AnchorPane>
+                  <VBox prefHeight="473.0" prefWidth="430.0">
+                     <children>
+                        <HBox alignment="CENTER" prefHeight="67.0" prefWidth="443.0" style="-fx-spacing: 30;">
+                           <children>
+                              <Label minWidth="100.0" text="First Name" />
+                              <JFXTextField fx:id="fnameField" minWidth="200.0" />
+                           </children>
+                        </HBox>
+                        <HBox alignment="CENTER" prefHeight="67.0" prefWidth="443.0" style="-fx-spacing: 30;">
+                           <children>
+                              <Label minWidth="100.0" text="Last Name" />
+                              <JFXTextField fx:id="lnameField" minWidth="200.0" />
+                           </children>
+                        </HBox>
+                        <HBox alignment="CENTER" prefHeight="67.0" prefWidth="443.0" style="-fx-spacing: 30;">
+                           <children>
+                              <Label minWidth="100.0" text="Email" />
+                              <JFXTextField fx:id="emailField" minWidth="200.0" />
+                           </children>
+                        </HBox>
+                        <HBox alignment="CENTER" prefHeight="67.0" prefWidth="443.0" style="-fx-spacing: 30;">
+                           <children>
+                              <Label minWidth="100.0" text="Phone" />
+                              <JFXTextField fx:id="phoneField" minWidth="200.0" />
+                           </children>
+                        </HBox>
+                        <HBox alignment="CENTER" prefHeight="67.0" prefWidth="443.0" style="-fx-spacing: 30;">
+                           <children>
+                              <Label minWidth="100.0" text="Country" />
+                              <JFXTextField fx:id="countryField" minWidth="200.0" />
+                           </children>
+                        </HBox>
+                        <HBox alignment="CENTER" prefHeight="67.0" prefWidth="443.0" style="-fx-spacing: 30;">
+                           <children>
+                              <Label minWidth="100.0" text="City" />
+                              <JFXTextField fx:id="cityField" minWidth="200.0" />
+                           </children>
+                        </HBox>
+                        <HBox alignment="CENTER" prefHeight="67.0" prefWidth="443.0" style="-fx-spacing: 30;">
+                           <children>
+                              <Label minWidth="100.0" text="Zip Code" />
+                              <JFXTextField fx:id="zipField" minWidth="200.0" />
+                           </children>
+                        </HBox>
+                        <HBox alignment="CENTER" prefHeight="67.0" prefWidth="443.0" style="-fx-spacing: 30;">
+                           <children>
+                              <Label minWidth="100.0" text="Street" />
+                              <JFXTextField fx:id="streetField" minWidth="200.0" />
+                           </children>
+                        </HBox>
+                        <HBox alignment="CENTER" prefHeight="67.0" prefWidth="429.0" style="-fx-spacing: 30;">
+                           <children>
+                              <Label minWidth="100.0" text="Street Number" />
+                              <JFXTextField fx:id="streetNrField" minWidth="200.0" />
+                           </children>
+                        </HBox>
+                     </children>
+                  </VBox>
+               </children>
+            </VBox>
+         </left>
+         <center>
+            <VBox prefHeight="527.0" prefWidth="383.0" BorderPane.alignment="CENTER">
+               <children>
+                  <AnchorPane maxHeight="60.0" prefHeight="120.0" prefWidth="432.0" style="-fx-background-color: #c7c7c7;">
+                     <children>
+                        <Label layoutX="42.0" prefHeight="60.0" text="Musician" textAlignment="CENTER">
+                           <font>
+                              <Font size="15.0" />
+                           </font>
+                        </Label>
+                        <Label layoutX="224.0" prefHeight="60.0" text="Administrative Assistant" textAlignment="CENTER">
+                           <font>
+                              <Font size="15.0" />
+                           </font>
+                        </Label>
+                        <JFXToggleButton fx:id="musicianAdministrativeToggle" layoutX="132.0" onAction="#maatoggle" prefHeight="60.0" text=" " toggleColor="#fafafa" toggleLineColor="#999999" />
+                     </children>
+                  </AnchorPane>
+                  <StackPane prefHeight="477.0" prefWidth="432.0">
+                     <children>
+                        <VBox fx:id="_musicianVBox" prefHeight="209.0" prefWidth="432.0">
+                           <children>
+                              <HBox alignment="CENTER" prefHeight="67.0" prefWidth="443.0" style="-fx-spacing: 30;" VBox.vgrow="NEVER">
+                                 <children>
+                                    <Label minWidth="100.0" text="Musician Role" />
+                                    <MenuButton fx:id="roleDropDown" maxWidth="200.0" minHeight="25.0" minWidth="200.0" mnemonicParsing="false" HBox.hgrow="NEVER" />
+                                 </children>
+                              </HBox>
+                              <HBox alignment="CENTER" prefHeight="67.0" prefWidth="443.0" style="-fx-spacing: 30;">
+                                 <children>
+                                    <Label minWidth="100.0" text="Section" />
+                                    <JFXComboBox fx:id="sectionDropDown" minWidth="200.0" />
+                                 </children>
+                              </HBox>
+                              <HBox alignment="CENTER" prefHeight="67.0" prefWidth="443.0" style="-fx-spacing: 30;">
+                                 <children>
+                                    <Label minWidth="100.0" text="Instrument" />
+                                    <MenuButton fx:id="instrumentDropDown" maxHeight="25.0" maxWidth="200.0" minWidth="200.0" mnemonicParsing="false" />
+                                 </children>
+                              </HBox>
+                              <HBox alignment="CENTER" prefHeight="67.0" prefWidth="443.0" style="-fx-spacing: 30;">
+                                 <children>
+                                    <Label minWidth="100.0" text="Contract Start" />
+                                    <JFXDatePicker fx:id="contractStartPicker" defaultColor="rgba(22, 165, 212, 0.5)" minWidth="200.0" />
+                                 </children>
+                              </HBox>
+                              <HBox alignment="CENTER" prefHeight="67.0" prefWidth="443.0" style="-fx-spacing: 30;">
+                                 <children>
+                                    <Label minWidth="100.0" text="Contract End" />
+                                    <JFXDatePicker fx:id="contractEndPicker" defaultColor="rgba(22, 165, 212, 0.5)" minWidth="200.0" />
+                                 </children>
+                              </HBox>
+                              <HBox alignment="CENTER" prefHeight="67.0" prefWidth="443.0" style="-fx-spacing: 30;">
+                                 <children>
+                                    <Label minWidth="100.0" text="Points per Month" />
+                                    <JFXTextField fx:id="pointsPerMonthField" minWidth="200.0" />
+                                 </children>
+                              </HBox>
+                              <HBox alignment="CENTER" prefHeight="67.0" prefWidth="443.0" style="-fx-spacing: 30;">
+                                 <children>
+                                    <Label minWidth="100.0" text="Special Instruments" />
+                                    <JFXTextField fx:id="specialField" minWidth="200.0" />
+                                 </children>
+                              </HBox>
+                           </children>
+                        </VBox>
+                        <VBox fx:id="_administrativeVBox" prefHeight="465.0" prefWidth="432.0" visible="false">
+                           <children>
+                              <HBox alignment="CENTER" prefHeight="67.0" prefWidth="443.0" style="-fx-spacing: 30;">
+                                 <children>
+                                    <Label minWidth="100.0" text="Administrative Role" />
+                                    <JFXComboBox fx:id="adminRoleDropDown" minWidth="200.0" />
+                                 </children>
+                              </HBox>
+                           </children>
+                        </VBox>
+                     </children>
+                  </StackPane>
+               </children>
+            </VBox>
+         </center>
+      </BorderPane>
+   </children>
+</AnchorPane>

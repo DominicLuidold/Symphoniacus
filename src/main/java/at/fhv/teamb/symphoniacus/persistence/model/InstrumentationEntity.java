@@ -1,5 +1,10 @@
 package at.fhv.teamb.symphoniacus.persistence.model;
 
+import at.fhv.teamb.symphoniacus.persistence.model.interfaces.IInstrumentationEntity;
+import at.fhv.teamb.symphoniacus.persistence.model.interfaces.IInstrumentationPositionEntity;
+import at.fhv.teamb.symphoniacus.persistence.model.interfaces.IMusicalPieceEntity;
+import at.fhv.teamb.symphoniacus.persistence.model.interfaces.ISectionInstrumentationEntity;
+import at.fhv.teamb.symphoniacus.persistence.model.interfaces.ISeriesOfPerformancesEntity;
 import java.util.LinkedList;
 import java.util.List;
 import javax.persistence.Column;
@@ -9,13 +14,15 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
+import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
 @Entity
 @Table(name = "instrumentation")
-public class InstrumentationEntity {
+public class InstrumentationEntity implements IInstrumentationEntity {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "instrumentationId")
@@ -24,73 +31,112 @@ public class InstrumentationEntity {
     @Column(name = "name")
     private String name;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.LAZY, targetEntity = MusicalPieceEntity.class)
     @JoinColumn(name = "musicalPieceId")
-    private MusicalPieceEntity musicalPiece;
+    private IMusicalPieceEntity musicalPiece;
 
-    @OneToMany(mappedBy = "instrumentation", orphanRemoval = true)
-    private List<SectionInstrumentationEntity> sectionInstrumentations = new LinkedList<>();
+    @ManyToMany(mappedBy = "instrumentations", targetEntity = SeriesOfPerformancesEntity.class)
+    private List<ISeriesOfPerformancesEntity> seriesOfPerformances = new LinkedList<>();
 
-    @OneToMany(mappedBy = "instrumentation", orphanRemoval = true)
-    private List<InstrumentationPositionEntity> instrumentationPositions = new LinkedList<>();
+    @OneToMany(
+        mappedBy = "instrumentation",
+        fetch = FetchType.LAZY,
+        targetEntity = SectionInstrumentationEntity.class
+    )
+    private List<ISectionInstrumentationEntity> sectionInstrumentations = new LinkedList<>();
 
+    @OneToMany(
+        mappedBy = "instrumentation",
+        orphanRemoval = true,
+        targetEntity = InstrumentationPositionEntity.class
+    )
+    private List<IInstrumentationPositionEntity> instrumentationPositions = new LinkedList<>();
+
+    @Override
     public Integer getInstrumentationId() {
         return this.instrumentationId;
     }
 
-    public void setInstrumentationId(Integer instrumentationId) {
+    @Override
+    public void setInstrumentationId(int instrumentationId) {
         this.instrumentationId = instrumentationId;
     }
 
+    @Override
     public String getName() {
         return this.name;
     }
 
+    @Override
     public void setName(String name) {
         this.name = name;
     }
 
-    public MusicalPieceEntity getMusicalPiece() {
+    @Override
+    public IMusicalPieceEntity getMusicalPiece() {
         return this.musicalPiece;
     }
 
-    public void setMusicalPiece(MusicalPieceEntity musicalPiece) {
+    @Override
+    public void setMusicalPiece(IMusicalPieceEntity musicalPiece) {
         this.musicalPiece = musicalPiece;
     }
 
-    public List<SectionInstrumentationEntity> getSectionInstrumentations() {
+    @Override
+    public List<ISectionInstrumentationEntity> getSectionInstrumentations() {
         return this.sectionInstrumentations;
     }
 
-    public void addSectionInstrumentation(
-        SectionInstrumentationEntity sectionInstrumentation
-    ) {
+    @Override
+    public void addSectionInstrumentation(ISectionInstrumentationEntity sectionInstrumentation) {
         this.sectionInstrumentations.add(sectionInstrumentation);
         sectionInstrumentation.setInstrumentation(this);
     }
 
-    public void removeSectionInstrumentation(
-        SectionInstrumentationEntity sectionInstrumentation
-    ) {
+    @Override
+    public void removeSectionInstrumentation(ISectionInstrumentationEntity sectionInstrumentation) {
         this.sectionInstrumentations.remove(sectionInstrumentation);
         sectionInstrumentation.setInstrumentation(null);
     }
 
-    public List<InstrumentationPositionEntity> getInstrumentationPositions() {
+    @Override
+    public List<IInstrumentationPositionEntity> getInstrumentationPositions() {
         return this.instrumentationPositions;
     }
 
-    public void addInstrumentationPosition(
-        InstrumentationPositionEntity instrumentationPosition
-    ) {
+    @Override
+    public void addInstrumentationPosition(IInstrumentationPositionEntity instrumentationPosition) {
         this.instrumentationPositions.add(instrumentationPosition);
         instrumentationPosition.setInstrumentation(this);
     }
 
+    @Override
     public void removeInstrumentationPosition(
-        InstrumentationPositionEntity instrumentationPosition
+        IInstrumentationPositionEntity instrumentationPosition
     ) {
         this.instrumentationPositions.remove(instrumentationPosition);
         instrumentationPosition.setInstrumentation(null);
+    }
+
+    @Override
+    public List<ISeriesOfPerformancesEntity> getSeriesOfPerformances() {
+        return this.seriesOfPerformances;
+    }
+
+    @Override
+    public void setSeriesOfPerformances(List<ISeriesOfPerformancesEntity> seriesOfPerformances) {
+        this.seriesOfPerformances = seriesOfPerformances;
+    }
+
+    @Override
+    public void addSeriesOfPerformance(ISeriesOfPerformancesEntity series) {
+        this.seriesOfPerformances.add(series);
+        series.addInstrumentation(this);
+    }
+
+    @Override
+    public void removeSeriesOfPerformance(ISeriesOfPerformancesEntity series) {
+        this.seriesOfPerformances.remove(series);
+        series.removeInstrumentation(this);
     }
 }

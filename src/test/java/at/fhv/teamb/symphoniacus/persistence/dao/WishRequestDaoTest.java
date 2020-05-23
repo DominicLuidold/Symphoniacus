@@ -1,11 +1,11 @@
 package at.fhv.teamb.symphoniacus.persistence.dao;
 
-import at.fhv.teamb.symphoniacus.persistence.model.DutyEntity;
-import at.fhv.teamb.symphoniacus.persistence.model.MonthlyScheduleEntity;
-import at.fhv.teamb.symphoniacus.persistence.model.NegativeDateWishEntity;
-import at.fhv.teamb.symphoniacus.persistence.model.NegativeDutyWishEntity;
-import at.fhv.teamb.symphoniacus.persistence.model.PositiveWishEntity;
+import at.fhv.teamb.symphoniacus.persistence.dao.interfaces.IDutyDao;
+import at.fhv.teamb.symphoniacus.persistence.dao.interfaces.INegativeDateWishDao;
+import at.fhv.teamb.symphoniacus.persistence.dao.interfaces.INegativeDutyWishDao;
+import at.fhv.teamb.symphoniacus.persistence.dao.interfaces.IPositiveWishDao;
 import at.fhv.teamb.symphoniacus.persistence.model.WishRequestable;
+import at.fhv.teamb.symphoniacus.persistence.model.interfaces.IDutyEntity;
 import java.util.List;
 import java.util.Optional;
 import java.util.Random;
@@ -19,9 +19,9 @@ import org.junit.jupiter.api.TestInstance;
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 class WishRequestDaoTest {
     private static final Logger LOG = LogManager.getLogger(WishRequestDaoTest.class);
-    private PositiveWishDao pdao;
-    private NegativeDutyWishDao ndutydao;
-    private NegativeDateWishDao ndatedao;
+    private IPositiveWishDao pdao;
+    private INegativeDutyWishDao ndutydao;
+    private INegativeDateWishDao ndatedao;
 
     @BeforeAll
     void initialize() {
@@ -34,11 +34,11 @@ class WishRequestDaoTest {
     void getAllWishes_ShouldNotReturnNullAndWishesAreValid() {
         Random rand = new Random();
         Integer rndId = rand.nextInt(100) + 1;
-        DutyDao dutyDao = new DutyDao();
-        Optional<DutyEntity> oprealDuty = dutyDao.find(rndId);
+        IDutyDao dutyDao = new DutyDao();
+        Optional<IDutyEntity> oprealDuty = dutyDao.find(rndId);
 
         if (oprealDuty.isPresent()) {
-            DutyEntity realDuty = oprealDuty.get();
+            IDutyEntity realDuty = oprealDuty.get();
             List<WishRequestable> positiveWishes = pdao.getAllPositiveWishes(realDuty);
             List<WishRequestable> negativeDutyWishes =
                 ndutydao.getAllNegativeDutyWishes(realDuty);

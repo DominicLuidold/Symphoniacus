@@ -5,10 +5,12 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 
+import at.fhv.teamb.symphoniacus.application.dto.SectionDto;
 import at.fhv.teamb.symphoniacus.domain.Duty;
 import at.fhv.teamb.symphoniacus.persistence.dao.DutyDao;
 import at.fhv.teamb.symphoniacus.persistence.model.DutyEntity;
 import at.fhv.teamb.symphoniacus.persistence.model.SectionEntity;
+import at.fhv.teamb.symphoniacus.persistence.model.interfaces.IDutyEntity;
 import java.time.DayOfWeek;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -28,13 +30,13 @@ import org.mockito.Mockito;
 class DutyManagerTest {
     private LocalDate testDate;
     private DutyManager dutyManager;
-    private SectionEntity section;
+    private SectionDto section;
 
     @BeforeAll
     void initialize() {
         this.testDate = LocalDate.now();
         this.dutyManager = new DutyManager();
-        this.section = Mockito.mock(SectionEntity.class);
+        this.section = Mockito.mock(SectionDto.class);
         this.dutyManager.dutyDao = Mockito.mock(DutyDao.class);
 
         when(this.dutyManager.dutyDao.findAllInRangeWithSection(
@@ -67,13 +69,13 @@ class DutyManagerTest {
         LocalDate tuesday = LocalDate.of(2020, 4, 7);
 
         // When & Then
-        assertEquals(DutyManager.getLastMondayDate(monday).getDayOfWeek(), DayOfWeek.MONDAY);
-        assertEquals(DutyManager.getLastMondayDate(tuesday).getDayOfWeek(), DayOfWeek.MONDAY);
+        assertEquals(DayOfWeek.MONDAY, DutyManager.getLastMondayDate(monday).getDayOfWeek());
+        assertEquals(DayOfWeek.MONDAY, DutyManager.getLastMondayDate(tuesday).getDayOfWeek());
     }
 
     @Test
     void convertToDuties_ShouldReturnAList() {
-        List<DutyEntity> el = new LinkedList<>();
+        List<IDutyEntity> el = new LinkedList<>();
         el.add(new DutyEntity());
         el.add(new DutyEntity());
         List<Duty> duties = DutyManager.convertEntitiesToDomainObjects(el);

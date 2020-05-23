@@ -1,6 +1,7 @@
 package at.fhv.teamb.symphoniacus.domain;
 
 import at.fhv.teamb.symphoniacus.persistence.model.DutyPositionEntity;
+import at.fhv.teamb.symphoniacus.persistence.model.interfaces.IDutyPositionEntity;
 import java.util.Optional;
 
 /**
@@ -9,18 +10,26 @@ import java.util.Optional;
  * @author Dominic Luidold
  */
 public class DutyPosition {
-    private final InstrumentationPosition instrumentationPosition;
-    private DutyPositionEntity entity;
+    private final IDutyPositionEntity entity;
+    private final MusicalPiece musicalPiece;
+    private int positionNumber;
+    private String positionDescription;
 
     /**
      * Initializes the DutyPosition object based on provided {@link DutyPositionEntity}.
      *
      * @param entity The entity to use
      */
-    public DutyPosition(DutyPositionEntity entity) {
+    public DutyPosition(IDutyPositionEntity entity) {
         this.entity = entity;
-        this.instrumentationPosition =
-            new InstrumentationPosition(entity.getInstrumentationPosition());
+        this.musicalPiece = new MusicalPiece(
+            entity.getInstrumentationPosition().getInstrumentation().getMusicalPiece()
+        );
+    }
+
+    public DutyPosition(IDutyPositionEntity entity, MusicalPiece musicalPiece) {
+        this.entity = entity;
+        this.musicalPiece = musicalPiece;
     }
 
     /**
@@ -36,7 +45,27 @@ public class DutyPosition {
         }
     }
 
-    public DutyPositionEntity getEntity() {
+    public IDutyPositionEntity getEntity() {
         return this.entity;
+    }
+
+    public MusicalPiece getMusicalPiece() {
+        return this.musicalPiece;
+    }
+
+    public int getPositionNumber() {
+        return this.positionNumber;
+    }
+
+    public void setPositionNumber(int positionNumber) {
+        this.positionNumber = positionNumber;
+    }
+
+    public String getPositionDescription() {
+        return this.positionDescription;
+    }
+
+    public void setPositionDescription(String positionDescription) {
+        this.positionDescription = positionDescription;
     }
 }

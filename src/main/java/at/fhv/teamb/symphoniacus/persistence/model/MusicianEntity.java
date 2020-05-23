@@ -1,5 +1,17 @@
 package at.fhv.teamb.symphoniacus.persistence.model;
 
+import at.fhv.teamb.symphoniacus.persistence.model.interfaces.IContractualObligationEntity;
+import at.fhv.teamb.symphoniacus.persistence.model.interfaces.IDutyPositionEntity;
+import at.fhv.teamb.symphoniacus.persistence.model.interfaces.IInstrumentCategoryEntity;
+import at.fhv.teamb.symphoniacus.persistence.model.interfaces.IMusicianEntity;
+import at.fhv.teamb.symphoniacus.persistence.model.interfaces.IMusicianRoleEntity;
+import at.fhv.teamb.symphoniacus.persistence.model.interfaces.INegativeDateWishEntity;
+import at.fhv.teamb.symphoniacus.persistence.model.interfaces.INegativeDutyWishEntity;
+import at.fhv.teamb.symphoniacus.persistence.model.interfaces.IPositiveWishEntity;
+import at.fhv.teamb.symphoniacus.persistence.model.interfaces.ISectionEntity;
+import at.fhv.teamb.symphoniacus.persistence.model.interfaces.ISubstitute;
+import at.fhv.teamb.symphoniacus.persistence.model.interfaces.IUserEntity;
+import at.fhv.teamb.symphoniacus.persistence.model.interfaces.IVacationEntity;
 import java.util.LinkedList;
 import java.util.List;
 import javax.persistence.CascadeType;
@@ -29,24 +41,24 @@ import javax.persistence.Table;
         @NamedAttributeNode("musicianRoles")
     }
 )
-public class MusicianEntity {
+public class MusicianEntity implements IMusicianEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "musicianId")
     private Integer musicianId;
 
-    @OneToOne(fetch = FetchType.LAZY)
+    @OneToOne(fetch = FetchType.LAZY, targetEntity = UserEntity.class)
     @JoinColumn(name = "userId")
-    private UserEntity user;
+    private IUserEntity user;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.LAZY, targetEntity = SectionEntity.class)
     @JoinColumn(name = "sectionId")
-    private SectionEntity section;
+    private ISectionEntity section;
 
-    @OneToMany(mappedBy = "musician")
-    private List<ContractualObligationEntity> contractualObligations = new LinkedList<>();
+    @OneToMany(mappedBy = "musician", targetEntity = ContractualObligationEntity.class)
+    private List<IContractualObligationEntity> contractualObligations = new LinkedList<>();
 
-    @ManyToMany
+    @ManyToMany(cascade = {CascadeType.MERGE}, targetEntity = MusicianRoleEntity.class)
     @JoinTable(
         name = "musicianRole_musician",
         joinColumns = {
@@ -56,179 +68,285 @@ public class MusicianEntity {
             @JoinColumn(name = "musicianRoleId")
         }
     )
-    private List<MusicianRole> musicianRoles = new LinkedList<>();
+    private List<IMusicianRoleEntity> musicianRoles = new LinkedList<>();
 
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "musician")
-    private List<DutyPositionEntity> dutyPositions = new LinkedList<>();
+    @ManyToMany(cascade = {CascadeType.MERGE}, targetEntity = InstrumentCategoryEntity.class)
+    @JoinTable(
+        name = "instrumentCategory_musician",
+        joinColumns = {
+            @JoinColumn(name = "musicianId")
+        },
+        inverseJoinColumns = {
+            @JoinColumn(name = "instrumentCategoryId")
+        }
+    )
+    private List<IInstrumentCategoryEntity> instrumentCategories = new LinkedList<>();
 
-    @OneToMany(mappedBy = "musician")
-    private List<PositiveWishEntity> positiveWishes = new LinkedList<>();
+    @OneToMany(
+        mappedBy = "musician",
+        cascade = {CascadeType.PERSIST, CascadeType.MERGE},
+        targetEntity = DutyPositionEntity.class
+    )
+    private List<IDutyPositionEntity> dutyPositions = new LinkedList<>();
 
-    @OneToMany(mappedBy = "musician")
-    private List<NegativeDutyWishEntity> negativeDutyWishes = new LinkedList<>();
+    @OneToMany(mappedBy = "musician", targetEntity = PositiveWishEntity.class)
+    private List<IPositiveWishEntity> positiveWishes = new LinkedList<>();
 
-    @OneToMany(mappedBy = "musician")
-    private List<VacationEntity> vacations = new LinkedList<>();
+    @OneToMany(mappedBy = "musician", targetEntity = NegativeDutyWishEntity.class)
+    private List<INegativeDutyWishEntity> negativeDutyWishes = new LinkedList<>();
 
-    @OneToMany(mappedBy = "musician")
-    private List<NegativeDateWishEntity> negativeDateWishes = new LinkedList<>();
+    @OneToMany(mappedBy = "musician", targetEntity = VacationEntity.class)
+    private List<IVacationEntity> vacations = new LinkedList<>();
 
-    public void addPosition(DutyPositionEntity position) {
-        this.dutyPositions.add(position);
-        position.setMusician(this);
-    }
+    @OneToMany(mappedBy = "musician", targetEntity = NegativeDateWishEntity.class)
+    private List<INegativeDateWishEntity> negativeDateWishes = new LinkedList<>();
 
-    public void removePosition(DutyPositionEntity position) {
-        this.dutyPositions.remove(position);
-        position.setMusician(null);
-    }
+    @OneToMany(mappedBy = "musician", targetEntity = Substitute.class)
+    private List<ISubstitute> substitutes = new LinkedList<>();
 
-    public void addPositiveWish(PositiveWishEntity positiveWish) {
+    @Override
+    public void addPositiveWish(IPositiveWishEntity positiveWish) {
         this.positiveWishes.add(positiveWish);
         positiveWish.setMusician(this);
     }
 
-    public void removePositiveWish(PositiveWishEntity positiveWish) {
+    @Override
+    public void removePositiveWish(IPositiveWishEntity positiveWish) {
         this.positiveWishes.remove(positiveWish);
         positiveWish.setMusician(null);
     }
 
-    public void addNegativeDutyWish(NegativeDutyWishEntity negativeWish) {
+    @Override
+    public void addNegativeDutyWish(INegativeDutyWishEntity negativeWish) {
         this.negativeDutyWishes.add(negativeWish);
         negativeWish.setMusician(this);
     }
 
-    public void removeNegativeDutyWish(NegativeDutyWishEntity negativeWish) {
+    @Override
+    public void removeNegativeDutyWish(INegativeDutyWishEntity negativeWish) {
         this.negativeDutyWishes.remove(negativeWish);
         negativeWish.setMusician(null);
     }
 
-    public void addNegativeDateWish(NegativeDateWishEntity negativeWish) {
+    @Override
+    public void addNegativeDateWish(INegativeDateWishEntity negativeWish) {
         this.negativeDateWishes.add(negativeWish);
         negativeWish.setMusician(this);
     }
 
-    public void removeNegativeDateWish(NegativeDateWishEntity negativeWish) {
+    @Override
+    public void removeNegativeDateWish(INegativeDateWishEntity negativeWish) {
         this.negativeDateWishes.remove(negativeWish);
         negativeWish.setMusician(null);
     }
 
+    @Override
     public void setContractualObligations(
-        List<ContractualObligationEntity> contractualObligations) {
+        List<IContractualObligationEntity> contractualObligations
+    ) {
         this.contractualObligations = contractualObligations;
     }
 
-    public List<NegativeDutyWishEntity> getNegativeDutyWishes() {
+    @Override
+    public List<INegativeDutyWishEntity> getNegativeDutyWishes() {
         return negativeDutyWishes;
     }
 
-    public void setNegativeDutyWishes(
-        List<NegativeDutyWishEntity> negativeDutyWishes) {
+    @Override
+    public void setNegativeDutyWishes(List<INegativeDutyWishEntity> negativeDutyWishes) {
         this.negativeDutyWishes = negativeDutyWishes;
     }
 
-    public void setMusicianRoles(
-        List<MusicianRole> musicianRoles) {
+    @Override
+    public void setMusicianRoles(List<IMusicianRoleEntity> musicianRoles) {
         this.musicianRoles = musicianRoles;
     }
 
-    public void setDutyPositions(
-        List<DutyPositionEntity> dutyPositions) {
+    @Override
+    public void setDutyPositions(List<IDutyPositionEntity> dutyPositions) {
         this.dutyPositions = dutyPositions;
     }
 
-    public List<PositiveWishEntity> getPositiveWishes() {
+    @Override
+    public List<IPositiveWishEntity> getPositiveWishes() {
         return positiveWishes;
     }
 
-    public void setPositiveWishes(
-        List<PositiveWishEntity> positiveWishes) {
+    @Override
+    public void setPositiveWishes(List<IPositiveWishEntity> positiveWishes) {
         this.positiveWishes = positiveWishes;
     }
 
 
-    public void setVacations(
-        List<VacationEntity> vacations) {
+    @Override
+    public void setVacations(List<IVacationEntity> vacations) {
         this.vacations = vacations;
     }
 
+    @Override
     public Integer getMusicianId() {
         return this.musicianId;
     }
 
+    @Override
     public void setMusicianId(Integer musicianId) {
         this.musicianId = musicianId;
     }
 
-    public UserEntity getUser() {
+    @Override
+    public IUserEntity getUser() {
         return this.user;
     }
 
-    public void setUser(UserEntity user) {
+    @Override
+    public void setUser(IUserEntity user) {
         this.user = user;
     }
 
-    public SectionEntity getSection() {
+    @Override
+    public ISectionEntity getSection() {
         return section;
     }
 
-    public void setSection(SectionEntity section) {
+    @Override
+    public void setSection(ISectionEntity section) {
         this.section = section;
     }
 
-    public List<ContractualObligationEntity> getContractualObligations() {
+    public List<IInstrumentCategoryEntity> getInstrumentCategories() {
+        return this.instrumentCategories;
+    }
+
+    public void setInstrumentCategories(
+        List<IInstrumentCategoryEntity> instrumentCategories) {
+        this.instrumentCategories = instrumentCategories;
+    }
+
+    @Override
+    public List<IContractualObligationEntity> getContractualObligations() {
         return this.contractualObligations;
     }
 
-    public void addContractualObligation(ContractualObligationEntity contractualObligation) {
+    @Override
+    public void addContractualObligation(IContractualObligationEntity contractualObligation) {
         this.contractualObligations.add(contractualObligation);
         contractualObligation.setMusician(this);
     }
 
-    public void removeContractualObligation(ContractualObligationEntity contractualObligation) {
+    @Override
+    public void removeContractualObligation(IContractualObligationEntity contractualObligation) {
         this.contractualObligations.remove(contractualObligation);
         contractualObligation.setMusician(null);
     }
 
-    public List<MusicianRole> getMusicianRoles() {
+    @Override
+    public List<IMusicianRoleEntity> getMusicianRoles() {
         return this.musicianRoles;
     }
 
-    public void addMusicianRole(MusicianRole role) {
+    @Override
+    public void addMusicianRole(IMusicianRoleEntity role) {
         this.musicianRoles.add(role);
         role.addMusician(this);
     }
 
-    public void removeMusicianRole(MusicianRole role) {
+    @Override
+    public void removeMusicianRole(IMusicianRoleEntity role) {
         this.musicianRoles.remove(role);
         role.removeMusician(this);
     }
 
-    public List<DutyPositionEntity> getDutyPositions() {
+    @Override
+    public List<IDutyPositionEntity> getDutyPositions() {
         return this.dutyPositions;
     }
 
-    public void addDutyPosition(DutyPositionEntity position) {
+    @Override
+    public void addDutyPosition(IDutyPositionEntity position) {
         this.dutyPositions.add(position);
         position.setMusician(this);
     }
 
-    public void removeDutyPosition(DutyPositionEntity position) {
+    @Override
+    public void removeDutyPosition(IDutyPositionEntity position) {
         this.dutyPositions.remove(position);
         position.setMusician(null);
     }
 
-    public List<VacationEntity> getVacations() {
+    @Override
+    public List<IVacationEntity> getVacations() {
         return this.vacations;
     }
 
-    public void addVacation(VacationEntity vacation) {
+    @Override
+    public void addVacation(IVacationEntity vacation) {
         this.vacations.add(vacation);
         vacation.setMusician(this);
     }
 
-    public void removeVacation(VacationEntity vacation) {
+    @Override
+    public void removeVacation(IVacationEntity vacation) {
         this.vacations.remove(vacation);
         vacation.setMusician(null);
+    }
+
+    @Override
+    public void addInstrumentCategory(IInstrumentCategoryEntity inst) {
+        this.instrumentCategories.add(inst);
+        inst.getMusicians().add(this);
+    }
+
+    @Override
+    public void removeInstrumentCategory(IInstrumentCategoryEntity inst) {
+        this.instrumentCategories.remove(inst);
+        inst.removeMusician(null);
+    }
+
+    public List<INegativeDateWishEntity> getNegativeDateWishes() {
+        return negativeDateWishes;
+    }
+
+    public void setNegativeDateWishes(
+        List<INegativeDateWishEntity> negativeDateWishes) {
+        this.negativeDateWishes = negativeDateWishes;
+    }
+
+    public List<ISubstitute> getSubstitutes() {
+        return substitutes;
+    }
+
+    public void setSubstitutes(
+        List<ISubstitute> substitutes) {
+        this.substitutes = substitutes;
+    }
+
+    /**
+     *  Removes all Musician Roles.
+     */
+    public void removeAllMusicianRoles() {
+        for (IMusicianRoleEntity role : this.musicianRoles) {
+            role.getMusicians().clear();
+        }
+        this.musicianRoles.clear();
+    }
+
+    /**
+     *  Removes all Instrumentation Categories.
+     */
+    public void removeAllInstrumentCategories() {
+        for (IInstrumentCategoryEntity cat : this.instrumentCategories) {
+            cat.getMusicians().clear();
+        }
+        this.instrumentCategories.clear();
+    }
+
+    /**
+     *  Removes all Contractual Obligations.
+     */
+    public void removeAllContractualObligations() {
+        for (IContractualObligationEntity contract : this.contractualObligations) {
+            contract.setMusician(null);
+        }
+        this.contractualObligations.clear();
     }
 }

@@ -3,6 +3,8 @@ package at.fhv.teamb.symphoniacus.presentation.internal;
 import at.fhv.teamb.symphoniacus.domain.Musician;
 import at.fhv.teamb.symphoniacus.domain.exception.PointsNotCalculatedException;
 import java.time.format.DateTimeFormatter;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 /**
  * TableModel for Musician.
@@ -10,7 +12,9 @@ import java.time.format.DateTimeFormatter;
  * @author Valentin Goronjic
  * @author Tobias Moser
  */
-public class MusicianTableModel {
+public class MusicianTableModel implements MusicianPointsTableModel {
+
+    private static final Logger LOG = LogManager.getLogger(MusicianTableModel.class);
     private boolean schedule;
     private Musician musician;
 
@@ -32,15 +36,47 @@ public class MusicianTableModel {
      *
      * @return value of Points of Musician.
      */
-    public Integer getPoints() {
+    @Override
+    public String getBalancePoints() {
         try {
-            return this.musician.getPoints().getValue();
+            return String.valueOf(this.musician.getBalancePoints().getValue());
         } catch (PointsNotCalculatedException e) {
-            return -1;
+            LOG.error(e);
+            return String.valueOf(-1);
         }
     }
 
-    public Boolean getSchedule() {
+    /**
+     * Returns the debit points of this musician.
+     *
+     * @return Points
+     */
+    @Override
+    public String getDebitPoints() {
+        try {
+            return String.valueOf(this.musician.getDebitPoints().getValue());
+        } catch (PointsNotCalculatedException e) {
+            LOG.error(e);
+            return String.valueOf(-1);
+        }
+    }
+
+    /**
+     * Returns the gained points of this musician.
+     *
+     * @return Points
+     */
+    @Override
+    public String getGainedPoints() {
+        try {
+            return String.valueOf(this.musician.getGainedPoints().getValue());
+        } catch (PointsNotCalculatedException e) {
+            LOG.error(e);
+            return String.valueOf(-1);
+        }
+    }
+
+    public boolean getSchedule() {
         return this.schedule;
     }
 
@@ -66,11 +102,12 @@ public class MusicianTableModel {
     }
 
     /**
-     * TODO JAVADOC.
-     * @return
+     * Returns whether this wish is positive or not.
+     *
+     * @return true when wish is positive
      */
     public boolean isWishPositive() {
-        if (!this.musician.getWishRequest().isPresent()) {
+        if (this.musician.getWishRequest().isEmpty()) {
             return false;
         } else {
             return this.musician.getWishRequest().get().isWishPositive();

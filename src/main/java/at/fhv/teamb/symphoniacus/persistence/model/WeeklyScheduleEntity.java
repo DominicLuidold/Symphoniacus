@@ -1,8 +1,12 @@
 package at.fhv.teamb.symphoniacus.persistence.model;
 
+import at.fhv.teamb.symphoniacus.persistence.model.interfaces.IDutyEntity;
+import at.fhv.teamb.symphoniacus.persistence.model.interfaces.IMonthlyScheduleEntity;
+import at.fhv.teamb.symphoniacus.persistence.model.interfaces.IWeeklyScheduleEntity;
 import java.time.LocalDate;
 import java.util.LinkedList;
 import java.util.List;
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -16,7 +20,7 @@ import javax.persistence.Table;
 
 @Entity
 @Table(name = "weeklySchedule")
-public class WeeklyScheduleEntity {
+public class WeeklyScheduleEntity implements IWeeklyScheduleEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "weeklyScheduleId")
@@ -35,95 +39,103 @@ public class WeeklyScheduleEntity {
     private LocalDate publishDate;
 
     @Column(name = "isConfirmed")
-    private Boolean isConfirmed;
+    private boolean isConfirmed;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(
+        fetch = FetchType.LAZY,
+        cascade = {CascadeType.PERSIST, CascadeType.MERGE},
+        targetEntity = MonthlyScheduleEntity.class
+    )
     @JoinColumn(name = "monthlyScheduleId")
-    private MonthlyScheduleEntity monthlySchedule;
+    private IMonthlyScheduleEntity monthlySchedule;
 
-    @OneToMany(mappedBy = "weeklySchedule", orphanRemoval = true)
-    private List<DutyEntity> duties = new LinkedList<>();
+    @OneToMany(mappedBy = "weeklySchedule", orphanRemoval = true, targetEntity = DutyEntity.class)
+    private List<IDutyEntity> duties = new LinkedList<>();
 
+    @Override
     public Integer getWeeklyScheduleId() {
         return this.weeklyScheduleId;
     }
 
+    @Override
     public void setWeeklyScheduleId(Integer weeklyScheduleId) {
         this.weeklyScheduleId = weeklyScheduleId;
     }
 
+    @Override
     public LocalDate getStartDate() {
         return this.startDate;
     }
 
+    @Override
     public void setStartDate(LocalDate startDate) {
         this.startDate = startDate;
     }
 
+    @Override
     public LocalDate getEndDate() {
         return this.endDate;
     }
 
+    @Override
     public void setEndDate(LocalDate endDate) {
         this.endDate = endDate;
     }
 
+    @Override
     public Integer getYear() {
         return this.year;
     }
 
+    @Override
     public void setYear(Integer year) {
         this.year = year;
     }
 
+    @Override
     public LocalDate getPublishDate() {
         return this.publishDate;
     }
 
+    @Override
     public void setPublishDate(LocalDate publishDate) {
         this.publishDate = publishDate;
     }
 
-    public Boolean getIsConfirmed() {
-        return this.isConfirmed;
+    @Override
+    public boolean getConfirmed() {
+        return isConfirmed;
     }
 
-    public void setIsConfirmed(Boolean isConfirmed) {
-        this.isConfirmed = isConfirmed;
+    @Override
+    public void setConfirmed(boolean confirmed) {
+        this.isConfirmed = confirmed;
     }
 
-    public MonthlyScheduleEntity getMonthlySchedule() {
-        return this.monthlySchedule;
+    @Override
+    public IMonthlyScheduleEntity getMonthlySchedule() {
+        return monthlySchedule;
     }
 
-    public void setMonthlySchedule(
-        MonthlyScheduleEntity monthlySchedule) {
+    @Override
+    public void setMonthlySchedule(IMonthlyScheduleEntity monthlySchedule) {
         this.monthlySchedule = monthlySchedule;
     }
 
-    public List<DutyEntity> getDuties() {
+    @Override
+    public List<IDutyEntity> getDuties() {
         return this.duties;
     }
 
-    public void addDuty(DutyEntity duty) {
+    @Override
+    public void addDuty(IDutyEntity duty) {
         this.duties.add(duty);
         duty.setWeeklySchedule(this);
     }
 
-    public void removeDuty(DutyEntity duty) {
+    @Override
+    public void removeDuty(IDutyEntity duty) {
         this.duties.remove(duty);
         duty.setWeeklySchedule(null);
-    }
-
-    public Boolean getConfirmed() {
-        return isConfirmed;
-    }
-
-    public void setConfirmed(Boolean confirmed) {
-        isConfirmed = confirmed;
-    }
-
-    public void setDuties(List<DutyEntity> duties) {
-        this.duties = duties;
     }
 }

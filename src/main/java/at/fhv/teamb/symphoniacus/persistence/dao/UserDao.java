@@ -1,11 +1,15 @@
 package at.fhv.teamb.symphoniacus.persistence.dao;
 
 import at.fhv.teamb.symphoniacus.persistence.BaseDao;
-import at.fhv.teamb.symphoniacus.persistence.model.MusicianEntity;
-import at.fhv.teamb.symphoniacus.persistence.model.NegativeDutyWishEntity;
+import at.fhv.teamb.symphoniacus.persistence.dao.interfaces.IUserDao;
 import at.fhv.teamb.symphoniacus.persistence.model.UserEntity;
+import at.fhv.teamb.symphoniacus.persistence.model.interfaces.IUserEntity;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 import javax.persistence.TypedQuery;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 /**
  * DAO for Users.
@@ -13,67 +17,148 @@ import javax.persistence.TypedQuery;
  * @author Danijel Antonijevic
  * @author Valentin Goronjic
  */
-public class UserDao extends BaseDao<UserEntity> {
+public class UserDao extends BaseDao<IUserEntity>
+    implements IUserDao {
+    private static final Logger LOG = LogManager.getLogger(UserDao.class);
 
     /**
-     * Finds a duty by its key.
-     *
-     * @param key The key of the duty
-     * @return The duty that is looked for
+     * {@inheritDoc}
      */
     @Override
-    public Optional<UserEntity> find(Integer key) {
+    public Optional<IUserEntity> find(Integer key) {
         return this.find(UserEntity.class, key);
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
-    public Optional<UserEntity> persist(UserEntity elem) {
-        return Optional.empty();
+    public Optional<IUserEntity> persist(IUserEntity elem) {
+        return this.persist(UserEntity.class, elem);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public Optional<IUserEntity> update(IUserEntity elem) {
+        return this.update(UserEntity.class, elem);
     }
 
     @Override
-    public Optional<UserEntity> update(UserEntity elem) {
-        return Optional.empty();
-    }
-
-    @Override
-    public Boolean remove(UserEntity elem) {
+    public boolean remove(IUserEntity elem) {
         return false;
     }
 
     /**
-     * Returns a {@link UserEntity} if provided shortcut and password match a database entry.
-     *
-     * @param userShortCut The shortcut to identify the user
-     * @param password     The password to authenticate the user
-     * @return A user matching provided credentials
+     * {@inheritDoc}
      */
-    public Optional<UserEntity> login(String userShortCut, String password) {
+    @Override
+    public Optional<IUserEntity> loadUser(String userShortCut) {
+        List<UserEntity> result = null;
         TypedQuery<UserEntity> query = entityManager.createQuery(
-            "SELECT u FROM UserEntity u WHERE u.shortcut = :shortc AND u.password = :pwd",
+            "SELECT u FROM UserEntity u WHERE u.shortcut = :shortc",
             UserEntity.class
         );
         query.setParameter("shortc", userShortCut);
-        query.setParameter("pwd", password);
-        UserEntity result = query.getSingleResult();
 
-        return Optional.of(result);
+        result = query.getResultList();
+        if (!result.isEmpty()) {
+            return Optional.of(result.get(0));
+        }
+
+        LOG.debug("No results for query loadUser found");
+        return Optional.empty();
     }
 
     /**
-     * Checks whether the provided {@link UserEntity} is a {@link MusicianEntity}.
-     *
-     * @param currentUser The user to check
-     * @return True if user is a musician, false otherwise
+     * {@inheritDoc}
      */
-    public boolean isUserMusician(UserEntity currentUser) {
+    @Override
+    public boolean isLoginCorrect(String userShortCut, String inputPasswordHash) {
+        TypedQuery<Long> query = entityManager.createQuery(
+            "SELECT COUNT(u) FROM UserEntity u "
+                + "WHERE u.shortcut = :userShortCut "
+                + "AND u.password = :inputPasswordHash",
+            Long.class
+        );
+        query.setParameter("userShortCut", userShortCut);
+        query.setParameter("inputPasswordHash", inputPasswordHash);
+
+        Long result = query.getSingleResult();
+        if (result == 1) {
+            return true;
+        }
+
+        LOG.debug("Credentials incorrect");
+        return false;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public boolean isUserMusician(IUserEntity currentUser) {
+        Optional<Long> result = Optional.empty();
         TypedQuery<Long> query = entityManager.createQuery(
             "SELECT COUNT(m) FROM MusicianEntity m WHERE m.user = :user",
             Long.class
         );
         query.setParameter("user", currentUser);
-        Long result = query.getSingleResult();
 
-        return result == 1;
+        try {
+            result = Optional.of(query.getSingleResult());
+        } catch (Exception e) {
+            LOG.error(e);
+        }
+
+        if (result.isPresent()) {
+            return result.get() == 1;
+        }
+        LOG.debug("No results for query isUserMusician found");
+        return false;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public boolean isUserAdministrativeAssistant(IUserEntity currentUser) {
+        Optional<Long> result = Optional.empty();
+        TypedQuery<Long> query = entityManager.createQuery(
+            "SELECT COUNT(aae) FROM AdministrativeAssistantEntity aae WHERE aae.user = :user",
+            Long.class
+        );
+        query.setParameter("user", currentUser);
+
+        try {
+            result = Optional.of(query.getSingleResult());
+        } catch (Exception e) {
+            LOG.error(e);
+        }
+
+        if (result.isPresent()) {
+            return result.get() == 1;
+        }
+        LOG.debug("No results for query isUserAdministrativeAssistant found");
+        return false;
+    }
+
+    @Override
+    public synchronized List<IUserEntity> getAll() {
+        // Fixes a problem caused by integrating code from Team C
+        entityManager.getTransaction().begin();
+
+        TypedQuery<UserEntity> query = entityManager.createQuery(
+            "SELECT a FROM UserEntity a",
+            UserEntity.class
+        );
+
+        List<IUserEntity> wrappedusers = new ArrayList<>(query.getResultList());
+
+        // Fixes a problem caused by integrating code from Team C
+        entityManager.getTransaction().commit();
+
+        return wrappedusers;
     }
 }

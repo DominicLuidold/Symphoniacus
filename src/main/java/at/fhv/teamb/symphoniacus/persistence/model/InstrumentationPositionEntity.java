@@ -1,5 +1,9 @@
 package at.fhv.teamb.symphoniacus.persistence.model;
 
+import at.fhv.teamb.symphoniacus.persistence.model.interfaces.IDutyPositionEntity;
+import at.fhv.teamb.symphoniacus.persistence.model.interfaces.IInstrumentationEntity;
+import at.fhv.teamb.symphoniacus.persistence.model.interfaces.IInstrumentationPositionEntity;
+import at.fhv.teamb.symphoniacus.persistence.model.interfaces.ISectionInstrumentationEntity;
 import java.util.LinkedList;
 import java.util.List;
 import javax.persistence.Column;
@@ -15,71 +19,84 @@ import javax.persistence.Table;
 
 @Entity
 @Table(name = "instrumentationPosition")
-public class InstrumentationPositionEntity {
+public class InstrumentationPositionEntity implements IInstrumentationPositionEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "instrumentationPositionId")
-    private Integer instrumentationPositionId;
+    private int instrumentationPositionId;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.LAZY, targetEntity = SectionInstrumentationEntity.class)
     @JoinColumn(name = "sectionInstrumentationId")
-    private SectionInstrumentationEntity sectionInstrumentation;
+    private ISectionInstrumentationEntity sectionInstrumentation;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.LAZY, targetEntity = InstrumentationEntity.class)
     @JoinColumn(name = "instrumentationId")
-    private InstrumentationEntity instrumentation;
+    private IInstrumentationEntity instrumentation;
 
     @Column(name = "positionDescription")
     private String positionDescription;
 
-    @OneToMany(mappedBy = "instrumentationPosition", orphanRemoval = true)
-    private List<DutyPositionEntity> dutyPositions = new LinkedList<>();
+    @OneToMany(
+        mappedBy = "instrumentationPosition",
+        orphanRemoval = true,
+        targetEntity = DutyPositionEntity.class
+    )
+    private List<IDutyPositionEntity> dutyPositions = new LinkedList<>();
 
+    @Override
     public Integer getInstrumentationPositionId() {
         return this.instrumentationPositionId;
     }
 
-    public void setInstrumentationPositionId(Integer instrumentationPositionId) {
+    @Override
+    public void setInstrumentationPositionId(int instrumentationPositionId) {
         this.instrumentationPositionId = instrumentationPositionId;
     }
 
-    public SectionInstrumentationEntity getSectionInstrumentation() {
+    @Override
+    public ISectionInstrumentationEntity getSectionInstrumentation() {
         return this.sectionInstrumentation;
     }
 
+    @Override
     public void setSectionInstrumentation(
-        SectionInstrumentationEntity sectionInstrumentation) {
+        ISectionInstrumentationEntity sectionInstrumentation) {
         this.sectionInstrumentation = sectionInstrumentation;
     }
 
-    public InstrumentationEntity getInstrumentation() {
+    @Override
+    public IInstrumentationEntity getInstrumentation() {
         return this.instrumentation;
     }
 
-    public void setInstrumentation(
-        InstrumentationEntity instrumentation
-    ) {
+    @Override
+    public void setInstrumentation(IInstrumentationEntity instrumentation) {
         this.instrumentation = instrumentation;
     }
 
+    @Override
     public String getPositionDescription() {
         return this.positionDescription;
     }
 
+    @Override
     public void setPositionDescription(String positionDescription) {
         this.positionDescription = positionDescription;
     }
 
-    public List<DutyPositionEntity> getDutyPositions() {
+    @Override
+    public List<IDutyPositionEntity> getDutyPositions() {
         return this.dutyPositions;
     }
 
-    public void addDutyPosition(DutyPositionEntity dutyPosition) {
+    @Override
+    public void addDutyPosition(IDutyPositionEntity dutyPosition) {
         this.dutyPositions.add(dutyPosition);
         dutyPosition.setInstrumentationPosition(this);
     }
 
-    public void removeDutyPosition(DutyPositionEntity dutyPosition) {
+    @Override
+    public void removeDutyPosition(IDutyPositionEntity dutyPosition) {
         this.dutyPositions.remove(dutyPosition);
         dutyPosition.setInstrumentationPosition(null);
     }

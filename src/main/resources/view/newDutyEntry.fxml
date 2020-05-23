@@ -1,0 +1,117 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import com.jfoenix.controls.JFXDatePicker?>
+<?import com.jfoenix.controls.JFXTextField?>
+<?import com.jfoenix.controls.JFXTimePicker?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ComboBox?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.Separator?>
+<?import javafx.scene.control.SplitPane?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.ColumnConstraints?>
+<?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.RowConstraints?>
+<?import javafx.scene.layout.StackPane?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
+<?import org.controlsfx.control.CheckComboBox?>
+
+<AnchorPane fx:id="newDutyEntryPane" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="at.fhv.teamb.symphoniacus.presentation.NewDutyEntryController">
+    <SplitPane fx:id="horizontalSplitPane" orientation="VERTICAL" prefHeight="160.0" prefWidth="200.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+        <items>
+             <VBox alignment="CENTER" spacing="20">
+            <AnchorPane fx:id="topAnchor" minHeight="75.0">
+               <children>
+                  <BorderPane fx:id="tabsTopBorderPane" prefHeight="75.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                     <center>
+                        <Label fx:id="labelCurrentPosition" alignment="CENTER" text="%menu.tab.duty.new.entry.title" BorderPane.alignment="CENTER">
+                            <font>
+                                <Font size="24" />
+                            </font>
+                        </Label>
+                     </center>
+                  </BorderPane>
+               </children>
+            </AnchorPane>
+                <GridPane alignment="CENTER" hgap="10.0" prefHeight="200.0" vgap="20" VBox.vgrow="ALWAYS">
+      
+                                <Label fx:id="dutyStartDateLabel" text="%tab.duty.new.entry.label.start.date" GridPane.columnIndex="0" GridPane.rowIndex="0" />
+                    <StackPane alignment="CENTER_LEFT" GridPane.columnIndex="1" GridPane.rowIndex="0">
+                        <JFXDatePicker fx:id="dutyStartDateInput" defaultColor="#16a5d6" StackPane.alignment="CENTER_LEFT" />
+                    </StackPane>
+                    <Label fx:id="dutyStartTimeLabel" text="%tab.duty.new.entry.label.start.time" GridPane.columnIndex="0" GridPane.rowIndex="1" />
+                    <JFXTimePicker fx:id="dutyStartTimeInput" defaultColor="#16a5d6" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+      
+                                <Label fx:id="dutyEndDateLabel" text="%tab.duty.new.entry.label.end.date" GridPane.columnIndex="0" GridPane.rowIndex="2" />
+                    <StackPane alignment="CENTER_LEFT" GridPane.columnIndex="1" GridPane.rowIndex="2">
+                        <JFXDatePicker fx:id="dutyEndDateInput" defaultColor="#16a5d6" />
+                    </StackPane>
+                    <Label fx:id="dutyEndTimeLabel" text="%tab.duty.new.entry.label.end.time" GridPane.columnIndex="0" GridPane.rowIndex="3" />
+                    <JFXTimePicker fx:id="dutyEndTimeInput" defaultColor="#16a5d6" GridPane.columnIndex="1" GridPane.rowIndex="3" />
+               <columnConstraints>
+                  <ColumnConstraints hgrow="NEVER" prefWidth="250.0" />
+                  <ColumnConstraints hgrow="NEVER" prefWidth="250.0" />
+                  <ColumnConstraints hgrow="NEVER" prefWidth="200.0" />
+               </columnConstraints>
+               <rowConstraints>
+                  <RowConstraints />
+                  <RowConstraints />
+                  <RowConstraints />
+                  <RowConstraints />
+                  <RowConstraints />
+               </rowConstraints>
+                </GridPane>
+                <Separator orientation="HORIZONTAL" />
+                <GridPane fx:id="upperGrid" alignment="CENTER" hgap="10.0" prefHeight="200.0" vgap="20.0" VBox.vgrow="ALWAYS">
+                    <Label fx:id="seriesOfPerformancesLabel" text="%tab.duty.new.entry.label.seriesofperformances" GridPane.columnIndex="0" />
+               <Label fx:id="instrumentationsLabel" text="%tab.duty.new.entry.dropdown.load.instrumentations" GridPane.rowIndex="1" />
+                    <ComboBox fx:id="seriesOfPerformancesSelect" layoutX="15.0" layoutY="33.0" prefWidth="250.0" promptText="%tab.duty.new.entry.dropdown.load.seriesofperformances" GridPane.columnIndex="1" />
+               <CheckComboBox fx:id="instrumentationsSelect" prefWidth="250.0" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+                    <Button fx:id="newSeriesOfPerformancesBtn" mnemonicParsing="false" prefWidth="75.0" text="%tab.duty.new.entry.button.new.seriesofperformances" GridPane.columnIndex="3" />
+                    <Label fx:id="dutyCategoryLabel" text="%tab.duty.new.entry.label.category" GridPane.columnIndex="0" GridPane.rowIndex="2" />
+                    <ComboBox fx:id="dutyCategorySelect" layoutX="15.0" layoutY="33.0" prefWidth="250.0" promptText="%tab.duty.new.entry.dropdown.load.category" GridPane.columnIndex="1" GridPane.rowIndex="2" />
+                    <Label fx:id="dutyPointsLabel" text="%tab.duty.new.entry.label.points" GridPane.columnIndex="0" GridPane.rowIndex="3" />
+                    <JFXTextField fx:id="dutyPointsInput" GridPane.columnIndex="1" GridPane.rowIndex="3" />
+                    <Label fx:id="dutyDescriptionLabel" text="%tab.duty.new.entry.label.description" GridPane.columnIndex="0" GridPane.rowIndex="4" />
+               <Button fx:id="editDutyPointsBtn" mnemonicParsing="false" prefWidth="75.0" text="%tab.duty.new.entry.button.edit.DutyPoints" GridPane.columnIndex="3" GridPane.rowIndex="3" />
+                    <JFXTextField fx:id="dutyDescriptionInput" GridPane.columnIndex="1" GridPane.rowIndex="4" />
+               <columnConstraints>
+                  <ColumnConstraints hgrow="NEVER" prefWidth="250.0" />
+                  <ColumnConstraints prefWidth="250.0" />
+                  <ColumnConstraints />
+                  <ColumnConstraints hgrow="NEVER" prefWidth="200.0" />
+               </columnConstraints>
+               <rowConstraints>
+                  <RowConstraints minHeight="10.0" prefHeight="30.0" />
+                  <RowConstraints />
+                  <RowConstraints />
+                  <RowConstraints />
+                  <RowConstraints />
+               </rowConstraints>
+               <VBox.margin>
+                  <Insets />
+               </VBox.margin>
+                </GridPane>
+            <HBox fx:id="tabsBottomButtonHbox" alignment="CENTER" prefHeight="100.0" spacing="30.0" VBox.vgrow="ALWAYS">
+               <children>
+                  <Button fx:id="scheduleSaveBtn" alignment="CENTER" defaultButton="true" minHeight="40.0" mnemonicParsing="false" prefHeight="40" prefWidth="150.0" text="%global.button.save" />
+                  <Button fx:id="scheduleCancelBtn" alignment="CENTER" cancelButton="true" contentDisplay="CENTER" minHeight="40.0" mnemonicParsing="false" prefHeight="40" prefWidth="150.0" text="%global.button.back" />
+               </children>
+               <opaqueInsets>
+                  <Insets />
+               </opaqueInsets>
+               <VBox.margin>
+                  <Insets top="15.0" />
+               </VBox.margin>
+               <padding>
+                  <Insets bottom="20.0" />
+               </padding>
+            </HBox>
+            </VBox>
+        </items>
+    </SplitPane>
+</AnchorPane>

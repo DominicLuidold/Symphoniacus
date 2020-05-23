@@ -1,13 +1,12 @@
 package at.fhv.teamb.symphoniacus.domain;
 
-import at.fhv.teamb.symphoniacus.persistence.model.ContractualObligationEntity;
-import at.fhv.teamb.symphoniacus.persistence.model.DutyCategoryChangelogEntity;
-import at.fhv.teamb.symphoniacus.persistence.model.DutyCategoryEntity;
-import at.fhv.teamb.symphoniacus.persistence.model.DutyEntity;
+import at.fhv.teamb.symphoniacus.persistence.model.interfaces.IContractualObligationEntity;
+import at.fhv.teamb.symphoniacus.persistence.model.interfaces.IDutyCategoryChangelogEntity;
+import at.fhv.teamb.symphoniacus.persistence.model.interfaces.IDutyCategoryEntity;
+import at.fhv.teamb.symphoniacus.persistence.model.interfaces.IDutyEntity;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
-import java.util.Optional;
 import java.util.Set;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -20,10 +19,34 @@ import org.apache.logging.log4j.Logger;
  */
 public class Points {
     private static final Logger LOG = LogManager.getLogger(Points.class);
-    private int value;
+    private final int value;
 
     private Points(int value) {
         this.value = value;
+    }
+
+    /**
+     * Gives the correct number of Points of a duty observing its startDate.
+     *
+     * @param duty given duty
+     * @return the correct number of Points of given Duty at a given Date
+     */
+    public static Points getPointsOfDuty(IDutyEntity duty) {
+        LocalDate timeOfDuty = duty.getStart().toLocalDate();
+        IDutyCategoryChangelogEntity temp = null;
+        int points = 0;
+        for (IDutyCategoryChangelogEntity dcl : duty.getDutyCategory()
+            .getDutyCategoryChangelogs()) {
+            if (temp == null || (dcl.getStartDate().isAfter(temp.getStartDate())
+                && timeOfDuty.isAfter(dcl.getStartDate()))
+                || timeOfDuty.isEqual(dcl.getStartDate())
+            ) {
+                temp = dcl;
+                points = temp.getPoints();
+            }
+        }
+        return new Points(points);
+
     }
 
     public int getValue() {
@@ -36,9 +59,8 @@ public class Points {
      * @param obligationEntity Contract of a musician w/ debitPoints
      * @return Points
      */
-    public static Optional<Points> calcDebitPoints(ContractualObligationEntity obligationEntity) {
-        Optional<Points> debit = Optional.of(new Points(obligationEntity.getPointsPerMonth()));
-        return debit;
+    public static Points calcDebitPoints(IContractualObligationEntity obligationEntity) {
+        return new Points(obligationEntity.getPointsPerMonth());
     }
 
     /**
@@ -50,23 +72,23 @@ public class Points {
      *                      history of changed points to dutycategories
      * @return Points
      */
-    public static Optional<Points> calcGainedPoints(
-        List<DutyEntity> duties,
-        List<DutyCategoryChangelogEntity> catChangeLogs
+    public static Points calcGainedPoints(
+        List<IDutyEntity> duties,
+        List<IDutyCategoryChangelogEntity> catChangeLogs
     ) {
-        if (!duties.isEmpty()) {
-            int points = 0;
-            for (DutyEntity duty : duties) {
-                if (duty.getStart().isBefore(LocalDateTime.now())
-                    || duty.getStart().isEqual(LocalDateTime.now())
-                ) {
-                    points += giveChangeLogPointsOfDuty(duty, catChangeLogs);
-                }
-            }
-            return Optional.of(new Points(points));
+        if (duties.isEmpty()) {
+            LOG.error("No duties delivered -> Points cannot be calculated");
+            return new Points(0);
         }
-        LOG.error("No duties delivered -> Points cannot be calculated");
-        return Optional.of(new Points(0));
+        int points = 0;
+        for (IDutyEntity duty : duties) {
+            if (duty.getStart().isBefore(LocalDateTime.now())
+                || duty.getStart().isEqual(LocalDateTime.now())
+            ) {
+                points += giveChangeLogPointsOfDuty(duty, catChangeLogs);
+            }
+        }
+        return new Points(points);
     }
 
     /**
@@ -77,47 +99,23 @@ public class Points {
      * @param dutyCategories Set of dutyCategories (contain Points)
      * @return Points
      */
-    public static Optional<Points> calcBalancePoints(
-        List<DutyEntity> duties,
-        Set<DutyCategoryEntity> dutyCategories
+    public static Points calcBalancePoints(
+        List<IDutyEntity> duties,
+        Set<IDutyCategoryEntity> dutyCategories
     ) {
-        if (!duties.isEmpty()) {
-            int points = 0;
-            if (isGivenMonthCurrentMonth(duties.get(0).getStart())) {
-
-                // Iterate every duty from current month
-                for (DutyEntity duty : duties) {
-                    if (duty.getStart().isAfter(LocalDateTime.now())) {
-
-                        // Iterate every dutyCategory and find match to duty -> count points
-                        // and break from iterator
-                        for (DutyCategoryEntity cat : dutyCategories) {
-                            if (cat.getDutyCategoryId()
-                                .equals(duty.getDutyCategory().getDutyCategoryId())) {
-                                points = points + cat.getPoints();
-                                break;
-                            }
-                        }
-                    }
-                }
-                return Optional.of(new Points(points));
-            } else if (isGivenMonthBeforeCurrentMonth(duties.get(0).getStart())) {
-                return Optional.of(new Points(points));
-            } else if (isGivenMonthAfterCurrentMonth(duties.get(0).getStart())) {
-                for (DutyEntity duty : duties) {
-                    for (DutyCategoryEntity cat : dutyCategories) {
-                        if (duty.getDutyCategory().getDutyCategoryId()
-                            .equals(cat.getDutyCategoryId())) {
-                            points = points + cat.getPoints();
-                            break;
-                        }
-                    }
-                }
-            }
-            return Optional.of(new Points(points));
+        if (duties.isEmpty()) {
+            LOG.error("No duties delivered -> Points cannot be calculated");
+            return new Points(0);
         }
-        LOG.debug("No duties delivered -> Points cannot be calculated");
-        return Optional.of(new Points(0));
+
+        if (isGivenMonthCurrentMonth(duties.get(0).getStart())) {
+            return calcBalancePointsForCurrentMonth(duties, dutyCategories);
+        } else if (isGivenMonthBeforeCurrentMonth(duties.get(0).getStart())) {
+            return new Points(0);
+        } else if (isGivenMonthAfterCurrentMonth(duties.get(0).getStart())) {
+            return calcBalancePointsForMonthAfterCurrent(duties, dutyCategories);
+        }
+        return new Points(0);
     }
 
     /**
@@ -128,13 +126,13 @@ public class Points {
      * @return The number of relevant/correct points at the time of the duty
      */
     private static int giveChangeLogPointsOfDuty(
-        DutyEntity duty,
-        List<DutyCategoryChangelogEntity> catChangeLogs
+        IDutyEntity duty,
+        List<IDutyCategoryChangelogEntity> catChangeLogs
     ) {
         int points = 0;
-        DutyCategoryChangelogEntity temp = null;
+        IDutyCategoryChangelogEntity temp = null;
         LocalDate dutyTime = duty.getStart().toLocalDate();
-        for (DutyCategoryChangelogEntity catChangeLogEntity : catChangeLogs) {
+        for (IDutyCategoryChangelogEntity catChangeLogEntity : catChangeLogs) {
             if (duty.getDutyCategory().getDutyCategoryId()
                 .equals(catChangeLogEntity.getDutyCategory().getDutyCategoryId())) {
                 if (temp == null
@@ -151,10 +149,11 @@ public class Points {
 
     /**
      * Returns 0 points for musicians.
+     *
      * @return A Points Object with 0 Points (for External Musicians)
      */
-    public static Optional<Points> getZeroPoints() {
-        return Optional.of(new Points(0));
+    public static Points getZeroPoints() {
+        return new Points(0);
     }
 
     private static boolean isGivenMonthBeforeCurrentMonth(LocalDateTime month) {
@@ -178,5 +177,58 @@ public class Points {
     private static boolean isGivenMonthCurrentMonth(LocalDateTime month) {
         return (month.getYear() == LocalDate.now().getYear()
             && (month.getMonthValue() == LocalDate.now().getMonthValue()));
+    }
+
+    /**
+     * Calculate balance points ("Saldo") for the current month.
+     *
+     * @param duties         The duties to use for calculation
+     * @param dutyCategories The duty categories to use for calculation
+     * @return Calculated points
+     */
+    private static Points calcBalancePointsForCurrentMonth(
+        List<IDutyEntity> duties,
+        Set<IDutyCategoryEntity> dutyCategories
+    ) {
+        int points = 0;
+        // Iterate every duty from current month
+        for (IDutyEntity duty : duties) {
+            if (duty.getStart().isAfter(LocalDateTime.now())) {
+                // Iterate every dutyCategory and find match to duty -> count points
+                // and break from iterator
+                for (IDutyCategoryEntity cat : dutyCategories) {
+                    if (cat.getDutyCategoryId()
+                        .equals(duty.getDutyCategory().getDutyCategoryId())
+                    ) {
+                        points = points + cat.getPoints();
+                        break;
+                    }
+                }
+            }
+        }
+        return new Points(points);
+    }
+
+    /**
+     * Calculates balance points ("Saldo") for the month after {@link LocalDate#now()}.
+     *
+     * @param duties         The duties to use for calculation
+     * @param dutyCategories The duty categories to use for calculation
+     * @return Calculated points
+     */
+    private static Points calcBalancePointsForMonthAfterCurrent(
+        List<IDutyEntity> duties,
+        Set<IDutyCategoryEntity> dutyCategories
+    ) {
+        int points = 0;
+        for (IDutyEntity duty : duties) {
+            for (IDutyCategoryEntity cat : dutyCategories) {
+                if (duty.getDutyCategory().getDutyCategoryId().equals(cat.getDutyCategoryId())) {
+                    points = points + cat.getPoints();
+                    break;
+                }
+            }
+        }
+        return new Points(points);
     }
 }

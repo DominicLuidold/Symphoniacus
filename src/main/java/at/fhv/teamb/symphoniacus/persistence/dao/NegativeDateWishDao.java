@@ -1,60 +1,66 @@
 package at.fhv.teamb.symphoniacus.persistence.dao;
 
 import at.fhv.teamb.symphoniacus.persistence.BaseDao;
-import at.fhv.teamb.symphoniacus.persistence.model.DutyEntity;
+import at.fhv.teamb.symphoniacus.persistence.dao.interfaces.INegativeDateWishDao;
 import at.fhv.teamb.symphoniacus.persistence.model.NegativeDateWishEntity;
 import at.fhv.teamb.symphoniacus.persistence.model.WishRequestable;
+import at.fhv.teamb.symphoniacus.persistence.model.interfaces.IDutyEntity;
+import at.fhv.teamb.symphoniacus.persistence.model.interfaces.INegativeDateWishEntity;
 import java.util.List;
 import java.util.Optional;
 import javax.persistence.TypedQuery;
 
-public class NegativeDateWishDao extends BaseDao<NegativeDateWishEntity> {
+public class NegativeDateWishDao extends BaseDao<INegativeDateWishEntity>
+    implements INegativeDateWishDao {
 
     /**
-     * Finds a duty by its key.
-     *
-     * @param key The key of the duty
-     * @return The duty that is looked for
+     * {@inheritDoc}
      */
     @Override
-    public Optional<NegativeDateWishEntity> find(Integer key) {
+    public Optional<INegativeDateWishEntity> find(Integer key) {
         return this.find(NegativeDateWishEntity.class, key);
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
-    public Optional<NegativeDateWishEntity> persist(NegativeDateWishEntity elem) {
-        return Optional.empty();
-    }
-
-    @Override
-    public Optional<NegativeDateWishEntity> update(NegativeDateWishEntity elem) {
-        return Optional.empty();
-    }
-
-    @Override
-    public Boolean remove(NegativeDateWishEntity elem) {
-        return null;
+    public Optional<INegativeDateWishEntity> persist(INegativeDateWishEntity elem) {
+        return this.persist(NegativeDateWishEntity.class, elem);
     }
 
     /**
-     * Finds all NegativeDateDateWishes for a given duty.
-     *
-     * @param duty duty
-     * @return List of (Interface)WishRequestable
+     * {@inheritDoc}
      */
-    public List<WishRequestable> getAllNegativeDateWishes(DutyEntity duty) {
-        TypedQuery<WishRequestable> query = this.entityManager.createQuery(""
-            + "SELECT nd FROM NegativeDateWishEntity nd "
-            + "JOIN nd.monthlySchedules ms "
-            + "JOIN ms.weeklySchedules ws "
-            + "JOIN ws.duties d "
-            + "WHERE d = :duty "
-            + "AND nd.startDate <= :startDate AND nd.endDate >= :endDate", WishRequestable.class);
+    @Override
+    public Optional<INegativeDateWishEntity> update(INegativeDateWishEntity elem) {
+        return this.update(NegativeDateWishEntity.class, elem);
+    }
+
+    @Override
+    public boolean remove(INegativeDateWishEntity elem) {
+        return false;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public List<WishRequestable> getAllNegativeDateWishes(IDutyEntity duty) {
+        TypedQuery<WishRequestable> query = entityManager.createQuery(
+            "SELECT nd FROM NegativeDateWishEntity nd "
+                + "JOIN nd.monthlySchedules ms "
+                + "JOIN ms.weeklySchedules ws "
+                + "JOIN ws.duties d "
+                + "WHERE d = :duty "
+                + "AND nd.startDate <= :startDate AND nd.endDate >= :endDate",
+            WishRequestable.class
+        );
+
         query.setParameter("duty", duty);
         query.setParameter("startDate", duty.getStart().toLocalDate());
         query.setParameter("endDate", duty.getEnd().toLocalDate());
 
-        List<WishRequestable> result = query.getResultList();
-        return result;
+        return query.getResultList();
     }
 }

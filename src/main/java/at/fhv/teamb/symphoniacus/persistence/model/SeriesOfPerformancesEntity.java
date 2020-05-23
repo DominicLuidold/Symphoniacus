@@ -1,20 +1,31 @@
 package at.fhv.teamb.symphoniacus.persistence.model;
 
+import at.fhv.teamb.symphoniacus.persistence.model.interfaces.IDutyEntity;
+import at.fhv.teamb.symphoniacus.persistence.model.interfaces.IInstrumentationEntity;
+import at.fhv.teamb.symphoniacus.persistence.model.interfaces.IMusicalPieceEntity;
+import at.fhv.teamb.symphoniacus.persistence.model.interfaces.INegativeDutyWishEntity;
+import at.fhv.teamb.symphoniacus.persistence.model.interfaces.IPositiveWishEntity;
+import at.fhv.teamb.symphoniacus.persistence.model.interfaces.ISeriesOfPerformancesEntity;
 import java.time.LocalDate;
+import java.util.LinkedHashSet;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
+import javax.persistence.ManyToMany;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
 @Entity
 @Table(name = "seriesOfPerformances")
-public class SeriesOfPerformancesEntity {
+public class SeriesOfPerformancesEntity implements ISeriesOfPerformancesEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "seriesOfPerformancesId")
@@ -30,130 +41,208 @@ public class SeriesOfPerformancesEntity {
     private LocalDate endDate;
 
     @Column(name = "isTour")
-    private Boolean isTour;
+    private boolean isTour;
 
-    @Column(name = "instrumentationId")
-    private Integer instrumentationId;
+    @ManyToMany(cascade = {CascadeType.MERGE}, targetEntity = InstrumentationEntity.class)
+    @JoinTable(
+        name = "seriesOfPerformances_instrumentation",
+        joinColumns = {
+            @JoinColumn(name = "seriesOfPerformancesId")
+        },
+        inverseJoinColumns = {
+            @JoinColumn(name = "instrumentationId")
+        }
+    )
+    private Set<IInstrumentationEntity> instrumentations = new LinkedHashSet<>();
 
-    @OneToMany(mappedBy = "seriesOfPerformances", orphanRemoval = false)
-    private Set<DutyEntity> dutyEntities;
+    @ManyToMany(cascade = {CascadeType.MERGE}, targetEntity = MusicalPieceEntity.class)
+    @JoinTable(
+        name = "seriesOfPerformances_musicalPiece",
+        joinColumns = {
+            @JoinColumn(name = "seriesOfPerformancesId")
+        },
+        inverseJoinColumns = {
+            @JoinColumn(name = "musicalPieceId")
+        }
+    )
+    private Set<IMusicalPieceEntity> musicalPieces = new LinkedHashSet<>();
 
-    @OneToMany(mappedBy = "seriesOfPerformances")
-    private List<PositiveWishEntity> positiveWishes = new LinkedList<>();
+    @OneToMany(mappedBy = "seriesOfPerformances", targetEntity = DutyEntity.class)
+    private Set<IDutyEntity> dutyEntities;
 
-    @OneToMany(mappedBy = "seriesOfPerformances")
-    private List<NegativeDutyWishEntity> negativeDutyWishes = new LinkedList<>();
+    @OneToMany(mappedBy = "seriesOfPerformances", targetEntity = PositiveWishEntity.class)
+    private List<IPositiveWishEntity> positiveWishes = new LinkedList<>();
 
-    public void addPositiveWish(PositiveWishEntity positiveWishEntity) {
+    @OneToMany(mappedBy = "seriesOfPerformances", targetEntity = NegativeDutyWishEntity.class)
+    private List<INegativeDutyWishEntity> negativeDutyWishes = new LinkedList<>();
+
+    @Override
+    public void addPositiveWish(IPositiveWishEntity positiveWishEntity) {
         this.positiveWishes.add(positiveWishEntity);
         positiveWishEntity.setSeriesOfPerformances(this);
     }
 
-    public void removePositiveWish(PositiveWishEntity positiveWishEntity) {
+    @Override
+    public void removePositiveWish(IPositiveWishEntity positiveWishEntity) {
         this.positiveWishes.remove(positiveWishEntity);
         positiveWishEntity.setSeriesOfPerformances(null);
     }
 
-    public void addNegativeDutyWish(NegativeDutyWishEntity negativeDutyWishEntity) {
+    @Override
+    public void addNegativeDutyWish(INegativeDutyWishEntity negativeDutyWishEntity) {
         this.negativeDutyWishes.add(negativeDutyWishEntity);
         negativeDutyWishEntity.setSeriesOfPerformances(this);
     }
 
-    public void removeNegativeDutyWish(NegativeDutyWishEntity negativeDutyWishEntity) {
+    @Override
+    public void removeNegativeDutyWish(INegativeDutyWishEntity negativeDutyWishEntity) {
         this.negativeDutyWishes.remove(negativeDutyWishEntity);
         negativeDutyWishEntity.setSeriesOfPerformances(null);
     }
 
-    public Boolean getTour() {
+    @Override
+    public boolean getTour() {
         return isTour;
     }
 
-    public void setTour(Boolean tour) {
+    @Override
+    public void setTour(boolean tour) {
         isTour = tour;
     }
 
-    public Set<DutyEntity> getDutyEntities() {
+    @Override
+    public Set<IDutyEntity> getDutyEntities() {
         return dutyEntities;
     }
 
-    public void setDutyEntities(
-        Set<DutyEntity> dutyEntities) {
+    @Override
+    public void setDutyEntities(Set<IDutyEntity> dutyEntities) {
         this.dutyEntities = dutyEntities;
     }
 
-    public List<PositiveWishEntity> getPositiveWishes() {
+    @Override
+    public List<IPositiveWishEntity> getPositiveWishes() {
         return positiveWishes;
     }
 
-    public void setPositiveWishes(
-        List<PositiveWishEntity> positiveWishes) {
+    @Override
+    public void setPositiveWishes(List<IPositiveWishEntity> positiveWishes) {
         this.positiveWishes = positiveWishes;
     }
 
+    @Override
     public Integer getSeriesOfPerformancesId() {
         return this.seriesOfPerformancesId;
     }
 
+    @Override
     public void setSeriesOfPerformancesId(Integer seriesOfPerformancesId) {
         this.seriesOfPerformancesId = seriesOfPerformancesId;
     }
 
+    @Override
     public String getDescription() {
         return this.description;
     }
 
+    @Override
     public void setDescription(String description) {
         this.description = description;
     }
 
+    @Override
     public LocalDate getStartDate() {
         return this.startDate;
     }
 
+    @Override
     public void setStartDate(LocalDate startDate) {
         this.startDate = startDate;
     }
 
+    @Override
     public LocalDate getEndDate() {
         return this.endDate;
     }
 
+    @Override
     public void setEndDate(LocalDate endDate) {
         this.endDate = endDate;
     }
 
-    public Boolean getIsTour() {
+    @Override
+    public boolean getIsTour() {
         return this.isTour;
     }
 
-    public void setIsTour(Boolean isTour) {
+    @Override
+    public void setIsTour(boolean isTour) {
         this.isTour = isTour;
     }
 
-    public Integer getInstrumentationId() {
-        return this.instrumentationId;
-    }
-
-    public void setInstrumentationId(Integer instrumentationId) {
-        this.instrumentationId = instrumentationId;
-    }
-
-    public void addDuty(DutyEntity dutyEntity) {
+    @Override
+    public void addDuty(IDutyEntity dutyEntity) {
         this.dutyEntities.add(dutyEntity);
         dutyEntity.setSeriesOfPerformances(this);
     }
 
-    public void removeDuty(DutyEntity dutyEntity) {
+    @Override
+    public void removeDuty(IDutyEntity dutyEntity) {
         this.dutyEntities.remove(dutyEntity);
         dutyEntity.setSeriesOfPerformances(null);
     }
 
-    public List<NegativeDutyWishEntity> getNegativeDutyWishes() {
-        return negativeDutyWishes;
+    @Override
+    public List<INegativeDutyWishEntity> getNegativeDutyWishes() {
+        return this.negativeDutyWishes;
     }
 
-    public void setNegativeDutyWishes(
-        List<NegativeDutyWishEntity> negativeDutyWishes) {
+    @Override
+    public void setNegativeDutyWishes(List<INegativeDutyWishEntity> negativeDutyWishes) {
         this.negativeDutyWishes = negativeDutyWishes;
+    }
+
+    @Override
+    public Set<IInstrumentationEntity> getInstrumentations() {
+        return this.instrumentations;
+    }
+
+    @Override
+    public void setInstrumentations(Set<IInstrumentationEntity> instrumentations) {
+        this.instrumentations = instrumentations;
+    }
+
+    @Override
+    public void addInstrumentation(IInstrumentationEntity instrumentationEntity) {
+        this.instrumentations.add(instrumentationEntity);
+        instrumentationEntity.addSeriesOfPerformance(this);
+    }
+
+    @Override
+    public void removeInstrumentation(IInstrumentationEntity instrumentationEntity) {
+        this.instrumentations.remove(instrumentationEntity);
+        instrumentationEntity.removeSeriesOfPerformance(this);
+    }
+
+    @Override
+    public Set<IMusicalPieceEntity> getMusicalPieces() {
+        return this.musicalPieces;
+    }
+
+    @Override
+    public void setMusicalPieces(Set<IMusicalPieceEntity> musicalPieces) {
+        this.musicalPieces = musicalPieces;
+    }
+
+    @Override
+    public void addMusicalPiece(IMusicalPieceEntity musicalPiece) {
+        this.musicalPieces.add(musicalPiece);
+        musicalPiece.addSeriesOfPerformance(this);
+    }
+
+    @Override
+    public void removeMusicalPiece(IMusicalPieceEntity musicalPiece) {
+        this.musicalPieces.remove(musicalPiece);
+        musicalPiece.removeSeriesOfPerformance(this);
     }
 }

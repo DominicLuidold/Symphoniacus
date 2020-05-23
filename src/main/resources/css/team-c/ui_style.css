@@ -1,0 +1,233 @@
+
+.jfx-button {
+     -jfx-button-type: RAISED;
+     -fx-background-color: #98A49F;
+     -fx-text-fill: black;
+}
+
+.tab{
+     -fx-background-color: #b491a1;
+
+}
+/* TESTING */
+
+.jfx-tab-pane .tab-header-background {
+     -fx-background-color: #b491a1;
+}
+
+.jfx-tab-pane .tab {
+     -fx-background-color: #b491a1;
+}
+
+.tab .jfx-rippler {
+     -jfx-rippler-fill: #b491a1;
+}
+
+.jfx-tab-pane .control-buttons-tab{
+     -fx-background-color: #b491a1;
+}
+.jfx-tab-pane .control-buttons-tab .tab-down-button{
+     -fx-background-color: #313131;
+}
+.jfx-tab-pane .control-buttons-tab .jfx-rippler{
+     -jfx-rippler-fill: #b491a1;
+}
+
+.tab .tab-label {
+     -fx-alignment: CENTER;
+     -fx-text-fill: rgba(0, 0, 0, 0.65);
+     -fx-font-size: 18px;
+     -fx-font-weight: bold;
+}
+
+.tab:selected .tab-label {
+     -fx-alignment: CENTER;
+     -fx-text-fill: #1e1e1e;
+}
+
+.jfx-tab-pane .tab:selected {
+     -fx-background-color: #896676;
+}
+
+.scroll-pane {
+     -fx-background-color:transparent;
+}
+
+#musicalPieceTab{
+     -fx-background-color: #D2B5C0;
+}
+#musicalPieceTab .tab{
+     -fx-background-color: #D2B5C0;
+}
+
+#musicalPieceTab .control-buttons-tab{
+     -fx-background-color: #D2B5C0;
+}
+
+#musicalPieceTab .tab-selected-line {
+     -fx-stroke-width: 3pt;
+     -fx-border-color: mediumvioletred;
+}
+
+#instrumentTab {
+     -fx-border-color: #676867;
+}
+
+#instrumentTab .tab{
+     -fx-background-color: #E1CDD5;
+}
+
+#instrumentTab .control-buttons-tab{
+     -fx-background-color: #E1CDD5;
+
+}
+
+#instrumentTab .tab-selected-line {
+     -fx-stroke-width: 3pt;
+     -fx-border-color: mediumvioletred;
+}
+
+.text-field {
+     -fx-background-color: -fx-text-box-border, -fx-background ;
+     -fx-background-insets: 0, 0 0 1 0 ;
+     -fx-background-radius: 0 ;
+     -fx-min-width: 10;
+}
+
+/*_____________________________*/
+/*Login*/
+
+#login {
+     -fx-background-color:#896676 ;
+     -fx-prompt-text-fill: #fffdfd;
+     -fx-text-fill: white;
+}
+#loginButton {
+     -fx-text-fill: #fffdfd;
+}
+#_slider {
+     -fx-display-caret:false;
+}
+
+#_slider > .colored-track {
+     -fx-background-color: #b491a1;
+}
+#_slider .thumb {
+     -fx-background-color: #896676;
+}
+#signIn {
+     -fx-background-color: CDB5C0;
+     -fx-text-fill: black;
+
+     -fx-border-color: transparent, CDB5C0;
+     -fx-border-width: 1, 1;
+     -fx-border-style: solid;
+     -fx-border-radius: 0, 0;
+     -fx-border-insets: 1 1 1 1, 0;
+     -fx-effect: dropshadow( gaussian , rgba(0,0,0,0.50) , 4,0,0,1 );
+}
+
+#musicPieceName {
+     -fx-text-fill: #c6c0c0;
+}
+
+musicbttn {
+     -fx-font-size: 50pt;
+}
+
+
+
+
+/*_____________________________*/
+
+.toggle-button{
+     -fx-border-color: transparent;
+     -fx-border-width: 0;
+     -fx-background-radius: 0;
+     -fx-background-color: transparent;
+     -fx-font-size: 1em; /* 12 */
+     -fx-background-insets: 0,1,2;
+
+}
+
+.toggle-button:focused {
+
+     -fx-background-color: CDB5C0;
+     -fx-text-fill: black;
+
+     -fx-border-color: transparent, CDB5C0;
+     -fx-border-width: 1, 1;
+     -fx-border-style: solid;
+     -fx-border-radius: 0, 0;
+     -fx-border-insets: 1 1 1 1, 0;
+     -fx-effect: dropshadow( gaussian , rgba(0,0,0,0.50) , 4,0,0,1 );
+
+}
+
+.toggle-button:hover {
+     -fx-background-color: CDB5C0;
+     -fx-text-fill: black;
+}
+
+
+/* List View */
+
+.list-view {
+     /*monofonts: "DejaVu Sans Mono", Menlo, Consolas, "Liberation Mono", Monaco, "Lucida Console"*/
+     -fx-font-family: "Arial";
+     -fx-font-size:7pt;
+}
+
+.list-view .list-cell:selected {
+     -fx-background-color: white;
+
+}
+
+.list-view .list-cell:focused {
+     -fx-background-color: white;
+     -fx-border-color: #b491a1;
+
+}
+
+.jfx-list-cell{
+     -fx-font-family: "Arial";
+     -fx-background-insets: 0;
+      -fx-font-size: 7pt;
+      -fx-border-width: 0 0 0 3;
+      -fx-border-color: #896676;
+      -fx-text-fill: #090909;
+ }
+.list-view .list-cell:hover{
+     -fx-border-color: #b491a1;
+     -fx-text-fill: #090909;
+     -fx-cursor: hand;
+}
+
+#_positionView .scroll-bar:vertical {
+     -fx-scale-x: 0;
+     -fx-padding: -10;
+     -fx-opacity: 0;
+}
+
+/*#_positionView .list-cell:filled:focused {*/
+/*     -fx-background-color: transparent;*/
+/*}*/
+
+/*#_positionView .list-cell:filled:selected {*/
+/*     -fx-background-color: #bfbdbd;*/
+/*}*/
+
+
+.list-cell:filled:selected .label {
+     -fx-text-fill: black ;
+}
+
+.jfx-list-cell .jfx-rippler{
+     -fx-rippler-fill: white;
+}
+.jfx-list-view {
+     -fx-background-insets: 0, 0 0 1 0 ;
+     -fx-cell-vertical-margin: 5.0;
+     -fx-vertical-gap: 5;
+}
+

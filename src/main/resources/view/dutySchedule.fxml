@@ -16,41 +16,48 @@
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.cell.PropertyValueFactory?>
 <?import javafx.scene.control.ComboBox?>
-<AnchorPane fx:id="dutySchedule" prefHeight="226.0" prefWidth="364.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="at.fhv.teamb.symphoniacus.presentation.DutyScheduleController">
+<AnchorPane fx:id="dutySchedule" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="at.fhv.teamb.symphoniacus.presentation.DutyScheduleController">
    <AnchorPane maxHeight="45.0" minHeight="45.0" prefHeight="45.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
       <children>
-         <ToolBar prefHeight="45.0" prefWidth="200.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+         <ToolBar prefHeight="45.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
            <items>
                <Button fx:id="scheduleBackBtn" mnemonicParsing="false" text="%global.button.back" />
                <Separator />
                <Label fx:id="dutyTitle" />
                <Pane HBox.hgrow="ALWAYS" />
-               <Button fx:id="getOldDuty" mnemonicParsing="false" text="%tab.duty.schedule.table.btn.getolddutyschedule" />
-               <ComboBox fx:id="oldDutySelect" layoutX="15.0" layoutY="33.0" prefWidth="160.0" promptText="%tab.duty.schedule.table.chooseolddutyschedule" />
+               <ComboBox fx:id="musicalPieceSelect" visible="false" layoutX="15.0" layoutY="33.0" prefWidth="160.0" promptText="%tab.duty.schedule.header.choose.musicalpiece" />
+               <Separator />
+               <Button fx:id="getOldDutyBtn" mnemonicParsing="false" text="%tab.duty.schedule.old.duty.btn" />
+               <ComboBox fx:id="oldDutySelect" layoutX="15.0" layoutY="33.0" prefWidth="160.0" promptText="%tab.duty.schedule.old.duty.choose" />
                <Separator />
                <Button fx:id="scheduleSaveBtn" mnemonicParsing="false" text="%global.button.save" />
            </items>
          </ToolBar>
       </children>
    </AnchorPane>
-   <SplitPane fx:id="leftSplitPane" dividerPositions="0.3" orientation="HORIZONTAL" prefHeight="160.0" prefWidth="200.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="45.0">
+   <SplitPane fx:id="leftSplitPane" dividerPositions="0.35" orientation="HORIZONTAL" prefHeight="160.0" prefWidth="200.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="45.0">
        <padding>
            <Insets top="5" right="5" bottom="5" left="5" />
        </padding>
        <items>
             <TableView fx:id="positionsTable">
                 <columns>
-                    <TableColumn fx:id="role"  prefWidth="120.0" text="%tab.duty.schedule.table.dutyrole.role" >
+                    <TableColumn fx:id="number" prefWidth="35.0" text="%tab.duty.schedule.table.posnumber" >
+                        <cellValueFactory>
+                            <PropertyValueFactory property="number" />
+                        </cellValueFactory>
+                    </TableColumn>
+                    <TableColumn fx:id="role" prefWidth="120.0" text="%tab.duty.schedule.table.role" >
                         <cellValueFactory>
                             <PropertyValueFactory property="role" />
                         </cellValueFactory>
                     </TableColumn>
-                    <TableColumn fx:id="musicianShortcut" prefWidth="120.0" text="%tab.duty.schedule.table.dutyposition.musican" >
+                    <TableColumn fx:id="musicianShortcut" prefWidth="120.0" text="%tab.duty.schedule.table.position.musician" >
                         <cellValueFactory>
                             <PropertyValueFactory property="musicanShortcut" />
                         </cellValueFactory>
                     </TableColumn>
-                    <TableColumn fx:id="columnUnsetPosition" prefWidth="100" text="%tab.duty.schedule.table.dutyposition.unset">
+                    <TableColumn fx:id="columnUnsetPosition" prefWidth="125" text="%tab.duty.schedule.table.position.unset">
                     </TableColumn>
                 </columns>
             </TableView>
@@ -76,12 +83,17 @@
                                     <PropertyValueFactory property="name" />
                                 </cellValueFactory>
                             </TableColumn>
-                            <TableColumn id="columnPoints" prefWidth="75.0" text="%tab.duty.schedule.table.musicians.points">
+                            <TableColumn fx:id="columnPointsWithoutRequests" prefWidth="100.0" text="%tab.duty.schedule.table.musicians.balancePoints">
                                 <cellValueFactory>
-                                    <PropertyValueFactory property="points" />
+                                    <PropertyValueFactory property="balancePoints" />
                                 </cellValueFactory>
                             </TableColumn>
-                            <TableColumn fx:id="columnSchedule2" prefWidth="75.0" text="%tab.duty.schedule.table.musicians.schedule">
+                            <TableColumn id="columnDebitPoints" prefWidth="100.0" text="%tab.duty.schedule.table.musicians.debitPoints">
+                                <cellValueFactory>
+                                    <PropertyValueFactory property="debitPoints" />
+                                </cellValueFactory>
+                            </TableColumn>
+                            <TableColumn fx:id="columnScheduleBtnWithoutRequests" prefWidth="125.0" text="%tab.duty.schedule.table.musicians.schedule">
                             </TableColumn>
                         </columns>
                     </TableView>
@@ -99,9 +111,14 @@
                                     <PropertyValueFactory property="name" />
                                 </cellValueFactory>
                             </TableColumn>
-                            <TableColumn id="columnPoints" prefWidth="75.0" text="%tab.duty.schedule.table.musicians.points">
+                            <TableColumn fx:id="columnPointsWithRequests" prefWidth="100.0" text="%tab.duty.schedule.table.musicians.balancePoints">
                                 <cellValueFactory>
-                                    <PropertyValueFactory property="points" />
+                                    <PropertyValueFactory property="balancePoints" />
+                                </cellValueFactory>
+                            </TableColumn>
+                            <TableColumn id="columnDebitPoints" prefWidth="100.0" text="%tab.duty.schedule.table.musicians.debitPoints">
+                                <cellValueFactory>
+                                    <PropertyValueFactory property="debitPoints" />
                                 </cellValueFactory>
                             </TableColumn>
                             <TableColumn id="columnType" prefWidth="100.0" text="%tab.duty.schedule.table.musicians.request.type">
@@ -114,12 +131,12 @@
                                     <PropertyValueFactory property="details" />
                                 </cellValueFactory>
                             </TableColumn>
-                            <TableColumn id="columnDate" prefWidth="75.0" text="%tab.duty.schedule.table.musicians.date">
+                            <TableColumn id="columnDate" prefWidth="100.0" text="%tab.duty.schedule.table.musicians.date">
                                 <cellValueFactory>
                                     <PropertyValueFactory property="date" />
                                 </cellValueFactory>
                             </TableColumn>
-                            <TableColumn fx:id="columnSchedule" prefWidth="75.0" text="%tab.duty.schedule.table.musicians.schedule">
+                            <TableColumn fx:id="columnScheduleBtnWithRequests" prefWidth="125.0" text="%tab.duty.schedule.table.musicians.schedule">
                             </TableColumn>
                         </columns>
                     </TableView>

@@ -1,59 +1,62 @@
 package at.fhv.teamb.symphoniacus.persistence.dao;
 
 import at.fhv.teamb.symphoniacus.persistence.BaseDao;
-import at.fhv.teamb.symphoniacus.persistence.model.DutyEntity;
+import at.fhv.teamb.symphoniacus.persistence.dao.interfaces.INegativeDutyWishDao;
 import at.fhv.teamb.symphoniacus.persistence.model.NegativeDutyWishEntity;
 import at.fhv.teamb.symphoniacus.persistence.model.WishRequestable;
+import at.fhv.teamb.symphoniacus.persistence.model.interfaces.IDutyEntity;
+import at.fhv.teamb.symphoniacus.persistence.model.interfaces.INegativeDutyWishEntity;
 import java.util.List;
 import java.util.Optional;
 import javax.persistence.TypedQuery;
 
-public class NegativeDutyWishDao extends BaseDao<NegativeDutyWishEntity> {
+public class NegativeDutyWishDao extends BaseDao<INegativeDutyWishEntity>
+    implements INegativeDutyWishDao {
 
     /**
-     * Finds a duty by its key.
-     *
-     * @param key The key of the duty
-     * @return The duty that is looked for
+     * {@inheritDoc}
      */
     @Override
-    public Optional<NegativeDutyWishEntity> find(Integer key) {
+    public Optional<INegativeDutyWishEntity> find(Integer key) {
         return this.find(NegativeDutyWishEntity.class, key);
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
-    public Optional<NegativeDutyWishEntity> persist(NegativeDutyWishEntity elem) {
-        return Optional.empty();
-    }
-
-    @Override
-    public Optional<NegativeDutyWishEntity> update(NegativeDutyWishEntity elem) {
-        return Optional.empty();
-    }
-
-    @Override
-    public Boolean remove(NegativeDutyWishEntity elem) {
-        return null;
+    public Optional<INegativeDutyWishEntity> persist(INegativeDutyWishEntity elem) {
+        return this.persist(NegativeDutyWishEntity.class, elem);
     }
 
     /**
-     * Finds all NegativeDutyWishes for a given duty.
-     *
-     * @param duty duty
-     * @return List of (Interface)WishRequestable
+     * {@inheritDoc}
      */
-    public List<WishRequestable> getAllNegativeDutyWishes(DutyEntity duty) {
-        TypedQuery<WishRequestable> query =
-            this.entityManager.createQuery(
-                "SELECT nw FROM NegativeDutyWishEntity nw "
-                    + "JOIN nw.seriesOfPerformances sop "
-                    + "JOIN sop.dutyEntities de "
-                    + "WHERE de = :duty",
-                WishRequestable.class);
+    @Override
+    public Optional<INegativeDutyWishEntity> update(INegativeDutyWishEntity elem) {
+        return this.update(NegativeDutyWishEntity.class, elem);
+    }
 
-        query.setParameter("duty",duty);
+    @Override
+    public boolean remove(INegativeDutyWishEntity elem) {
+        return false;
+    }
 
-        List<WishRequestable> result = query.getResultList();
-        return result;
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public List<WishRequestable> getAllNegativeDutyWishes(IDutyEntity duty) {
+        TypedQuery<WishRequestable> query = entityManager.createQuery(
+            "SELECT nw FROM NegativeDutyWishEntity nw "
+                + "JOIN nw.seriesOfPerformances sop "
+                + "JOIN sop.dutyEntities de "
+                + "WHERE de = :duty",
+            WishRequestable.class
+        );
+
+        query.setParameter("duty", duty);
+
+        return query.getResultList();
     }
 }

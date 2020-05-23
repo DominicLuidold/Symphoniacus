@@ -2,6 +2,7 @@ package at.fhv.teamb.symphoniacus.domain;
 
 import at.fhv.teamb.symphoniacus.persistence.PersistenceState;
 import at.fhv.teamb.symphoniacus.persistence.model.DutyEntity;
+import at.fhv.teamb.symphoniacus.persistence.model.interfaces.IDutyEntity;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.LinkedList;
@@ -21,26 +22,35 @@ import org.apache.logging.log4j.Logger;
  */
 public class Duty {
     private static final Logger LOG = LogManager.getLogger(Duty.class);
-    private DutyEntity entity;
+    private IDutyEntity entity;
     private List<DutyPosition> dutyPositions;
     private String title;
     private PersistenceState persistenceState;
+    private List<MusicalPiece> musicalPieces = new LinkedList<>(); // prevent NPE
 
-    public Duty(DutyEntity entity) {
-        this(entity, null);
+    public Duty(IDutyEntity entity) {
+        this(entity, null, null);
     }
 
     /**
-     * Initializes the Duty object based on provided {@link DutyEntity} and List of
-     * {@link DutyPosition}s.
+     * Initializes the Duty object based on provided {@link DutyEntity}, List of
+     * {@link DutyPosition}s and {@link MusicalPiece}s.
      *
      * @param entity        The entity to use
      * @param dutyPositions The List of DutyPositions to use
+     * @param musicalPieces The List of MusicalPieces to use
      */
-    public Duty(DutyEntity entity, List<DutyPosition> dutyPositions) {
+    public Duty(
+        IDutyEntity entity,
+        List<DutyPosition> dutyPositions,
+        List<MusicalPiece> musicalPieces
+    ) {
         this.entity = entity;
         if (dutyPositions != null) {
             this.dutyPositions = Collections.unmodifiableList(dutyPositions);
+        }
+        if (musicalPieces != null) {
+            this.musicalPieces = Collections.unmodifiableList(musicalPieces);
         }
     }
 
@@ -52,13 +62,15 @@ public class Duty {
      * @param dutiesOfThisDay       A List of duties
      * @param locallySetMusicians   A Set of musicians locally assigned to a duty position
      * @param locallyUnsetMusicians A Set of musicians locally removed from a duty position
+     * @param selectedPosition      The selected duty position from the GUI
      * @return A Set of musicians that are available for a given position
      */
     public Set<Musician> determineAvailableMusicians(
         Set<Musician> allSectionMusicians,
         List<Duty> dutiesOfThisDay,
         Set<Musician> locallySetMusicians,
-        Set<Musician> locallyUnsetMusicians
+        Set<Musician> locallyUnsetMusicians,
+        DutyPosition selectedPosition
     ) {
         Set<Musician> availableMusicians = new HashSet<>(allSectionMusicians);
 
@@ -66,8 +78,13 @@ public class Duty {
         dutiesOfThisDay.remove(this);
 
         // Mark all musicians as unavailable that are already assigned to another duty position
+        // when the there's either only one musical piece or the piece equals the conflict's one
         for (DutyPosition possibleConflict : this.getDutyPositions()) {
-            if (possibleConflict.getAssignedMusician().isPresent()) {
+            if ((this.musicalPieces.size() == 1
+                && possibleConflict.getAssignedMusician().isPresent())
+                || (possibleConflict.getMusicalPiece().equals(selectedPosition.getMusicalPiece())
+                && possibleConflict.getAssignedMusician().isPresent())
+            ) {
                 availableMusicians.remove(possibleConflict.getAssignedMusician().get());
             }
         }
@@ -103,7 +120,7 @@ public class Duty {
      * Generates a calendar-friendly title for Duty.
      *
      * @return String that looks like this: CATEGORY for SERIES (DESCRIPTION), where the
-     *     "for SERIES", "(DESCRIPTION)" parts are optional.
+     *      "for SERIES", "(DESCRIPTION)" parts are optional.
      */
     public String getTitle() {
         if (this.title == null) {
@@ -153,7 +170,7 @@ public class Duty {
         return Objects.requireNonNullElseGet(this.dutyPositions, LinkedList::new);
     }
 
-    public DutyEntity getEntity() {
+    public IDutyEntity getEntity() {
         return this.entity;
     }
 
@@ -163,6 +180,14 @@ public class Duty {
 
     public void setPersistenceState(PersistenceState persistenceState) {
         this.persistenceState = persistenceState;
+    }
+
+    public List<MusicalPiece> getMusicalPieces() {
+        return this.musicalPieces;
+    }
+
+    public void setMusicalPieces(List<MusicalPiece> musicalPieces) {
+        this.musicalPieces = musicalPieces;
     }
 
     @Override
@@ -182,5 +207,10 @@ public class Duty {
 
         // Compare data members and return accordingly
         return this.entity.getDutyId().equals(d.getEntity().getDutyId());
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(this.entity.getDutyId());
     }
 }

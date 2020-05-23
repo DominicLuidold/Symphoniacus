@@ -1,15 +1,15 @@
 package at.fhv.teamb.symphoniacus.persistence.dao;
 
-import at.fhv.teamb.symphoniacus.domain.Section;
-import at.fhv.teamb.symphoniacus.domain.SectionMonthlySchedule;
 import at.fhv.teamb.symphoniacus.persistence.BaseDao;
-import at.fhv.teamb.symphoniacus.persistence.model.SectionEntity;
+import at.fhv.teamb.symphoniacus.persistence.dao.interfaces.ISectionMonthlyScheduleDao;
 import at.fhv.teamb.symphoniacus.persistence.model.SectionMonthlyScheduleEntity;
+import at.fhv.teamb.symphoniacus.persistence.model.interfaces.ISectionEntity;
+import at.fhv.teamb.symphoniacus.persistence.model.interfaces.ISectionMonthlyScheduleEntity;
 import java.time.Month;
 import java.time.Year;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Optional;
-import javax.persistence.EntityTransaction;
 import javax.persistence.TypedQuery;
 
 /**
@@ -17,22 +17,22 @@ import javax.persistence.TypedQuery;
  *
  * @author Dominic Luidold
  */
-public class SectionMonthlyScheduleDao extends BaseDao<SectionMonthlyScheduleEntity> {
+public class SectionMonthlyScheduleDao extends BaseDao<ISectionMonthlyScheduleEntity>
+    implements ISectionMonthlyScheduleDao {
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
-    public Optional<SectionMonthlyScheduleEntity> find(Integer key) {
-        return Optional.empty();
+    public Optional<ISectionMonthlyScheduleEntity> find(Integer key) {
+        return this.find(SectionMonthlyScheduleEntity.class, key);
     }
 
     /**
-     * Finds all {@link SectionMonthlySchedule} objects based on provided {@link Section}
-     * object and year.
-     *
-     * @param section The section to use
-     * @param year    The year to use
-     * @return A List of section monthly schedules
+     * {@inheritDoc}
      */
-    public List<SectionMonthlyScheduleEntity> findAllInYear(SectionEntity section, Year year) {
+    @Override
+    public List<ISectionMonthlyScheduleEntity> findAllInYear(ISectionEntity section, Year year) {
         TypedQuery<SectionMonthlyScheduleEntity> query = entityManager.createQuery(
             "SELECT sms FROM SectionMonthlyScheduleEntity sms "
                 + "JOIN FETCH sms.monthlySchedule ms "
@@ -44,19 +44,30 @@ public class SectionMonthlyScheduleDao extends BaseDao<SectionMonthlyScheduleEnt
         query.setParameter("section", section);
         query.setParameter("year", year.getValue());
 
-        return query.getResultList();
+        return new LinkedList<>(query.getResultList());
     }
 
     /**
-     * Finds all {@link SectionMonthlySchedule} objects based on provided {@link Section}
-     * object, year and month.
-     *
-     * @param year  The year to use
-     * @param month The month to use
-     * @return A List of section monthly schedules
+     * {@inheritDoc}
      */
-    public SectionMonthlyScheduleEntity findAllInYearAndMonth(
-        SectionEntity section,
+    @Override
+    public List<ISectionMonthlyScheduleEntity> findAllInYearAndMonth(Year year, Month month) {
+        TypedQuery<SectionMonthlyScheduleEntity> query = entityManager.createQuery(
+            "SELECT sms FROM SectionMonthlyScheduleEntity sms "
+                + "JOIN FETCH sms.monthlySchedule ms "
+                + "WHERE ms.year = :year AND ms.month = :month",
+            SectionMonthlyScheduleEntity.class
+        );
+
+        query.setParameter("year", year.getValue());
+        query.setParameter("month", month.getValue());
+
+        return new LinkedList<>(query.getResultList());
+    }
+
+    @Override
+    public ISectionMonthlyScheduleEntity findAllInYearAndMonth(
+        ISectionEntity section,
         Year year,
         Month month
     ) {
@@ -75,30 +86,24 @@ public class SectionMonthlyScheduleDao extends BaseDao<SectionMonthlyScheduleEnt
         return query.getSingleResult();
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
-    public Optional<SectionMonthlyScheduleEntity> persist(SectionMonthlyScheduleEntity elem) {
-        return Optional.empty();
+    public Optional<ISectionMonthlyScheduleEntity> persist(ISectionMonthlyScheduleEntity elem) {
+        return this.persist(ISectionMonthlyScheduleEntity.class, elem);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public Optional<ISectionMonthlyScheduleEntity> update(ISectionMonthlyScheduleEntity elem) {
+        return this.update(ISectionMonthlyScheduleEntity.class, elem);
     }
 
     @Override
-    public Optional<SectionMonthlyScheduleEntity> update(SectionMonthlyScheduleEntity elem) {
-        EntityTransaction transaction = null;
-        try {
-            transaction = entityManager.getTransaction();
-            transaction.begin();
-            entityManager.merge(elem);
-            transaction.commit();
-            return Optional.of(elem);
-        } catch (Exception e) {
-            if (transaction != null && transaction.isActive()) {
-                transaction.rollback();
-            }
-        }
-        return Optional.empty();
-    }
-
-    @Override
-    public Boolean remove(SectionMonthlyScheduleEntity elem) {
+    public boolean remove(ISectionMonthlyScheduleEntity elem) {
         return false;
     }
 }
