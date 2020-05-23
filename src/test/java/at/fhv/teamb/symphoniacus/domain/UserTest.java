@@ -47,7 +47,7 @@ public class UserTest {
         Assertions.assertEquals(
             DomainUserType.DOMAIN_MUSICIAN,
             this.user.getType(),
-            "Full Name should be valid"
+            "Type should be the same as previously set"
         );
     }
 
@@ -56,7 +56,7 @@ public class UserTest {
         Assertions.assertEquals(
             this.userEntity,
             this.user.getUserEntity(),
-            "Full Name should be valid"
+            "Entity should be the same as previously set"
         );
     }
 }
