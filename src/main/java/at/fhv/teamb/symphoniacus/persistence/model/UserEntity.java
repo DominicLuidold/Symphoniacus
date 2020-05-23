@@ -155,7 +155,7 @@ public class UserEntity implements IUserEntity, PasswordableUser {
     }
 
     public String getPassword() {
-        return this.password;
+        return "";
     }
 
     @Override

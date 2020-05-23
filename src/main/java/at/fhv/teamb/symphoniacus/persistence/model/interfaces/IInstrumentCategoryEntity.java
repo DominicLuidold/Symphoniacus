@@ -3,6 +3,7 @@ package at.fhv.teamb.symphoniacus.persistence.model.interfaces;
 import java.util.List;
 
 public interface IInstrumentCategoryEntity {
+
     Integer getInstrumentCategoryId();
 
     void setInstrumentCategoryId(Integer instrumentCategoryId);
@@ -23,6 +24,6 @@ public interface IInstrumentCategoryEntity {
 
     List<IMusicianEntity> getMusicians();
 
-    void setMusicians(
-        List<IMusicianEntity> musicians);
+    void setMusicians(List<IMusicianEntity> musicians);
+
 }

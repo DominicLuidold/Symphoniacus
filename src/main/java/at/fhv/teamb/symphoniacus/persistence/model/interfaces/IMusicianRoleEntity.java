@@ -4,6 +4,7 @@ import at.fhv.teamb.symphoniacus.application.type.MusicianRoleType;
 import java.util.List;
 
 public interface IMusicianRoleEntity {
+
     void addMusician(IMusicianEntity m);
 
     void removeMusician(IMusicianEntity m);
@@ -18,6 +19,6 @@ public interface IMusicianRoleEntity {
 
     List<IMusicianEntity> getMusicians();
 
-    void setMusicians(
-        List<IMusicianEntity> musicians);
+    void setMusicians(List<IMusicianEntity> musicians);
+
 }

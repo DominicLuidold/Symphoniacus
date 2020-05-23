@@ -321,7 +321,7 @@ public class MusicianEntity implements IMusicianEntity {
     }
 
     /**
-     *  checkstyle -.-
+     *  Removes all Musician Roles.
      */
     public void removeAllMusicianRoles() {
         for (IMusicianRoleEntity role : this.musicianRoles) {
@@ -331,7 +331,7 @@ public class MusicianEntity implements IMusicianEntity {
     }
 
     /**
-     *  checkstyle -.-
+     *  Removes all Instrumentation Categories.
      */
     public void removeAllInstrumentCategories() {
         for (IInstrumentCategoryEntity cat : this.instrumentCategories) {
@@ -341,7 +341,7 @@ public class MusicianEntity implements IMusicianEntity {
     }
 
     /**
-     *  checkstyle -.-
+     *  Removes all Contractual Obligations.
      */
     public void removeAllContractualObligations() {
         for (IContractualObligationEntity contract : this.contractualObligations) {

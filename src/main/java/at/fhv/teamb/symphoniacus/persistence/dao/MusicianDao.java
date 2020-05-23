@@ -95,7 +95,7 @@ public class MusicianDao extends BaseDao<IMusicianEntity>
     /**
      * Returns Musician matching given userId.
      * @param id given User Id
-     * @return Musician
+     * @return Optional Musician
      */
     public Optional<IMusicianEntity> findMusicianByUserId(int id) {
         TypedQuery<MusicianEntity> query = entityManager.createQuery(
