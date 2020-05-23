@@ -1,6 +1,6 @@
 package at.fhv.orchestraria.persistence.dao;
 
-import at.fhv.orchestraria.domain.model.InstrumentCategoryMusicianEntity;
+import at.fhv.orchestraria.domain.model.InstrumentCategoryMusicianEntityC;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
 
@@ -8,27 +8,27 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-public class InstrumentCategoryMusicianDAO implements DaoBase<InstrumentCategoryMusicianEntity> {
+public class InstrumentCategoryMusicianDAO implements DaoBase<InstrumentCategoryMusicianEntityC> {
     private SessionManager _sessionManager;
 
     protected InstrumentCategoryMusicianDAO(SessionManager sessionManager){ _sessionManager =sessionManager;}
 
     @Override
-    public synchronized Optional<InstrumentCategoryMusicianEntity> get(int id) {
+    public synchronized Optional<InstrumentCategoryMusicianEntityC> get(int id) {
         Session session = _sessionManager.openConnection();
         Transaction ta = session.beginTransaction();
-        Optional<InstrumentCategoryMusicianEntity> icme = Optional.ofNullable(session.get(InstrumentCategoryMusicianEntity.class, id));
+        Optional<InstrumentCategoryMusicianEntityC> icme = Optional.ofNullable(session.get(InstrumentCategoryMusicianEntityC.class, id));
         ta.commit();
         return icme;
     }
 
     @Override
-    public synchronized List<InstrumentCategoryMusicianEntity> getAll() {
+    public synchronized List<InstrumentCategoryMusicianEntityC> getAll() {
         Session session = _sessionManager.openConnection();
         Transaction ta = session.beginTransaction();
-        List<InstrumentCategoryMusicianEntity> icmes=  session.createQuery("SELECT a FROM InstrumentCategoryMusicianEntity a", InstrumentCategoryMusicianEntity.class).getResultList();
-        List<InstrumentCategoryMusicianEntity> wrappedICME = new ArrayList<>(icmes.size());
-        for(InstrumentCategoryMusicianEntity icme:icmes){
+        List<InstrumentCategoryMusicianEntityC> icmes=  session.createQuery("SELECT a FROM InstrumentCategoryMusicianEntity a", InstrumentCategoryMusicianEntityC.class).getResultList();
+        List<InstrumentCategoryMusicianEntityC> wrappedICME = new ArrayList<>(icmes.size());
+        for(InstrumentCategoryMusicianEntityC icme:icmes){
             wrappedICME.add(icme);
         }
         ta.commit();
@@ -36,7 +36,7 @@ public class InstrumentCategoryMusicianDAO implements DaoBase<InstrumentCategory
     }
 
     @Override
-    public synchronized void save(InstrumentCategoryMusicianEntity entity) {
+    public synchronized void save(InstrumentCategoryMusicianEntityC entity) {
         Session session = _sessionManager.openConnection();
         Transaction ta = session.beginTransaction();
         session.saveOrUpdate(entity);
@@ -44,16 +44,16 @@ public class InstrumentCategoryMusicianDAO implements DaoBase<InstrumentCategory
     }
 
     @Override
-    public synchronized InstrumentCategoryMusicianEntity update(InstrumentCategoryMusicianEntity entity) {
+    public synchronized InstrumentCategoryMusicianEntityC update(InstrumentCategoryMusicianEntityC entity) {
         Session session = _sessionManager.openConnection();
         Transaction ta = session.beginTransaction();
-        InstrumentCategoryMusicianEntity icme = (InstrumentCategoryMusicianEntity) session.merge(entity);
+        InstrumentCategoryMusicianEntityC icme = (InstrumentCategoryMusicianEntityC) session.merge(entity);
         ta.commit();
         return icme;
     }
 
     @Override
-    public synchronized void delete(InstrumentCategoryMusicianEntity entity) {
+    public synchronized void delete(InstrumentCategoryMusicianEntityC entity) {
         Session session = _sessionManager.openConnection();
         Transaction ta = session.beginTransaction();
         session.delete(entity);

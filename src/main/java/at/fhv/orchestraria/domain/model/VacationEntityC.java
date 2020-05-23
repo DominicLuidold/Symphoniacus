@@ -17,12 +17,12 @@ import java.util.Objects;
 
 @Entity
 @Table(name = "vacation", schema = "ni128610_1sql8")
-public class VacationEntity implements IVacation, Serializable {
+public class VacationEntityC implements IVacation, Serializable {
     private int vacationId;
     private Date startDate;
     private Date endDate;
     private boolean isConfirmed;
-    private MusicianEntity musician;
+    private MusicianEntityC musician;
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -73,7 +73,7 @@ public class VacationEntity implements IVacation, Serializable {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        VacationEntity that = (VacationEntity) o;
+        VacationEntityC that = (VacationEntityC) o;
         return vacationId == that.vacationId &&
                 isConfirmed == that.isConfirmed &&
                 Objects.equals(startDate, that.startDate) &&
@@ -88,11 +88,11 @@ public class VacationEntity implements IVacation, Serializable {
     @ManyToOne
     @JoinColumn(name = "musicianId", referencedColumnName = "musicianId", nullable = false)
     @Override
-    public MusicianEntity getMusician() {
+    public MusicianEntityC getMusician() {
         return musician;
     }
 
-    public void setMusician(MusicianEntity musician) {
+    public void setMusician(MusicianEntityC musician) {
         this.musician = musician;
     }
 }

@@ -32,20 +32,20 @@ public class JPADatabaseFacade implements DBFacade {
         _sessionManager = new SessionManager(_sessionFactory);
 
         _daos= new HashMap<>();
-        _daos.put(DutyEntity.class, new DutyDAO(_sessionManager));
-        _daos.put(MusicianEntity.class, new MusicianDAO(_sessionManager));
-        _daos.put(DutyPositionEntity.class, new DutyPositionDAO(_sessionManager));
-        _daos.put(InstrumentationEntity.class, new InstrumentationDAO(_sessionManager));
-        _daos.put(InstrumentationPositionEntity.class, new InstrumentationPositionDAO(_sessionManager));
-        _daos.put(SectionInstrumentationEntity.class, new SectionInstrumentationDAO(_sessionManager));
-        _daos.put(SectionEntity.class, new SectionDAO(_sessionManager));
-        _daos.put(UserEntity.class, new UserDAO(_sessionManager));
-        _daos.put(InstrumentCategoryEntity.class, new InstrumentCategoryDAO(_sessionManager));
-        _daos.put(MusicianRoleEntity.class, new MusicianRoleDAO(_sessionManager));
-        _daos.put(InstrumentCategoryMusicianEntity.class, new InstrumentCategoryMusicianDAO(_sessionManager));
-        _daos.put(MusicianRoleMusicianEntity.class, new MusicianRoleMusicianDAO(_sessionManager));
-        _daos.put(ContractualObligationEntity.class, new ContractualObligationDAO(_sessionManager));
-        _daos.put(AdministrativeAssistantEntity.class, new AdministrativeAssistantDAO(_sessionManager));
+        _daos.put(DutyEntityC.class, new DutyDAO(_sessionManager));
+        _daos.put(MusicianEntityC.class, new MusicianDAO(_sessionManager));
+        _daos.put(DutyPositionEntityC.class, new DutyPositionDAO(_sessionManager));
+        _daos.put(InstrumentationEntityC.class, new InstrumentationDAO(_sessionManager));
+        _daos.put(InstrumentationPositionEntityC.class, new InstrumentationPositionDAO(_sessionManager));
+        _daos.put(SectionInstrumentationEntityC.class, new SectionInstrumentationDAO(_sessionManager));
+        _daos.put(SectionEntityC.class, new SectionDAO(_sessionManager));
+        _daos.put(UserEntityC.class, new UserDAO(_sessionManager));
+        _daos.put(InstrumentCategoryEntityC.class, new InstrumentCategoryDAO(_sessionManager));
+        _daos.put(MusicianRoleEntityC.class, new MusicianRoleDAO(_sessionManager));
+        _daos.put(InstrumentCategoryMusicianEntityC.class, new InstrumentCategoryMusicianDAO(_sessionManager));
+        _daos.put(MusicianRoleMusicianEntityC.class, new MusicianRoleMusicianDAO(_sessionManager));
+        _daos.put(ContractualObligationEntityC.class, new ContractualObligationDAO(_sessionManager));
+        _daos.put(AdministrativeAssistantEntityC.class, new AdministrativeAssistantDAO(_sessionManager));
 
     }
 

@@ -8,10 +8,10 @@ import java.util.Objects;
 
 @Entity
 @Table(name = "seriesOfPerformances_instrumentation", schema = "ni128610_1sql8")
-public class SeriesOfPerformancesInstrumentationEntity implements ISeriesOfPerformancesInstrumentation, Serializable {
+public class SeriesOfPerformancesInstrumentationEntityC implements ISeriesOfPerformancesInstrumentation, Serializable {
     private int seriesOfPerformancesInstrumentationId;
-    private SeriesOfPerformancesEntity seriesOfPerformances;
-    private InstrumentationEntity instrumentation;
+    private SeriesOfPerformancesEntityC seriesOfPerformances;
+    private InstrumentationEntityC instrumentation;
 
     @Id
     @Column(name = "seriesOfPerformances_instrumentationId")
@@ -27,7 +27,7 @@ public class SeriesOfPerformancesInstrumentationEntity implements ISeriesOfPerfo
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        SeriesOfPerformancesInstrumentationEntity that = (SeriesOfPerformancesInstrumentationEntity) o;
+        SeriesOfPerformancesInstrumentationEntityC that = (SeriesOfPerformancesInstrumentationEntityC) o;
         return seriesOfPerformancesInstrumentationId == that.seriesOfPerformancesInstrumentationId;
     }
 
@@ -38,21 +38,21 @@ public class SeriesOfPerformancesInstrumentationEntity implements ISeriesOfPerfo
 
     @ManyToOne
     @JoinColumn(name = "seriesOfPerformancesId", referencedColumnName = "seriesOfPerformancesId", nullable = false)
-    public SeriesOfPerformancesEntity getSeriesOfPerformances() {
+    public SeriesOfPerformancesEntityC getSeriesOfPerformances() {
         return seriesOfPerformances;
     }
 
-    public void setSeriesOfPerformances(SeriesOfPerformancesEntity seriesOfPerformances) {
+    public void setSeriesOfPerformances(SeriesOfPerformancesEntityC seriesOfPerformances) {
         this.seriesOfPerformances= seriesOfPerformances;
     }
 
     @ManyToOne
     @JoinColumn(name = "instrumentationId", referencedColumnName = "instrumentationId", nullable = false)
-    public InstrumentationEntity getInstrumentation() {
+    public InstrumentationEntityC getInstrumentation() {
         return instrumentation;
     }
 
-    public void setInstrumentation(InstrumentationEntity instrumentationByInstrumentationId) {
+    public void setInstrumentation(InstrumentationEntityC instrumentationByInstrumentationId) {
         this.instrumentation = instrumentationByInstrumentationId;
     }
 }

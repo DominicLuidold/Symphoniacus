@@ -19,14 +19,14 @@ import java.util.Objects;
 
 @Entity
 @Table(name = "sectionMonthlySchedule", schema = "ni128610_1sql8")
-public class SectionMonthlyScheduleEntity implements ISectionMonthlySchedule, Serializable {
+public class SectionMonthlyScheduleEntityC implements ISectionMonthlySchedule, Serializable {
     private int sectionMonthlyScheduleId;
     private boolean isReadyForDutyScheduler;
     private boolean isReadyForOrganisationManager;
     private boolean isPublished;
-    private Collection<DutySectionMonthlyScheduleEntity> dutySectionMonthlySchedules;
-    private MonthlyScheduleEntity monthlySchedule;
-    private SectionEntity section;
+    private Collection<DutySectionMonthlyScheduleEntityC> dutySectionMonthlySchedules;
+    private MonthlyScheduleEntityC monthlySchedule;
+    private SectionEntityC section;
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -77,7 +77,7 @@ public class SectionMonthlyScheduleEntity implements ISectionMonthlySchedule, Se
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        SectionMonthlyScheduleEntity that = (SectionMonthlyScheduleEntity) o;
+        SectionMonthlyScheduleEntityC that = (SectionMonthlyScheduleEntityC) o;
         return sectionMonthlyScheduleId == that.sectionMonthlyScheduleId &&
                 isReadyForDutyScheduler == that.isReadyForDutyScheduler &&
                 isReadyForOrganisationManager == that.isReadyForOrganisationManager &&
@@ -90,33 +90,33 @@ public class SectionMonthlyScheduleEntity implements ISectionMonthlySchedule, Se
     }
 
     @OneToMany(mappedBy = "sectionMonthlySchedule")
-    public Collection<DutySectionMonthlyScheduleEntity> getDutySectionMonthlySchedules() {
+    public Collection<DutySectionMonthlyScheduleEntityC> getDutySectionMonthlySchedules() {
         return dutySectionMonthlySchedules;
     }
 
-    public void setDutySectionMonthlySchedules(Collection<DutySectionMonthlyScheduleEntity> dutySectionMonthlySchedulesBySectionMonthlyScheduleId) {
+    public void setDutySectionMonthlySchedules(Collection<DutySectionMonthlyScheduleEntityC> dutySectionMonthlySchedulesBySectionMonthlyScheduleId) {
         this.dutySectionMonthlySchedules = dutySectionMonthlySchedulesBySectionMonthlyScheduleId;
     }
 
     @ManyToOne
     @JoinColumn(name = "monthlyScheduleId", referencedColumnName = "monthlyScheduleId", nullable = false)
     @Override
-    public MonthlyScheduleEntity getMonthlySchedule() {
+    public MonthlyScheduleEntityC getMonthlySchedule() {
         return monthlySchedule;
     }
 
-    public void setMonthlySchedule(MonthlyScheduleEntity monthlySchedule) {
+    public void setMonthlySchedule(MonthlyScheduleEntityC monthlySchedule) {
         this.monthlySchedule = monthlySchedule;
     }
 
     @ManyToOne
     @JoinColumn(name = "sectionId", referencedColumnName = "sectionId", nullable = false)
     @Override
-    public SectionEntity getSection() {
+    public SectionEntityC getSection() {
         return section;
     }
 
-    public void setSection(SectionEntity section) {
+    public void setSection(SectionEntityC section) {
         this.section = section;
     }
 

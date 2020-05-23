@@ -17,14 +17,14 @@ import java.util.Objects;
 
 @Entity
 @Table(name = "contractualObligation", schema = "ni128610_1sql8")
-public class ContractualObligationEntity implements IContractualObligation, Serializable {
+public class ContractualObligationEntityC implements IContractualObligation, Serializable {
     private int contractNr;
     private String position;
     private int pointsPerMonth;
     private LocalDate startDate;
     private LocalDate endDate;
-    private MusicianEntity musician;
-    private InstrumentCategoryEntity instrumentCategory;
+    private MusicianEntityC musician;
+    private InstrumentCategoryEntityC instrumentCategory;
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -86,7 +86,7 @@ public class ContractualObligationEntity implements IContractualObligation, Seri
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        ContractualObligationEntity that = (ContractualObligationEntity) o;
+        ContractualObligationEntityC that = (ContractualObligationEntityC) o;
         return contractNr == that.contractNr &&
                 pointsPerMonth == that.pointsPerMonth &&
                 Objects.equals(position, that.position) &&
@@ -102,22 +102,22 @@ public class ContractualObligationEntity implements IContractualObligation, Seri
     @ManyToOne(cascade = CascadeType.MERGE)
     @JoinColumn(name = "musicianId", referencedColumnName = "musicianId", nullable = false)
     @Override
-    public MusicianEntity getMusician() {
+    public MusicianEntityC getMusician() {
         return musician;
     }
 
-    public void setMusician(MusicianEntity musicianByMusicianId) {
+    public void setMusician(MusicianEntityC musicianByMusicianId) {
         this.musician = musicianByMusicianId;
     }
 
     @ManyToOne
     @JoinColumn(name = "instrumentCategoryId", referencedColumnName = "instrumentCategoryId")
     @Override
-    public InstrumentCategoryEntity getInstrumentCategory() {
+    public InstrumentCategoryEntityC getInstrumentCategory() {
         return instrumentCategory;
     }
 
-    public void setInstrumentCategory(InstrumentCategoryEntity instrumentCategoryByInstrumentCategoryId) {
+    public void setInstrumentCategory(InstrumentCategoryEntityC instrumentCategoryByInstrumentCategoryId) {
         this.instrumentCategory = instrumentCategoryByInstrumentCategoryId;
     }
 }

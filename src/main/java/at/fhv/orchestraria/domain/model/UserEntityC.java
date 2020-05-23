@@ -18,7 +18,7 @@ import java.util.Objects;
  */
 @Entity
 @Table(name = "user", schema = "ni128610_1sql8")
-public class UserEntity implements IUser, ManageableUser, PasswordableUser, Serializable, IntegratableUser {
+public class UserEntityC implements IUser, ManageableUser, PasswordableUser, Serializable, IntegratableUser {
     private int userId;
     private String firstName;
     private String lastName;
@@ -32,8 +32,8 @@ public class UserEntity implements IUser, ManageableUser, PasswordableUser, Seri
     private String street;
     private String streetNumber;
     private String passwordSalt;
-    private AdministrativeAssistantEntity administrativeAssistant;
-    private MusicianEntity musician;
+    private AdministrativeAssistantEntityC administrativeAssistant;
+    private MusicianEntityC musician;
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -195,7 +195,7 @@ public class UserEntity implements IUser, ManageableUser, PasswordableUser, Seri
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        UserEntity that = (UserEntity) o;
+        UserEntityC that = (UserEntityC) o;
         return userId == that.userId &&
                 Objects.equals(firstName, that.firstName) &&
                 Objects.equals(lastName, that.lastName) &&
@@ -218,23 +218,23 @@ public class UserEntity implements IUser, ManageableUser, PasswordableUser, Seri
 
     @OneToOne(mappedBy = "user", cascade = CascadeType.MERGE)
     @Override
-    public AdministrativeAssistantEntity getAdministrativeAssistant() {
+    public AdministrativeAssistantEntityC getAdministrativeAssistant() {
         return administrativeAssistant;
     }
 
 
-    public void setAdministrativeAssistant(AdministrativeAssistantEntity administrativeAssistant) {
+    public void setAdministrativeAssistant(AdministrativeAssistantEntityC administrativeAssistant) {
         this.administrativeAssistant = administrativeAssistant;
     }
 
     @OneToOne(mappedBy = "user" ,cascade = CascadeType.MERGE)
     @Override
-    public MusicianEntity getMusician() {
+    public MusicianEntityC getMusician() {
         return musician;
     }
 
 
-    public void setMusician(MusicianEntity musician) {
+    public void setMusician(MusicianEntityC musician) {
         this.musician = musician;
     }
 

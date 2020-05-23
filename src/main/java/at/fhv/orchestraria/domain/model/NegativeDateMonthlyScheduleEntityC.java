@@ -16,10 +16,10 @@ import java.util.Objects;
 
 @Entity
 @Table(name = "negativeDate_monthlySchedule", schema = "ni128610_1sql8")
-public class NegativeDateMonthlyScheduleEntity implements INegativeDateMonthlySchedule, Serializable {
+public class NegativeDateMonthlyScheduleEntityC implements INegativeDateMonthlySchedule, Serializable {
     private int negativeDateMonthlyScheduleId;
-    private MonthlyScheduleEntity monthlySchedule;
-    private NegativeDateWishEntity negativeDateWish;
+    private MonthlyScheduleEntityC monthlySchedule;
+    private NegativeDateWishEntityC negativeDateWish;
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -37,7 +37,7 @@ public class NegativeDateMonthlyScheduleEntity implements INegativeDateMonthlySc
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        NegativeDateMonthlyScheduleEntity that = (NegativeDateMonthlyScheduleEntity) o;
+        NegativeDateMonthlyScheduleEntityC that = (NegativeDateMonthlyScheduleEntityC) o;
         return negativeDateMonthlyScheduleId == that.negativeDateMonthlyScheduleId;
     }
 
@@ -49,22 +49,22 @@ public class NegativeDateMonthlyScheduleEntity implements INegativeDateMonthlySc
     @ManyToOne
     @JoinColumn(name = "monthlyScheduleId", referencedColumnName = "monthlyScheduleId", nullable = false)
     @Override
-    public MonthlyScheduleEntity getMonthlySchedule() {
+    public MonthlyScheduleEntityC getMonthlySchedule() {
         return monthlySchedule;
     }
 
-    public void setMonthlySchedule(MonthlyScheduleEntity monthlySchedule) {
+    public void setMonthlySchedule(MonthlyScheduleEntityC monthlySchedule) {
         this.monthlySchedule = monthlySchedule;
     }
 
     @ManyToOne
     @JoinColumn(name = "negativeDateId", referencedColumnName = "negativeDateId", nullable = false)
     @Override
-    public NegativeDateWishEntity getNegativeDateWish() {
+    public NegativeDateWishEntityC getNegativeDateWish() {
         return negativeDateWish;
     }
 
-    public void setNegativeDateWish(NegativeDateWishEntity negativeDateWish) {
+    public void setNegativeDateWish(NegativeDateWishEntityC negativeDateWish) {
         this.negativeDateWish = negativeDateWish;
     }
 }

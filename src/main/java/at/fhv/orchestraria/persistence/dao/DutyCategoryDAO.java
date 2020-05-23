@@ -1,6 +1,6 @@
 package at.fhv.orchestraria.persistence.dao;
 
-import at.fhv.orchestraria.domain.model.DutyCategoryEntity;
+import at.fhv.orchestraria.domain.model.DutyCategoryEntityC;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
@@ -13,34 +13,34 @@ import java.util.Optional;
  * @author Team C
  */
 
-public class DutyCategoryDAO implements DaoBase<DutyCategoryEntity> {
+public class DutyCategoryDAO implements DaoBase<DutyCategoryEntityC> {
 
     private SessionFactory _sessionFactory;
 
     @Override
-    public Optional<DutyCategoryEntity> get(int id) {
+    public Optional<DutyCategoryEntityC> get(int id) {
         Session session = _sessionFactory.openSession();
         Transaction ta = session.beginTransaction();
-        Optional<DutyCategoryEntity> dce = Optional.ofNullable(session.get(DutyCategoryEntity.class, id));
+        Optional<DutyCategoryEntityC> dce = Optional.ofNullable(session.get(DutyCategoryEntityC.class, id));
         ta.commit();
         return dce;
     }
 
     @Override
-    public List<DutyCategoryEntity> getAll() {
+    public List<DutyCategoryEntityC> getAll() {
         Session session = _sessionFactory.openSession();
         Transaction ta = session.beginTransaction();
-        List<DutyCategoryEntity> dces = session.createQuery("SELECT a FROM DutyCategoryEntity a", DutyCategoryEntity.class).getResultList();
+        List<DutyCategoryEntityC> dces = session.createQuery("SELECT a FROM DutyCategoryEntity a", DutyCategoryEntityC.class).getResultList();
         ta.commit();
-        List<DutyCategoryEntity> wrappedCategories = new ArrayList<>(dces.size());
-        for(DutyCategoryEntity dce: dces){
+        List<DutyCategoryEntityC> wrappedCategories = new ArrayList<>(dces.size());
+        for(DutyCategoryEntityC dce: dces){
             wrappedCategories.add(dce);
         }
         return wrappedCategories;
     }
 
     @Override
-    public void save(DutyCategoryEntity category) {
+    public void save(DutyCategoryEntityC category) {
         Session session = _sessionFactory.openSession();
         Transaction ta = session.beginTransaction();
         session.saveOrUpdate(category);
@@ -48,16 +48,16 @@ public class DutyCategoryDAO implements DaoBase<DutyCategoryEntity> {
     }
 
     @Override
-    public DutyCategoryEntity update(DutyCategoryEntity category) {
+    public DutyCategoryEntityC update(DutyCategoryEntityC category) {
         Session session = _sessionFactory.openSession();
         Transaction ta = session.beginTransaction();
-        DutyCategoryEntity dce = (DutyCategoryEntity) session.merge(category);
+        DutyCategoryEntityC dce = (DutyCategoryEntityC) session.merge(category);
         ta.commit();
         return dce;
     }
 
     @Override
-    public void delete(DutyCategoryEntity category) {
+    public void delete(DutyCategoryEntityC category) {
         Session session = _sessionFactory.openSession();
         Transaction ta = session.beginTransaction();
         session.delete(category);

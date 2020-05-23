@@ -16,10 +16,10 @@ import java.util.Objects;
 
 @Entity
 @Table(name = "instrumentCategory_musician", schema = "ni128610_1sql8")
-public class InstrumentCategoryMusicianEntity implements IInstrumentCategoryMusician, Serializable {
+public class InstrumentCategoryMusicianEntityC implements IInstrumentCategoryMusician, Serializable {
     private int instrumentCategoryMusicianId;
-    private InstrumentCategoryEntity instrumentCategory;
-    private MusicianEntity musician;
+    private InstrumentCategoryEntityC instrumentCategory;
+    private MusicianEntityC musician;
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -37,7 +37,7 @@ public class InstrumentCategoryMusicianEntity implements IInstrumentCategoryMusi
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        InstrumentCategoryMusicianEntity that = (InstrumentCategoryMusicianEntity) o;
+        InstrumentCategoryMusicianEntityC that = (InstrumentCategoryMusicianEntityC) o;
         return instrumentCategoryMusicianId == that.instrumentCategoryMusicianId;
     }
 
@@ -49,22 +49,22 @@ public class InstrumentCategoryMusicianEntity implements IInstrumentCategoryMusi
     @ManyToOne
     @JoinColumn(name = "instrumentCategoryId", referencedColumnName = "instrumentCategoryId", nullable = false)
     @Override
-    public InstrumentCategoryEntity getInstrumentCategory() {
+    public InstrumentCategoryEntityC getInstrumentCategory() {
         return instrumentCategory;
     }
 
-    public void setInstrumentCategory(InstrumentCategoryEntity instrumentCategory) {
+    public void setInstrumentCategory(InstrumentCategoryEntityC instrumentCategory) {
         this.instrumentCategory = instrumentCategory;
     }
 
     @ManyToOne
     @JoinColumn(name = "musicianId", referencedColumnName = "musicianId", nullable = false)
     @Override
-    public MusicianEntity getMusician() {
+    public MusicianEntityC getMusician() {
         return musician;
     }
 
-    public void setMusician(MusicianEntity musician) {
+    public void setMusician(MusicianEntityC musician) {
         this.musician = musician;
     }
 }

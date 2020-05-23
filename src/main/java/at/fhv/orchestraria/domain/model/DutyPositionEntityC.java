@@ -17,13 +17,13 @@ import java.util.Objects;
 
 @Entity
 @Table(name = "dutyPosition", schema = "ni128610_1sql8")
-public class DutyPositionEntity implements IDutyPosition, IntegratableDutyPosition, Serializable {
+public class DutyPositionEntityC implements IDutyPosition, IntegratableDutyPosition, Serializable {
     private int dutyPositionId;
     private String description;
-    private InstrumentationPositionEntity instrumentationPosition;
-    private DutyEntity duty;
-    private SectionEntity section;
-    private MusicianEntity musician;
+    private InstrumentationPositionEntityC instrumentationPosition;
+    private DutyEntityC duty;
+    private SectionEntityC section;
+    private MusicianEntityC musician;
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -52,7 +52,7 @@ public class DutyPositionEntity implements IDutyPosition, IntegratableDutyPositi
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        DutyPositionEntity that = (DutyPositionEntity) o;
+        DutyPositionEntityC that = (DutyPositionEntityC) o;
         return dutyPositionId == that.dutyPositionId &&
                 Objects.equals(description, that.description);
     }
@@ -65,44 +65,44 @@ public class DutyPositionEntity implements IDutyPosition, IntegratableDutyPositi
     @ManyToOne
     @JoinColumn(name = "instrumentationPositionId", referencedColumnName = "instrumentationPositionId")
     @Override
-    public InstrumentationPositionEntity getInstrumentationPosition() {
+    public InstrumentationPositionEntityC getInstrumentationPosition() {
         return instrumentationPosition;
     }
 
-    public void setInstrumentationPosition(InstrumentationPositionEntity instrumentationPosition) {
+    public void setInstrumentationPosition(InstrumentationPositionEntityC instrumentationPosition) {
         this.instrumentationPosition = instrumentationPosition;
     }
 
     @ManyToOne
     @JoinColumn(name = "dutyId", referencedColumnName = "dutyId")
     @Override
-    public DutyEntity getDuty() {
+    public DutyEntityC getDuty() {
         return duty;
     }
 
-    public void setDuty(DutyEntity duty) {
+    public void setDuty(DutyEntityC duty) {
         this.duty = duty;
     }
 
     @ManyToOne
     @JoinColumn(name = "sectionId", referencedColumnName = "sectionId")
     @Override
-    public SectionEntity getSection() {
+    public SectionEntityC getSection() {
         return section;
     }
 
-    public void setSection(SectionEntity section) {
+    public void setSection(SectionEntityC section) {
         this.section = section;
     }
 
     @ManyToOne(cascade = CascadeType.MERGE)
     @JoinColumn(name = "musicianId", referencedColumnName = "musicianId")
     @Override
-    public MusicianEntity getMusician() {
+    public MusicianEntityC getMusician() {
         return musician;
     }
 
-    public void setMusician(MusicianEntity musicianByDutyPositionId) {
+    public void setMusician(MusicianEntityC musicianByDutyPositionId) {
         this.musician = musicianByDutyPositionId;
     }
 

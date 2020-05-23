@@ -16,11 +16,11 @@ import java.util.Objects;
 
 @Entity
 @Table(name = "positiveWish", schema = "ni128610_1sql8")
-public class PositiveWishEntity implements IPositiveWish, Serializable {
+public class PositiveWishEntityC implements IPositiveWish, Serializable {
     private int positiveWishId;
     private String description;
-    private SeriesOfPerformancesEntity seriesOfPerformances;
-    private MusicianEntity musician;
+    private SeriesOfPerformancesEntityC seriesOfPerformances;
+    private MusicianEntityC musician;
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -49,7 +49,7 @@ public class PositiveWishEntity implements IPositiveWish, Serializable {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        PositiveWishEntity that = (PositiveWishEntity) o;
+        PositiveWishEntityC that = (PositiveWishEntityC) o;
         return positiveWishId == that.positiveWishId &&
                 Objects.equals(description, that.description);
     }
@@ -62,22 +62,22 @@ public class PositiveWishEntity implements IPositiveWish, Serializable {
     @ManyToOne
     @JoinColumn(name = "seriesOfPerformancesId", referencedColumnName = "seriesOfPerformancesId", nullable = false)
     @Override
-    public SeriesOfPerformancesEntity getSeriesOfPerformances() {
+    public SeriesOfPerformancesEntityC getSeriesOfPerformances() {
         return seriesOfPerformances;
     }
 
-    public void setSeriesOfPerformances(SeriesOfPerformancesEntity seriesOfPerformances) {
+    public void setSeriesOfPerformances(SeriesOfPerformancesEntityC seriesOfPerformances) {
         this.seriesOfPerformances = seriesOfPerformances;
     }
 
     @ManyToOne
     @JoinColumn(name = "musicianId", referencedColumnName = "musicianId", nullable = false)
     @Override
-    public MusicianEntity getMusician() {
+    public MusicianEntityC getMusician() {
         return musician;
     }
 
-    public void setMusician(MusicianEntity musician) {
+    public void setMusician(MusicianEntityC musician) {
         this.musician = musician;
     }
 }

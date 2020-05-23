@@ -1,6 +1,6 @@
 package at.fhv.orchestraria.persistence.dao;
 
-import at.fhv.orchestraria.domain.model.InstrumentationEntity;
+import at.fhv.orchestraria.domain.model.InstrumentationEntityC;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
 
@@ -12,7 +12,7 @@ import java.util.Optional;
  * @author Team C
  */
 
-public class InstrumentationDAO implements DaoBase<InstrumentationEntity> {
+public class InstrumentationDAO implements DaoBase<InstrumentationEntityC> {
     private SessionManager _sessionManager;
 
     public InstrumentationDAO(SessionManager sessionFactory) {
@@ -20,21 +20,21 @@ public class InstrumentationDAO implements DaoBase<InstrumentationEntity> {
     }
 
     @Override
-    public synchronized Optional<InstrumentationEntity> get(int id) {
+    public synchronized Optional<InstrumentationEntityC> get(int id) {
         Session session = _sessionManager.openConnection();
         Transaction ta = session.beginTransaction();
-        Optional<InstrumentationEntity> ie = Optional.ofNullable(session.get(InstrumentationEntity.class, id));
+        Optional<InstrumentationEntityC> ie = Optional.ofNullable(session.get(InstrumentationEntityC.class, id));
         ta.commit();
         return ie;
     }
 
     @Override
-    public synchronized List<InstrumentationEntity> getAll() {
+    public synchronized List<InstrumentationEntityC> getAll() {
         Session session = _sessionManager.openConnection();
         Transaction ta = session.beginTransaction();
-        List<InstrumentationEntity> ies = session.createQuery("SELECT a FROM InstrumentationEntity a", InstrumentationEntity.class).getResultList();
-        List<InstrumentationEntity> wrappedInstrumentations = new ArrayList<>(ies.size());
-        for(InstrumentationEntity ie : ies){
+        List<InstrumentationEntityC> ies = session.createQuery("SELECT a FROM InstrumentationEntity a", InstrumentationEntityC.class).getResultList();
+        List<InstrumentationEntityC> wrappedInstrumentations = new ArrayList<>(ies.size());
+        for(InstrumentationEntityC ie : ies){
             wrappedInstrumentations.add(ie);
         }
         ta.commit();
@@ -42,7 +42,7 @@ public class InstrumentationDAO implements DaoBase<InstrumentationEntity> {
     }
 
     @Override
-    public synchronized void save(InstrumentationEntity instrumentationEntity) {
+    public synchronized void save(InstrumentationEntityC instrumentationEntity) {
         Session session = _sessionManager.openConnection();
         Transaction ta = session.beginTransaction();
         session.saveOrUpdate(instrumentationEntity);
@@ -50,16 +50,16 @@ public class InstrumentationDAO implements DaoBase<InstrumentationEntity> {
     }
 
     @Override
-    public synchronized InstrumentationEntity update(InstrumentationEntity instrumentationEntity) {
+    public synchronized InstrumentationEntityC update(InstrumentationEntityC instrumentationEntity) {
         Session session = _sessionManager.openConnection();
         Transaction ta = session.beginTransaction();
-        InstrumentationEntity ie = (InstrumentationEntity) session.merge(instrumentationEntity);
+        InstrumentationEntityC ie = (InstrumentationEntityC) session.merge(instrumentationEntity);
         ta.commit();
         return ie;
     }
 
     @Override
-    public synchronized void delete(InstrumentationEntity instrumentationEntity) {
+    public synchronized void delete(InstrumentationEntityC instrumentationEntity) {
         Session session = _sessionManager.openConnection();
         Transaction ta = session.beginTransaction();
         session.delete(instrumentationEntity);

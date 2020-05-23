@@ -20,13 +20,13 @@ import java.util.Objects;
 
 @Entity
 @Table(name = "negativeDateWish", schema = "ni128610_1sql8")
-public class NegativeDateWishEntity implements INegativeDateWish, Serializable {
+public class NegativeDateWishEntityC implements INegativeDateWish, Serializable {
     private int negativeDateId;
     private String description;
     private LocalDate startDate;
     private LocalDate endDate;
-    private MusicianEntity musician;
-    private Collection<NegativeDateMonthlyScheduleEntity> negativeDateMonthlySchedules;
+    private MusicianEntityC musician;
+    private Collection<NegativeDateMonthlyScheduleEntityC> negativeDateMonthlySchedules;
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -77,7 +77,7 @@ public class NegativeDateWishEntity implements INegativeDateWish, Serializable {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        NegativeDateWishEntity that = (NegativeDateWishEntity) o;
+        NegativeDateWishEntityC that = (NegativeDateWishEntityC) o;
         return negativeDateId == that.negativeDateId &&
                 Objects.equals(description, that.description) &&
                 Objects.equals(startDate, that.startDate) &&
@@ -92,20 +92,20 @@ public class NegativeDateWishEntity implements INegativeDateWish, Serializable {
     @ManyToOne
     @JoinColumn(name = "musicianId", referencedColumnName = "musicianId")
     @Override
-    public MusicianEntity getMusician() {
+    public MusicianEntityC getMusician() {
         return musician;
     }
 
-    public void setMusician(MusicianEntity musician) {
+    public void setMusician(MusicianEntityC musician) {
         this.musician = musician;
     }
 
     @OneToMany(mappedBy = "negativeDateWish")
-    public Collection<NegativeDateMonthlyScheduleEntity> getNegativeDateMonthlySchedules() {
+    public Collection<NegativeDateMonthlyScheduleEntityC> getNegativeDateMonthlySchedules() {
         return negativeDateMonthlySchedules;
     }
 
-    public void setNegativeDateMonthlySchedules(Collection<NegativeDateMonthlyScheduleEntity> negativeDateMonthlySchedulesByNegativeDateId) {
+    public void setNegativeDateMonthlySchedules(Collection<NegativeDateMonthlyScheduleEntityC> negativeDateMonthlySchedulesByNegativeDateId) {
         this.negativeDateMonthlySchedules = negativeDateMonthlySchedulesByNegativeDateId;
     }
 

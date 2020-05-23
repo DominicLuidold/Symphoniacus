@@ -1,8 +1,8 @@
 package at.fhv.orchestraria.persistence.dao;
 
-import at.fhv.orchestraria.domain.model.DutyEntity;
-import at.fhv.orchestraria.domain.model.DutySectionMonthlyScheduleEntity;
-import at.fhv.orchestraria.domain.model.SectionMonthlyScheduleEntity;
+import at.fhv.orchestraria.domain.model.DutyEntityC;
+import at.fhv.orchestraria.domain.model.DutySectionMonthlyScheduleEntityC;
+import at.fhv.orchestraria.domain.model.SectionMonthlyScheduleEntityC;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
 
@@ -14,7 +14,7 @@ import java.util.Optional;
  * @author Team C
  */
 
-public class DutyDAO implements DaoBase<DutyEntity> {
+public class DutyDAO implements DaoBase<DutyEntityC> {
 
 
 
@@ -25,21 +25,21 @@ public class DutyDAO implements DaoBase<DutyEntity> {
     }
 
     @Override
-    public synchronized Optional<DutyEntity> get(int id) {
+    public synchronized Optional<DutyEntityC> get(int id) {
         Session s = _sessionManager.openConnection();
         Transaction tx =s.beginTransaction();
-        Optional<DutyEntity> duty = Optional.ofNullable(s.get(DutyEntity.class, id));
+        Optional<DutyEntityC> duty = Optional.ofNullable(s.get(DutyEntityC.class, id));
         tx.commit();
         return duty;
     }
 
     @Override
-    public synchronized List<DutyEntity> getAll() {
+    public synchronized List<DutyEntityC> getAll() {
         Session s = _sessionManager.openConnection();
         Transaction tx =s.beginTransaction();
-        List<DutyEntity> duties = s.createQuery("SELECT a FROM DutyEntity a", DutyEntity.class).getResultList();
-        List<DutyEntity> wrappedDuties = new ArrayList<>(duties.size());
-        for(DutyEntity d :duties){
+        List<DutyEntityC> duties = s.createQuery("SELECT a FROM DutyEntity a", DutyEntityC.class).getResultList();
+        List<DutyEntityC> wrappedDuties = new ArrayList<>(duties.size());
+        for(DutyEntityC d :duties){
             wrappedDuties.add(d);
         }
         tx.commit();
@@ -51,14 +51,14 @@ public class DutyDAO implements DaoBase<DutyEntity> {
      * @param sectionID ID of the section
      * @return duties of the section
      */
-    public synchronized List<DutyEntity> getDutiesBySectionID(int sectionID){
-        List<DutyEntity> fittingDuties = new ArrayList<>();
+    public synchronized List<DutyEntityC> getDutiesBySectionID(int sectionID){
+        List<DutyEntityC> fittingDuties = new ArrayList<>();
 
         Session s = _sessionManager.openConnection();
         Transaction tx = s.beginTransaction();
-        List<SectionMonthlyScheduleEntity> sectionMonthlyScheduleEntities =  s.createQuery("SELECT a FROM SectionMonthlyScheduleEntity a WHERE a.section.sectionId ="+ sectionID, SectionMonthlyScheduleEntity.class).getResultList();
-        for(SectionMonthlyScheduleEntity smse : sectionMonthlyScheduleEntities){
-            for(DutySectionMonthlyScheduleEntity dsmse : smse.getDutySectionMonthlySchedules()){
+        List<SectionMonthlyScheduleEntityC> sectionMonthlyScheduleEntities =  s.createQuery("SELECT a FROM SectionMonthlyScheduleEntity a WHERE a.section.sectionId ="+ sectionID, SectionMonthlyScheduleEntityC.class).getResultList();
+        for(SectionMonthlyScheduleEntityC smse : sectionMonthlyScheduleEntities){
+            for(DutySectionMonthlyScheduleEntityC dsmse : smse.getDutySectionMonthlySchedules()){
                fittingDuties.add(dsmse.getDuty());
             }
         }
@@ -85,7 +85,7 @@ public class DutyDAO implements DaoBase<DutyEntity> {
 //    }
 
     @Override
-    public synchronized void save(DutyEntity entity) {
+    public synchronized void save(DutyEntityC entity) {
         Session s = _sessionManager.openConnection();
         Transaction tx = s.beginTransaction();
         s.saveOrUpdate(entity);
@@ -93,16 +93,16 @@ public class DutyDAO implements DaoBase<DutyEntity> {
     }
 
     @Override
-    public synchronized DutyEntity update(DutyEntity entity) {
+    public synchronized DutyEntityC update(DutyEntityC entity) {
         Session s = _sessionManager.openConnection();
         Transaction tx = s.beginTransaction();
-        DutyEntity de =  (DutyEntity) s.merge(entity);
+        DutyEntityC de =  (DutyEntityC) s.merge(entity);
         tx.commit();
         return de;
     }
 
     @Override
-    public synchronized void delete(DutyEntity entity) {
+    public synchronized void delete(DutyEntityC entity) {
         Session s = _sessionManager.openConnection();
         Transaction tx = s.beginTransaction();
         s.delete(entity);

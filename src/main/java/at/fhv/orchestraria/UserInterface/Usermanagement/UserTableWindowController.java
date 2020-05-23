@@ -5,7 +5,7 @@ import at.fhv.orchestraria.UserInterface.Login.LoginWindowController;
 import at.fhv.orchestraria.UserInterface.MainWindow.MainWindow;
 import at.fhv.orchestraria.UserInterface.Roster.RosterWindow;
 import at.fhv.orchestraria.application.UserManagementController;
-import at.fhv.orchestraria.domain.model.MusicianEntity;
+import at.fhv.orchestraria.domain.model.MusicianEntityC;
 import at.fhv.teamb.symphoniacus.persistence.model.interfaces.IAdministrativeAssistantEntity;
 import at.fhv.teamb.symphoniacus.persistence.model.interfaces.IContractualObligationEntity;
 import at.fhv.teamb.symphoniacus.persistence.model.interfaces.IMusicianRoleEntity;
@@ -235,7 +235,7 @@ public class UserTableWindowController implements Parentable<TabPaneController> 
         });
 
         for (IUserEntity ue : uManagementController.getUsers()) {
-            if (ue.getUserId() != MusicianEntity.EXTERNAL_MUSICIAN_ID) {
+            if (ue.getUserId() != MusicianEntityC.EXTERNAL_MUSICIAN_ID) {
                 TreeItem ti = new TreeItem(new UserWrapper(ue));
                 newUserRow.getChildren().add(ti);
                 treeTableView.refresh();

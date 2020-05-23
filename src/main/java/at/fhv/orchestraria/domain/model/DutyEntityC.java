@@ -20,7 +20,7 @@ import java.util.*;
 
 @Entity
 @Table(name = "duty", schema = "ni128610_1sql8")
-public class DutyEntity implements IDuty, IntegratableDuty, Serializable {
+public class DutyEntityC implements IDuty, IntegratableDuty, Serializable {
 
     public static final String EVENING_DUTY_NAME = "EVENING";
 
@@ -29,11 +29,11 @@ public class DutyEntity implements IDuty, IntegratableDuty, Serializable {
     private String timeOfDay;
     private LocalDateTime start;
     private LocalDateTime end;
-    private WeeklyScheduleEntity weeklySchedule;
-    private DutyCategoryEntity dutyCategory;
-    private SeriesOfPerformancesEntity seriesOfPerformances;
-    private Collection<DutyPositionEntity> dutyPositions;
-    private Collection<DutySectionMonthlyScheduleEntity> dutySectionMonthlySchedules;
+    private WeeklyScheduleEntityC weeklySchedule;
+    private DutyCategoryEntityC dutyCategory;
+    private SeriesOfPerformancesEntityC seriesOfPerformances;
+    private Collection<DutyPositionEntityC> dutyPositions;
+    private Collection<DutySectionMonthlyScheduleEntityC> dutySectionMonthlySchedules;
 
     @Override
     @Id
@@ -95,7 +95,7 @@ public class DutyEntity implements IDuty, IntegratableDuty, Serializable {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        DutyEntity that = (DutyEntity) o;
+        DutyEntityC that = (DutyEntityC) o;
         return dutyId == that.dutyId &&
                 Objects.equals(description, that.description) &&
                 Objects.equals(timeOfDay, that.timeOfDay) &&
@@ -111,51 +111,51 @@ public class DutyEntity implements IDuty, IntegratableDuty, Serializable {
     @ManyToOne
     @JoinColumn(name = "weeklyScheduleId", referencedColumnName = "weeklyScheduleId", nullable = false)
     @Override
-    public WeeklyScheduleEntity getWeeklySchedule() {
+    public WeeklyScheduleEntityC getWeeklySchedule() {
         return weeklySchedule;
     }
 
-    public void setWeeklySchedule(WeeklyScheduleEntity weeklySchedule) {
+    public void setWeeklySchedule(WeeklyScheduleEntityC weeklySchedule) {
         this.weeklySchedule = weeklySchedule;
     }
 
     @ManyToOne
     @JoinColumn(name = "dutyCategoryId", referencedColumnName = "dutyCategoryId", nullable = false)
     @Override
-    public DutyCategoryEntity getDutyCategory() {
+    public DutyCategoryEntityC getDutyCategory() {
         return dutyCategory;
     }
 
-    public void setDutyCategory(DutyCategoryEntity dutyCategory) {
+    public void setDutyCategory(DutyCategoryEntityC dutyCategory) {
         this.dutyCategory = dutyCategory;
     }
 
     @ManyToOne
     @JoinColumn(name = "seriesOfPerformancesId", referencedColumnName = "seriesOfPerformancesId")
     @Override
-    public SeriesOfPerformancesEntity getSeriesOfPerformances() {
+    public SeriesOfPerformancesEntityC getSeriesOfPerformances() {
         return seriesOfPerformances;
     }
 
-    public void setSeriesOfPerformances(SeriesOfPerformancesEntity seriesOfPerformances) {
+    public void setSeriesOfPerformances(SeriesOfPerformancesEntityC seriesOfPerformances) {
         this.seriesOfPerformances = seriesOfPerformances;
     }
 
     @OneToMany(mappedBy = "duty")
-    public Collection<DutyPositionEntity> getDutyPositions() {
+    public Collection<DutyPositionEntityC> getDutyPositions() {
         return dutyPositions;
     }
 
-    public void setDutyPositions(Collection<DutyPositionEntity> dutyPositionsByDutyId) {
+    public void setDutyPositions(Collection<DutyPositionEntityC> dutyPositionsByDutyId) {
         this.dutyPositions = dutyPositionsByDutyId;
     }
 
     @OneToMany(mappedBy = "duty")
-    public Collection<DutySectionMonthlyScheduleEntity> getDutySectionMonthlySchedules() {
+    public Collection<DutySectionMonthlyScheduleEntityC> getDutySectionMonthlySchedules() {
         return dutySectionMonthlySchedules;
     }
 
-    public void setDutySectionMonthlySchedules(Collection<DutySectionMonthlyScheduleEntity> dutySectionMonthlySchedulesByDutyId) {
+    public void setDutySectionMonthlySchedules(Collection<DutySectionMonthlyScheduleEntityC> dutySectionMonthlySchedulesByDutyId) {
         this.dutySectionMonthlySchedules = dutySectionMonthlySchedulesByDutyId;
     }
 
@@ -169,11 +169,11 @@ public class DutyEntity implements IDuty, IntegratableDuty, Serializable {
      */
     @Transient
     @Override
-    public SectionInstrumentationEntity getSectionInstrumentation(int sectionID) {
+    public SectionInstrumentationEntityC getSectionInstrumentation(int sectionID) {
         if (seriesOfPerformances != null) {
-            InstrumentationEntity instrumentation = seriesOfPerformances.
+            InstrumentationEntityC instrumentation = seriesOfPerformances.
                     getSeriesOfPerformancesInstrumentations().iterator().next().getInstrumentation(); //TODO: fixMe
-                for (SectionInstrumentationEntity sectionInstrumentation : instrumentation.getSectionInstrumentations()) {
+                for (SectionInstrumentationEntityC sectionInstrumentation : instrumentation.getSectionInstrumentations()) {
                     if (sectionInstrumentation.getSection().getSectionId() == sectionID) {
                         return sectionInstrumentation;
                     }
@@ -190,7 +190,7 @@ public class DutyEntity implements IDuty, IntegratableDuty, Serializable {
     @Override
     @Transient
     public boolean isSectionCompletelyAssigned(int sectionID) {
-        for (DutyPositionEntity dPos : getDutyPositions()) {
+        for (DutyPositionEntityC dPos : getDutyPositions()) {
             if (dPos.getSection().getSectionId() == sectionID && dPos.getMusician() == null) {
                 return false;
             }
@@ -228,7 +228,7 @@ public class DutyEntity implements IDuty, IntegratableDuty, Serializable {
         String musicalPiece = "";
         int count = 0;
         if (getSeriesOfPerformances() != null) {
-            for (SeriesOfPerformancesMusicalPieceEntity sopmusicalpiece : getSeriesOfPerformances().getSeriesOfPerformancesMusicalPieces()) {
+            for (SeriesOfPerformancesMusicalPieceEntityC sopmusicalpiece : getSeriesOfPerformances().getSeriesOfPerformancesMusicalPieces()) {
                 if(count<1){
                     musicalPiece = sopmusicalpiece.getMusicalPiece().getName() + " ";
                     count++;
@@ -259,7 +259,7 @@ public class DutyEntity implements IDuty, IntegratableDuty, Serializable {
         List<String> composers = new LinkedList<>();
         String composerStr = "";
         if (getSeriesOfPerformances() != null) {
-            for (SeriesOfPerformancesMusicalPieceEntity sopmusicalpiece : getSeriesOfPerformances().getSeriesOfPerformancesMusicalPieces()) {
+            for (SeriesOfPerformancesMusicalPieceEntityC sopmusicalpiece : getSeriesOfPerformances().getSeriesOfPerformancesMusicalPieces()) {
                 if(composers.size()==0){
                    composerStr = sopmusicalpiece.getMusicalPiece().getComposer();
                    composers.add(composerStr);
@@ -291,7 +291,7 @@ public class DutyEntity implements IDuty, IntegratableDuty, Serializable {
         String instrumentation = "";
         List<String> instrumentations = new LinkedList<>();
         if (getSeriesOfPerformances() != null) {
-            for (SeriesOfPerformancesInstrumentationEntity sopmusicalpiece : getSeriesOfPerformances().getSeriesOfPerformancesInstrumentations()) {
+            for (SeriesOfPerformancesInstrumentationEntityC sopmusicalpiece : getSeriesOfPerformances().getSeriesOfPerformancesInstrumentations()) {
                 if(instrumentations.size()==0){
                     instrumentation = sopmusicalpiece.getInstrumentation().getName();
                     instrumentations.add(instrumentation);

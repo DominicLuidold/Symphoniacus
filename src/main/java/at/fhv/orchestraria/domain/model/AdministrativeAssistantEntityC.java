@@ -16,10 +16,10 @@ import java.util.Objects;
 
 @Entity
 @Table(name = "administrativeAssistant", schema = "ni128610_1sql8")
-public class AdministrativeAssistantEntity implements IAdministrativeAssistant, Serializable {
+public class AdministrativeAssistantEntityC implements IAdministrativeAssistant, Serializable {
     private int userId;
     private String description;
-    private UserEntity user;
+    private UserEntityC user;
     public static final String typeOrganisation = "Organisationsreferent";
     public static final String typeNote = "Notenwart";
     public static final String typeOrchestra = "Orchesterwart";
@@ -51,7 +51,7 @@ public class AdministrativeAssistantEntity implements IAdministrativeAssistant, 
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        AdministrativeAssistantEntity that = (AdministrativeAssistantEntity) o;
+        AdministrativeAssistantEntityC that = (AdministrativeAssistantEntityC) o;
         return userId == that.userId &&
                 Objects.equals(description, that.description);
     }
@@ -64,11 +64,11 @@ public class AdministrativeAssistantEntity implements IAdministrativeAssistant, 
     @OneToOne (cascade = CascadeType.MERGE)
     @JoinColumn(name = "userId", referencedColumnName = "userId", nullable = false)
     @Override
-    public UserEntity getUser() {
+    public UserEntityC getUser() {
         return user;
     }
 
-    public void setUser(UserEntity user) {
+    public void setUser(UserEntityC user) {
         this.user = user;
     }
 }
