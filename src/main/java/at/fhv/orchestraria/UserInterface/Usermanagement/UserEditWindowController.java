@@ -289,7 +289,7 @@ public class UserEditWindowController implements Parentable<TabPaneController> {
         contractStartPicker.setValue(null);
         contractEndPicker.setValue(null);
         pointsPerMonthField.clear();
-
+        musicianAdministrativeToggle.setDisable(false);
     }
 
     /**
