@@ -144,6 +144,7 @@ public class SeriesOfPerformancesController
         this.startingDate.valueProperty().addListener(
             (observable, oldValue, newValue) -> {
                 this.start.set(this.startingDate.validate());
+                this.endingDate.setValue(newValue);
                 checkButtonVisibility();
             }
         );
@@ -503,6 +504,10 @@ public class SeriesOfPerformancesController
             }
         }
         return true;
+    }
+
+    public JFXDatePicker getStartingDate() {
+        return this.startingDate;
     }
 
     @Override

@@ -59,8 +59,7 @@ public class TabPaneController implements Initializable, Parentable<MainControll
         removeTab(entry.getTitle());
     }
 
-
-    public Optional<Parentable<TabPaneController>> addTab(TabPaneEntry entry) {
+    public Optional<Parentable<?>> addTab(TabPaneEntry entry) {
         return addTab(entry, null);
     }
 
@@ -72,7 +71,7 @@ public class TabPaneController implements Initializable, Parentable<MainControll
      * @return The Controller of the Tab if the tab is created, returns optional.empty
      *          if tab already exists
      */
-    public Optional<Parentable<TabPaneController>> addTab(
+    public Optional<Parentable<?>> addTab(
         TabPaneEntry entry,
         Parentable parent
     ) {
@@ -105,28 +104,28 @@ public class TabPaneController implements Initializable, Parentable<MainControll
                 }
                 controller.initializeWithParent();
             }
+            if (entry.isTemporary()) {
+                tab.setStyle(
+                    "-fx-background-color: #7fc9f5; "
+                        + "-fx-text-fill: #093753; "
+                        + "-fx-prompt-text-fill: #093753;"
+                );
+            }
+
+            this.tabPane.getTabs().add(tab);
+            // Only select temporary tabs -> always show tabs with order #1 when initializing
+            if (entry.isTemporary()) {
+                this.tabPane.getSelectionModel().select(tab);
+            }
+
+            // FXML has no controller defined
+            return Optional.ofNullable(controller);
         } catch (IOException e) {
             // cannot load FXML
             LOG.error(e);
-            return Optional.empty();
-        }
 
-        if (entry.isTemporary()) {
-            tab.setStyle(
-                "-fx-background-color: #7fc9f5; "
-                    + "-fx-text-fill: #093753; "
-                    + "-fx-prompt-text-fill: #093753;"
-            );
         }
-
-        this.tabPane.getTabs().add(tab);
-        // Only select temporary tabs -> always show tabs with order #1 when initializing
-        if (entry.isTemporary()) {
-            this.tabPane.getSelectionModel().select(tab);
-        }
-
-        // FXML has no controller defined
-        return Optional.ofNullable(controller);
+        return Optional.empty();
     }
 
     /**

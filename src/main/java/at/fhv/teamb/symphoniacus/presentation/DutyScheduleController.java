@@ -91,6 +91,7 @@ public class DutyScheduleController
     private DutyPosition selectedDutyPosition;
     private ResourceBundle resources;
     private DutySchedulerCalendarController parentController;
+    private boolean showPositionUpdatedNotif = true;
 
     @FXML
     private AnchorPane dutySchedule;
@@ -280,7 +281,9 @@ public class DutyScheduleController
         for (Musician domainMusician : list) {
             MusicianTableModel mtm = new MusicianTableModel(domainMusician);
             guiList.add(mtm);
-            if (this.selectedDutyPosition.getAssignedMusician().isPresent()) {
+            if (this.selectedDutyPosition != null
+                && this.selectedDutyPosition.getAssignedMusician().isPresent()
+            ) {
                 LOG.debug("There is already a musician assigned for this position");
                 if (domainMusician.getShortcut().equals(
                     this.selectedDutyPosition.getAssignedMusician().get().getShortcut()
@@ -761,21 +764,23 @@ public class DutyScheduleController
                 this.unassignOnePositionToMusician(dutyPosition, asi, newMusician);
             }
             this.initMusicianTableWithoutRequests();
-            Notifications.create()
-                .owner(this.getParentController().calendarView)
-                .title(
-                    this.resources.getString(
-                        "notif.duty.schedule.position.add.musician.set.message.title"
+            if (this.showPositionUpdatedNotif) {
+                Notifications.create()
+                    .owner(this.getParentController().calendarView)
+                    .title(
+                        this.resources.getString(
+                            "notif.duty.schedule.position.add.musician.set.message.title"
+                        )
                     )
-                )
-                .text(
-                    this.resources.getString(
-                        "notif.duty.schedule.position.add.musician.set.message"
+                    .text(
+                        this.resources.getString(
+                            "notif.duty.schedule.position.add.musician.set.message"
+                        )
                     )
-                )
-                .position(Pos.CENTER)
-                .hideAfter(new Duration(2000))
-                .show();
+                    .position(Pos.CENTER)
+                    .hideAfter(new Duration(2000))
+                    .show();
+            }
         }
     }
 
@@ -806,21 +811,23 @@ public class DutyScheduleController
             }
             this.initMusicianTableWithoutRequests();
         }
-        Notifications.create()
-            .owner(this.getParentController().calendarView)
-            .title(
-                this.resources.getString(
-                    "notif.duty.schedule.position.add.musician.set.message.title"
+        if (this.showPositionUpdatedNotif) {
+            Notifications.create()
+                .owner(this.getParentController().calendarView)
+                .title(
+                    this.resources.getString(
+                        "notif.duty.schedule.position.add.musician.set.message.title"
+                    )
                 )
-            )
-            .text(
-                this.resources.getString(
-                    "notif.duty.schedule.position.add.musician.set.message"
+                .text(
+                    this.resources.getString(
+                        "notif.duty.schedule.position.add.musician.set.message"
+                    )
                 )
-            )
-            .position(Pos.CENTER)
-            .hideAfter(new Duration(2000))
-            .show();
+                .position(Pos.CENTER)
+                .hideAfter(new Duration(2000))
+                .show();
+        }
     }
 
     protected void addMusicianToPosition(
@@ -914,6 +921,7 @@ public class DutyScheduleController
         ) {
             ButtonType userSelection = getConfirmation();
             if (userSelection == ButtonType.OK) {
+                this.showPositionUpdatedNotif = false;
                 for (DutyPosition dp : this
                     .actualSectionInstrumentation
                     .getDuty()
@@ -947,6 +955,7 @@ public class DutyScheduleController
             this.dutyScheduleManager,
             this.actualSectionInstrumentation
         );
+        this.showPositionUpdatedNotif = true;
         this.actualSectionInstrumentation = null;
         this.dutyScheduleManager = null;
         this.selectedDutyPosition = null;
