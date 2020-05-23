@@ -17,11 +17,11 @@ import java.util.Objects;
 
 @Entity
 @Table(name = "dutyCategoryChangelog", schema = "ni128610_1sql8")
-public class DutyCategoryChangelogEntity implements IDutyCategoryChangelog, Serializable {
+public class DutyCategoryChangelogEntityC implements IDutyCategoryChangelog, Serializable {
     private int dutyCategoryChangelogId;
     private Date startDate;
     private int points;
-    private DutyCategoryEntity dutyCategory;
+    private DutyCategoryEntityC dutyCategory;
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -61,7 +61,7 @@ public class DutyCategoryChangelogEntity implements IDutyCategoryChangelog, Seri
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        DutyCategoryChangelogEntity that = (DutyCategoryChangelogEntity) o;
+        DutyCategoryChangelogEntityC that = (DutyCategoryChangelogEntityC) o;
         return dutyCategoryChangelogId == that.dutyCategoryChangelogId &&
                 points == that.points &&
                 Objects.equals(startDate, that.startDate);
@@ -75,11 +75,11 @@ public class DutyCategoryChangelogEntity implements IDutyCategoryChangelog, Seri
     @ManyToOne
     @JoinColumn(name = "dutyCategoryId", referencedColumnName = "dutyCategoryId", nullable = false)
     @Override
-    public DutyCategoryEntity getDutyCategory() {
+    public DutyCategoryEntityC getDutyCategory() {
         return dutyCategory;
     }
 
-    public void setDutyCategory(DutyCategoryEntity dutyCategory) {
+    public void setDutyCategory(DutyCategoryEntityC dutyCategory) {
         this.dutyCategory = dutyCategory;
     }
 }

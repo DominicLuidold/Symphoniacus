@@ -2,6 +2,7 @@ package at.fhv.teamb.symphoniacus.domain.adapter;
 
 import at.fhv.orchestraria.domain.integrationInterfaces.IntegratableDuty;
 import at.fhv.orchestraria.domain.integrationInterfaces.IntegratableSeriesOfPerformances;
+import at.fhv.orchestraria.domain.model.DutyEntityC;
 import at.fhv.teamb.symphoniacus.persistence.model.interfaces.IDutyEntity;
 import at.fhv.teamb.symphoniacus.persistence.model.interfaces.IInstrumentationEntity;
 import at.fhv.teamb.symphoniacus.persistence.model.interfaces.IMusicalPieceEntity;
@@ -39,7 +40,7 @@ public class DutyAdapter implements IntegratableDuty {
 
     /**
      * Copied and adapted from
-     * {@link at.fhv.orchestraria.domain.model.DutyEntity#getMusicalPieceString}.
+     * {@link DutyEntityC#getMusicalPieceString}.
      *
      * @return the name of the musical piece as string
      */
@@ -69,7 +70,7 @@ public class DutyAdapter implements IntegratableDuty {
 
     /**
      * Copied and adapted from
-     * {@link at.fhv.orchestraria.domain.model.DutyEntity#getComposerString}.
+     * {@link DutyEntityC#getComposerString}.
      *
      * @return the name of the composer as string
      */
@@ -109,7 +110,7 @@ public class DutyAdapter implements IntegratableDuty {
 
     /**
      * Copied and adapted from
-     * {@link at.fhv.orchestraria.domain.model.DutyEntity#getInstrumentationString}.
+     * {@link DutyEntityC#getInstrumentationString}.
      *
      * @return the instrumentation as string
      */

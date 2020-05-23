@@ -21,12 +21,12 @@ import java.util.Objects;
 
 @Entity
 @Table(name = "instrumentCategory", schema = "ni128610_1sql8")
-public class InstrumentCategoryEntity implements IInstrumentCategory, Serializable {
+public class InstrumentCategoryEntityC implements IInstrumentCategory, Serializable {
     private int instrumentCategoryId;
     private String description;
-    private Collection<ContractualObligationEntity> contractualObligations;
-    private Collection<InstrumentCategoryMusicianEntity> instrumentCategoryMusicians;
-    private Collection<SectionInstrumentCategoryEntity> sectionInstrumentCategories;
+    private Collection<ContractualObligationEntityC> contractualObligations;
+    private Collection<InstrumentCategoryMusicianEntityC> instrumentCategoryMusicians;
+    private Collection<SectionInstrumentCategoryEntityC> sectionInstrumentCategories;
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -55,7 +55,7 @@ public class InstrumentCategoryEntity implements IInstrumentCategory, Serializab
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        InstrumentCategoryEntity that = (InstrumentCategoryEntity) o;
+        InstrumentCategoryEntityC that = (InstrumentCategoryEntityC) o;
         return instrumentCategoryId == that.instrumentCategoryId &&
                 Objects.equals(description, that.description);
     }
@@ -66,29 +66,29 @@ public class InstrumentCategoryEntity implements IInstrumentCategory, Serializab
     }
 
     @OneToMany(mappedBy = "instrumentCategory")
-    public Collection<ContractualObligationEntity> getContractualObligations() {
+    public Collection<ContractualObligationEntityC> getContractualObligations() {
         return contractualObligations;
     }
 
-    public void setContractualObligations(Collection<ContractualObligationEntity> contractualObligationsByInstrumentCategoryId) {
+    public void setContractualObligations(Collection<ContractualObligationEntityC> contractualObligationsByInstrumentCategoryId) {
         this.contractualObligations = contractualObligationsByInstrumentCategoryId;
     }
 
     @OneToMany(mappedBy = "instrumentCategory")
-    public Collection<InstrumentCategoryMusicianEntity> getInstrumentCategoryMusicians() {
+    public Collection<InstrumentCategoryMusicianEntityC> getInstrumentCategoryMusicians() {
         return instrumentCategoryMusicians;
     }
 
-    public void setInstrumentCategoryMusicians(Collection<InstrumentCategoryMusicianEntity> instrumentCategoryMusiciansByInstrumentCategoryId) {
+    public void setInstrumentCategoryMusicians(Collection<InstrumentCategoryMusicianEntityC> instrumentCategoryMusiciansByInstrumentCategoryId) {
         this.instrumentCategoryMusicians = instrumentCategoryMusiciansByInstrumentCategoryId;
     }
 
     @OneToMany(mappedBy = "instrumentCategory")
-    public Collection<SectionInstrumentCategoryEntity> getSectionInstrumentCategories() {
+    public Collection<SectionInstrumentCategoryEntityC> getSectionInstrumentCategories() {
         return sectionInstrumentCategories;
     }
 
-    public void setSectionInstrumentCategories(Collection<SectionInstrumentCategoryEntity> sectionInstrumentCategoriesByInstrumentCategoryId) {
+    public void setSectionInstrumentCategories(Collection<SectionInstrumentCategoryEntityC> sectionInstrumentCategoriesByInstrumentCategoryId) {
         this.sectionInstrumentCategories = sectionInstrumentCategoriesByInstrumentCategoryId;
     }
 

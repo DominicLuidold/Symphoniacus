@@ -20,13 +20,13 @@ import java.util.Objects;
 
 @Entity
 @Table(name = "musicalPiece", schema = "ni128610_1sql8")
-public class MusicalPieceEntity implements IMusicalPiece, Serializable {
+public class MusicalPieceEntityC implements IMusicalPiece, Serializable {
     private int musicalPieceId;
     private String name;
     private String composer;
     private String category;
-    private Collection<InstrumentationEntity> instrumentations;
-    private Collection<SeriesOfPerformancesMusicalPieceEntity> seriesOfPerformancesMusicalPieces;
+    private Collection<InstrumentationEntityC> instrumentations;
+    private Collection<SeriesOfPerformancesMusicalPieceEntityC> seriesOfPerformancesMusicalPieces;
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -77,7 +77,7 @@ public class MusicalPieceEntity implements IMusicalPiece, Serializable {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        MusicalPieceEntity that = (MusicalPieceEntity) o;
+        MusicalPieceEntityC that = (MusicalPieceEntityC) o;
         return musicalPieceId == that.musicalPieceId &&
                 Objects.equals(name, that.name) &&
                 Objects.equals(composer, that.composer) &&
@@ -90,20 +90,20 @@ public class MusicalPieceEntity implements IMusicalPiece, Serializable {
     }
 
     @OneToMany(mappedBy = "musicalPiece")
-    public Collection<InstrumentationEntity> getInstrumentations() {
+    public Collection<InstrumentationEntityC> getInstrumentations() {
         return instrumentations;
     }
 
-    public void setInstrumentations(Collection<InstrumentationEntity> instrumentationsByMusicalPieceId) {
+    public void setInstrumentations(Collection<InstrumentationEntityC> instrumentationsByMusicalPieceId) {
         this.instrumentations = instrumentationsByMusicalPieceId;
     }
 
     @OneToMany(mappedBy = "musicalPiece")
-    public Collection<SeriesOfPerformancesMusicalPieceEntity> getSeriesOfPerformancesMusicalPieces() {
+    public Collection<SeriesOfPerformancesMusicalPieceEntityC> getSeriesOfPerformancesMusicalPieces() {
         return seriesOfPerformancesMusicalPieces;
     }
 
-    public void setSeriesOfPerformancesMusicalPieces(Collection<SeriesOfPerformancesMusicalPieceEntity> seriesOfPerformancesMusicalPiecesByMusicalPieceId) {
+    public void setSeriesOfPerformancesMusicalPieces(Collection<SeriesOfPerformancesMusicalPieceEntityC> seriesOfPerformancesMusicalPiecesByMusicalPieceId) {
         this.seriesOfPerformancesMusicalPieces = seriesOfPerformancesMusicalPiecesByMusicalPieceId;
     }
 

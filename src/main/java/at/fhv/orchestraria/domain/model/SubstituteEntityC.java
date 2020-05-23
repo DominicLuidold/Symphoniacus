@@ -16,14 +16,14 @@ import java.util.Objects;
 
 @Entity
 @Table(name = "substitute", schema = "ni128610_1sql8")
-public class SubstituteEntity implements ISubstitute, Serializable {
+public class SubstituteEntityC implements ISubstitute, Serializable {
     private int substituteId;
     private String firstName;
     private String lastName;
     private String address;
     private String email;
     private String phone;
-    private MusicianEntity musician;
+    private MusicianEntityC musician;
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -96,7 +96,7 @@ public class SubstituteEntity implements ISubstitute, Serializable {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        SubstituteEntity that = (SubstituteEntity) o;
+        SubstituteEntityC that = (SubstituteEntityC) o;
         return substituteId == that.substituteId &&
                 Objects.equals(firstName, that.firstName) &&
                 Objects.equals(lastName, that.lastName) &&
@@ -113,11 +113,11 @@ public class SubstituteEntity implements ISubstitute, Serializable {
     @ManyToOne
     @JoinColumn(name = "musicianId", referencedColumnName = "musicianId", nullable = false)
     @Override
-    public MusicianEntity getMusician() {
+    public MusicianEntityC getMusician() {
         return musician;
     }
 
-    public void setMusician(MusicianEntity musician) {
+    public void setMusician(MusicianEntityC musician) {
         this.musician = musician;
     }
 }

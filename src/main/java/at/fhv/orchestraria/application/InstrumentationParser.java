@@ -27,23 +27,23 @@ public class InstrumentationParser {
      * new ones for all the Duties currently in the DB
      */
     public void createDutyPositionsAndInstrumentationPositions() {
-        DaoBase<DutyEntity> dutyDAO = JPADatabaseFacade.getInstance().getDAO(DutyEntity.class);
+        DaoBase<DutyEntityC> dutyDAO = JPADatabaseFacade.getInstance().getDAO(DutyEntityC.class);
         InstrumentationParser parser = new InstrumentationParser();
-        DaoBase<DutyPositionEntity> dutyPosDAO = JPADatabaseFacade.getInstance().getDAO(DutyPositionEntity.class);
-        DaoBase<InstrumentationPositionEntity> instruPosDAO = JPADatabaseFacade.getInstance().getDAO(InstrumentationPositionEntity.class);
-        for (DutyPositionEntity dutypos : dutyPosDAO.getAll()) {
+        DaoBase<DutyPositionEntityC> dutyPosDAO = JPADatabaseFacade.getInstance().getDAO(DutyPositionEntityC.class);
+        DaoBase<InstrumentationPositionEntityC> instruPosDAO = JPADatabaseFacade.getInstance().getDAO(InstrumentationPositionEntityC.class);
+        for (DutyPositionEntityC dutypos : dutyPosDAO.getAll()) {
             dutyPosDAO.delete(dutypos);
         }
-        for (InstrumentationPositionEntity pos : instruPosDAO.getAll()) {
+        for (InstrumentationPositionEntityC pos : instruPosDAO.getAll()) {
             instruPosDAO.delete(pos);
         }
         //TODO: FixMe
-        for (DutyEntity duty : dutyDAO.getAll()) {
+        for (DutyEntityC duty : dutyDAO.getAll()) {
             if (duty.getSeriesOfPerformances() != null) {
 
 
-                for (SeriesOfPerformancesInstrumentationEntity sopie : duty.getSeriesOfPerformances().getSeriesOfPerformancesInstrumentations()) {
-                    for (SectionInstrumentationEntity sectionInstrumentationEntity : sopie.getInstrumentation().getSectionInstrumentations()){
+                for (SeriesOfPerformancesInstrumentationEntityC sopie : duty.getSeriesOfPerformances().getSeriesOfPerformancesInstrumentations()) {
+                    for (SectionInstrumentationEntityC sectionInstrumentationEntity : sopie.getInstrumentation().getSectionInstrumentations()){
                         createDutyPositionEntries(duty, sectionInstrumentationEntity);
                     }
                 }
@@ -57,16 +57,16 @@ public class InstrumentationParser {
      * @param de Duty, for which the DutyPositions should be created
      * @param se SectionInstrumentation, for which the DutyPositions should be created
      */
-    public void createDutyPositionEntries(DutyEntity de, SectionInstrumentationEntity se) {
+    public void createDutyPositionEntries(DutyEntityC de, SectionInstrumentationEntityC se) {
 
-        Collection<InstrumentationPositionEntity> ipes = se.getInstrumentationPositions();
+        Collection<InstrumentationPositionEntityC> ipes = se.getInstrumentationPositions();
 
         if (ipes == null || ipes.isEmpty()) {
 
-            LinkedList<InstrumentationPositionEntity> allInstrumentationPositions = createInstrumentationPositionEntries(se);
+            LinkedList<InstrumentationPositionEntityC> allInstrumentationPositions = createInstrumentationPositionEntries(se);
 
-            for (InstrumentationPositionEntity ipe : allInstrumentationPositions) {
-                DutyPositionEntity dpe = new DutyPositionEntity();
+            for (InstrumentationPositionEntityC ipe : allInstrumentationPositions) {
+                DutyPositionEntityC dpe = new DutyPositionEntityC();
 
                 dpe.setInstrumentationPosition(ipe);
                 dpe.setDuty(de);
@@ -81,11 +81,11 @@ public class InstrumentationParser {
 
                 se.getInstrumentationPositions().add(ipe);
 
-                JPADatabaseFacade.getInstance().getDAO(DutyPositionEntity.class).save(dpe);
+                JPADatabaseFacade.getInstance().getDAO(DutyPositionEntityC.class).save(dpe);
             }
         } else {
-            for (InstrumentationPositionEntity ipe : ipes) {
-                DutyPositionEntity dpe = new DutyPositionEntity();
+            for (InstrumentationPositionEntityC ipe : ipes) {
+                DutyPositionEntityC dpe = new DutyPositionEntityC();
 
                 dpe.setInstrumentationPosition(ipe);
                 dpe.setDuty(de);
@@ -96,7 +96,7 @@ public class InstrumentationParser {
                 }
                 ipe.getDutyPositions().add(dpe);
 
-                JPADatabaseFacade.getInstance().getDAO(DutyPositionEntity.class).save(dpe);
+                JPADatabaseFacade.getInstance().getDAO(DutyPositionEntityC.class).save(dpe);
             }
         }
     }
@@ -107,11 +107,11 @@ public class InstrumentationParser {
      * @param si Needed to add the sectionId to the newly made DB entries
      * @return returns a List with InstrumentationPositionEntities
      */
-    public LinkedList<InstrumentationPositionEntity> createInstrumentationPositionEntries(SectionInstrumentationEntity si) {
+    public LinkedList<InstrumentationPositionEntityC> createInstrumentationPositionEntries(SectionInstrumentationEntityC si) {
         String[][] values = createInstrumentationPositions(si);
         String[] instruments = values[0];
         String[] numbersOfInstruments = values[1];
-        LinkedList<InstrumentationPositionEntity> allAddedEntities = new LinkedList<>();
+        LinkedList<InstrumentationPositionEntityC> allAddedEntities = new LinkedList<>();
         String last = "default";
         int count = 1;
         for (int i = 0; i < instruments.length; i++) {
@@ -120,7 +120,7 @@ public class InstrumentationParser {
                 count = 1;
             }
             for (int j = 0; j < Integer.parseInt(numbersOfInstruments[i]); j++) {
-                InstrumentationPositionEntity e = new InstrumentationPositionEntity();
+                InstrumentationPositionEntityC e = new InstrumentationPositionEntityC();
 
                 e.setSectionInstrumentation(si);
                 e.setInstrumentation(si.getInstrumentation());
@@ -133,7 +133,7 @@ public class InstrumentationParser {
 
                 allAddedEntities.add(e);
 
-                JPADatabaseFacade.getInstance().getDAO(InstrumentationPositionEntity.class).save(e);
+                JPADatabaseFacade.getInstance().getDAO(InstrumentationPositionEntityC.class).save(e);
             }
             if (instruments.length != 1) {
                 if (i + 1 < instruments.length && splits[0].compareToIgnoreCase("Other") != 0
@@ -155,8 +155,8 @@ public class InstrumentationParser {
      * @param desc String containing the type of replacement, for example Fl if the replacement is for the flute subsection
      * @return returns the ready-to-process InstrumentationPositionEntity
      */
-    private InstrumentationPositionEntity createReplacementInstrumentationPosition(SectionInstrumentationEntity si, String desc) {
-        InstrumentationPositionEntity e = new InstrumentationPositionEntity();
+    private InstrumentationPositionEntityC createReplacementInstrumentationPosition(SectionInstrumentationEntityC si, String desc) {
+        InstrumentationPositionEntityC e = new InstrumentationPositionEntityC();
 
         e.setSectionInstrumentation(si);
         e.setInstrumentation(si.getInstrumentation());
@@ -165,7 +165,7 @@ public class InstrumentationParser {
 
         e.setPositionDescription(description);
 
-        JPADatabaseFacade.getInstance().getDAO(InstrumentationPositionEntity.class).save(e);
+        JPADatabaseFacade.getInstance().getDAO(InstrumentationPositionEntityC.class).save(e);
         return e;
     }
 

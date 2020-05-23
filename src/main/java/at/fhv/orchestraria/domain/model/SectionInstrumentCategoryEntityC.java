@@ -16,10 +16,10 @@ import java.util.Objects;
 
 @Entity
 @Table(name = "section_instrumentCategory", schema = "ni128610_1sql8")
-public class SectionInstrumentCategoryEntity implements ISectionInstrumentCategory, Serializable {
+public class SectionInstrumentCategoryEntityC implements ISectionInstrumentCategory, Serializable {
     private int sectionInstrumentCategoryId;
-    private InstrumentCategoryEntity instrumentCategory;
-    private SectionEntity section;
+    private InstrumentCategoryEntityC instrumentCategory;
+    private SectionEntityC section;
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -37,7 +37,7 @@ public class SectionInstrumentCategoryEntity implements ISectionInstrumentCatego
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        SectionInstrumentCategoryEntity that = (SectionInstrumentCategoryEntity) o;
+        SectionInstrumentCategoryEntityC that = (SectionInstrumentCategoryEntityC) o;
         return sectionInstrumentCategoryId == that.sectionInstrumentCategoryId;
     }
 
@@ -49,22 +49,22 @@ public class SectionInstrumentCategoryEntity implements ISectionInstrumentCatego
     @ManyToOne
     @JoinColumn(name = "instrumentCategoryId", referencedColumnName = "instrumentCategoryId", nullable = false)
     @Override
-    public InstrumentCategoryEntity getInstrumentCategory() {
+    public InstrumentCategoryEntityC getInstrumentCategory() {
         return instrumentCategory;
     }
 
-    public void setInstrumentCategory(InstrumentCategoryEntity instrumentCategory) {
+    public void setInstrumentCategory(InstrumentCategoryEntityC instrumentCategory) {
         this.instrumentCategory = instrumentCategory;
     }
 
     @ManyToOne
     @JoinColumn(name = "sectionId", referencedColumnName = "sectionId", nullable = false)
     @Override
-    public SectionEntity getSection() {
+    public SectionEntityC getSection() {
         return section;
     }
 
-    public void setSection(SectionEntity section) {
+    public void setSection(SectionEntityC section) {
         this.section = section;
     }
 }

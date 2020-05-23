@@ -16,10 +16,10 @@ import java.util.Objects;
 
 @Entity
 @Table(name = "musicianRole_musician", schema = "ni128610_1sql8")
-public class MusicianRoleMusicianEntity implements IMusicianRoleMusician, Serializable {
+public class MusicianRoleMusicianEntityC implements IMusicianRoleMusician, Serializable {
     private int musicianRoleMusicianId;
-    private MusicianRoleEntity musicianRole;
-    private MusicianEntity musician;
+    private MusicianRoleEntityC musicianRole;
+    private MusicianEntityC musician;
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -37,7 +37,7 @@ public class MusicianRoleMusicianEntity implements IMusicianRoleMusician, Serial
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        MusicianRoleMusicianEntity that = (MusicianRoleMusicianEntity) o;
+        MusicianRoleMusicianEntityC that = (MusicianRoleMusicianEntityC) o;
         return musicianRoleMusicianId == that.musicianRoleMusicianId;
     }
 
@@ -49,22 +49,22 @@ public class MusicianRoleMusicianEntity implements IMusicianRoleMusician, Serial
     @ManyToOne(cascade = CascadeType.MERGE)
     @JoinColumn(name = "musicianRoleId", referencedColumnName = "musicianRoleId")
     @Override
-    public MusicianRoleEntity getMusicianRole() {
+    public MusicianRoleEntityC getMusicianRole() {
         return musicianRole;
     }
 
-    public void setMusicianRole(MusicianRoleEntity musicianRole) {
+    public void setMusicianRole(MusicianRoleEntityC musicianRole) {
         this.musicianRole = musicianRole;
     }
 
     @ManyToOne(cascade = CascadeType.MERGE)
     @JoinColumn(name = "musicianId", referencedColumnName = "musicianId")
     @Override
-    public MusicianEntity getMusician() {
+    public MusicianEntityC getMusician() {
         return musician;
     }
 
-    public void setMusician(MusicianEntity musician) {
+    public void setMusician(MusicianEntityC musician) {
         this.musician = musician;
     }
 }

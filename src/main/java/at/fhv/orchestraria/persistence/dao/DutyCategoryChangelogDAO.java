@@ -1,6 +1,6 @@
 package at.fhv.orchestraria.persistence.dao;
 
-import at.fhv.orchestraria.domain.model.DutyCategoryChangelogEntity;
+import at.fhv.orchestraria.domain.model.DutyCategoryChangelogEntityC;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
@@ -13,34 +13,34 @@ import java.util.Optional;
  * @author Team C
  */
 
-public class DutyCategoryChangelogDAO implements DaoBase<DutyCategoryChangelogEntity> {
+public class DutyCategoryChangelogDAO implements DaoBase<DutyCategoryChangelogEntityC> {
 
     private SessionFactory _sessionFactory;
 
     @Override
-    public Optional<DutyCategoryChangelogEntity> get(int id) {
+    public Optional<DutyCategoryChangelogEntityC> get(int id) {
         Session session = _sessionFactory.openSession();
         Transaction ta = session.beginTransaction();
-        Optional<DutyCategoryChangelogEntity> dcce = Optional.ofNullable(session.get(DutyCategoryChangelogEntity.class , id));
+        Optional<DutyCategoryChangelogEntityC> dcce = Optional.ofNullable(session.get(DutyCategoryChangelogEntityC.class , id));
         ta.commit();
         return dcce;
     }
 
     @Override
-    public List<DutyCategoryChangelogEntity> getAll() {
+    public List<DutyCategoryChangelogEntityC> getAll() {
         Session session = _sessionFactory.openSession();
         Transaction ta = session.beginTransaction();
-        List<DutyCategoryChangelogEntity> dcces = session.createQuery("SELECT a FROM DutyCategoryChangelogEntity a",DutyCategoryChangelogEntity.class).getResultList();
+        List<DutyCategoryChangelogEntityC> dcces = session.createQuery("SELECT a FROM DutyCategoryChangelogEntity a", DutyCategoryChangelogEntityC.class).getResultList();
         ta.commit();
-        List<DutyCategoryChangelogEntity> wrappedChangelogs = new ArrayList<>(dcces.size());
-        for(DutyCategoryChangelogEntity dcce:dcces){
+        List<DutyCategoryChangelogEntityC> wrappedChangelogs = new ArrayList<>(dcces.size());
+        for(DutyCategoryChangelogEntityC dcce:dcces){
             wrappedChangelogs.add(dcce);
         }
         return wrappedChangelogs;
     }
 
     @Override
-    public void save(DutyCategoryChangelogEntity changelog) {
+    public void save(DutyCategoryChangelogEntityC changelog) {
         Session session = _sessionFactory.openSession();
         Transaction ta = session.beginTransaction();
         session.saveOrUpdate(changelog);
@@ -48,16 +48,16 @@ public class DutyCategoryChangelogDAO implements DaoBase<DutyCategoryChangelogEn
     }
 
     @Override
-    public synchronized DutyCategoryChangelogEntity update(DutyCategoryChangelogEntity changelog) {
+    public synchronized DutyCategoryChangelogEntityC update(DutyCategoryChangelogEntityC changelog) {
         Session session = _sessionFactory.openSession();
         Transaction ta = session.beginTransaction();
-        DutyCategoryChangelogEntity dcce = (DutyCategoryChangelogEntity) session.merge(changelog);
+        DutyCategoryChangelogEntityC dcce = (DutyCategoryChangelogEntityC) session.merge(changelog);
         ta.commit();
         return dcce;
     }
 
     @Override
-    public synchronized void delete(DutyCategoryChangelogEntity changelog) {
+    public synchronized void delete(DutyCategoryChangelogEntityC changelog) {
         Session session = _sessionFactory.openSession();
         Transaction ta = session.beginTransaction();
         session.delete(changelog);

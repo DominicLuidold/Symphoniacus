@@ -1,6 +1,6 @@
 package at.fhv.orchestraria.persistence.dao;
 
-import at.fhv.orchestraria.domain.model.ContractualObligationEntity;
+import at.fhv.orchestraria.domain.model.ContractualObligationEntityC;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
 
@@ -12,7 +12,7 @@ import java.util.Optional;
  * @author Team C
  */
 
-public class ContractualObligationDAO implements DaoBase<ContractualObligationEntity> {
+public class ContractualObligationDAO implements DaoBase<ContractualObligationEntityC> {
 
     private SessionManager _sessionManager;
 
@@ -21,21 +21,21 @@ public class ContractualObligationDAO implements DaoBase<ContractualObligationEn
     }
 
     @Override
-    public synchronized Optional<ContractualObligationEntity> get(int id) {
+    public synchronized Optional<ContractualObligationEntityC> get(int id) {
         Session session = _sessionManager.openConnection();
         Transaction ta = session.beginTransaction();
-        Optional<ContractualObligationEntity> coe = Optional.ofNullable(session.get(ContractualObligationEntity.class, id));
+        Optional<ContractualObligationEntityC> coe = Optional.ofNullable(session.get(ContractualObligationEntityC.class, id));
         ta.commit();
         return coe;
     }
 
     @Override
-    public synchronized List<ContractualObligationEntity> getAll() {
+    public synchronized List<ContractualObligationEntityC> getAll() {
         Session session = _sessionManager.openConnection();
         Transaction ta = session.beginTransaction();
-        List<ContractualObligationEntity> coe = session.createQuery("SELECT a FROM ContractualObligationEntity a", ContractualObligationEntity.class).getResultList();
-        List<ContractualObligationEntity> wrappedObligations = new ArrayList<>(coe.size());
-        for(ContractualObligationEntity c: coe){
+        List<ContractualObligationEntityC> coe = session.createQuery("SELECT a FROM ContractualObligationEntity a", ContractualObligationEntityC.class).getResultList();
+        List<ContractualObligationEntityC> wrappedObligations = new ArrayList<>(coe.size());
+        for(ContractualObligationEntityC c: coe){
             wrappedObligations.add(c);
         }
         ta.commit();
@@ -43,7 +43,7 @@ public class ContractualObligationDAO implements DaoBase<ContractualObligationEn
     }
 
     @Override
-    public synchronized void save(ContractualObligationEntity obligation) {
+    public synchronized void save(ContractualObligationEntityC obligation) {
         Session session = _sessionManager.openConnection();
         Transaction ta = session.beginTransaction();
         session.saveOrUpdate(obligation);
@@ -51,7 +51,7 @@ public class ContractualObligationDAO implements DaoBase<ContractualObligationEn
     }
 
     @Override
-    public synchronized ContractualObligationEntity update(ContractualObligationEntity obligation) {
+    public synchronized ContractualObligationEntityC update(ContractualObligationEntityC obligation) {
         Session session = _sessionManager.openConnection();
         Transaction ta = session.beginTransaction();
         session.merge(obligation);
@@ -60,7 +60,7 @@ public class ContractualObligationDAO implements DaoBase<ContractualObligationEn
     }
 
     @Override
-    public synchronized void delete(ContractualObligationEntity obligation) {
+    public synchronized void delete(ContractualObligationEntityC obligation) {
         Session session = _sessionManager.openConnection();
         Transaction ta = session.beginTransaction();
         session.delete(obligation);

@@ -20,12 +20,12 @@ import java.util.Objects;
 
 @Entity
 @Table(name = "instrumentationPosition", schema = "ni128610_1sql8")
-public class InstrumentationPositionEntity implements IInstrumentationPosition, Serializable, IntegratableInstrumentationPosition {
+public class InstrumentationPositionEntityC implements IInstrumentationPosition, Serializable, IntegratableInstrumentationPosition {
     private int instrumentationPositionId;
     private String positionDescription;
-    private Collection<DutyPositionEntity> dutyPositions;
-    private SectionInstrumentationEntity sectionInstrumentation;
-    private InstrumentationEntity instrumentation;
+    private Collection<DutyPositionEntityC> dutyPositions;
+    private SectionInstrumentationEntityC sectionInstrumentation;
+    private InstrumentationEntityC instrumentation;
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -54,7 +54,7 @@ public class InstrumentationPositionEntity implements IInstrumentationPosition, 
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        InstrumentationPositionEntity that = (InstrumentationPositionEntity) o;
+        InstrumentationPositionEntityC that = (InstrumentationPositionEntityC) o;
         return instrumentationPositionId == that.instrumentationPositionId &&
                 Objects.equals(positionDescription, that.positionDescription);
     }
@@ -65,33 +65,33 @@ public class InstrumentationPositionEntity implements IInstrumentationPosition, 
     }
 
     @OneToMany(mappedBy = "instrumentationPosition")
-    public Collection<DutyPositionEntity> getDutyPositions() {
+    public Collection<DutyPositionEntityC> getDutyPositions() {
         return dutyPositions;
     }
 
-    public void setDutyPositions(Collection<DutyPositionEntity> dutyPositionsByInstrumentationPositionId) {
+    public void setDutyPositions(Collection<DutyPositionEntityC> dutyPositionsByInstrumentationPositionId) {
         this.dutyPositions = dutyPositionsByInstrumentationPositionId;
     }
 
     @ManyToOne
     @JoinColumn(name = "sectionInstrumentationId", referencedColumnName = "sectionInstrumentationId", nullable = false)
     @Override
-    public SectionInstrumentationEntity getSectionInstrumentation() {
+    public SectionInstrumentationEntityC getSectionInstrumentation() {
         return sectionInstrumentation;
     }
 
-    public void setSectionInstrumentation(SectionInstrumentationEntity sectionInstrumentation) {
+    public void setSectionInstrumentation(SectionInstrumentationEntityC sectionInstrumentation) {
         this.sectionInstrumentation = sectionInstrumentation;
     }
 
     @ManyToOne
     @JoinColumn(name = "instrumentationId", referencedColumnName = "instrumentationId", nullable = false)
     @Override
-    public InstrumentationEntity getInstrumentation() {
+    public InstrumentationEntityC getInstrumentation() {
         return instrumentation;
     }
 
-    public void setInstrumentation(InstrumentationEntity instrumentation) {
+    public void setInstrumentation(InstrumentationEntityC instrumentation) {
         this.instrumentation = instrumentation;
     }
 

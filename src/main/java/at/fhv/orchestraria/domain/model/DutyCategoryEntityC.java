@@ -20,13 +20,13 @@ import java.util.Objects;
 
 @Entity
 @Table(name = "dutyCategory", schema = "ni128610_1sql8")
-public class DutyCategoryEntity implements IDutyCategory, Serializable {
+public class DutyCategoryEntityC implements IDutyCategory, Serializable {
     private int dutyCategoryId;
     private String type;
     private boolean isRehearsal;
     private int points;
-    private Collection<DutyEntity> duties;
-    private Collection<DutyCategoryChangelogEntity> dutyCategoryChangelogs;
+    private Collection<DutyEntityC> duties;
+    private Collection<DutyCategoryChangelogEntityC> dutyCategoryChangelogs;
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -77,7 +77,7 @@ public class DutyCategoryEntity implements IDutyCategory, Serializable {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        DutyCategoryEntity that = (DutyCategoryEntity) o;
+        DutyCategoryEntityC that = (DutyCategoryEntityC) o;
         return dutyCategoryId == that.dutyCategoryId &&
                 isRehearsal == that.isRehearsal &&
                 points == that.points &&
@@ -90,20 +90,20 @@ public class DutyCategoryEntity implements IDutyCategory, Serializable {
     }
 
     @OneToMany(mappedBy = "dutyCategory")
-    public Collection<DutyEntity> getDuties() {
+    public Collection<DutyEntityC> getDuties() {
         return duties;
     }
 
-    public void setDuties(Collection<DutyEntity> dutiesByDutyCategoryId) {
+    public void setDuties(Collection<DutyEntityC> dutiesByDutyCategoryId) {
         this.duties = dutiesByDutyCategoryId;
     }
 
     @OneToMany(mappedBy = "dutyCategory")
-    public Collection<DutyCategoryChangelogEntity> getDutyCategoryChangelogs() {
+    public Collection<DutyCategoryChangelogEntityC> getDutyCategoryChangelogs() {
         return dutyCategoryChangelogs;
     }
 
-    public void setDutyCategoryChangelogs(Collection<DutyCategoryChangelogEntity> dutyCategoryChangelogsByDutyCategoryId) {
+    public void setDutyCategoryChangelogs(Collection<DutyCategoryChangelogEntityC> dutyCategoryChangelogsByDutyCategoryId) {
         this.dutyCategoryChangelogs = dutyCategoryChangelogsByDutyCategoryId;
     }
 

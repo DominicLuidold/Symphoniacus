@@ -16,10 +16,10 @@ import java.util.Objects;
 
 @Entity
 @Table(name = "duty_sectionMonthlySchedule", schema = "ni128610_1sql8")
-public class DutySectionMonthlyScheduleEntity implements IDutySectionMonthlySchedule, Serializable {
+public class DutySectionMonthlyScheduleEntityC implements IDutySectionMonthlySchedule, Serializable {
     private int dutySectionMonthlyScheduleId;
-    private DutyEntity duty;
-    private SectionMonthlyScheduleEntity sectionMonthlySchedule;
+    private DutyEntityC duty;
+    private SectionMonthlyScheduleEntityC sectionMonthlySchedule;
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -37,7 +37,7 @@ public class DutySectionMonthlyScheduleEntity implements IDutySectionMonthlySche
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        DutySectionMonthlyScheduleEntity that = (DutySectionMonthlyScheduleEntity) o;
+        DutySectionMonthlyScheduleEntityC that = (DutySectionMonthlyScheduleEntityC) o;
         return dutySectionMonthlyScheduleId == that.dutySectionMonthlyScheduleId;
     }
 
@@ -48,22 +48,22 @@ public class DutySectionMonthlyScheduleEntity implements IDutySectionMonthlySche
 
     @ManyToOne
     @JoinColumn(name = "dutyId", referencedColumnName = "dutyId", nullable = false)
-    public DutyEntity getDuty() {
+    public DutyEntityC getDuty() {
         return duty;
     }
 
-    public void setDuty(DutyEntity dutyByDutyId) {
+    public void setDuty(DutyEntityC dutyByDutyId) {
         this.duty = dutyByDutyId;
     }
 
     @ManyToOne
     @JoinColumn(name = "sectionMonthlyScheduleId", referencedColumnName = "sectionMonthlyScheduleId", nullable = false)
     @Override
-    public SectionMonthlyScheduleEntity getSectionMonthlySchedule() {
+    public SectionMonthlyScheduleEntityC getSectionMonthlySchedule() {
         return sectionMonthlySchedule;
     }
 
-    public void setSectionMonthlySchedule(SectionMonthlyScheduleEntity sectionMonthlySchedule) {
+    public void setSectionMonthlySchedule(SectionMonthlyScheduleEntityC sectionMonthlySchedule) {
         this.sectionMonthlySchedule = sectionMonthlySchedule;
     }
 }

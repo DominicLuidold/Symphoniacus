@@ -2,7 +2,7 @@
 package at.fhv.orchestraria.persistence.dao;
 
 
-import at.fhv.orchestraria.domain.model.UserEntity;
+import at.fhv.orchestraria.domain.model.UserEntityC;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
 
@@ -16,7 +16,7 @@ import java.util.Optional;
  * @author Team C
  */
 
-public class UserDAO implements DaoBase<UserEntity> {
+public class UserDAO implements DaoBase<UserEntityC> {
 
     private SessionManager _sessionManager;
 
@@ -25,21 +25,21 @@ public class UserDAO implements DaoBase<UserEntity> {
     }
 
     @Override
-    public synchronized Optional<UserEntity> get(int id) {
+    public synchronized Optional<UserEntityC> get(int id) {
         Session session = _sessionManager.openConnection();
         Transaction ta = session.beginTransaction();
-        Optional<UserEntity> ue =  Optional.ofNullable(session.get(UserEntity.class , id));
+        Optional<UserEntityC> ue =  Optional.ofNullable(session.get(UserEntityC.class , id));
         ta.commit();
         return ue;
     }
 
     @Override
-    public synchronized List<UserEntity> getAll() {
+    public synchronized List<UserEntityC> getAll() {
         Session session = _sessionManager.openConnection();
         Transaction ta = session.beginTransaction();
-        List<UserEntity> user = session.createQuery("SELECT a FROM UserEntity a", UserEntity.class).getResultList();
-        List<UserEntity> wrappedusers = new ArrayList<>(user.size());
-        for(UserEntity d :user){
+        List<UserEntityC> user = session.createQuery("SELECT a FROM UserEntity a", UserEntityC.class).getResultList();
+        List<UserEntityC> wrappedusers = new ArrayList<>(user.size());
+        for(UserEntityC d :user){
             wrappedusers.add(d);
         }
         ta.commit();
@@ -48,7 +48,7 @@ public class UserDAO implements DaoBase<UserEntity> {
 
 
     @Override
-    public synchronized void save(UserEntity entity) {
+    public synchronized void save(UserEntityC entity) {
         Session session = _sessionManager.openConnection();
         Transaction ta = session.beginTransaction();
         session.saveOrUpdate(entity);
@@ -56,16 +56,16 @@ public class UserDAO implements DaoBase<UserEntity> {
     }
 
     @Override
-    public synchronized UserEntity update(UserEntity entity) {
+    public synchronized UserEntityC update(UserEntityC entity) {
         Session session = _sessionManager.openConnection();
         Transaction ta = session.beginTransaction();
-        UserEntity de = (UserEntity) session.merge(entity);
+        UserEntityC de = (UserEntityC) session.merge(entity);
         ta.commit();
         return de;
     }
 
     @Override
-    public synchronized void delete(UserEntity entity) {
+    public synchronized void delete(UserEntityC entity) {
         Session session = _sessionManager.openConnection();
         Transaction ta = session.beginTransaction();
         session.delete(entity);
@@ -77,23 +77,23 @@ public class UserDAO implements DaoBase<UserEntity> {
      * @param user is a list of unsers;
      * saves a list of users with only one transaction;
      */
-    public synchronized void savelist(List<UserEntity> user){
+    public synchronized void savelist(List<UserEntityC> user){
         Session session = _sessionManager.openConnection();
         Transaction ta = session.beginTransaction();
-        for (UserEntity d:user) {
+        for (UserEntityC d:user) {
             session.saveOrUpdate(d);
         }
         ta.commit();
     }
 
-    public synchronized Optional<UserEntity> getByShortcut(String shorty) {
+    public synchronized Optional<UserEntityC> getByShortcut(String shorty) {
         Session session = _sessionManager.openConnection();
         Transaction ta = session.beginTransaction();
-        Query userquery = session.createQuery("SELECT a FROM UserEntity a where shortcut = :shorty ", UserEntity.class);
+        Query userquery = session.createQuery("SELECT a FROM UserEntity a where shortcut = :shorty ", UserEntityC.class);
         userquery.setParameter("shorty", shorty);
-        Optional<UserEntity> user = Optional.empty();
+        Optional<UserEntityC> user = Optional.empty();
         try{
-            user= Optional.ofNullable((UserEntity)userquery.getSingleResult());
+            user= Optional.ofNullable((UserEntityC)userquery.getSingleResult());
         } catch(NoResultException e){
             return user;
         }
@@ -107,14 +107,14 @@ public class UserDAO implements DaoBase<UserEntity> {
      * @param shorty is the first name of a user
      * @return list of all users with the first name
      */
-    public synchronized List<UserEntity> getFname(String shorty) {
+    public synchronized List<UserEntityC> getFname(String shorty) {
         Session session = _sessionManager.openConnection();
         Transaction ta = session.beginTransaction();
-        Query userquery = session.createQuery("SELECT a FROM UserEntity a where firstName = :shorty ", UserEntity.class);
+        Query userquery = session.createQuery("SELECT a FROM UserEntity a where firstName = :shorty ", UserEntityC.class);
         userquery.setParameter("shorty", shorty);
-        List<UserEntity> user=userquery.getResultList();
-        List<UserEntity> wrappedusers = new ArrayList<>(user.size());
-        for(UserEntity d :user){
+        List<UserEntityC> user=userquery.getResultList();
+        List<UserEntityC> wrappedusers = new ArrayList<>(user.size());
+        for(UserEntityC d :user){
             wrappedusers.add(d);
         }
         ta.commit();
@@ -126,14 +126,14 @@ public class UserDAO implements DaoBase<UserEntity> {
      * @param shorty is the secondname
      * @return list of users with the second name
      */
-    public synchronized List<UserEntity> getSname(String shorty) {
+    public synchronized List<UserEntityC> getSname(String shorty) {
         Session session = _sessionManager.openConnection();
         Transaction ta = session.beginTransaction();
-        Query userquery = session.createQuery("SELECT a FROM UserEntity a where lastName = :shorty ", UserEntity.class);
+        Query userquery = session.createQuery("SELECT a FROM UserEntity a where lastName = :shorty ", UserEntityC.class);
         userquery.setParameter("shorty", shorty);
-        List<UserEntity> user=userquery.getResultList();
-        List<UserEntity> wrappedusers = new ArrayList<>(user.size());
-        for(UserEntity d :user){
+        List<UserEntityC> user=userquery.getResultList();
+        List<UserEntityC> wrappedusers = new ArrayList<>(user.size());
+        for(UserEntityC d :user){
             wrappedusers.add(d);
         }
         ta.commit();

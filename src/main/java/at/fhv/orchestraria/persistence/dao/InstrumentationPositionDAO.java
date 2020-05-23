@@ -1,6 +1,6 @@
 package at.fhv.orchestraria.persistence.dao;
 
-import at.fhv.orchestraria.domain.model.InstrumentationPositionEntity;
+import at.fhv.orchestraria.domain.model.InstrumentationPositionEntityC;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
 
@@ -12,7 +12,7 @@ import java.util.Optional;
  * @author Team C
  */
 
-public class InstrumentationPositionDAO implements DaoBase<InstrumentationPositionEntity> {
+public class InstrumentationPositionDAO implements DaoBase<InstrumentationPositionEntityC> {
     private SessionManager _sessionManager;
 
     protected InstrumentationPositionDAO(SessionManager sessionManager) {
@@ -20,21 +20,21 @@ public class InstrumentationPositionDAO implements DaoBase<InstrumentationPositi
     }
 
     @Override
-    public synchronized Optional<InstrumentationPositionEntity> get(int id) {
+    public synchronized Optional<InstrumentationPositionEntityC> get(int id) {
         Session session = _sessionManager.openConnection();
         Transaction ta = session.beginTransaction();
-        Optional<InstrumentationPositionEntity> ipe = Optional.ofNullable(session.get(InstrumentationPositionEntity.class, id));
+        Optional<InstrumentationPositionEntityC> ipe = Optional.ofNullable(session.get(InstrumentationPositionEntityC.class, id));
         ta.commit();
         return ipe;
     }
 
     @Override
-    public synchronized List<InstrumentationPositionEntity> getAll() {
+    public synchronized List<InstrumentationPositionEntityC> getAll() {
         Session session = _sessionManager.openConnection();
         Transaction ta = session.beginTransaction();
-        List<InstrumentationPositionEntity> ipes =session.createQuery("SELECT a FROM InstrumentationPositionEntity a", InstrumentationPositionEntity.class).getResultList();
-        List <InstrumentationPositionEntity> wrappedInstrumentationPositions = new ArrayList<>(ipes.size());
-        for(InstrumentationPositionEntity ipe: ipes){
+        List<InstrumentationPositionEntityC> ipes =session.createQuery("SELECT a FROM InstrumentationPositionEntity a", InstrumentationPositionEntityC.class).getResultList();
+        List <InstrumentationPositionEntityC> wrappedInstrumentationPositions = new ArrayList<>(ipes.size());
+        for(InstrumentationPositionEntityC ipe: ipes){
             wrappedInstrumentationPositions.add(ipe);
         }
         ta.commit();
@@ -42,7 +42,7 @@ public class InstrumentationPositionDAO implements DaoBase<InstrumentationPositi
     }
 
     @Override
-    public synchronized void save(InstrumentationPositionEntity instrumentationPositionEntity) {
+    public synchronized void save(InstrumentationPositionEntityC instrumentationPositionEntity) {
         Session session = _sessionManager.openConnection();
         Transaction ta = session.beginTransaction();
         session.saveOrUpdate(instrumentationPositionEntity);
@@ -50,16 +50,16 @@ public class InstrumentationPositionDAO implements DaoBase<InstrumentationPositi
     }
 
     @Override
-    public synchronized InstrumentationPositionEntity update(InstrumentationPositionEntity instrumentationPositionEntity) {
+    public synchronized InstrumentationPositionEntityC update(InstrumentationPositionEntityC instrumentationPositionEntity) {
         Session session = _sessionManager.openConnection();
         Transaction ta = session.beginTransaction();
-        InstrumentationPositionEntity ipe = (InstrumentationPositionEntity) session.merge(instrumentationPositionEntity);
+        InstrumentationPositionEntityC ipe = (InstrumentationPositionEntityC) session.merge(instrumentationPositionEntity);
         ta.commit();
         return ipe;
     }
 
     @Override
-    public synchronized void delete(InstrumentationPositionEntity instrumentationPositionEntity) {
+    public synchronized void delete(InstrumentationPositionEntityC instrumentationPositionEntity) {
         Session session = _sessionManager.openConnection();
         Transaction ta = session.beginTransaction();
         session.delete(instrumentationPositionEntity);
