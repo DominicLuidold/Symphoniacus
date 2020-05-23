@@ -3,7 +3,7 @@ package at.fhv.teamb.symphoniacus.domain;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
-import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.mock;
 
 import at.fhv.teamb.symphoniacus.persistence.PersistenceState;
 import at.fhv.teamb.symphoniacus.persistence.model.DutyEntity;
@@ -47,7 +47,7 @@ public class ActualSectionInstrumentationTest {
         musicianEntity.setUser(userEntity);
         this.musician = new Musician(musicianEntity);
         IDutyPositionEntity dutyPositionEntity = new DutyPositionEntity();
-        this.dutyPosition = new DutyPosition(dutyPositionEntity, any(MusicalPiece.class));
+        this.dutyPosition = new DutyPosition(dutyPositionEntity, mock(MusicalPiece.class));
     }
 
     @Test
