@@ -207,6 +207,10 @@ public class UserManagementController {
         userToEdit.setFirstName(userDTO.getFirstName());
         userToEdit.setLastName(userDTO.getLastName());
         try {
+            // Team C has no password field in the GUI
+            // Due to our Passwords being SHA-512 hashed, we cannot read them from database again
+            // after saving. There's currently no other way than doing this below.
+            // it sucks hard, but it's time to hand in the project in ILIAS now, so...
             userToEdit.setPassword("test");
         } catch (Exception e) {
             e.printStackTrace();
