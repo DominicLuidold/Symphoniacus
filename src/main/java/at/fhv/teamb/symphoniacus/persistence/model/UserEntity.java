@@ -154,6 +154,9 @@ public class UserEntity implements IUserEntity, PasswordableUser {
         }
     }
 
+    // this is needed by Team C
+    // but we don't wanna give our passwords to anyone, to be honest...
+    // so let's just pretend that we give them something :-)
     public String getPassword() {
         return "";
     }
