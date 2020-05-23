@@ -345,12 +345,6 @@ public class UserTableWindowController implements Parentable<TabPaneController> 
                         sb.append(ass.getDescription());
                         sb.append(" | ");
                     }
-                    /*
-                    sb.deleteCharAt(sb.length() - 1);
-                    sb.deleteCharAt(sb.length() - 1);
-                    sb.deleteCharAt(sb.length() - 1);
-
-                     */
                     role = sb.toString();
                 } else {
                     role = "-";
@@ -445,6 +439,9 @@ public class UserTableWindowController implements Parentable<TabPaneController> 
         return this;
     }
 
+    /*
+    Not Integrated by Team - B
+     */
     /*
     public void setLoggedInUserName(IUser user){
         _loggedInUserName.setText(user.getFirstName() + " " + user.getLastName());

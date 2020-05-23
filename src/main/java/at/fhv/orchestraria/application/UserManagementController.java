@@ -58,6 +58,9 @@ public class UserManagementController {
     private IContractualObligationDao contractualObligationDao;
 
     public UserManagementController() {
+        /**
+         * Not integrated by Team-B
+         */
         //_facade = DBFacade.getInstance();
         this.userDao = new UserDao();
         this.categoryDao = new InstrumentCategoryDao();
@@ -114,18 +117,30 @@ public class UserManagementController {
         return musicianDao.persist(me);
     }
 
+    /**
+     * Not integrated by Team-B
+     */
     public IMusicianRoleMusician updateMusicianRoleMusician(MusicianRoleMusicianEntity mrme) {
         return _facade.getDAO(MusicianRoleMusicianEntity.class).update(mrme);
     }
 
+    /**
+     * Not integrated by Team-B
+     */
     public void updateMusicianRole(IMusicianRole mre) {
         musicianRoleDao.update(mre);
     }
 
+    /**
+     * Not integrated by Team-B
+     */
     public void saveMusicianRoleMusician(MusicianRoleMusicianEntity mrme) {
         _facade.getDAO(MusicianRoleMusicianEntity.class).save(mrme);
     }
 
+    /**
+     * Not integrated by Team-B
+     */
     public void saveMusicianRole(IMusicianRole mre) {
         musicianRoleDao.persist(mre);
     }
@@ -140,15 +155,24 @@ public class UserManagementController {
         return administrativeAssistantDao.persist(aae);
     }
 
+    /**
+     * Not integrated by Team-B
+     */
     public void updateInstrumentCategoryMusician(
         IInstrumentCategoryEntity icme) {
         instrumentCategoryDao.update(icme);
     }
 
+    /**
+     * Not integrated by Team-B
+     */
     public void saveInstrumentCategoryMusician(IInstrumentCategoryEntity icme) {
         instrumentCategoryDao.persist(icme);
     }
 
+    /**
+     * Not integrated by Team-B
+     */
     public void updateContractualObligation(
         IContractualObligationEntity coe) {
         contractualObligationDao.update(coe);
@@ -166,6 +190,10 @@ public class UserManagementController {
 
         if (userToEdit == null) {
             userToEdit = new UserEntity();
+
+            /**
+             * Not integrated by Team-B
+             */
             /*
             try {
                 PasswordManager.setNewPassword(userToEdit, "PW_" + userToEdit.getShortcut()); //TODO SALT
@@ -221,7 +249,9 @@ public class UserManagementController {
                 aae.setDescription(AdministrativeAssistantType.valueOf(userDTO.getAdminRole()));
                 //aae.setUser(userToEdit);
             }
-
+            /**
+             * Not integrated by Team-B
+             */
             /*
             if (!userDTO.isNewUser()) {
                 //updateUser(userToEdit);
@@ -272,6 +302,9 @@ public class UserManagementController {
 
 
             me.setSection(findSectionByString(userDTO.getSection()));
+            /**
+             * Not integrated by Team-B
+             */
 /*
             if (!userDTO.isNewUser()) {
                 updateUser(userToEdit);
@@ -303,12 +336,19 @@ public class UserManagementController {
                     }
                 }
             }
+
+            /**
+             * Not integrated by Team-B
+             */
             /*
             if (!userDTO.isNewUser()) {
                 updateMusician(me);
             }
 */
 
+            /**
+             * Not integrated by Team-B
+             */
 /*
             for (String role : userDTO.getSelectedRoles()) {
                 IMusicianRole mrme = new MusicianRole();
@@ -403,6 +443,10 @@ public class UserManagementController {
                     //userToEdit.setMusician(me);
                     updateMusician(me);
                 }
+
+                /**
+                 * Not integrated by Team-B
+                 */
                 /*else {
                     if (userToEdit.getAdministrativeAssistants().get(0) != null) {
                         updateAdministrativeAssistant(
@@ -414,6 +458,9 @@ public class UserManagementController {
             }
 
 
+            /**
+             * Not integrated by Team-B
+             */
             /*
             for (String instrumentCat : userDTO.getSelectedInstrumentCats()) {
                 //IInstrumentCategoryEntity icme = new InstrumentCategoryEntity();
@@ -430,6 +477,7 @@ public class UserManagementController {
                 } else {
                     saveInstrumentCategoryMusician(ice);
                 }
+
 
 
                 IContractualObligationEntity contract = new ContractualObligationEntity();
@@ -487,6 +535,9 @@ public class UserManagementController {
      * @return true if it exists, false if it doesn't
      */
     public boolean checkExistingUserShortcut(String shortcut) {
+        /**
+         * Not integrated by Team-B
+         */
         /*
         UserDAO uDAO = (UserDAO) _facade.getDAO(UserEntity.class);
         if (uDAO.getByShortcut(shortcut).isPresent()) {

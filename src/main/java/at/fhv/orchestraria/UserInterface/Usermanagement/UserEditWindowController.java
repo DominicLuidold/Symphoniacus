@@ -270,7 +270,7 @@ public class UserEditWindowController implements Parentable<TabPaneController> {
      * Method for Integration.
      */
     public void tearDown() {
-        if(this.allMusicianRoles != null && this.allInstrumentCategories != null) {
+        if (this.allMusicianRoles != null && this.allInstrumentCategories != null) {
             this.allMusicianRoles = new LinkedList<>();
             this.allInstrumentCategories = new LinkedList<>();
         }
@@ -611,6 +611,10 @@ public class UserEditWindowController implements Parentable<TabPaneController> {
 
             this.parentController.removeTab(TabPaneEntry.USER_EDIT);
             this.parentController.selectTab(TabPaneEntry.USER_MANAGEMENT);
+
+            /*
+            Not Integrated by Team - B
+            */
             /*
             Node source = (Node) actionEvent.getSource();
             Stage stage = (Stage) source.getScene().getWindow();

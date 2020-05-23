@@ -19,9 +19,9 @@
    <children>
       <BorderPane fx:id="borderPane" layoutX="10.0" layoutY="10.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
          <top>
-            <HBox alignment="CENTER" prefHeight="64.0" prefWidth="738.0" spacing="15.0" style="-fx-background-color: B491A1;">
+            <HBox alignment="CENTER" prefHeight="64.0" prefWidth="738.0" spacing="15.0" style="-fx-background-color: rgba(139, 146, 167, 0.66);">
                <children>
-                  <Label fx:id="_user1" style="-fx-font-weight: bold;" text="User: ">
+                  <Label fx:id="_user1" style="-fx-font-weight: bolder;" text="User ">
                      <font>
                         <Font size="18.0" />
                      </font>
@@ -161,13 +161,13 @@
                               <HBox alignment="CENTER" prefHeight="67.0" prefWidth="443.0" style="-fx-spacing: 30;">
                                  <children>
                                     <Label minWidth="100.0" text="Contract Start" />
-                                    <JFXDatePicker fx:id="contractStartPicker" defaultColor="#b491a1" minWidth="200.0" />
+                                    <JFXDatePicker fx:id="contractStartPicker" defaultColor="rgba(22, 165, 212, 0.5)" minWidth="200.0" />
                                  </children>
                               </HBox>
                               <HBox alignment="CENTER" prefHeight="67.0" prefWidth="443.0" style="-fx-spacing: 30;">
                                  <children>
                                     <Label minWidth="100.0" text="Contract End" />
-                                    <JFXDatePicker fx:id="contractEndPicker" defaultColor="#b491a1" minWidth="200.0" />
+                                    <JFXDatePicker fx:id="contractEndPicker" defaultColor="rgba(22, 165, 212, 0.5)" minWidth="200.0" />
                                  </children>
                               </HBox>
                               <HBox alignment="CENTER" prefHeight="67.0" prefWidth="443.0" style="-fx-spacing: 30;">
