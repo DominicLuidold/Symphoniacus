@@ -2,12 +2,14 @@ package at.fhv.teamb.symphoniacus.persistence.model;
 
 import at.fhv.teamb.symphoniacus.persistence.model.interfaces.IContractualObligationEntity;
 import at.fhv.teamb.symphoniacus.persistence.model.interfaces.IDutyPositionEntity;
+import at.fhv.teamb.symphoniacus.persistence.model.interfaces.IInstrumentCategoryEntity;
 import at.fhv.teamb.symphoniacus.persistence.model.interfaces.IMusicianEntity;
-import at.fhv.teamb.symphoniacus.persistence.model.interfaces.IMusicianRole;
+import at.fhv.teamb.symphoniacus.persistence.model.interfaces.IMusicianRoleEntity;
 import at.fhv.teamb.symphoniacus.persistence.model.interfaces.INegativeDateWishEntity;
 import at.fhv.teamb.symphoniacus.persistence.model.interfaces.INegativeDutyWishEntity;
 import at.fhv.teamb.symphoniacus.persistence.model.interfaces.IPositiveWishEntity;
 import at.fhv.teamb.symphoniacus.persistence.model.interfaces.ISectionEntity;
+import at.fhv.teamb.symphoniacus.persistence.model.interfaces.ISubstitute;
 import at.fhv.teamb.symphoniacus.persistence.model.interfaces.IUserEntity;
 import at.fhv.teamb.symphoniacus.persistence.model.interfaces.IVacationEntity;
 import java.util.LinkedList;
@@ -56,7 +58,7 @@ public class MusicianEntity implements IMusicianEntity {
     @OneToMany(mappedBy = "musician", targetEntity = ContractualObligationEntity.class)
     private List<IContractualObligationEntity> contractualObligations = new LinkedList<>();
 
-    @ManyToMany(targetEntity = MusicianRole.class)
+    @ManyToMany(cascade = {CascadeType.MERGE}, targetEntity = MusicianRoleEntity.class)
     @JoinTable(
         name = "musicianRole_musician",
         joinColumns = {
@@ -66,7 +68,19 @@ public class MusicianEntity implements IMusicianEntity {
             @JoinColumn(name = "musicianRoleId")
         }
     )
-    private List<IMusicianRole> musicianRoles = new LinkedList<>();
+    private List<IMusicianRoleEntity> musicianRoles = new LinkedList<>();
+
+    @ManyToMany(cascade = {CascadeType.MERGE}, targetEntity = InstrumentCategoryEntity.class)
+    @JoinTable(
+        name = "instrumentCategory_musician",
+        joinColumns = {
+            @JoinColumn(name = "musicianId")
+        },
+        inverseJoinColumns = {
+            @JoinColumn(name = "instrumentCategoryId")
+        }
+    )
+    private List<IInstrumentCategoryEntity> instrumentCategories = new LinkedList<>();
 
     @OneToMany(
         mappedBy = "musician",
@@ -86,6 +100,9 @@ public class MusicianEntity implements IMusicianEntity {
 
     @OneToMany(mappedBy = "musician", targetEntity = NegativeDateWishEntity.class)
     private List<INegativeDateWishEntity> negativeDateWishes = new LinkedList<>();
+
+    @OneToMany(mappedBy = "musician", targetEntity = Substitute.class)
+    private List<ISubstitute> substitutes = new LinkedList<>();
 
     @Override
     public void addPositiveWish(IPositiveWishEntity positiveWish) {
@@ -141,7 +158,7 @@ public class MusicianEntity implements IMusicianEntity {
     }
 
     @Override
-    public void setMusicianRoles(List<IMusicianRole> musicianRoles) {
+    public void setMusicianRoles(List<IMusicianRoleEntity> musicianRoles) {
         this.musicianRoles = musicianRoles;
     }
 
@@ -196,6 +213,15 @@ public class MusicianEntity implements IMusicianEntity {
         this.section = section;
     }
 
+    public List<IInstrumentCategoryEntity> getInstrumentCategories() {
+        return this.instrumentCategories;
+    }
+
+    public void setInstrumentCategories(
+        List<IInstrumentCategoryEntity> instrumentCategories) {
+        this.instrumentCategories = instrumentCategories;
+    }
+
     @Override
     public List<IContractualObligationEntity> getContractualObligations() {
         return this.contractualObligations;
@@ -214,18 +240,18 @@ public class MusicianEntity implements IMusicianEntity {
     }
 
     @Override
-    public List<IMusicianRole> getMusicianRoles() {
+    public List<IMusicianRoleEntity> getMusicianRoles() {
         return this.musicianRoles;
     }
 
     @Override
-    public void addMusicianRole(IMusicianRole role) {
+    public void addMusicianRole(IMusicianRoleEntity role) {
         this.musicianRoles.add(role);
         role.addMusician(this);
     }
 
     @Override
-    public void removeMusicianRole(IMusicianRole role) {
+    public void removeMusicianRole(IMusicianRoleEntity role) {
         this.musicianRoles.remove(role);
         role.removeMusician(this);
     }
@@ -262,5 +288,65 @@ public class MusicianEntity implements IMusicianEntity {
     public void removeVacation(IVacationEntity vacation) {
         this.vacations.remove(vacation);
         vacation.setMusician(null);
+    }
+
+    @Override
+    public void addInstrumentCategory(IInstrumentCategoryEntity inst) {
+        this.instrumentCategories.add(inst);
+        inst.getMusicians().add(this);
+    }
+
+    @Override
+    public void removeInstrumentCategory(IInstrumentCategoryEntity inst) {
+        this.instrumentCategories.remove(inst);
+        inst.removeMusician(null);
+    }
+
+    public List<INegativeDateWishEntity> getNegativeDateWishes() {
+        return negativeDateWishes;
+    }
+
+    public void setNegativeDateWishes(
+        List<INegativeDateWishEntity> negativeDateWishes) {
+        this.negativeDateWishes = negativeDateWishes;
+    }
+
+    public List<ISubstitute> getSubstitutes() {
+        return substitutes;
+    }
+
+    public void setSubstitutes(
+        List<ISubstitute> substitutes) {
+        this.substitutes = substitutes;
+    }
+
+    /**
+     *  Removes all Musician Roles.
+     */
+    public void removeAllMusicianRoles() {
+        for (IMusicianRoleEntity role : this.musicianRoles) {
+            role.getMusicians().clear();
+        }
+        this.musicianRoles.clear();
+    }
+
+    /**
+     *  Removes all Instrumentation Categories.
+     */
+    public void removeAllInstrumentCategories() {
+        for (IInstrumentCategoryEntity cat : this.instrumentCategories) {
+            cat.getMusicians().clear();
+        }
+        this.instrumentCategories.clear();
+    }
+
+    /**
+     *  Removes all Contractual Obligations.
+     */
+    public void removeAllContractualObligations() {
+        for (IContractualObligationEntity contract : this.contractualObligations) {
+            contract.setMusician(null);
+        }
+        this.contractualObligations.clear();
     }
 }

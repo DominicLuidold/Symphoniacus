@@ -2,6 +2,7 @@ package at.fhv.teamb.symphoniacus.persistence.model;
 
 import at.fhv.teamb.symphoniacus.persistence.model.interfaces.IContractualObligationEntity;
 import at.fhv.teamb.symphoniacus.persistence.model.interfaces.IInstrumentCategoryEntity;
+import at.fhv.teamb.symphoniacus.persistence.model.interfaces.IMusicianEntity;
 import java.util.LinkedList;
 import java.util.List;
 import javax.persistence.Column;
@@ -9,6 +10,7 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.ManyToMany;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
@@ -26,7 +28,8 @@ public class InstrumentCategoryEntity implements IInstrumentCategoryEntity {
     @OneToMany(mappedBy = "instrumentCategory", targetEntity = ContractualObligationEntity.class)
     private List<IContractualObligationEntity> contractualObligations = new LinkedList<>();
 
-    // TODO - @ManyToMany InstrumentationCategory - InstrumentationCategory_Musician - Musician
+    @ManyToMany(mappedBy = "instrumentCategories", targetEntity = MusicianEntity.class)
+    private List<IMusicianEntity> musicians = new LinkedList<>();
 
     @Override
     public Integer getInstrumentCategoryId() {
@@ -63,5 +66,26 @@ public class InstrumentCategoryEntity implements IInstrumentCategoryEntity {
     public void removeContractualObligation(IContractualObligationEntity contractualObligation) {
         this.contractualObligations.remove(contractualObligation);
         contractualObligation.setInstrumentCategory(null);
+    }
+
+    @Override
+    public void addMusician(IMusicianEntity musician) {
+        this.musicians.add(musician);
+        musician.getInstrumentCategories().add(this);
+    }
+
+    @Override
+    public void removeMusician(IMusicianEntity musician) {
+        this.musicians.remove(musician);
+        musician.removeInstrumentCategory(this);
+    }
+
+    public List<IMusicianEntity> getMusicians() {
+        return musicians;
+    }
+
+    public void setMusicians(
+        List<IMusicianEntity> musicians) {
+        this.musicians = musicians;
     }
 }

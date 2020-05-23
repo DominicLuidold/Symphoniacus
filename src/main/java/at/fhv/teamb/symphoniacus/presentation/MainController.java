@@ -7,7 +7,7 @@ import at.fhv.teamb.symphoniacus.application.type.DomainUserType;
 import at.fhv.teamb.symphoniacus.application.type.MusicianRoleType;
 import at.fhv.teamb.symphoniacus.domain.AdministrativeAssistant;
 import at.fhv.teamb.symphoniacus.domain.Musician;
-import at.fhv.teamb.symphoniacus.persistence.model.interfaces.IMusicianRole;
+import at.fhv.teamb.symphoniacus.persistence.model.interfaces.IMusicianRoleEntity;
 import at.fhv.teamb.symphoniacus.presentation.internal.TabPaneEntry;
 import java.net.URL;
 import java.util.Comparator;
@@ -127,19 +127,24 @@ public class MainController implements Initializable {
             LOG.debug("Getting permittedTabs for Musician");
             LOG.debug("No default view for Musician atm");
 
-            for (IMusicianRole role : m.getEntity().getMusicianRoles()) {
+            for (IMusicianRoleEntity role : m.getEntity().getMusicianRoles()) {
+                // Duty Scheduler only
                 if (role.getDescription().equals(MusicianRoleType.DUTY_SCHEDULER)) {
-                    result.add(
-                        TabPaneEntry.DUTY_SCHEDULER_CALENDAR_VIEW
-                    );
+                    result.add(TabPaneEntry.DUTY_SCHEDULER_CALENDAR_VIEW);
+                }
+
+                // Duty Scheduler, Section Principal & Tutti
+                if (role.getDescription().equals(MusicianRoleType.SECTION_PRINCIPAL)
+                    || role.getDescription().equals(MusicianRoleType.TUTTI)
+                    ||  role.getDescription().equals(MusicianRoleType.DUTY_SCHEDULER)
+                ) {
+                    result.add(TabPaneEntry.MUSICIAN_CALENDAR_VIEW);
                 }
             }
-            // Organizational Officer
-        } else if (m == null) {
+        } else if (m == null) { // Organizational Officer
             LOG.debug("Getting permittedTabs for Administrative Assistant");
-            result.add(
-                TabPaneEntry.ORG_OFFICER_CALENDAR_VIEW
-            );
+            result.add(TabPaneEntry.ORG_OFFICER_CALENDAR_VIEW);
+            result.add(TabPaneEntry.USER_MANAGEMENT);
         }
 
         if (result.isEmpty()) {

@@ -4,6 +4,7 @@ import at.fhv.teamb.symphoniacus.persistence.Dao;
 import at.fhv.teamb.symphoniacus.persistence.model.AdministrativeAssistantEntity;
 import at.fhv.teamb.symphoniacus.persistence.model.MusicianEntity;
 import at.fhv.teamb.symphoniacus.persistence.model.interfaces.IUserEntity;
+import java.util.Collection;
 import java.util.Optional;
 
 public interface IUserDao extends Dao<IUserEntity> {
@@ -40,4 +41,11 @@ public interface IUserDao extends Dao<IUserEntity> {
      * @return True if user is a AdministrativeAssistant, false otherwise
      */
     boolean isUserAdministrativeAssistant(IUserEntity currentUser);
+
+    /**
+     * Integration of Team - C.
+     *
+     * @return List of all users.
+     */
+    Collection<IUserEntity> getAll();
 }

@@ -20,6 +20,7 @@ import at.fhv.teamb.symphoniacus.presentation.internal.MusicianTableModel;
 import at.fhv.teamb.symphoniacus.presentation.internal.OldDutyComboView;
 import at.fhv.teamb.symphoniacus.presentation.internal.Parentable;
 import at.fhv.teamb.symphoniacus.presentation.internal.ScheduleButtonTableCell;
+import at.fhv.teamb.symphoniacus.presentation.internal.TabPaneEntry;
 import at.fhv.teamb.symphoniacus.presentation.internal.tasks.GetMusiciansAvailableForPositionTask;
 import at.fhv.teamb.symphoniacus.presentation.internal.tasks.GetOtherDutiesTask;
 import at.fhv.teamb.symphoniacus.presentation.internal.tasks.GetPositionsWithMusiciansTask;
@@ -1030,6 +1031,15 @@ public class DutyScheduleController
                         .position(Pos.CENTER)
                         .hideAfter(new Duration(4000))
                         .show();
+
+                    // Hacky way to update Team C's integrated duty roster to show latest
+                    // changes made to duties and the respective instrumentation positions
+                    this.parentController.getParentController().removeTab(
+                        TabPaneEntry.MUSICIAN_CALENDAR_VIEW
+                    );
+                    this.parentController.getParentController().addTab(
+                        TabPaneEntry.MUSICIAN_CALENDAR_VIEW
+                    );
                 }
             } else {
                 Notifications.create()

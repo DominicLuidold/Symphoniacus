@@ -296,7 +296,9 @@ public class NewDutyEntryController implements Initializable, Parentable<Calenda
             FXCollections.observableArrayList();
 
         observableList.addAll(seriesOfPerformancesList);
-        this.seriesOfPerformancesSelect.getItems().removeAll();
+        this.seriesOfPerformancesSelect.getItems().removeAll(
+            this.seriesOfPerformancesSelect.getItems()
+        );
         this.seriesOfPerformancesSelect.getItems().addAll(observableList);
 
     }

@@ -1,5 +1,6 @@
 package at.fhv.teamb.symphoniacus.persistence.model;
 
+import at.fhv.orchestraria.domain.integrationInterfaces.PasswordableUser;
 import at.fhv.teamb.symphoniacus.persistence.model.interfaces.IAdministrativeAssistantEntity;
 import at.fhv.teamb.symphoniacus.persistence.model.interfaces.IMusicianEntity;
 import at.fhv.teamb.symphoniacus.persistence.model.interfaces.IUserEntity;
@@ -23,7 +24,7 @@ import org.apache.logging.log4j.Logger;
 
 @Entity
 @Table(name = "user")
-public class UserEntity implements IUserEntity {
+public class UserEntity implements IUserEntity, PasswordableUser {
     private static final Logger LOG = LogManager.getLogger(UserEntity.class);
 
     @Id
@@ -151,6 +152,13 @@ public class UserEntity implements IUserEntity {
         } else {
             LOG.error("Could not generate hash");
         }
+    }
+
+    // this is needed by Team C
+    // but we don't wanna give our passwords to anyone, to be honest...
+    // so let's just pretend that we give them something :-)
+    public String getPassword() {
+        return "";
     }
 
     @Override

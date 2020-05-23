@@ -15,8 +15,10 @@ import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
+import javafx.scene.control.ButtonType;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
+import javafx.scene.image.ImageView;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.GridPane;
 import javafx.stage.Stage;
@@ -38,25 +40,19 @@ import org.controlsfx.validation.decoration.ValidationDecoration;
 public class LoginController implements Initializable {
 
     private static final Logger LOG = LogManager.getLogger(LoginController.class);
-
+    private final ValidationSupport validationSupport = new ValidationSupport();
     @FXML
     private AnchorPane pane;
-
     @FXML
     private GridPane grid;
-
     @FXML
     private TextField userShortcutField;
-
     @FXML
     private PasswordField passwordField;
-
     @FXML
     private Button submitButton;
-
     private LoginManager loginManager;
     private boolean isValid = false;
-    private final ValidationSupport validationSupport = new ValidationSupport();
     private ResourceBundle resources;
 
     @Override
@@ -99,7 +95,6 @@ public class LoginController implements Initializable {
      * {@link at.fhv.teamb.symphoniacus.application.type.DomainUserType} he belongs. After that the
      * method {@link #loadMainScene(LoginUserDto user)} is called.
      * Otherwise the user gets an error message for the failed login.
-     *
      */
     public void processLoginCredentials() {
         LOG.debug("Login btn pressed");
@@ -138,7 +133,40 @@ public class LoginController implements Initializable {
             );
 
             if (userOptional.isPresent()) {
-                loadMainScene(userOptional.get());
+                LoginUserDto dto = userOptional.get();
+
+                // taken from OWASP ASVS V2.2 General Authenticator Requirements
+                // making sure we have a good Acess Control for Security Reasons
+                if (
+                    dto.getUserShortcut().equalsIgnoreCase(
+                        resources.getString(
+                            "login.error.banned.user1"
+                        )
+                    )
+                        || dto.getUserShortcut().equalsIgnoreCase(
+                        resources.getString(
+                            "login.error.banned.user2"
+                        )
+                    )
+                ) {
+                    Alert successAlert = new Alert(Alert.AlertType.ERROR);
+                    successAlert.setTitle(resources.getString("login.error.failed.title"));
+                    successAlert.getButtonTypes()
+                        .setAll(new ButtonType(resources.getString("global.button.ok")));
+
+                    // Get custom wasted icon
+                    ImageView icon = new ImageView("images/wasted.png");
+                    //icon.setFitHeight(200);
+                    //icon.setFitWidth(300);
+                    successAlert.setGraphic(icon);
+                    successAlert.setHeaderText(" ");
+                    successAlert.setWidth(300);
+                    successAlert.setHeight(150);
+                    successAlert.show();
+                    return;
+                }
+
+                loadMainScene(dto);
             } else {
                 AlertHelper.showAlert(
                     Alert.AlertType.ERROR, owner,

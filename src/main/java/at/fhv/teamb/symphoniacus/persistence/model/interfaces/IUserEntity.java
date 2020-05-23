@@ -68,4 +68,6 @@ public interface IUserEntity {
     Optional<String> getHashFromPlaintext(String password) throws NoSuchAlgorithmException;
 
     String generateSalt();
+
+    String getPassword();
 }

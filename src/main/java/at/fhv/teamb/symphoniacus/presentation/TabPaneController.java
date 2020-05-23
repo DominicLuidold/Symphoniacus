@@ -55,17 +55,23 @@ public class TabPaneController implements Initializable, Parentable<MainControll
         this.tabPane.getTabs().setAll(newTabs);
     }
 
-    protected void removeTab(TabPaneEntry entry) {
+    public void removeTab(TabPaneEntry entry) {
         removeTab(entry.getTitle());
     }
 
-
-
-    protected Optional<Parentable<?>> addTab(TabPaneEntry entry) {
+    public Optional<Parentable<?>> addTab(TabPaneEntry entry) {
         return addTab(entry, null);
     }
 
-    protected Optional<Parentable<?>> addTab(
+    /**
+     * Responsible for adding a new Tab to the Tabpane.
+     *
+     * @param entry  entry
+     * @param parent parentTab of the entry
+     * @return The Controller of the Tab if the tab is created, returns optional.empty
+     *          if tab already exists
+     */
+    public Optional<Parentable<?>> addTab(
         TabPaneEntry entry,
         Parentable parent
     ) {
@@ -107,7 +113,10 @@ public class TabPaneController implements Initializable, Parentable<MainControll
             }
 
             this.tabPane.getTabs().add(tab);
-            this.tabPane.getSelectionModel().select(tab);
+            // Only select temporary tabs -> always show tabs with order #1 when initializing
+            if (entry.isTemporary()) {
+                this.tabPane.getSelectionModel().select(tab);
+            }
 
             // FXML has no controller defined
             return Optional.ofNullable(controller);
