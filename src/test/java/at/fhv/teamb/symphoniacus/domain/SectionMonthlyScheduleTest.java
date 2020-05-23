@@ -6,16 +6,14 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 import at.fhv.teamb.symphoniacus.persistence.model.MonthlyScheduleEntity;
 import at.fhv.teamb.symphoniacus.persistence.model.SectionMonthlyScheduleEntity;
 import at.fhv.teamb.symphoniacus.persistence.model.interfaces.ISectionMonthlyScheduleEntity;
-import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.TestInstance;
 
 /**
  * Tests for the {@link SectionMonthlySchedule} domain class.
  *
  * @author Valentin Goronjic
  */
-@TestInstance(TestInstance.Lifecycle.PER_CLASS)
 public class SectionMonthlyScheduleTest {
     private SectionMonthlySchedule sms;
     private ISectionMonthlyScheduleEntity entity;
@@ -23,7 +21,7 @@ public class SectionMonthlyScheduleTest {
     /**
      * Initial setup for each test.
      */
-    @BeforeAll
+    @BeforeEach
     public void setUp() {
         ISectionMonthlyScheduleEntity entity = new SectionMonthlyScheduleEntity();
         entity.setMonthlySchedule(new MonthlyScheduleEntity());
