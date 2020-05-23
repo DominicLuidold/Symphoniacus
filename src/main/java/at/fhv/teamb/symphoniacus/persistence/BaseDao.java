@@ -30,6 +30,7 @@ public abstract class BaseDao<T> implements Dao<T> {
      * @param key   The primary key to use
      * @return The object
      */
+    @SuppressWarnings("unchecked")
     protected Optional<T> find(Class<?> clazz, Integer key) {
         // Disable cache because duty positions could be set.
         //entityManager.clear();
@@ -84,8 +85,16 @@ public abstract class BaseDao<T> implements Dao<T> {
         return Optional.empty();
     }
 
+    /**
+     * Returns all objects from a class.
+     *
+     * @param clazz Class of the object
+     * @return A List of objects
+     */
+    @SuppressWarnings("unchecked")
     public List<T> getAll(Class<?> clazz) {
-        return entityManager.createQuery("Select t from " + clazz.getSimpleName() + " t")
-            .getResultList();
+        return entityManager.createQuery(
+            "Select t from " + clazz.getSimpleName() + " t"
+        ).getResultList();
     }
 }
