@@ -91,4 +91,21 @@ public class MusicianDao extends BaseDao<IMusicianEntity>
     public boolean remove(IMusicianEntity elem) {
         return false;
     }
+
+    /**
+     * Returns Musician matching given userId.
+     * @param id given User Id
+     * @return Musician
+     */
+    public Optional<IMusicianEntity> findMusicianByUserId(int id) {
+        TypedQuery<MusicianEntity> query = entityManager.createQuery(
+            "SELECT m FROM MusicianEntity m "
+                + "WHERE m.user.userId = :uid",
+            MusicianEntity.class
+        );
+
+        query.setParameter("uid", id);
+
+        return Optional.of(query.getSingleResult());
+    }
 }
