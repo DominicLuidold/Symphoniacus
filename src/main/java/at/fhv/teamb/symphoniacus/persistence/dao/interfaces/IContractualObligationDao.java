@@ -13,6 +13,4 @@ public interface IContractualObligationDao extends Dao<IContractualObligationEnt
      * @return ContractualObligationEntity
      */
     IContractualObligationEntity getContractualObligation(IMusicianEntity musician);
-
-    boolean remove(IContractualObligationEntity elem);
 }

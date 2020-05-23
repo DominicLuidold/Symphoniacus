@@ -8,13 +8,11 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Optional;
 
-public class InstrumentCategoryDao extends BaseDao<IInstrumentCategoryEntity> implements
-    IInstrumentCategoryDao {
+public class InstrumentCategoryDao extends BaseDao<IInstrumentCategoryEntity>
+    implements IInstrumentCategoryDao {
+
     /**
-     * Finds the object based on the provided primary key.
-     *
-     * @param key The primary key to use
-     * @return The object
+     * {@inheritDoc}
      */
     @Override
     public Optional<IInstrumentCategoryEntity> find(Integer key) {
@@ -22,10 +20,7 @@ public class InstrumentCategoryDao extends BaseDao<IInstrumentCategoryEntity> im
     }
 
     /**
-     * Persists an object.
-     *
-     * @param elem The object to persist
-     * @return Optional.empty if persisting not possible
+     * {@inheritDoc}
      */
     @Override
     public Optional<IInstrumentCategoryEntity> persist(IInstrumentCategoryEntity elem) {
@@ -33,10 +28,7 @@ public class InstrumentCategoryDao extends BaseDao<IInstrumentCategoryEntity> im
     }
 
     /**
-     * Updates an existing object.
-     *
-     * @param elem The object to update
-     * @return Optional.empty if updating not possible
+     * {@inheritDoc}
      */
     @Override
     public Optional<IInstrumentCategoryEntity> update(IInstrumentCategoryEntity elem) {
@@ -48,9 +40,11 @@ public class InstrumentCategoryDao extends BaseDao<IInstrumentCategoryEntity> im
         return false;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public synchronized List<IInstrumentCategoryEntity> getAll() {
-        return new LinkedList<IInstrumentCategoryEntity>(
-            this.getAll(InstrumentCategoryEntity.class));
+        return new LinkedList<>(this.getAll(InstrumentCategoryEntity.class));
     }
 }

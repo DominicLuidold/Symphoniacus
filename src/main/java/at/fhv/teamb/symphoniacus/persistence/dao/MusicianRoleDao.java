@@ -10,11 +10,9 @@ import java.util.List;
 import java.util.Optional;
 
 public class MusicianRoleDao extends BaseDao<IMusicianRole> implements IMusicianRoleDao {
+
     /**
-     * Finds the object based on the provided primary key.
-     *
-     * @param key The primary key to use
-     * @return The object
+     * {@inheritDoc}
      */
     @Override
     public Optional<IMusicianRole> find(Integer key) {
@@ -22,10 +20,7 @@ public class MusicianRoleDao extends BaseDao<IMusicianRole> implements IMusician
     }
 
     /**
-     * Persists an object.
-     *
-     * @param elem The object to persist
-     * @return Optional.empty if persisting not possible
+     * {@inheritDoc}
      */
     @Override
     public Optional<IMusicianRole> persist(IMusicianRole elem) {
@@ -33,10 +28,7 @@ public class MusicianRoleDao extends BaseDao<IMusicianRole> implements IMusician
     }
 
     /**
-     * Updates an existing object.
-     *
-     * @param elem The object to update
-     * @return Optional.empty if updating not possible
+     * {@inheritDoc}
      */
     @Override
     public Optional<IMusicianRole> update(IMusicianRole elem) {
@@ -48,6 +40,9 @@ public class MusicianRoleDao extends BaseDao<IMusicianRole> implements IMusician
         return false;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public synchronized List<IMusicianRole> getAll() {
         return new LinkedList<>(this.getAll(MusicianRole.class));
