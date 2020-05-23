@@ -29,6 +29,7 @@ public class UserEdit extends Application implements Parentable<TabPaneControlle
     }
 
     @Override
+    @SuppressWarnings("unchecked")
     public void start(Stage primaryStage) throws Exception {
         /*
         Not used in integration
@@ -51,9 +52,9 @@ public class UserEdit extends Application implements Parentable<TabPaneControlle
         primaryStage.setX((primScreenBounds.getWidth() - width) / 2);
          */
 
-        Optional<Parentable<TabPaneController>> controller = this.parentController.addTab(TabPaneEntry.USER_EDIT);
+        Optional<Parentable<?>> controller = this.parentController.addTab(TabPaneEntry.USER_EDIT);
         if (controller.isPresent()) {
-            Parentable<TabPaneController> con = controller.get();
+            Parentable<TabPaneController> con = (Parentable<TabPaneController>) controller.get();
             _userEditWindowController = (UserEditWindowController)con;
         }
 
