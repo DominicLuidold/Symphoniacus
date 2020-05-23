@@ -15,19 +15,10 @@ public class WeeklyScheduleManager {
     private final IWeeklyScheduleDao weeklyScheduleDao;
 
     /**
-     * Initializes the WeeklyScheduleManager (usage for Team B only).
+     * Initializes the WeeklyScheduleManager.
      */
     public WeeklyScheduleManager() {
         this.weeklyScheduleDao = new WeeklyScheduleDao();
-    }
-
-    /**
-     * Initializes the WeeklyScheduleManager (usage for Team C only).
-     *
-     * @param weeklyScheduleDao The WeeklyScheduleDao used in this manager
-     */
-    public WeeklyScheduleManager(IWeeklyScheduleDao weeklyScheduleDao) {
-        this.weeklyScheduleDao = weeklyScheduleDao;
     }
 
     /**

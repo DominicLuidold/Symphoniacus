@@ -22,25 +22,11 @@ public class MusicalPieceManager {
     private final IMusicalPieceDao musicalPieceDao;
 
     /**
-     * Initializes the MusicalPieceManager (usage for Team B only).
+     * Initializes the MusicalPieceManager.
      */
     public MusicalPieceManager() {
         this.instrumentationDao = new InstrumentationDao();
         this.musicalPieceDao = new MusicalPieceDao();
-    }
-
-    /**
-     * Initializes the MusicalPieceManager (usage for Team C only).
-     *
-     * @param instrumentationDao The InstrumentationDao used in this manager
-     * @param musicalPieceDao    The MusicalPieceDao used in this manager
-     */
-    public MusicalPieceManager(
-        IInstrumentationDao instrumentationDao,
-        IMusicalPieceDao musicalPieceDao
-    ) {
-        this.instrumentationDao = instrumentationDao;
-        this.musicalPieceDao = musicalPieceDao;
     }
 
     /**

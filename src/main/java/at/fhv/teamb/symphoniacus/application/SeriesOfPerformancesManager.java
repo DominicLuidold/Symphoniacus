@@ -34,25 +34,11 @@ public class SeriesOfPerformancesManager {
     private final ISeriesOfPerformancesDao seriesOfPerformancesDao;
 
     /**
-     * Initializes the SeriesOfPerformancesManager (usage for Team B only).
+     * Initializes the SeriesOfPerformancesManager.
      */
     public SeriesOfPerformancesManager() {
         this.instrumentationDao = new InstrumentationDao();
         this.seriesOfPerformancesDao = new SeriesOfPerformancesDao();
-    }
-
-    /**
-     * Initializes the SeriesOfPerformancesManager (usage for Team C only).
-     *
-     * @param instrumentationDao      The InstrumentationDao used in this manager
-     * @param seriesOfPerformancesDao The SeriesOfPerformancesDao used in this manager
-     */
-    public SeriesOfPerformancesManager(
-        IInstrumentationDao instrumentationDao,
-        ISeriesOfPerformancesDao seriesOfPerformancesDao
-    ) {
-        this.instrumentationDao = instrumentationDao;
-        this.seriesOfPerformancesDao = seriesOfPerformancesDao;
     }
 
     /**

@@ -62,7 +62,7 @@ public class DutyManager {
     protected IDutyDao dutyDao;
 
     /**
-     * Initializes the DutyManager (usage for Team B only).
+     * Initializes the DutyManager.
      */
     public DutyManager() {
         this.dutyPositionManager = new DutyPositionManager();
@@ -74,41 +74,6 @@ public class DutyManager {
         this.seriesDao = new SeriesOfPerformancesDao();
         this.dutyCategoryDao = new DutyCategoryDao();
         this.instrumentationDao = new InstrumentationDao();
-    }
-
-    /**
-     * Initializes the DutyManager (usage for Team C only).
-     *
-     * @param dutyPositionManager           The DutyPositionManager used in this manager
-     * @param monthlyScheduleManager        The MonthlyScheduleManager used in this manager
-     * @param sectionMonthlyScheduleManager The SectionMonthlyScheduleManager used in this manager
-     * @param weeklyScheduleManager         The WeeklyScheduleManager used in this manager
-     * @param changeLogDao                  The ChangelogDao used in this manager
-     * @param dutyDao                       The DutyDao used in this manager
-     * @param seriesDao                     The SeriesDao used in this manager
-     * @param dutyCategoryDao               The DutyCategoryDao used in this manager
-     * @param instrumentationDao            THe InstrumentationDao used in this manager
-     */
-    public DutyManager(
-        DutyPositionManager dutyPositionManager,
-        MonthlyScheduleManager monthlyScheduleManager,
-        SectionMonthlyScheduleManager sectionMonthlyScheduleManager,
-        WeeklyScheduleManager weeklyScheduleManager,
-        IDutyCategoryChangeLogDao changeLogDao,
-        IDutyDao dutyDao,
-        ISeriesOfPerformancesDao seriesDao,
-        IDutyCategoryDao dutyCategoryDao,
-        IInstrumentationDao instrumentationDao
-    ) {
-        this.dutyPositionManager = dutyPositionManager;
-        this.monthlyScheduleManager = monthlyScheduleManager;
-        this.sectionMonthlyScheduleManager = sectionMonthlyScheduleManager;
-        this.weeklyScheduleManager = weeklyScheduleManager;
-        this.changeLogDao = changeLogDao;
-        this.dutyDao = dutyDao;
-        this.seriesDao = seriesDao;
-        this.dutyCategoryDao = dutyCategoryDao;
-        this.instrumentationDao = instrumentationDao;
     }
 
     /**

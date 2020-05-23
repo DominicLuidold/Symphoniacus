@@ -37,29 +37,12 @@ public class SectionMonthlyScheduleManager {
     private final ISectionMonthlyScheduleDao smsDao;
 
     /**
-     * Initializes the SectionMonthlyScheduleManager (usage for Team B only).
+     * Initializes the SectionMonthlyScheduleManager.
      */
     public SectionMonthlyScheduleManager() {
         this.dutyPositionDao = new DutyPositionDao();
         this.sectionDao = new SectionDao();
         this.smsDao = new SectionMonthlyScheduleDao();
-    }
-
-    /**
-     * Initializes the SectionMonthlyScheduleManager (usage for Team C only).
-     *
-     * @param dutyPositionDao The DutyPositionDao used in this manager
-     * @param sectionDao      The SectionDao used in this manager
-     * @param smsDao          The SectionMonthlyScheduleDao used in this manager
-     */
-    public SectionMonthlyScheduleManager(
-        IDutyPositionDao dutyPositionDao,
-        ISectionDao sectionDao,
-        ISectionMonthlyScheduleDao smsDao
-    ) {
-        this.dutyPositionDao = dutyPositionDao;
-        this.sectionDao = sectionDao;
-        this.smsDao = smsDao;
     }
 
     /**

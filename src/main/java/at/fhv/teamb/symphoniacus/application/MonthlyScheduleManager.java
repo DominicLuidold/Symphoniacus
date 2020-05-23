@@ -14,19 +14,10 @@ public class MonthlyScheduleManager {
     private final IMonthlyScheduleDao monthlyScheduleDao;
 
     /**
-     * Initializes the MonthlyScheduleManager (usage for Team B only).
+     * Initializes the MonthlyScheduleManager.
      */
     public MonthlyScheduleManager() {
         this.monthlyScheduleDao = new MonthlyScheduleDao();
-    }
-
-    /**
-     * Initializes the MonthlyScheduleManager (usage for Team C only).
-     *
-     * @param monthlyScheduleDao The MonthlyScheduleDao used in this manager
-     */
-    public MonthlyScheduleManager(IMonthlyScheduleDao monthlyScheduleDao) {
-        this.monthlyScheduleDao = monthlyScheduleDao;
     }
 
     /**

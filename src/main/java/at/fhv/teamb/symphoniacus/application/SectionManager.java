@@ -16,19 +16,10 @@ public class SectionManager {
     private final ISectionDao sectionDao;
 
     /**
-     * Initializes the SectionManager (usage for Team B only).
+     * Initializes the SectionManager.
      */
     public SectionManager() {
         this.sectionDao = new SectionDao();
-    }
-
-    /**
-     * Initializes the SectionManager (usage for Team C only).
-     *
-     * @param sectionDao The SectionDao used in this manager.
-     */
-    public SectionManager(ISectionDao sectionDao) {
-        this.sectionDao = sectionDao;
     }
 
     /**
