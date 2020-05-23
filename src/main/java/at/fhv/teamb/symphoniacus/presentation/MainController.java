@@ -97,7 +97,6 @@ public class MainController implements Initializable {
 
         this.tabPaneController.initializeTabMenu();
         this.userHeaderMenuController.setUserShortcut(this.currentUser.getFullName());
-        //this.userHeaderMenuController.setUserTxtSection(this.currentUser.ge());
         if (this.currentMusician != null) {
             this.userHeaderMenuController
                 .setUserTxtRole(this.resources.getString("global.label.user.type.musician"));

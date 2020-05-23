@@ -49,7 +49,7 @@
     -fx-font-weight: bolder;
 }
 #userShortcut:hover {
-    -fx-background-color: rgba(22, 165, 212, 0.8);
+    -fx-background-color: #5A7CA0;
 
 }
 
