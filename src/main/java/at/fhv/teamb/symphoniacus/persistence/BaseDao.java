@@ -93,8 +93,11 @@ public abstract class BaseDao<T> implements Dao<T> {
      */
     @SuppressWarnings("unchecked")
     public List<T> getAll(Class<?> clazz) {
-        return entityManager.createQuery(
-            "Select t from " + clazz.getSimpleName() + " t"
+        // Class simpleName can hopefully not be changed by the user
+        // so, we don't check for SQL injection here...
+        return (List<T>) entityManager.createQuery(
+            "Select t from " + clazz.getSimpleName() + " t",
+            clazz
         ).getResultList();
     }
 }
