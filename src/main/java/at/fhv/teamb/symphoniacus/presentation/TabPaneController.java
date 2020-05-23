@@ -106,7 +106,7 @@ public class TabPaneController implements Initializable, Parentable<MainControll
             }
             if (entry.isTemporary()) {
                 tab.setStyle(
-                    "-fx-background-color: #7fc9f5; "
+                    "-fx-background-color: #00909e; "
                         + "-fx-text-fill: #093753; "
                         + "-fx-prompt-text-fill: #093753;"
                 );

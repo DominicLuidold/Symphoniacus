@@ -45,11 +45,13 @@ public class MainController implements Initializable {
     private AdministrativeAssistant currentAssistant;
     private MusicianManager musicianManager;
     private AdministrativeAssistantManager administrativeManager;
+    private ResourceBundle resources;
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         this.userHeaderMenuController.setParentController(this);
         this.tabPaneController.setParentController(this);
+        this.resources = resources;
         LOG.debug("Initialized MainController");
     }
 
@@ -95,6 +97,34 @@ public class MainController implements Initializable {
 
         this.tabPaneController.initializeTabMenu();
         this.userHeaderMenuController.setUserShortcut(this.currentUser.getFullName());
+        if (this.currentMusician != null) {
+            this.userHeaderMenuController
+                .setUserTxtRole(this.resources.getString("global.label.user.type.musician"));
+            this.userHeaderMenuController.setUserTxtSection(
+                this.getCurrentMusician().getSection().getEntity().getDescription().toString());
+        } else if (this.currentAssistant != null) {
+            String role = "";
+            switch (this.currentAssistant.getAdministrativeAssistantEntity().getDescription()
+                .toString()) {
+                case "ORGANIZATIONAL_OFFICER":
+                    role =
+                        this.resources.getString("global.label.user.role.organizational.officer");
+                    break;
+                case "MUSIC_LIBRARIAN":
+                    role = this.resources.getString("global.label.user.role.music.librarian");
+                    break;
+                case "ORCHESTRA_LIBRARIAN":
+                    role = this.resources.getString("global.label.user.role.orchestra.librarian");
+                    break;
+                default:
+                    role = "";
+            }
+            this.userHeaderMenuController.setUserTxtSection(role);
+
+            this.userHeaderMenuController.setUserTxtRole(
+                this.resources.getString("global.label.user.type.administrative.assistant"));
+        }
+
     }
 
     public DomainUserType getLoginUserType() {
@@ -136,7 +166,7 @@ public class MainController implements Initializable {
                 // Duty Scheduler, Section Principal & Tutti
                 if (role.getDescription().equals(MusicianRoleType.SECTION_PRINCIPAL)
                     || role.getDescription().equals(MusicianRoleType.TUTTI)
-                    ||  role.getDescription().equals(MusicianRoleType.DUTY_SCHEDULER)
+                    || role.getDescription().equals(MusicianRoleType.DUTY_SCHEDULER)
                 ) {
                     result.add(TabPaneEntry.MUSICIAN_CALENDAR_VIEW);
                 }

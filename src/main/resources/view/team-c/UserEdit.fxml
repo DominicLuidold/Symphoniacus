@@ -14,12 +14,11 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-
 <AnchorPane xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="at.fhv.orchestraria.UserInterface.Usermanagement.UserEditWindowController">
    <children>
       <BorderPane fx:id="borderPane" layoutX="10.0" layoutY="10.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
          <top>
-            <HBox alignment="CENTER" prefHeight="64.0" prefWidth="738.0" spacing="15.0" style="-fx-background-color: rgba(139, 146, 167, 0.66);">
+            <HBox alignment="CENTER" prefHeight="64.0" prefWidth="738.0" spacing="15.0" style="-fx-background-color: rgba(39, 73, 109, 0.5);">
                <children>
                   <Label fx:id="_user1" style="-fx-font-weight: bolder;" text="User ">
                      <font>

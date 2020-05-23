@@ -16,5 +16,5 @@
 }
 
 .tree-table-row-cell:selected{
-    -fx-background-color: rgba(22, 165, 212, 0.5);
+    -fx-background-color: rgba(0, 145, 158, 0.5);
 }
