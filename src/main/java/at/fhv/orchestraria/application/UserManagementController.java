@@ -5,7 +5,7 @@ import at.fhv.orchestraria.UserInterface.Usermanagement.UserDTO;
 import at.fhv.orchestraria.domain.Imodel.IMusicianRoleMusician;
 import at.fhv.orchestraria.domain.model.MusicianRoleMusicianEntity;
 import at.fhv.orchestraria.persistence.dao.DBFacade;
-import at.fhv.teamb.symphoniacus.application.adapter.MusicianRoleAdapter;
+import at.fhv.teamb.symphoniacus.domain.adapter.MusicianRoleAdapter;
 import at.fhv.teamb.symphoniacus.application.type.AdministrativeAssistantType;
 import at.fhv.teamb.symphoniacus.persistence.dao.AdministrativeAssistantDao;
 import at.fhv.teamb.symphoniacus.persistence.dao.ContractualObligationDao;

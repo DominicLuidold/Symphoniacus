@@ -1,15 +1,15 @@
-package at.fhv.teamb.symphoniacus.application.adapter;
+package at.fhv.teamb.symphoniacus.domain.adapter;
 
 import at.fhv.orchestraria.domain.Imodel.IMusicianRole;
 import at.fhv.orchestraria.domain.Imodel.IMusicianRoleMusician;
 import at.fhv.teamb.symphoniacus.persistence.model.interfaces.IMusicianRoleEntity;
 import java.util.Collection;
+import java.util.LinkedList;
 
 public class MusicianRoleAdapter implements IMusicianRole {
     private final IMusicianRoleEntity musicianRole;
 
-    public MusicianRoleAdapter(
-        IMusicianRoleEntity role) {
+    public MusicianRoleAdapter(IMusicianRoleEntity role) {
         musicianRole = role;
     }
 
@@ -28,14 +28,8 @@ public class MusicianRoleAdapter implements IMusicianRole {
         }
     }
 
-    /**
-     * Blub.
-     *
-     * @return Returns unmodifiable collection of musician roles of
-     *      the musicians by musician role ID
-     */
     @Override
     public Collection<IMusicianRoleMusician> getIMusicianRoleMusicians() {
-        return null;
+        return new LinkedList<>();
     }
 }

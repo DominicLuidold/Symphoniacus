@@ -1,6 +1,5 @@
 package at.fhv.teamb.symphoniacus.domain.adapter;
 
-import at.fhv.orchestraria.domain.Imodel.IMusician;
 import at.fhv.orchestraria.domain.integrationInterfaces.IntegratableDutyPosition;
 import at.fhv.orchestraria.domain.integrationInterfaces.IntegratableMusician;
 import at.fhv.orchestraria.domain.integrationInterfaces.IntegratableSection;
