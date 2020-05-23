@@ -16,15 +16,15 @@ import java.util.Objects;
 
 @Entity
 @Table(name = "section", schema = "ni128610_1sql8")
-public class SectionEntity implements ISection, IntegratableSection, Serializable {
+public class SectionEntityC implements ISection, IntegratableSection, Serializable {
     private int sectionId;
     private String sectionShortcut;
     private String description;
-    private Collection<DutyPositionEntity> dutyPositions;
-    private Collection<MusicianEntity> musicians;
-    private Collection<SectionInstrumentationEntity> sectionInstrumentations;
-    private Collection<SectionMonthlyScheduleEntity> sectionMonthlySchedules;
-    private Collection<SectionInstrumentCategoryEntity> sectionInstrumentCategories;
+    private Collection<DutyPositionEntityC> dutyPositions;
+    private Collection<MusicianEntityC> musicians;
+    private Collection<SectionInstrumentationEntityC> sectionInstrumentations;
+    private Collection<SectionMonthlyScheduleEntityC> sectionMonthlySchedules;
+    private Collection<SectionInstrumentCategoryEntityC> sectionInstrumentCategories;
 
 
     /*
@@ -92,7 +92,7 @@ public class SectionEntity implements ISection, IntegratableSection, Serializabl
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        SectionEntity that = (SectionEntity) o;
+        SectionEntityC that = (SectionEntityC) o;
         return sectionId == that.sectionId &&
                 Objects.equals(sectionShortcut, that.sectionShortcut) &&
                 Objects.equals(description, that.description);
@@ -104,47 +104,47 @@ public class SectionEntity implements ISection, IntegratableSection, Serializabl
     }
 
     @OneToMany(mappedBy = "section")
-    public Collection<DutyPositionEntity> getDutyPositions() {
+    public Collection<DutyPositionEntityC> getDutyPositions() {
         return dutyPositions;
     }
 
-    public void setDutyPositions(Collection<DutyPositionEntity> dutyPositionsBySectionId) {
+    public void setDutyPositions(Collection<DutyPositionEntityC> dutyPositionsBySectionId) {
         this.dutyPositions = dutyPositionsBySectionId;
     }
 
     @OneToMany(mappedBy = "section")
-    public Collection<MusicianEntity> getMusicians() {
+    public Collection<MusicianEntityC> getMusicians() {
         return musicians;
     }
 
-    public void setMusicians(Collection<MusicianEntity> musiciansBySectionId) {
+    public void setMusicians(Collection<MusicianEntityC> musiciansBySectionId) {
         this.musicians = musiciansBySectionId;
     }
 
     @OneToMany(mappedBy = "section")
-    public Collection<SectionInstrumentationEntity> getSectionInstrumentations() {
+    public Collection<SectionInstrumentationEntityC> getSectionInstrumentations() {
         return sectionInstrumentations;
     }
 
-    public void setSectionInstrumentations(Collection<SectionInstrumentationEntity> sectionInstrumentationsBySectionId) {
+    public void setSectionInstrumentations(Collection<SectionInstrumentationEntityC> sectionInstrumentationsBySectionId) {
         this.sectionInstrumentations = sectionInstrumentationsBySectionId;
     }
 
     @OneToMany(mappedBy = "section")
-    public Collection<SectionMonthlyScheduleEntity> getSectionMonthlySchedules() {
+    public Collection<SectionMonthlyScheduleEntityC> getSectionMonthlySchedules() {
         return sectionMonthlySchedules;
     }
 
-    public void setSectionMonthlySchedules(Collection<SectionMonthlyScheduleEntity> sectionMonthlySchedulesBySectionId) {
+    public void setSectionMonthlySchedules(Collection<SectionMonthlyScheduleEntityC> sectionMonthlySchedulesBySectionId) {
         this.sectionMonthlySchedules = sectionMonthlySchedulesBySectionId;
     }
 
     @OneToMany(mappedBy = "section")
-    public Collection<SectionInstrumentCategoryEntity> getSectionInstrumentCategories() {
+    public Collection<SectionInstrumentCategoryEntityC> getSectionInstrumentCategories() {
         return sectionInstrumentCategories;
     }
 
-    public void setSectionInstrumentCategories(Collection<SectionInstrumentCategoryEntity> sectionInstrumentCategoriesBySectionId) {
+    public void setSectionInstrumentCategories(Collection<SectionInstrumentCategoryEntityC> sectionInstrumentCategoriesBySectionId) {
         this.sectionInstrumentCategories = sectionInstrumentCategoriesBySectionId;
     }
 

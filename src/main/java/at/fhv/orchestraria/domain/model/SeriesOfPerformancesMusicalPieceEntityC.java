@@ -16,10 +16,10 @@ import java.util.Objects;
 
 @Entity
 @Table(name = "seriesOfPerformances_musicalPiece", schema = "ni128610_1sql8")
-public class SeriesOfPerformancesMusicalPieceEntity implements ISeriesOfPerformancesMusicalPiece, Serializable {
+public class SeriesOfPerformancesMusicalPieceEntityC implements ISeriesOfPerformancesMusicalPiece, Serializable {
     private int seriesOfPerformancesMusicalPieceId;
-    private MusicalPieceEntity musicalPiece;
-    private SeriesOfPerformancesEntity seriesOfPerformances;
+    private MusicalPieceEntityC musicalPiece;
+    private SeriesOfPerformancesEntityC seriesOfPerformances;
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -37,7 +37,7 @@ public class SeriesOfPerformancesMusicalPieceEntity implements ISeriesOfPerforma
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        SeriesOfPerformancesMusicalPieceEntity that = (SeriesOfPerformancesMusicalPieceEntity) o;
+        SeriesOfPerformancesMusicalPieceEntityC that = (SeriesOfPerformancesMusicalPieceEntityC) o;
         return seriesOfPerformancesMusicalPieceId == that.seriesOfPerformancesMusicalPieceId;
     }
 
@@ -48,22 +48,22 @@ public class SeriesOfPerformancesMusicalPieceEntity implements ISeriesOfPerforma
 
     @ManyToOne
     @JoinColumn(name = "musicalPieceId", referencedColumnName = "musicalPieceId")
-    public MusicalPieceEntity getMusicalPiece() {
+    public MusicalPieceEntityC getMusicalPiece() {
         return musicalPiece;
     }
 
-    public void setMusicalPiece(MusicalPieceEntity musicalPieceByMusicalPieceId) {
+    public void setMusicalPiece(MusicalPieceEntityC musicalPieceByMusicalPieceId) {
         this.musicalPiece = musicalPieceByMusicalPieceId;
     }
 
     @ManyToOne
     @JoinColumn(name = "seriesOfPerformancesId", referencedColumnName = "seriesOfPerformancesId")
     @Override
-    public SeriesOfPerformancesEntity getSeriesOfPerformances() {
+    public SeriesOfPerformancesEntityC getSeriesOfPerformances() {
         return seriesOfPerformances;
     }
 
-    public void setSeriesOfPerformances(SeriesOfPerformancesEntity seriesOfPerformances) {
+    public void setSeriesOfPerformances(SeriesOfPerformancesEntityC seriesOfPerformances) {
         this.seriesOfPerformances = seriesOfPerformances;
     }
 }

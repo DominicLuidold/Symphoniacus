@@ -19,11 +19,11 @@ import java.util.Objects;
 
 @Entity
 @Table(name = "sectionInstrumentation", schema = "ni128610_1sql8")
-public class SectionInstrumentationEntity implements ISectionInstrumentation, Serializable {
+public class SectionInstrumentationEntityC implements ISectionInstrumentation, Serializable {
     private int sectionInstrumentationId;
-    private Collection<InstrumentationPositionEntity> instrumentationPositions;
-    private InstrumentationEntity instrumentation;
-    private SectionEntity section;
+    private Collection<InstrumentationPositionEntityC> instrumentationPositions;
+    private InstrumentationEntityC instrumentation;
+    private SectionEntityC section;
     private String predefinedSectionInstrumentation;
 
     @Id
@@ -54,7 +54,7 @@ public class SectionInstrumentationEntity implements ISectionInstrumentation, Se
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        SectionInstrumentationEntity that = (SectionInstrumentationEntity) o;
+        SectionInstrumentationEntityC that = (SectionInstrumentationEntityC) o;
         return sectionInstrumentationId == that.sectionInstrumentationId;
     }
 
@@ -64,33 +64,33 @@ public class SectionInstrumentationEntity implements ISectionInstrumentation, Se
     }
 
     @OneToMany(mappedBy = "sectionInstrumentation")
-    public Collection<InstrumentationPositionEntity> getInstrumentationPositions() {
+    public Collection<InstrumentationPositionEntityC> getInstrumentationPositions() {
         return instrumentationPositions;
     }
 
-    public void setInstrumentationPositions(Collection<InstrumentationPositionEntity> instrumentationPositionsBySectionInstrumentationId) {
+    public void setInstrumentationPositions(Collection<InstrumentationPositionEntityC> instrumentationPositionsBySectionInstrumentationId) {
         this.instrumentationPositions = instrumentationPositionsBySectionInstrumentationId;
     }
 
     @ManyToOne
     @JoinColumn(name = "instrumentationId", referencedColumnName = "instrumentationId")
     @Override
-    public InstrumentationEntity getInstrumentation() {
+    public InstrumentationEntityC getInstrumentation() {
         return instrumentation;
     }
 
-    public void setInstrumentation(InstrumentationEntity instrumentation) {
+    public void setInstrumentation(InstrumentationEntityC instrumentation) {
         this.instrumentation = instrumentation;
     }
 
     @ManyToOne
     @JoinColumn(name = "sectionId", referencedColumnName = "sectionId")
     @Override
-    public SectionEntity getSection() {
+    public SectionEntityC getSection() {
         return section;
     }
 
-    public void setSection(SectionEntity section) {
+    public void setSection(SectionEntityC section) {
         this.section = section;
     }
 

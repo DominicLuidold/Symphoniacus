@@ -1,6 +1,6 @@
 package at.fhv.orchestraria.persistence.dao;
 
-import at.fhv.orchestraria.domain.model.MusicianRoleEntity;
+import at.fhv.orchestraria.domain.model.MusicianRoleEntityC;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
 
@@ -12,7 +12,7 @@ import java.util.Optional;
  * @author Team C
  */
 
-public class MusicianRoleDAO implements DaoBase<MusicianRoleEntity> {
+public class MusicianRoleDAO implements DaoBase<MusicianRoleEntityC> {
     private SessionManager _sessionManager;
 
     protected MusicianRoleDAO(SessionManager sessionFactory) {
@@ -20,21 +20,21 @@ public class MusicianRoleDAO implements DaoBase<MusicianRoleEntity> {
     }
 
     @Override
-    public synchronized Optional<MusicianRoleEntity> get(int id) {
+    public synchronized Optional<MusicianRoleEntityC> get(int id) {
         Session session = _sessionManager.openConnection();
         Transaction ta = session.beginTransaction();
-        Optional <MusicianRoleEntity> mre = Optional.ofNullable(session.get(MusicianRoleEntity.class , id));
+        Optional <MusicianRoleEntityC> mre = Optional.ofNullable(session.get(MusicianRoleEntityC.class , id));
         ta.commit();
         return mre;
     }
 
     @Override
-    public synchronized List<MusicianRoleEntity> getAll() {
+    public synchronized List<MusicianRoleEntityC> getAll() {
         Session session = _sessionManager.openConnection();
         Transaction ta = session.beginTransaction();
-        List <MusicianRoleEntity> mres = session.createQuery("SELECT a FROM MusicianRoleEntity a", MusicianRoleEntity.class).getResultList();
-        List<MusicianRoleEntity> wrappedMusicianRoles = new ArrayList<>(mres.size());
-        for(MusicianRoleEntity mre : mres){
+        List <MusicianRoleEntityC> mres = session.createQuery("SELECT a FROM MusicianRoleEntity a", MusicianRoleEntityC.class).getResultList();
+        List<MusicianRoleEntityC> wrappedMusicianRoles = new ArrayList<>(mres.size());
+        for(MusicianRoleEntityC mre : mres){
             wrappedMusicianRoles.add(mre);
         }
         ta.commit();
@@ -42,7 +42,7 @@ public class MusicianRoleDAO implements DaoBase<MusicianRoleEntity> {
     }
 
     @Override
-    public synchronized void save(MusicianRoleEntity musicianRoleEntity) {
+    public synchronized void save(MusicianRoleEntityC musicianRoleEntity) {
         Session session = _sessionManager.openConnection();
         Transaction ta = session.beginTransaction();
         session.saveOrUpdate(musicianRoleEntity);
@@ -50,16 +50,16 @@ public class MusicianRoleDAO implements DaoBase<MusicianRoleEntity> {
     }
 
     @Override
-    public synchronized MusicianRoleEntity update(MusicianRoleEntity musicianRoleEntity) {
+    public synchronized MusicianRoleEntityC update(MusicianRoleEntityC musicianRoleEntity) {
         Session session = _sessionManager.openConnection();
         Transaction ta = session.beginTransaction();
-        MusicianRoleEntity ipe = (MusicianRoleEntity) session.merge(musicianRoleEntity);
+        MusicianRoleEntityC ipe = (MusicianRoleEntityC) session.merge(musicianRoleEntity);
         ta.commit();
         return ipe;
     }
 
     @Override
-    public synchronized void delete(MusicianRoleEntity musicianRoleEntity) {
+    public synchronized void delete(MusicianRoleEntityC musicianRoleEntity) {
         Session session = _sessionManager.openConnection();
         Transaction ta = session.beginTransaction();
         session.delete(musicianRoleEntity);

@@ -1,6 +1,6 @@
 package at.fhv.orchestraria.persistence.dao;
 
-import at.fhv.orchestraria.domain.model.AdministrativeAssistantEntity;
+import at.fhv.orchestraria.domain.model.AdministrativeAssistantEntityC;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
 
@@ -12,7 +12,7 @@ import java.util.Optional;
  * @author Team C
  */
 
-public class AdministrativeAssistantDAO implements DaoBase<AdministrativeAssistantEntity>{
+public class AdministrativeAssistantDAO implements DaoBase<AdministrativeAssistantEntityC>{
 
     private SessionManager _sessionManager;
 
@@ -21,21 +21,21 @@ public class AdministrativeAssistantDAO implements DaoBase<AdministrativeAssista
     }
 
     @Override
-    public synchronized Optional<AdministrativeAssistantEntity> get(int id) {
+    public synchronized Optional<AdministrativeAssistantEntityC> get(int id) {
         Session session = _sessionManager.openConnection();
         Transaction ta = session.beginTransaction();
-        Optional<AdministrativeAssistantEntity> administrativeAssistantEntity = Optional.ofNullable(session.get(AdministrativeAssistantEntity.class, id));
+        Optional<AdministrativeAssistantEntityC> administrativeAssistantEntity = Optional.ofNullable(session.get(AdministrativeAssistantEntityC.class, id));
         ta.commit();
         return administrativeAssistantEntity;
     }
 
     @Override
-    public synchronized List<AdministrativeAssistantEntity> getAll() {
+    public synchronized List<AdministrativeAssistantEntityC> getAll() {
         Session session = _sessionManager.openConnection();
         Transaction ta = session.beginTransaction();
-        List<AdministrativeAssistantEntity> administrativeAssistantEntities = session.createQuery("SELECT a FROM AdministrativeAssistantEntity a",AdministrativeAssistantEntity.class).getResultList();
-        List<AdministrativeAssistantEntity> wrappedAdministrativeAssistants = new ArrayList<>(administrativeAssistantEntities.size());
-        for(AdministrativeAssistantEntity a : administrativeAssistantEntities){
+        List<AdministrativeAssistantEntityC> administrativeAssistantEntities = session.createQuery("SELECT a FROM AdministrativeAssistantEntity a", AdministrativeAssistantEntityC.class).getResultList();
+        List<AdministrativeAssistantEntityC> wrappedAdministrativeAssistants = new ArrayList<>(administrativeAssistantEntities.size());
+        for(AdministrativeAssistantEntityC a : administrativeAssistantEntities){
             wrappedAdministrativeAssistants.add(a);
         }
         ta.commit();
@@ -43,7 +43,7 @@ public class AdministrativeAssistantDAO implements DaoBase<AdministrativeAssista
     }
 
     @Override
-    public synchronized void save(AdministrativeAssistantEntity assistant) {
+    public synchronized void save(AdministrativeAssistantEntityC assistant) {
         Session session = _sessionManager.openConnection();
         Transaction ta = session.beginTransaction();
         session.saveOrUpdate(assistant);
@@ -51,16 +51,16 @@ public class AdministrativeAssistantDAO implements DaoBase<AdministrativeAssista
     }
 
     @Override
-    public synchronized AdministrativeAssistantEntity update(AdministrativeAssistantEntity assistant) {
+    public synchronized AdministrativeAssistantEntityC update(AdministrativeAssistantEntityC assistant) {
         Session session = _sessionManager.openConnection();
         Transaction ta = session.beginTransaction();
-        AdministrativeAssistantEntity aae = (AdministrativeAssistantEntity) session.merge(assistant);
+        AdministrativeAssistantEntityC aae = (AdministrativeAssistantEntityC) session.merge(assistant);
         ta.commit();
         return aae;
     }
 
     @Override
-    public synchronized void delete(AdministrativeAssistantEntity assistant) {
+    public synchronized void delete(AdministrativeAssistantEntityC assistant) {
         Session session = _sessionManager.openConnection();
         Transaction ta = session.beginTransaction();
         session.delete(assistant);

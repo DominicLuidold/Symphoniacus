@@ -15,7 +15,7 @@ import java.util.*;
 
 @Entity
 @Table(name = "musician", schema = "ni128610_1sql8")
-public class MusicianEntity implements IMusician, IntegratableMusician, Serializable {
+public class MusicianEntityC implements IMusician, IntegratableMusician, Serializable {
 
     public static final String SECTION_PRINCIPAL_NAME= "Stimmfuehrer";
     public static final String DUTY_SCHEDULER_NAME = "Diensteinteiler";
@@ -24,17 +24,17 @@ public class MusicianEntity implements IMusician, IntegratableMusician, Serializ
     public static final int EXTERNAL_MUSICIAN_ID = 99999999;
 
     private int musicianId;
-    private Collection<ContractualObligationEntity> contractualObligations;
-    private Collection<DutyPositionEntity> dutyPositions;
-    private Collection<InstrumentCategoryMusicianEntity> instrumentCategoryMusicians;
-    private UserEntity user;
-    private SectionEntity section;
-    private Collection<MusicianRoleMusicianEntity> musicianRoleMusicians;
-    private Collection<NegativeDateWishEntity> negativeDateWishes;
-    private Collection<NegativeDutyWishEntity> negativeDutyWishes;
-    private Collection<PositiveWishEntity> positiveWishes;
-    private Collection<SubstituteEntity> substitutes;
-    private Collection<VacationEntity> vacations;
+    private Collection<ContractualObligationEntityC> contractualObligations;
+    private Collection<DutyPositionEntityC> dutyPositions;
+    private Collection<InstrumentCategoryMusicianEntityC> instrumentCategoryMusicians;
+    private UserEntityC user;
+    private SectionEntityC section;
+    private Collection<MusicianRoleMusicianEntityC> musicianRoleMusicians;
+    private Collection<NegativeDateWishEntityC> negativeDateWishes;
+    private Collection<NegativeDutyWishEntityC> negativeDutyWishes;
+    private Collection<PositiveWishEntityC> positiveWishes;
+    private Collection<SubstituteEntityC> substitutes;
+    private Collection<VacationEntityC> vacations;
 
 
     /*
@@ -44,7 +44,7 @@ public class MusicianEntity implements IMusician, IntegratableMusician, Serializ
     @Override
     @Transient
     public boolean isDutyScheduler(){
-        for(MusicianRoleMusicianEntity role : musicianRoleMusicians){
+        for(MusicianRoleMusicianEntityC role : musicianRoleMusicians){
             if(role.getMusicianRole().getDescription().equals(DUTY_SCHEDULER_NAME)){
                 return true;
             }
@@ -62,7 +62,7 @@ public class MusicianEntity implements IMusician, IntegratableMusician, Serializ
     @Transient
     public int getMaxAmountOfEveningDuties(){
         int maxAmountOfEveningDuties = 17;
-        for(MusicianRoleMusicianEntity role : getMusicianRoleMusicians()){
+        for(MusicianRoleMusicianEntityC role : getMusicianRoleMusicians()){
             if (role.getMusicianRole().getDescription().equals(SECTION_PRINCIPAL_NAME)) {
                 maxAmountOfEveningDuties = 15;
                 break;
@@ -77,10 +77,10 @@ public class MusicianEntity implements IMusician, IntegratableMusician, Serializ
         boolean hasBeenAssignedToTheMax = false;
         if(section.isBrassSection()){
             int assignedEveningDuties = 0;
-            HashSet<DutyEntity> closedList = new HashSet<>();
+            HashSet<DutyEntityC> closedList = new HashSet<>();
 
-            for(DutyPositionEntity dpe: dutyPositions){
-                DutyEntity assignedToDuty= dpe.getDuty();
+            for(DutyPositionEntityC dpe: dutyPositions){
+                DutyEntityC assignedToDuty= dpe.getDuty();
                 if(!closedList.contains(assignedToDuty)
                         && assignedToDuty.getStart().getYear() == date.getYear()
                         && assignedToDuty.getStart().getDayOfYear() == date.getDayOfYear()) {
@@ -196,14 +196,14 @@ public class MusicianEntity implements IMusician, IntegratableMusician, Serializ
 //            }
 //        }
 
-        HashSet<DutyEntity> closedList = new HashSet<>();
+        HashSet<DutyEntityC> closedList = new HashSet<>();
 
-        for(DutyPositionEntity dpe: dutyPositions){
-            DutyEntity assignedToDuty= dpe.getDuty();
+        for(DutyPositionEntityC dpe: dutyPositions){
+            DutyEntityC assignedToDuty= dpe.getDuty();
             if(!closedList.contains(assignedToDuty)
                 && assignedToDuty.getStart().getMonth() == date.getMonth() &&
                     assignedToDuty.getStart().getYear() == date.getYear() &&
-                    assignedToDuty.getTimeOfDay().equals(DutyEntity.EVENING_DUTY_NAME)) {
+                    assignedToDuty.getTimeOfDay().equals(DutyEntityC.EVENING_DUTY_NAME)) {
 
                 closedList.add(dpe.getDuty());
                 eveningDutyCount++;
@@ -220,7 +220,7 @@ public class MusicianEntity implements IMusician, IntegratableMusician, Serializ
     @Override
     @Transient
     public int getRequiredPointsOfMonth(LocalDate date) {
-        for (ContractualObligationEntity coa : contractualObligations) {
+        for (ContractualObligationEntityC coa : contractualObligations) {
             if (date.isBefore(coa.getEndDate()) && date.isAfter(coa.getStartDate())) {
                 return coa.getPointsPerMonth();
             }
@@ -268,10 +268,10 @@ public class MusicianEntity implements IMusician, IntegratableMusician, Serializ
 //        }
 
 
-        HashSet<DutyEntity> closedList = new HashSet<>();
+        HashSet<DutyEntityC> closedList = new HashSet<>();
 
-        for(DutyPositionEntity dpe: dutyPositions){
-            DutyEntity assignedToDuty= dpe.getDuty();
+        for(DutyPositionEntityC dpe: dutyPositions){
+            DutyEntityC assignedToDuty= dpe.getDuty();
             if(!closedList.contains(assignedToDuty)
                     && assignedToDuty.getStart().getMonth() == date.getMonth()
                     && assignedToDuty.getStart().getYear() == date.getYear()){
@@ -306,8 +306,8 @@ public class MusicianEntity implements IMusician, IntegratableMusician, Serializ
     @Transient
     @Override
     public boolean isOnEventAtDate(IDuty providedDuty) {
-        for (DutyPositionEntity dutyPosition : dutyPositions) {
-            DutyEntity duty = dutyPosition.getDuty();
+        for (DutyPositionEntityC dutyPosition : dutyPositions) {
+            DutyEntityC duty = dutyPosition.getDuty();
             if (!duty.equals(providedDuty) && providedDuty.getEnd().isAfter(duty.getStart()) && providedDuty.getStart().isBefore(duty.getEnd())) {
                 return true;
             }
@@ -324,8 +324,8 @@ public class MusicianEntity implements IMusician, IntegratableMusician, Serializ
     @Override
     public boolean isOnTourAtDate(IDuty duty) {
         LocalDate date = duty.getStart().toLocalDate();
-        for (DutyPositionEntity dpme : dutyPositions) {
-            SeriesOfPerformancesEntity seriesOfPerformance = dpme.getDuty().
+        for (DutyPositionEntityC dpme : dutyPositions) {
+            SeriesOfPerformancesEntityC seriesOfPerformance = dpme.getDuty().
                     getSeriesOfPerformances();
             if (seriesOfPerformance != null && !seriesOfPerformance.equals(duty.getSeriesOfPerformances()) && seriesOfPerformance.isTour()) {
                 if (date.isBefore(seriesOfPerformance.getEndDate().plusDays(1)) && date.isAfter(seriesOfPerformance.getStartDate().minusDays(1))) {
@@ -344,7 +344,7 @@ public class MusicianEntity implements IMusician, IntegratableMusician, Serializ
     @Transient
     @Override
     public boolean isOnVacationAtDate(LocalDate date) {
-        for (VacationEntity ve : vacations) {
+        for (VacationEntityC ve : vacations) {
             if (date.isBefore(ve.getEndDate().toLocalDate().plusDays(1)) && date.isAfter(ve.getStartDate().toLocalDate().minusDays(1))) {
                 return true;
             }
@@ -360,7 +360,7 @@ public class MusicianEntity implements IMusician, IntegratableMusician, Serializ
     @Override
     @Transient
     public boolean canPlayInstrument(String instrumentName) {
-        for (InstrumentCategoryMusicianEntity instrument : instrumentCategoryMusicians) {
+        for (InstrumentCategoryMusicianEntityC instrument : instrumentCategoryMusicians) {
             if (instrumentName.equals(instrument.getInstrumentCategory().getDescription())) {
                 return true;
             }
@@ -376,7 +376,7 @@ public class MusicianEntity implements IMusician, IntegratableMusician, Serializ
     @Override
     @Transient
     public boolean isSectionPrincipal() {
-        for(MusicianRoleMusicianEntity roles : musicianRoleMusicians){
+        for(MusicianRoleMusicianEntityC roles : musicianRoleMusicians){
             if(roles.getMusicianRole().getDescription().equals(SECTION_PRINCIPAL_NAME)){
                 return true;
             }
@@ -404,7 +404,7 @@ public class MusicianEntity implements IMusician, IntegratableMusician, Serializ
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        MusicianEntity that = (MusicianEntity) o;
+        MusicianEntityC that = (MusicianEntityC) o;
         return musicianId == that.musicianId;
     }
 
@@ -414,105 +414,105 @@ public class MusicianEntity implements IMusician, IntegratableMusician, Serializ
     }
 
     @OneToMany(mappedBy = "musician", cascade = CascadeType.MERGE)
-    public Collection<ContractualObligationEntity> getContractualObligations() {
+    public Collection<ContractualObligationEntityC> getContractualObligations() {
         return contractualObligations;
     }
 
-    public void setContractualObligations(Collection<ContractualObligationEntity> contractualObligationsByMusicianId) {
+    public void setContractualObligations(Collection<ContractualObligationEntityC> contractualObligationsByMusicianId) {
         this.contractualObligations = contractualObligationsByMusicianId;
     }
 
     @OneToMany(mappedBy = "musician", cascade = CascadeType.MERGE)
-    public Collection<DutyPositionEntity> getDutyPositions() {
+    public Collection<DutyPositionEntityC> getDutyPositions() {
         return dutyPositions;
     }
 
-    public void setDutyPositions(Collection<DutyPositionEntity> dutyPositionsByMusicianId) {
+    public void setDutyPositions(Collection<DutyPositionEntityC> dutyPositionsByMusicianId) {
         this.dutyPositions = dutyPositionsByMusicianId;
     }
 
     @OneToMany(mappedBy = "musician")
-    public Collection<InstrumentCategoryMusicianEntity> getInstrumentCategoryMusicians() {
+    public Collection<InstrumentCategoryMusicianEntityC> getInstrumentCategoryMusicians() {
         return instrumentCategoryMusicians;
     }
 
-    public void setInstrumentCategoryMusicians(Collection<InstrumentCategoryMusicianEntity> instrumentCategoryMusiciansByMusicianId) {
+    public void setInstrumentCategoryMusicians(Collection<InstrumentCategoryMusicianEntityC> instrumentCategoryMusiciansByMusicianId) {
         this.instrumentCategoryMusicians = instrumentCategoryMusiciansByMusicianId;
     }
 
     @OneToOne (cascade = CascadeType.MERGE)
     @JoinColumn(name = "userId", referencedColumnName = "userId", nullable = false )
     @Override
-    public UserEntity getUser() {
+    public UserEntityC getUser() {
         return user;
     }
 
-    public void setUser(UserEntity user) {
+    public void setUser(UserEntityC user) {
         this.user = user;
     }
 
     @ManyToOne
     @JoinColumn(name = "sectionId", referencedColumnName = "sectionId")
     @Override
-    public SectionEntity getSection() {
+    public SectionEntityC getSection() {
         return section;
     }
 
-    public void setSection(SectionEntity section) {
+    public void setSection(SectionEntityC section) {
         this.section = section;
     }
 
     @OneToMany(mappedBy = "musician", cascade = CascadeType.MERGE)
-    public Collection<MusicianRoleMusicianEntity> getMusicianRoleMusicians() {
+    public Collection<MusicianRoleMusicianEntityC> getMusicianRoleMusicians() {
         return musicianRoleMusicians;
     }
 
-    public void setMusicianRoleMusicians(Collection<MusicianRoleMusicianEntity> musicianRoleMusiciansByMusicianId) {
+    public void setMusicianRoleMusicians(Collection<MusicianRoleMusicianEntityC> musicianRoleMusiciansByMusicianId) {
         this.musicianRoleMusicians = musicianRoleMusiciansByMusicianId;
     }
 
     @OneToMany(mappedBy = "musician")
-    public Collection<NegativeDateWishEntity> getNegativeDateWishes() {
+    public Collection<NegativeDateWishEntityC> getNegativeDateWishes() {
         return negativeDateWishes;
     }
 
-    public void setNegativeDateWishes(Collection<NegativeDateWishEntity> negativeDateWishesByMusicianId) {
+    public void setNegativeDateWishes(Collection<NegativeDateWishEntityC> negativeDateWishesByMusicianId) {
         this.negativeDateWishes = negativeDateWishesByMusicianId;
     }
 
     @OneToMany(mappedBy = "musician")
-    public Collection<NegativeDutyWishEntity> getNegativeDutyWishes() {
+    public Collection<NegativeDutyWishEntityC> getNegativeDutyWishes() {
         return negativeDutyWishes;
     }
 
-    public void setNegativeDutyWishes(Collection<NegativeDutyWishEntity> negativeDutyWishesByMusicianId) {
+    public void setNegativeDutyWishes(Collection<NegativeDutyWishEntityC> negativeDutyWishesByMusicianId) {
         this.negativeDutyWishes = negativeDutyWishesByMusicianId;
     }
 
     @OneToMany(mappedBy = "musician")
-    public Collection<PositiveWishEntity> getPositiveWishes() {
+    public Collection<PositiveWishEntityC> getPositiveWishes() {
         return positiveWishes;
     }
 
-    public void setPositiveWishes(Collection<PositiveWishEntity> positiveWishesByMusicianId) {
+    public void setPositiveWishes(Collection<PositiveWishEntityC> positiveWishesByMusicianId) {
         this.positiveWishes = positiveWishesByMusicianId;
     }
 
     @OneToMany(mappedBy = "musician")
-    public Collection<SubstituteEntity> getSubstitutes() {
+    public Collection<SubstituteEntityC> getSubstitutes() {
         return substitutes;
     }
 
-    public void setSubstitutes(Collection<SubstituteEntity> substitutesByMusicianId) {
+    public void setSubstitutes(Collection<SubstituteEntityC> substitutesByMusicianId) {
         this.substitutes = substitutesByMusicianId;
     }
 
     @OneToMany(mappedBy = "musician")
-    public Collection<VacationEntity> getVacations() {
+    public Collection<VacationEntityC> getVacations() {
         return vacations;
     }
 
-    public void setVacations(Collection<VacationEntity> vacationsByMusicianId) {
+    public void setVacations(Collection<VacationEntityC> vacationsByMusicianId) {
         this.vacations = vacationsByMusicianId;
     }
 

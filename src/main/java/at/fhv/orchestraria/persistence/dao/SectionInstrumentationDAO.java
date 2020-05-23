@@ -1,7 +1,7 @@
 package at.fhv.orchestraria.persistence.dao;
 
 
-import at.fhv.orchestraria.domain.model.SectionInstrumentationEntity;
+import at.fhv.orchestraria.domain.model.SectionInstrumentationEntityC;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
 
@@ -13,7 +13,7 @@ import java.util.Optional;
  * @author Team C
  */
 
-public class SectionInstrumentationDAO implements DaoBase<SectionInstrumentationEntity> {
+public class SectionInstrumentationDAO implements DaoBase<SectionInstrumentationEntityC> {
     private SessionManager _sessionManager;
 
     protected SectionInstrumentationDAO(SessionManager sessionFactory) {
@@ -21,21 +21,21 @@ public class SectionInstrumentationDAO implements DaoBase<SectionInstrumentation
     }
 
     @Override
-    public synchronized Optional<SectionInstrumentationEntity> get(int id) {
+    public synchronized Optional<SectionInstrumentationEntityC> get(int id) {
         Session session = _sessionManager.openConnection();
         Transaction ta = session.beginTransaction();
-        Optional<SectionInstrumentationEntity> sie = Optional.ofNullable(session.get(SectionInstrumentationEntity.class, id));
+        Optional<SectionInstrumentationEntityC> sie = Optional.ofNullable(session.get(SectionInstrumentationEntityC.class, id));
         ta.commit();
         return sie;
     }
 
     @Override
-    public synchronized List<SectionInstrumentationEntity> getAll() {
+    public synchronized List<SectionInstrumentationEntityC> getAll() {
         Session session = _sessionManager.openConnection();
         Transaction ta = session.beginTransaction();
-        List<SectionInstrumentationEntity> sies = session.createQuery("SELECT a FROM SectionInstrumentationEntity a", SectionInstrumentationEntity.class).getResultList();
-        List<SectionInstrumentationEntity> wrappedSectionInstrumentations = new ArrayList<>(sies.size());
-        for(SectionInstrumentationEntity sie: sies){
+        List<SectionInstrumentationEntityC> sies = session.createQuery("SELECT a FROM SectionInstrumentationEntity a", SectionInstrumentationEntityC.class).getResultList();
+        List<SectionInstrumentationEntityC> wrappedSectionInstrumentations = new ArrayList<>(sies.size());
+        for(SectionInstrumentationEntityC sie: sies){
             wrappedSectionInstrumentations.add(sie);
         }
         ta.commit();
@@ -43,7 +43,7 @@ public class SectionInstrumentationDAO implements DaoBase<SectionInstrumentation
     }
 
     @Override
-    public synchronized void save(SectionInstrumentationEntity sectionInstrumentationEntity) {
+    public synchronized void save(SectionInstrumentationEntityC sectionInstrumentationEntity) {
         Session session = _sessionManager.openConnection();
         Transaction ta = session.beginTransaction();
         session.saveOrUpdate(sectionInstrumentationEntity);
@@ -51,16 +51,16 @@ public class SectionInstrumentationDAO implements DaoBase<SectionInstrumentation
     }
 
     @Override
-    public synchronized SectionInstrumentationEntity update(SectionInstrumentationEntity sectionInstrumentationEntity) {
+    public synchronized SectionInstrumentationEntityC update(SectionInstrumentationEntityC sectionInstrumentationEntity) {
         Session session = _sessionManager.openConnection();
         Transaction ta = session.beginTransaction();
-        SectionInstrumentationEntity sie = (SectionInstrumentationEntity) session.merge(sectionInstrumentationEntity);
+        SectionInstrumentationEntityC sie = (SectionInstrumentationEntityC) session.merge(sectionInstrumentationEntity);
         ta.commit();
         return sie;
     }
 
     @Override
-    public synchronized void delete(SectionInstrumentationEntity sectionInstrumentationEntity) {
+    public synchronized void delete(SectionInstrumentationEntityC sectionInstrumentationEntity) {
         Session session = _sessionManager.openConnection();
         Transaction ta = session.beginTransaction();
         session.delete(sectionInstrumentationEntity);

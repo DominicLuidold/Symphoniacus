@@ -20,17 +20,17 @@ import java.util.Objects;
 
 @Entity
 @Table(name = "seriesOfPerformances", schema = "ni128610_1sql8")
-public class SeriesOfPerformancesEntity implements ISeriesOfPerformances, IntegratableSeriesOfPerformances, Serializable {
+public class SeriesOfPerformancesEntityC implements ISeriesOfPerformances, IntegratableSeriesOfPerformances, Serializable {
     private int seriesOfPerformancesId;
     private String description;
     private LocalDate startDate;
     private LocalDate endDate;
     private boolean isTour;
-    private Collection<DutyEntity> duties;
-    private Collection<NegativeDutyWishEntity> negativeDutyWishes;
-    private Collection<PositiveWishEntity> positiveWishes;
-    private Collection<SeriesOfPerformancesMusicalPieceEntity> seriesOfPerformancesMusicalPieces;
-    private Collection<SeriesOfPerformancesInstrumentationEntity> seriesOfPerformancesInstrumentations;
+    private Collection<DutyEntityC> duties;
+    private Collection<NegativeDutyWishEntityC> negativeDutyWishes;
+    private Collection<PositiveWishEntityC> positiveWishes;
+    private Collection<SeriesOfPerformancesMusicalPieceEntityC> seriesOfPerformancesMusicalPieces;
+    private Collection<SeriesOfPerformancesInstrumentationEntityC> seriesOfPerformancesInstrumentations;
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -92,7 +92,7 @@ public class SeriesOfPerformancesEntity implements ISeriesOfPerformances, Integr
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        SeriesOfPerformancesEntity that = (SeriesOfPerformancesEntity) o;
+        SeriesOfPerformancesEntityC that = (SeriesOfPerformancesEntityC) o;
         return seriesOfPerformancesId == that.seriesOfPerformancesId &&
                 isTour == that.isTour &&
                 Objects.equals(description, that.description) &&
@@ -106,47 +106,47 @@ public class SeriesOfPerformancesEntity implements ISeriesOfPerformances, Integr
     }
 
     @OneToMany(mappedBy = "seriesOfPerformances")
-    public Collection<DutyEntity> getDuties() {
+    public Collection<DutyEntityC> getDuties() {
         return duties;
     }
 
-    public void setDuties(Collection<DutyEntity> dutiesBySeriesOfPerformancesId) {
+    public void setDuties(Collection<DutyEntityC> dutiesBySeriesOfPerformancesId) {
         this.duties = dutiesBySeriesOfPerformancesId;
     }
 
     @OneToMany(mappedBy = "seriesOfPerformances")
-    public Collection<NegativeDutyWishEntity> getNegativeDutyWishes() {
+    public Collection<NegativeDutyWishEntityC> getNegativeDutyWishes() {
         return negativeDutyWishes;
     }
 
-    public void setNegativeDutyWishes(Collection<NegativeDutyWishEntity> negativeDutyWishesBySeriesOfPerformancesId) {
+    public void setNegativeDutyWishes(Collection<NegativeDutyWishEntityC> negativeDutyWishesBySeriesOfPerformancesId) {
         this.negativeDutyWishes = negativeDutyWishesBySeriesOfPerformancesId;
     }
 
     @OneToMany(mappedBy = "seriesOfPerformances")
-    public Collection<PositiveWishEntity> getPositiveWishes() {
+    public Collection<PositiveWishEntityC> getPositiveWishes() {
         return positiveWishes;
     }
 
-    public void setPositiveWishes(Collection<PositiveWishEntity> positiveWishesBySeriesOfPerformancesId) {
+    public void setPositiveWishes(Collection<PositiveWishEntityC> positiveWishesBySeriesOfPerformancesId) {
         this.positiveWishes = positiveWishesBySeriesOfPerformancesId;
     }
 
     @OneToMany(mappedBy = "seriesOfPerformances")
-    public Collection<SeriesOfPerformancesMusicalPieceEntity> getSeriesOfPerformancesMusicalPieces() {
+    public Collection<SeriesOfPerformancesMusicalPieceEntityC> getSeriesOfPerformancesMusicalPieces() {
         return seriesOfPerformancesMusicalPieces;
     }
 
-    public void setSeriesOfPerformancesMusicalPieces(Collection<SeriesOfPerformancesMusicalPieceEntity> seriesOfPerformancesMusicalPiecesBySeriesOfPerformancesId) {
+    public void setSeriesOfPerformancesMusicalPieces(Collection<SeriesOfPerformancesMusicalPieceEntityC> seriesOfPerformancesMusicalPiecesBySeriesOfPerformancesId) {
         this.seriesOfPerformancesMusicalPieces = seriesOfPerformancesMusicalPiecesBySeriesOfPerformancesId;
     }
 
     @OneToMany(mappedBy = "seriesOfPerformances")
-    public Collection<SeriesOfPerformancesInstrumentationEntity> getSeriesOfPerformancesInstrumentations() {
+    public Collection<SeriesOfPerformancesInstrumentationEntityC> getSeriesOfPerformancesInstrumentations() {
         return seriesOfPerformancesInstrumentations;
     }
 
-    public void setSeriesOfPerformancesInstrumentations(Collection<SeriesOfPerformancesInstrumentationEntity> seriesOfPerformancesInstrumentations) {
+    public void setSeriesOfPerformancesInstrumentations(Collection<SeriesOfPerformancesInstrumentationEntityC> seriesOfPerformancesInstrumentations) {
         this.seriesOfPerformancesInstrumentations = seriesOfPerformancesInstrumentations;
     }
 
@@ -188,7 +188,7 @@ public class SeriesOfPerformancesEntity implements ISeriesOfPerformances, Integr
     @Override
     public int getTotalAmountOfSeriesOfPerformancePoints(){
         int total = 0;
-        for(DutyEntity duty: duties){
+        for(DutyEntityC duty: duties){
             total+= duty.getDutyCategory().getPoints();
         }
         return total;

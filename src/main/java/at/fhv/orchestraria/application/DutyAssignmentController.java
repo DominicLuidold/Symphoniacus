@@ -37,7 +37,7 @@ public class DutyAssignmentController {
      * @return All duties of the assigning musician's section.
      */
     public Collection<IDuty> getDuties() {
-        DutyDAO dDAO = (DutyDAO) JPADatabaseFacade.getInstance().getDAO(DutyEntity.class);
+        DutyDAO dDAO = (DutyDAO) JPADatabaseFacade.getInstance().getDAO(DutyEntityC.class);
         return Collections.unmodifiableCollection(dDAO.getDutiesBySectionID(_sectionID));
     }
 
@@ -47,13 +47,13 @@ public class DutyAssignmentController {
      * @return All musicians available at that time of the assigning person's section
      */
     public Collection<IMusician> getSortedForDutyAvailableMusicians(IDuty duty) {
-        MusicianDAO mDAO = (MusicianDAO) JPADatabaseFacade.getInstance().getDAO(MusicianEntity.class);
-        Collection<MusicianEntity> availableMusicians = mDAO.getAllBySectionID(_sectionID);
-        LinkedList<MusicianEntity> sortedMusicianEntities = new LinkedList<>();
+        MusicianDAO mDAO = (MusicianDAO) JPADatabaseFacade.getInstance().getDAO(MusicianEntityC.class);
+        Collection<MusicianEntityC> availableMusicians = mDAO.getAllBySectionID(_sectionID);
+        LinkedList<MusicianEntityC> sortedMusicianEntities = new LinkedList<>();
 
         //Iterates all musicians of the section and filters the available musicians
-        for(MusicianEntity musician : availableMusicians){
-            if(musician.isAvailableAtDuty(duty) && musician.getMusicianId()!= MusicianEntity.EXTERNAL_MUSICIAN_ID){
+        for(MusicianEntityC musician : availableMusicians){
+            if(musician.isAvailableAtDuty(duty) && musician.getMusicianId()!= MusicianEntityC.EXTERNAL_MUSICIAN_ID){
                 sortedMusicianEntities.add(musician);
             }
         }
@@ -72,14 +72,14 @@ public class DutyAssignmentController {
      * @return All musicians available at that time of the assigning person's section playing the specified instrument
      */
     public Collection<IMusician> getSortedForDutyAvailableMusiciansByInstrument(IDuty duty, String instrumentAbbreviation){
-        MusicianDAO mDAO = (MusicianDAO) JPADatabaseFacade.getInstance().getDAO(MusicianEntity.class);
-        Collection<MusicianEntity> availableMusicians = mDAO.getAllBySectionID(_sectionID);
-        LinkedList<MusicianEntity> sortedMusicianEntities = new LinkedList<>();
+        MusicianDAO mDAO = (MusicianDAO) JPADatabaseFacade.getInstance().getDAO(MusicianEntityC.class);
+        Collection<MusicianEntityC> availableMusicians = mDAO.getAllBySectionID(_sectionID);
+        LinkedList<MusicianEntityC> sortedMusicianEntities = new LinkedList<>();
 
         //Iterates all musicians of the section and filters the available musicians
-        for(MusicianEntity musician : availableMusicians){
+        for(MusicianEntityC musician : availableMusicians){
             if(musician.canPlayInstrument(instrumentAbbreviation) && musician.isAvailableAtDuty(duty)
-                    && musician.getMusicianId()!= MusicianEntity.EXTERNAL_MUSICIAN_ID){
+                    && musician.getMusicianId()!= MusicianEntityC.EXTERNAL_MUSICIAN_ID){
                 sortedMusicianEntities.add(musician);
             }
         }
@@ -97,20 +97,20 @@ public class DutyAssignmentController {
      * @param sortedMusicianEntities The already sorted entities
      * @return External musician
      */
-    private MusicianEntity createExternal(LinkedList<MusicianEntity> sortedMusicianEntities){
+    private MusicianEntityC createExternal(LinkedList<MusicianEntityC> sortedMusicianEntities){
         //This section adds the external musician
-        Optional<MusicianEntity> external =  JPADatabaseFacade.getInstance().getDAO(MusicianEntity.class).get(MusicianEntity.EXTERNAL_MUSICIAN_ID);
-        MusicianEntity ext = null;
+        Optional<MusicianEntityC> external =  JPADatabaseFacade.getInstance().getDAO(MusicianEntityC.class).get(MusicianEntityC.EXTERNAL_MUSICIAN_ID);
+        MusicianEntityC ext = null;
         if(external.isPresent()) {
             ext = external.get();
-                ext.setNegativeDateWishes(new LinkedList<NegativeDateWishEntity>());
-                ext.setNegativeDutyWishes(new LinkedList<NegativeDutyWishEntity>());
-                ext.setPositiveWishes(new LinkedList<PositiveWishEntity>());
+                ext.setNegativeDateWishes(new LinkedList<NegativeDateWishEntityC>());
+                ext.setNegativeDutyWishes(new LinkedList<NegativeDutyWishEntityC>());
+                ext.setPositiveWishes(new LinkedList<PositiveWishEntityC>());
                 if (!sortedMusicianEntities.isEmpty())
                     ext.setSection(sortedMusicianEntities.getFirst().getSection());
-                ext.setVacations(new LinkedList<VacationEntity>());
-                ext.setDutyPositions(new LinkedList<DutyPositionEntity>());
-                ext.setMusicianRoleMusicians(new LinkedList<MusicianRoleMusicianEntity>());
+                ext.setVacations(new LinkedList<VacationEntityC>());
+                ext.setDutyPositions(new LinkedList<DutyPositionEntityC>());
+                ext.setMusicianRoleMusicians(new LinkedList<MusicianRoleMusicianEntityC>());
         }
         return ext;
     }
@@ -121,14 +121,14 @@ public class DutyAssignmentController {
      * @param mapping the mapping assigns to every dutyposition either one or no musician
      */
     public void assignDutyTo(IDuty duty, Map<IDutyPosition, IMusician> mapping){
-        DutyPositionDAO dpmeDAO = (DutyPositionDAO) JPADatabaseFacade.getInstance().getDAO(DutyPositionEntity.class);
-        MusicianDAO mDAO = (MusicianDAO) JPADatabaseFacade.getInstance().getDAO(MusicianEntity.class);
-        List<DutyPositionEntity> dp =new LinkedList<>();
-        LinkedList<MusicianEntity> musicianEntities = new LinkedList<>();
+        DutyPositionDAO dpmeDAO = (DutyPositionDAO) JPADatabaseFacade.getInstance().getDAO(DutyPositionEntityC.class);
+        MusicianDAO mDAO = (MusicianDAO) JPADatabaseFacade.getInstance().getDAO(MusicianEntityC.class);
+        List<DutyPositionEntityC> dp =new LinkedList<>();
+        LinkedList<MusicianEntityC> musicianEntities = new LinkedList<>();
 
         for (Map.Entry<IDutyPosition, IMusician> positionWithMusician : mapping.entrySet()) {
-            DutyPositionEntity realDutyPosition = (DutyPositionEntity) positionWithMusician.getKey();
-            MusicianEntity realMusician = (MusicianEntity) positionWithMusician.getValue();
+            DutyPositionEntityC realDutyPosition = (DutyPositionEntityC) positionWithMusician.getKey();
+            MusicianEntityC realMusician = (MusicianEntityC) positionWithMusician.getValue();
 
 
             if(realDutyPosition != null) {
@@ -140,7 +140,7 @@ public class DutyAssignmentController {
                     realMusician.getDutyPositions().remove(realDutyPosition);
                     realMusician.getDutyPositions().add(realDutyPosition);
 
-                    if (realMusician.getMusicianId() != MusicianEntity.EXTERNAL_MUSICIAN_ID) {
+                    if (realMusician.getMusicianId() != MusicianEntityC.EXTERNAL_MUSICIAN_ID) {
                         musicianEntities.add(realMusician);
                     }
                 }

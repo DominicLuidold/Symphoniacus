@@ -22,7 +22,7 @@ import java.util.Objects;
 
 @Entity
 @Table(name = "monthlySchedule", schema = "ni128610_1sql8")
-public class MonthlyScheduleEntity implements IMonthlySchedule, Serializable {
+public class MonthlyScheduleEntityC implements IMonthlySchedule, Serializable {
     private int monthlyScheduleId;
     private int month;
     private int year;
@@ -30,9 +30,9 @@ public class MonthlyScheduleEntity implements IMonthlySchedule, Serializable {
     private Date endDateClassification;
     private boolean isPublished;
     private Date endWish;
-    private Collection<NegativeDateMonthlyScheduleEntity> negativeDateMonthlySchedules;
-    private Collection<SectionMonthlyScheduleEntity> sectionMonthlySchedules;
-    private Collection<WeeklyScheduleEntity> weeklySchedules;
+    private Collection<NegativeDateMonthlyScheduleEntityC> negativeDateMonthlySchedules;
+    private Collection<SectionMonthlyScheduleEntityC> sectionMonthlySchedules;
+    private Collection<WeeklyScheduleEntityC> weeklySchedules;
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -116,7 +116,7 @@ public class MonthlyScheduleEntity implements IMonthlySchedule, Serializable {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        MonthlyScheduleEntity that = (MonthlyScheduleEntity) o;
+        MonthlyScheduleEntityC that = (MonthlyScheduleEntityC) o;
         return monthlyScheduleId == that.monthlyScheduleId &&
                 month == that.month &&
                 year == that.year &&
@@ -132,29 +132,29 @@ public class MonthlyScheduleEntity implements IMonthlySchedule, Serializable {
     }
 
     @OneToMany(mappedBy = "monthlySchedule")
-    public Collection<NegativeDateMonthlyScheduleEntity> getNegativeDateMonthlySchedules() {
+    public Collection<NegativeDateMonthlyScheduleEntityC> getNegativeDateMonthlySchedules() {
         return negativeDateMonthlySchedules;
     }
 
-    public void setNegativeDateMonthlySchedules(Collection<NegativeDateMonthlyScheduleEntity> negativeDateMonthlySchedulesByMonthlyScheduleId) {
+    public void setNegativeDateMonthlySchedules(Collection<NegativeDateMonthlyScheduleEntityC> negativeDateMonthlySchedulesByMonthlyScheduleId) {
         this.negativeDateMonthlySchedules = negativeDateMonthlySchedulesByMonthlyScheduleId;
     }
 
     @OneToMany(mappedBy = "monthlySchedule")
-    public Collection<SectionMonthlyScheduleEntity> getSectionMonthlySchedules() {
+    public Collection<SectionMonthlyScheduleEntityC> getSectionMonthlySchedules() {
         return sectionMonthlySchedules;
     }
 
-    public void setSectionMonthlySchedules(Collection<SectionMonthlyScheduleEntity> sectionMonthlySchedulesByMonthlyScheduleId) {
+    public void setSectionMonthlySchedules(Collection<SectionMonthlyScheduleEntityC> sectionMonthlySchedulesByMonthlyScheduleId) {
         this.sectionMonthlySchedules = sectionMonthlySchedulesByMonthlyScheduleId;
     }
 
     @OneToMany(mappedBy = "monthlySchedule")
-    public Collection<WeeklyScheduleEntity> getWeeklySchedules() {
+    public Collection<WeeklyScheduleEntityC> getWeeklySchedules() {
         return weeklySchedules;
     }
 
-    public void setWeeklySchedules(Collection<WeeklyScheduleEntity> weeklySchedulesByMonthlyScheduleId) {
+    public void setWeeklySchedules(Collection<WeeklyScheduleEntityC> weeklySchedulesByMonthlyScheduleId) {
         this.weeklySchedules = weeklySchedulesByMonthlyScheduleId;
     }
 

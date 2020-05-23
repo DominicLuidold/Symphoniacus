@@ -3,7 +3,7 @@ package at.fhv.orchestraria.application;
 import at.fhv.orchestraria.UserInterface.Exceptions.NoValidShortcutException;
 import at.fhv.orchestraria.UserInterface.Usermanagement.UserDTO;
 import at.fhv.orchestraria.domain.Imodel.IMusicianRoleMusician;
-import at.fhv.orchestraria.domain.model.MusicianRoleMusicianEntity;
+import at.fhv.orchestraria.domain.model.MusicianRoleMusicianEntityC;
 import at.fhv.orchestraria.persistence.dao.DBFacade;
 import at.fhv.teamb.symphoniacus.domain.adapter.MusicianRoleAdapter;
 import at.fhv.teamb.symphoniacus.application.type.AdministrativeAssistantType;
@@ -120,8 +120,8 @@ public class UserManagementController {
     /**
      * Not integrated by Team-B
      */
-    public IMusicianRoleMusician updateMusicianRoleMusician(MusicianRoleMusicianEntity mrme) {
-        return _facade.getDAO(MusicianRoleMusicianEntity.class).update(mrme);
+    public IMusicianRoleMusician updateMusicianRoleMusician(MusicianRoleMusicianEntityC mrme) {
+        return _facade.getDAO(MusicianRoleMusicianEntityC.class).update(mrme);
     }
 
     /**
@@ -134,8 +134,8 @@ public class UserManagementController {
     /**
      * Not integrated by Team-B
      */
-    public void saveMusicianRoleMusician(MusicianRoleMusicianEntity mrme) {
-        _facade.getDAO(MusicianRoleMusicianEntity.class).save(mrme);
+    public void saveMusicianRoleMusician(MusicianRoleMusicianEntityC mrme) {
+        _facade.getDAO(MusicianRoleMusicianEntityC.class).save(mrme);
     }
 
     /**

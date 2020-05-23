@@ -19,10 +19,10 @@ import java.util.Objects;
 
 @Entity
 @Table(name = "musicianRole", schema = "ni128610_1sql8")
-public class MusicianRoleEntity implements IMusicianRole, Serializable {
+public class MusicianRoleEntityC implements IMusicianRole, Serializable {
     private int musicianRoleId;
     private String description;
-    private Collection<MusicianRoleMusicianEntity> musicianRoleMusicians;
+    private Collection<MusicianRoleMusicianEntityC> musicianRoleMusicians;
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -51,7 +51,7 @@ public class MusicianRoleEntity implements IMusicianRole, Serializable {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        MusicianRoleEntity that = (MusicianRoleEntity) o;
+        MusicianRoleEntityC that = (MusicianRoleEntityC) o;
         return musicianRoleId == that.musicianRoleId &&
                 Objects.equals(description, that.description);
     }
@@ -62,11 +62,11 @@ public class MusicianRoleEntity implements IMusicianRole, Serializable {
     }
 
     @OneToMany(mappedBy = "musicianRole", cascade = CascadeType.MERGE)
-    public Collection<MusicianRoleMusicianEntity> getMusicianRoleMusicians() {
+    public Collection<MusicianRoleMusicianEntityC> getMusicianRoleMusicians() {
         return musicianRoleMusicians;
     }
 
-    public void setMusicianRoleMusicians(Collection<MusicianRoleMusicianEntity> musicianRoleMusiciansByMusicianRoleId) {
+    public void setMusicianRoleMusicians(Collection<MusicianRoleMusicianEntityC> musicianRoleMusiciansByMusicianRoleId) {
         this.musicianRoleMusicians = musicianRoleMusiciansByMusicianRoleId;
     }
 

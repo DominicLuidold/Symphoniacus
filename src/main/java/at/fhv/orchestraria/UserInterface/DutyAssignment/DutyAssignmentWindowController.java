@@ -4,8 +4,8 @@ import at.fhv.orchestraria.UserInterface.Roster.AssignmentRosterThread;
 import at.fhv.orchestraria.UserInterface.Roster.OrchestraEntry;
 import at.fhv.orchestraria.application.DutyAssignmentController;
 import at.fhv.orchestraria.domain.Imodel.*;
-import at.fhv.orchestraria.domain.model.DutyEntity;
-import at.fhv.orchestraria.domain.model.MusicianEntity;
+import at.fhv.orchestraria.domain.model.DutyEntityC;
+import at.fhv.orchestraria.domain.model.MusicianEntityC;
 import com.jfoenix.controls.JFXListView;
 import com.jfoenix.controls.JFXProgressBar;
 import com.jfoenix.controls.JFXTabPane;
@@ -725,7 +725,7 @@ public class DutyAssignmentWindowController {
             for (JFXListView<UIMusician> view : list) {
                 if (view.getItems().size() == 0) {
                     view.getItems().add(musician);
-                    if (musician.getMusician().getMusicianId() != MusicianEntity.EXTERNAL_MUSICIAN_ID) {
+                    if (musician.getMusician().getMusicianId() != MusicianEntityC.EXTERNAL_MUSICIAN_ID) {
                         musicianView.getItems().remove(musician);
                     }
                     break;
@@ -737,7 +737,7 @@ public class DutyAssignmentWindowController {
 
     private void shiftMusicianBack(JFXListView<UIMusician> positionView, UIMusician musician) {
         positionView.getItems().remove(musician);
-        if (musician.getMusician().getMusicianId() != MusicianEntity.EXTERNAL_MUSICIAN_ID) {
+        if (musician.getMusician().getMusicianId() != MusicianEntityC.EXTERNAL_MUSICIAN_ID) {
             _posViewToMusViewMapping.get(positionView).getItems().add(musician);
         }
     }
@@ -823,7 +823,7 @@ public class DutyAssignmentWindowController {
         if (dragboard.hasContent(MUSICIAN_LIST)) {
             List<UIMusician> list = (ArrayList<UIMusician>) dragboard.getContent(MUSICIAN_LIST);
             for (UIMusician musician : list) {
-                if ((musician.getMusician().getMusicianId() != MusicianEntity.EXTERNAL_MUSICIAN_ID) && (!JFXListView.getItems().contains(musician))) {
+                if ((musician.getMusician().getMusicianId() != MusicianEntityC.EXTERNAL_MUSICIAN_ID) && (!JFXListView.getItems().contains(musician))) {
                     JFXListView.getItems().add(musician);
                 }
             }
@@ -892,7 +892,7 @@ public class DutyAssignmentWindowController {
 
         if (!isPositionView) {
             for (UIMusician musician : JFXListView.getSelectionModel().getSelectedItems()) {
-                if (musician.getMusician().getMusicianId() != MusicianEntity.EXTERNAL_MUSICIAN_ID)
+                if (musician.getMusician().getMusicianId() != MusicianEntityC.EXTERNAL_MUSICIAN_ID)
                     selectedList.add(musician);
             }
         } else {
@@ -1082,7 +1082,7 @@ public class DutyAssignmentWindowController {
      */
     private void checkMaxDuties(Collection<IMusician> imusicians, LocalDate date) {
         int countEveningDuties = 0;
-        if (_duty.getTimeOfDay().equals(DutyEntity.EVENING_DUTY_NAME)) {
+        if (_duty.getTimeOfDay().equals(DutyEntityC.EVENING_DUTY_NAME)) {
             for (IMusician imusician : imusicians) {
                 if (imusician.getCountOfEveningDutiesOfMonth(date) > imusician.getMaxAmountOfEveningDuties()) {
                     countEveningDuties++;
@@ -1256,7 +1256,7 @@ public class DutyAssignmentWindowController {
                 IMusician mus = entry.getValue().getMusician();
                 if (mus != null) {
                     entry.getKey().getItems().add(new UIMusician(mus, _duty));
-                    if(mus.getMusicianId()!=MusicianEntity.EXTERNAL_MUSICIAN_ID) {
+                    if(mus.getMusicianId()!= MusicianEntityC.EXTERNAL_MUSICIAN_ID) {
                         for (ListView<UIMusician> musView : _unassignedMusicianLists) {
                             for (UIMusician musician : musView.getItems()) {
                                 if (musician.getMusician().equals(mus)) {
@@ -1280,11 +1280,11 @@ public class DutyAssignmentWindowController {
                 IMusician alreadyAssignedmusician = assignedMap.get(key);
 
                 if (alreadyAssignedmusician != null && posView.getItems().isEmpty()) {
-                    if (alreadyAssignedmusician.getMusicianId() != MusicianEntity.EXTERNAL_MUSICIAN_ID) {
+                    if (alreadyAssignedmusician.getMusicianId() != MusicianEntityC.EXTERNAL_MUSICIAN_ID) {
                         if (currentDutyPosition.getInstrumentationPosition() != null
                                 && currentDutyPosition.getInstrumentationPosition().getPositionDescription().startsWith("Other")) {
                             for (UIMusician musician : _otherUnassignedMusicianList.getItems()) {
-                                if (musician.getMusician().getMusicianId() != MusicianEntity.EXTERNAL_MUSICIAN_ID
+                                if (musician.getMusician().getMusicianId() != MusicianEntityC.EXTERNAL_MUSICIAN_ID
                                         && musician.getMusician().equals(alreadyAssignedmusician)) {
                                     _otherUnassignedMusicianList.getItems().remove(musician);
                                     break;

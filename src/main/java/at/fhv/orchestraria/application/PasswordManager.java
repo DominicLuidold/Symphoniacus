@@ -4,7 +4,7 @@ import at.fhv.orchestraria.persistence.dao.JPADatabaseFacade;
 import at.fhv.orchestraria.persistence.dao.UserDAO;
 import at.fhv.orchestraria.domain.integrationInterfaces.PasswordableUser;
 
-import at.fhv.orchestraria.domain.model.UserEntity;
+import at.fhv.orchestraria.domain.model.UserEntityC;
 
 import javax.crypto.SecretKeyFactory;
 import javax.crypto.spec.PBEKeySpec;
@@ -126,7 +126,7 @@ public class PasswordManager {
     public static Optional<PasswordableUser> getUserIfValid(String shortcut, String password) {
         Optional<PasswordableUser> user;
         try {
-            UserDAO uDAO = (UserDAO)JPADatabaseFacade.getInstance().getDAO(UserEntity.class);
+            UserDAO uDAO = (UserDAO)JPADatabaseFacade.getInstance().getDAO(UserEntityC.class);
             user = Optional.ofNullable(uDAO.getByShortcut(shortcut).get());
             if (user.isPresent() && !isPasswordValid(user.get(), password)) {
                 user = Optional.empty();

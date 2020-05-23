@@ -18,13 +18,13 @@ import java.util.Objects;
 
 @Entity
 @Table(name = "instrumentation", schema = "ni128610_1sql8")
-public class InstrumentationEntity implements IInstrumentation, Serializable {
+public class InstrumentationEntityC implements IInstrumentation, Serializable {
     private int instrumentationId;
     private String name;
-    private MusicalPieceEntity musicalPiece;
-    private Collection<InstrumentationPositionEntity> instrumentationPositions;
-    private Collection<SectionInstrumentationEntity> sectionInstrumentations;
-    private Collection<SeriesOfPerformancesInstrumentationEntity> seriesInstrumentations;
+    private MusicalPieceEntityC musicalPiece;
+    private Collection<InstrumentationPositionEntityC> instrumentationPositions;
+    private Collection<SectionInstrumentationEntityC> sectionInstrumentations;
+    private Collection<SeriesOfPerformancesInstrumentationEntityC> seriesInstrumentations;
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -53,7 +53,7 @@ public class InstrumentationEntity implements IInstrumentation, Serializable {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        InstrumentationEntity that = (InstrumentationEntity) o;
+        InstrumentationEntityC that = (InstrumentationEntityC) o;
         return instrumentationId == that.instrumentationId &&
                 Objects.equals(name, that.name);
     }
@@ -66,38 +66,38 @@ public class InstrumentationEntity implements IInstrumentation, Serializable {
     @ManyToOne
     @JoinColumn(name = "musicalPieceId", referencedColumnName = "musicalPieceId", nullable = false)
     @Override
-    public MusicalPieceEntity getMusicalPiece() {
+    public MusicalPieceEntityC getMusicalPiece() {
         return musicalPiece;
     }
 
-    public void setMusicalPiece(MusicalPieceEntity musicalPiece) {
+    public void setMusicalPiece(MusicalPieceEntityC musicalPiece) {
         this.musicalPiece = musicalPiece;
     }
 
     @OneToMany(mappedBy = "instrumentation")
-    public Collection<InstrumentationPositionEntity> getInstrumentationPositions() {
+    public Collection<InstrumentationPositionEntityC> getInstrumentationPositions() {
         return instrumentationPositions;
     }
 
-    public void setInstrumentationPositions(Collection<InstrumentationPositionEntity> instrumentationPositionsByInstrumentationId) {
+    public void setInstrumentationPositions(Collection<InstrumentationPositionEntityC> instrumentationPositionsByInstrumentationId) {
         this.instrumentationPositions = instrumentationPositionsByInstrumentationId;
     }
 
     @OneToMany(mappedBy = "instrumentation")
-    public Collection<SectionInstrumentationEntity> getSectionInstrumentations() {
+    public Collection<SectionInstrumentationEntityC> getSectionInstrumentations() {
         return sectionInstrumentations;
     }
 
-    public void setSectionInstrumentations(Collection<SectionInstrumentationEntity> sectionInstrumentationsByInstrumentationId) {
+    public void setSectionInstrumentations(Collection<SectionInstrumentationEntityC> sectionInstrumentationsByInstrumentationId) {
         this.sectionInstrumentations = sectionInstrumentationsByInstrumentationId;
     }
 
     @OneToMany(mappedBy = "instrumentation")
-    public Collection<SeriesOfPerformancesInstrumentationEntity> getSeriesInstrumentations() {
+    public Collection<SeriesOfPerformancesInstrumentationEntityC> getSeriesInstrumentations() {
         return seriesInstrumentations;
     }
 
-    public void setSeriesInstrumentations(Collection<SeriesOfPerformancesInstrumentationEntity> seriesInstrumentations) {
+    public void setSeriesInstrumentations(Collection<SeriesOfPerformancesInstrumentationEntityC> seriesInstrumentations) {
         this.seriesInstrumentations = seriesInstrumentations;
     }
 

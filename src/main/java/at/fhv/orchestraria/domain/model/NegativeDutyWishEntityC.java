@@ -16,11 +16,11 @@ import java.util.Objects;
 
 @Entity
 @Table(name = "negativeDutyWish", schema = "ni128610_1sql8")
-public class NegativeDutyWishEntity implements INegativeDutyWish, Serializable {
+public class NegativeDutyWishEntityC implements INegativeDutyWish, Serializable {
     private int negativeDutyId;
     private String description;
-    private MusicianEntity musician;
-    private SeriesOfPerformancesEntity seriesOfPerformances;
+    private MusicianEntityC musician;
+    private SeriesOfPerformancesEntityC seriesOfPerformances;
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -49,7 +49,7 @@ public class NegativeDutyWishEntity implements INegativeDutyWish, Serializable {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        NegativeDutyWishEntity that = (NegativeDutyWishEntity) o;
+        NegativeDutyWishEntityC that = (NegativeDutyWishEntityC) o;
         return negativeDutyId == that.negativeDutyId &&
                 Objects.equals(description, that.description);
     }
@@ -62,22 +62,22 @@ public class NegativeDutyWishEntity implements INegativeDutyWish, Serializable {
     @ManyToOne
     @JoinColumn(name = "musicianId", referencedColumnName = "musicianId", nullable = false)
     @Override
-    public MusicianEntity getMusician() {
+    public MusicianEntityC getMusician() {
         return musician;
     }
 
-    public void setMusician(MusicianEntity musician) {
+    public void setMusician(MusicianEntityC musician) {
         this.musician = musician;
     }
 
     @ManyToOne
     @JoinColumn(name = "seriesOfPerformancesId", referencedColumnName = "seriesOfPerformancesId", nullable = false)
     @Override
-    public SeriesOfPerformancesEntity getSeriesOfPerformances() {
+    public SeriesOfPerformancesEntityC getSeriesOfPerformances() {
         return seriesOfPerformances;
     }
 
-    public void setSeriesOfPerformances(SeriesOfPerformancesEntity seriesOfPerformances) {
+    public void setSeriesOfPerformances(SeriesOfPerformancesEntityC seriesOfPerformances) {
         this.seriesOfPerformances = seriesOfPerformances;
     }
 }

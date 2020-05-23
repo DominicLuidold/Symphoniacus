@@ -20,15 +20,15 @@ import java.util.Objects;
 
 @Entity
 @Table(name = "weeklySchedule", schema = "ni128610_1sql8")
-public class WeeklyScheduleEntity implements IWeeklySchedule, Serializable {
+public class WeeklyScheduleEntityC implements IWeeklySchedule, Serializable {
     private int weeklyScheduleId;
     private Date startDate;
     private Date endDate;
     private int year;
     private Date publishDate;
     private boolean isConfirmed;
-    private Collection<DutyEntity> duties;
-    private MonthlyScheduleEntity monthlySchedule;
+    private Collection<DutyEntityC> duties;
+    private MonthlyScheduleEntityC monthlySchedule;
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -101,7 +101,7 @@ public class WeeklyScheduleEntity implements IWeeklySchedule, Serializable {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        WeeklyScheduleEntity that = (WeeklyScheduleEntity) o;
+        WeeklyScheduleEntityC that = (WeeklyScheduleEntityC) o;
         return weeklyScheduleId == that.weeklyScheduleId &&
                 year == that.year &&
                 isConfirmed == that.isConfirmed &&
@@ -116,22 +116,22 @@ public class WeeklyScheduleEntity implements IWeeklySchedule, Serializable {
     }
 
     @OneToMany(mappedBy = "weeklySchedule")
-    public Collection<DutyEntity> getDuties() {
+    public Collection<DutyEntityC> getDuties() {
         return duties;
     }
 
-    public void setDuties(Collection<DutyEntity> dutiesByWeeklyScheduleId) {
+    public void setDuties(Collection<DutyEntityC> dutiesByWeeklyScheduleId) {
         this.duties = dutiesByWeeklyScheduleId;
     }
 
     @ManyToOne
     @JoinColumn(name = "monthlyScheduleId", referencedColumnName = "monthlyScheduleId", nullable = false)
     @Override
-    public MonthlyScheduleEntity getMonthlySchedule() {
+    public MonthlyScheduleEntityC getMonthlySchedule() {
         return monthlySchedule;
     }
 
-    public void setMonthlySchedule(MonthlyScheduleEntity monthlySchedule) {
+    public void setMonthlySchedule(MonthlyScheduleEntityC monthlySchedule) {
         this.monthlySchedule = monthlySchedule;
     }
 
