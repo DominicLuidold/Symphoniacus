@@ -27,6 +27,11 @@ public class DutyPosition {
         );
     }
 
+    public DutyPosition(IDutyPositionEntity entity, MusicalPiece musicalPiece) {
+        this.entity = entity;
+        this.musicalPiece = musicalPiece;
+    }
+
     /**
      * Returns the {@link Musician} assigned to this duty.
      *
