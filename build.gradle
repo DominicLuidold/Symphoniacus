@@ -49,6 +49,9 @@ dependencies {
     compile 'de.jensd:fontawesomefx:8.2'
 }
 
+group = 'at.fhv.teamb.symphoniacus'
+version = '0.3.1'
+
 application {
     mainClassName = 'at.fhv.teamb.symphoniacus.Main'
     applicationDefaultJvmArgs = [
@@ -108,5 +111,4 @@ distributions {
         }
     }
 }
-
 build.dependsOn jacocoTestReport
