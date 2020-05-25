@@ -50,7 +50,7 @@ dependencies {
 }
 
 group = 'at.fhv.teamb.symphoniacus'
-version = '0.3.0'
+version = '0.3.1'
 
 application {
     mainClassName = 'at.fhv.teamb.symphoniacus.Main'
