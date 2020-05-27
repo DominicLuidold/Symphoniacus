@@ -7,6 +7,7 @@ import com.calendarfx.model.Calendar;
 import com.calendarfx.model.CalendarSource;
 import com.calendarfx.view.CalendarView;
 import java.util.HashSet;
+import java.util.Iterator;
 
 public class ViewRosterThread extends RosterThread {
 
@@ -75,29 +76,31 @@ public class ViewRosterThread extends RosterThread {
 
         HashSet<IntegratableDuty> closedList = new HashSet<>();
 
-        for(IntegratableDutyPosition dutyPosition :_musicianEntity.getIntegratableDutyPositions()){
 
+        Iterator<IntegratableDutyPosition> iterator = _musicianEntity.getIntegratableDutyPositions().iterator();
+        while (iterator.hasNext()) {
+            IntegratableDutyPosition dutyPosition = iterator.next();
             IntegratableDuty duty = dutyPosition.getDuty();
-            if(!closedList.contains(duty)) {
+            if (!closedList.contains(duty)) {
                 OrchestraEntry<IntegratableDuty> entry = new OrchestraEntry<IntegratableDuty>(duty);
 
                 if (dutyPosition.getDuty().isRehearsal()) {
                     _rehearsalDuties.addEntry(entry);
                 } else if (duty.getSeriesOfPerformances() != null
-                        && duty.getSeriesOfPerformances().isTour()) {
+                    && duty.getSeriesOfPerformances().isTour()) {
                     _tourDuties.addEntry(entry);
                 } else {
                     _performanceDuties.addEntry(entry);
                 }
                 closedList.add(duty);
             }
-
         }
     }
 
 
     /**
      * Creates a CalendarSource and connects it to the CalendarView.
+     *
      * @return The created CalendarSource
      */
     @Override

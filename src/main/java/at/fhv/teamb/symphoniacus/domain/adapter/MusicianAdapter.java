@@ -18,7 +18,7 @@ public class MusicianAdapter implements IntegratableMusician {
     }
 
     @Override
-    public Collection<IntegratableDutyPosition> getIntegratableDutyPositions() {
+    public synchronized Collection<IntegratableDutyPosition> getIntegratableDutyPositions() {
         List<IntegratableDutyPosition> dutyPositions = new LinkedList<>();
         for (IDutyPositionEntity dutyPosition : this.musician.getDutyPositions()) {
             dutyPositions.add(new DutyPositionAdapter(dutyPosition));
