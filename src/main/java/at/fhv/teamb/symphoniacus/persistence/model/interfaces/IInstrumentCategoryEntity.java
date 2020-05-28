@@ -26,4 +26,8 @@ public interface IInstrumentCategoryEntity {
 
     void setMusicians(List<IMusicianEntity> musicians);
 
+    void addInstrumentationPosition(IInstrumentationPositionEntity instrumentationPosition);
+
+    void removeInstrumentationPosition(IInstrumentationPositionEntity instrumentationPosition);
+
 }

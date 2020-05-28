@@ -1,11 +1,11 @@
 package at.fhv.teamb.symphoniacus.persistence.model;
 
 import at.fhv.teamb.symphoniacus.persistence.model.interfaces.IDutyPositionEntity;
+import at.fhv.teamb.symphoniacus.persistence.model.interfaces.IInstrumentCategoryEntity;
 import at.fhv.teamb.symphoniacus.persistence.model.interfaces.IInstrumentationEntity;
 import at.fhv.teamb.symphoniacus.persistence.model.interfaces.IInstrumentationPositionEntity;
 import at.fhv.teamb.symphoniacus.persistence.model.interfaces.ISectionInstrumentationEntity;
-import java.util.LinkedList;
-import java.util.List;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -16,6 +16,8 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
+import java.util.LinkedList;
+import java.util.List;
 
 @Entity
 @Table(name = "instrumentationPosition")
@@ -35,6 +37,10 @@ public class InstrumentationPositionEntity implements IInstrumentationPositionEn
 
     @Column(name = "positionDescription")
     private String positionDescription;
+
+    @ManyToOne(fetch = FetchType.LAZY, targetEntity = InstrumentCategoryEntity.class)
+    @JoinColumn(name = "instrumentCategoryId")
+    private IInstrumentCategoryEntity instrumentCategory;
 
     @OneToMany(
         mappedBy = "instrumentationPosition",
@@ -100,4 +106,16 @@ public class InstrumentationPositionEntity implements IInstrumentationPositionEn
         this.dutyPositions.remove(dutyPosition);
         dutyPosition.setInstrumentationPosition(null);
     }
+
+    @Override
+    public IInstrumentCategoryEntity getInstrumentCategory() {
+        return this.instrumentCategory;
+    }
+
+    @Override
+    public void setInstrumentCategory(IInstrumentCategoryEntity instrumentCategory) {
+        this.instrumentCategory = instrumentCategory;
+    }
+
+
 }
