@@ -81,7 +81,7 @@ public class ViewRosterThread extends RosterThread {
         while (iterator.hasNext()) {
             IntegratableDutyPosition dutyPosition = iterator.next();
             IntegratableDuty duty = dutyPosition.getDuty();
-            if (!closedList.contains(duty)) {
+            if (!closedList.contains(duty) && duty.getWeeklySchedule().isConfirmed()) {
                 OrchestraEntry<IntegratableDuty> entry = new OrchestraEntry<IntegratableDuty>(duty);
 
                 if (dutyPosition.getDuty().isRehearsal()) {
