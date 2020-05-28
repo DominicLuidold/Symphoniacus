@@ -2,6 +2,7 @@ package at.fhv.teamb.symphoniacus.domain.adapter;
 
 import at.fhv.orchestraria.domain.integrationInterfaces.IntegratableDuty;
 import at.fhv.orchestraria.domain.integrationInterfaces.IntegratableSeriesOfPerformances;
+import at.fhv.orchestraria.domain.integrationInterfaces.IntegratableWeeklySchedule;
 import at.fhv.orchestraria.domain.model.DutyEntityC;
 import at.fhv.teamb.symphoniacus.persistence.model.interfaces.IDutyEntity;
 import at.fhv.teamb.symphoniacus.persistence.model.interfaces.IInstrumentationEntity;
@@ -141,6 +142,11 @@ public class DutyAdapter implements IntegratableDuty {
     @Override
     public int getDutyId() {
         return this.duty.getDutyId();
+    }
+
+    @Override
+    public IntegratableWeeklySchedule getWeeklySchedule() {
+        return new WeeklyScheduleAdapter(this.duty.getWeeklySchedule());
     }
 
     @Override

@@ -87,7 +87,7 @@ public class RosterWindowController implements Parentable<TabPaneController> {
 
     private TabPaneController parentController;
 
-    public void setMain(RosterWindow main, boolean isAssignment) {
+    public synchronized void setMain(RosterWindow main, boolean isAssignment) {
 
         if(isAssignment){
             _rosterThread = new AssignmentRosterThread(this,cview);

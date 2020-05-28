@@ -1,5 +1,6 @@
 trigger:
 - master
+- develop
 - feature/*
 - release/*
 - bugfix/*
@@ -9,6 +10,18 @@ pool:
   vmImage: 'ubuntu-latest'
 
 steps:
+- task: SonarQubePrepare@4
+  condition: and(succeeded(), eq(variables['Build.SourceBranch'], 'refs/heads/develop'))
+  inputs:
+    SonarQube: '***REMOVED***'
+    scannerMode: 'Other'
+    extraProperties: |
+      # Additional properties that will be passed to the scanner, 
+      # Put one key=value per line, example:
+      # sonar.exclusions=**/*.bin
+      sonar.projectKey=***REMOVED***
+      sonar.projectName=***REMOVED***
+
 - task: Gradle@2
   inputs:
     gradleWrapperFile: 'gradlew'
@@ -20,8 +33,14 @@ steps:
     testResultsFiles: '**/TEST-*.xml'
     checkStyleRunAnalysis: true
     tasks: 'build'
+
 - task: PublishCodeCoverageResults@1
   inputs:
     codeCoverageTool: 'JaCoCo'
     summaryFileLocation: '$(System.DefaultWorkingDirectory)/**/jacocoTestReport.xml'
     reportDirectory: '$(System.DefaultWorkingDirectory)/**/jacoco/test/**'
+
+- task: SonarQubePublish@4
+  condition: and(succeeded(), eq(variables['Build.SourceBranch'], 'refs/heads/develop'))
+  inputs:
+    pollingTimeoutSec: '300'
