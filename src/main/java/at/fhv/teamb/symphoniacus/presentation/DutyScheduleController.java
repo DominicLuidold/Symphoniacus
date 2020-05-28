@@ -221,6 +221,8 @@ public class DutyScheduleController
             Set<Musician> musiciansWithoutWishRequest = task.getValue();
             Set<Musician> musiciansWithWishRequest = new HashSet<>();
 
+            // when there is no chosen musical piece
+            //-> sum up all wishes to table for all musical pieces to this duty
             if (this.musicalPieceSelect.getSelectionModel().isEmpty()) {
                 for (MusicalPieceComboView mpC : this.musicalPieceSelect.getItems()) {
                     MusicalPiece mp = mpC.getMusicalPiece();
@@ -236,6 +238,9 @@ public class DutyScheduleController
                         }
                     }
                 }
+                //when there is a chosen musical piece
+                //if there is only 1 musical piece, its preselected
+                // -> display all wishes to this duty+musical piece
             } else {
                 Iterator<Musician> itr = musiciansWithoutWishRequest.iterator();
                 while (itr.hasNext()) {
@@ -250,7 +255,6 @@ public class DutyScheduleController
                     }
                 }
             }
-
 
             this.initMusicianTableWithRequests(musiciansWithWishRequest);
             List<MusicianTableModel> guiList = new LinkedList<>();
@@ -296,44 +300,6 @@ public class DutyScheduleController
         ));
         new Thread(task).start();
     }
-/*
-    private void initMusicianTableWithRequests(Set<Musician> list) {
-        List<MusicianTableModel> guiList = new LinkedList<>();
-        int i = 0;
-        int selectedIndex = 0;
-        MusicianTableModel selected = null;
-        for (Musician domainMusician : list) {
-            MusicianTableModel mtm = new MusicianTableModel(domainMusician);
-            guiList.add(mtm);
-            if (this.selectedDutyPosition != null
-                && this.selectedDutyPosition.getAssignedMusician().isPresent()
-            ) {
-                LOG.debug("There is already a musician assigned for this position");
-                if (domainMusician.getShortcut().equals(
-                    this.selectedDutyPosition.getAssignedMusician().get().getShortcut()
-                )) {
-                    LOG.debug("Selecting index {}", i);
-                    selectedIndex = i;
-                    selected = mtm;
-                }
-            }
-            i++;
-        }
-
-        ObservableList<MusicianTableModel> observableListWithRequests =
-            FXCollections.observableArrayList();
-        observableListWithRequests.addAll(guiList);
-        this.musicianTableWithRequests.setItems(observableListWithRequests);
-
-        // auto select current musician.
-        if (selected != null) {
-            this.musicianTableWithRequests.requestFocus();
-            this.musicianTableWithRequests.getSelectionModel().select(selected);
-            this.musicianTableWithRequests.scrollTo(selectedIndex);
-        }
-    }
-
- */
 
     private void initMusicianTableWithRequests(Set<Musician> musiciansWithRequests) {
         List<MusicianTableModel> guiList = new LinkedList<>();

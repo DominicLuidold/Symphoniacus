@@ -75,6 +75,14 @@ public class WishRequestManager {
         return musician;
     }
 
+    /**
+     *  Chechks if WishRequest exists for given User to given Duty and given Musical Piece.
+     *
+     * @param m given Musician
+     * @param selectedItem given musical piece
+     * @param duty given duty
+     * @return boolean if WishRequest exists for given duty and musical piece
+     */
     public boolean hasWishRequestForGivenDutyAndMusicalPiece(
         Musician m,
         MusicalPiece selectedItem,
