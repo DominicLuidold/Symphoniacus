@@ -6,21 +6,8 @@ import java.util.regex.Pattern;
  * FormValidator to validate the Form to create new user or edit them
  * Validation with regex and matching
  */
-public class FormValidator {
+public class ValidationController {
 
-//    First Name: keine Zahlen
-//    Last Name: keine Zahlen
-//    Section: DropDown
-//    Role: DropDown
-//    End of Contract: Datepicker
-//    E-Mail: regex
-//    Phone: regex
-//    Password: regex
-//    City: keine zahlen und sonderzeichen
-//    Zip code: nur zahlen?
-//    Country: nur Buchstaben
-//    street: nur Buchstaben
-//    streetnumber: / und number
 
     //Regex
     private final String FNAME_REGEX = "^[A-Z\u00c4\u00d6\u00dcÖÄÜ][öäüÖÄÜßa-zA-Z\\-' \u00c4\u00e4\u00d6\u00f6\u00dc\u00fc\u00df]{1,20}";
@@ -51,6 +38,7 @@ public class FormValidator {
 
     /**
      * boolean method which returns wheter a form is valid or not
+     *
      * @param fname
      * @param lname
      * @param city
@@ -63,9 +51,9 @@ public class FormValidator {
      * @return
      */
     public boolean validateAll(String fname, String lname, String city, String zip, String country, String street,
-                            String streetNr, String email, String phone) {
+                               String streetNr, String email, String phone) {
         if (validateFname(fname) && validateLname(lname) &&
-               validateCity(city) && validateZip(zip) &&
+                validateCity(city) && validateZip(zip) &&
                 validateCountry(country) && validateStreet(street) && validateStreetNr(streetNr) &&
                 validateEmail(email) && validatePhone(phone)) {
             return true;
@@ -73,86 +61,86 @@ public class FormValidator {
         return false;
     }
 
-    public boolean validateFname(String fname){
-        if (FNAME_PATTERN.matcher(fname).matches()){
+    public boolean validateFname(String fname) {
+        if (FNAME_PATTERN.matcher(fname).matches()) {
             return true;
         }
         return false;
     }
 
-    public boolean validateLname(String lname){
-        if (LNAME_PATTERN.matcher(lname).matches()){
+    public boolean validateLname(String lname) {
+        if (LNAME_PATTERN.matcher(lname).matches()) {
             return true;
         }
         return false;
     }
 
-    public boolean validateCity(String city){
-        if (CITY_PATTERN.matcher(city).matches()){
+    public boolean validateCity(String city) {
+        if (CITY_PATTERN.matcher(city).matches()) {
             return true;
         }
         return false;
     }
 
-    public boolean validateZip(String zip){
-        if (ZIP_PATTERN.matcher(zip).matches()){
+    public boolean validateZip(String zip) {
+        if (ZIP_PATTERN.matcher(zip).matches()) {
             return true;
         }
         return false;
     }
 
-    public boolean validateCountry(String country){
-        if(COUNTRY_PATTERN.matcher(country).matches()){
+    public boolean validateCountry(String country) {
+        if (COUNTRY_PATTERN.matcher(country).matches()) {
             return true;
-        }else{
+        } else {
             return false;
         }
     }
 
-    public boolean validateStreet(String street){
-        if(STREET_PATTERN.matcher(street).matches()){
+    public boolean validateStreet(String street) {
+        if (STREET_PATTERN.matcher(street).matches()) {
             return true;
-        }else{
+        } else {
             return false;
         }
     }
 
-    public boolean validateStreetNr(String streetNr){
-        if(STREET_NR_PATTERN.matcher(streetNr).matches()){
+    public boolean validateStreetNr(String streetNr) {
+        if (STREET_NR_PATTERN.matcher(streetNr).matches()) {
             return true;
-        }else{
+        } else {
             return false;
         }
     }
 
-    public boolean validateEmail(String email){
-        if(EMAIL_PATTERN.matcher(email).matches()){
+    public boolean validateEmail(String email) {
+        if (EMAIL_PATTERN.matcher(email).matches()) {
             return true;
-        }else{
+        } else {
             return false;
         }
     }
 
-    public boolean validatePhone(String phone){
-        if(PHONE_PATTERN.matcher(phone).matches()){
+    public boolean validatePhone(String phone) {
+        if (PHONE_PATTERN.matcher(phone).matches()) {
             return true;
-        }else{
+        } else {
             return false;
         }
     }
 
-    public boolean validatePoints(String points){
-        if(POINTS_PATTERN.matcher(points).matches()){
+    public boolean validatePoints(String points) {
+        if (POINTS_PATTERN.matcher(points).matches()) {
             return true;
-        }else{
+        } else {
             return false;
         }
     }
 
-    public boolean validateDate(String date){
-        if(DATE_PATTERN.matcher(date).matches()){
+    public boolean validateDate(String date) {
+        if (DATE_PATTERN.matcher(date).matches()) {
             return true;
-        }else{
+        } else {
             return false;
         }
     }
