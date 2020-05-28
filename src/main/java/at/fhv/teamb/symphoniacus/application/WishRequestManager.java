@@ -1,5 +1,7 @@
 package at.fhv.teamb.symphoniacus.application;
 
+import at.fhv.teamb.symphoniacus.domain.Duty;
+import at.fhv.teamb.symphoniacus.domain.MusicalPiece;
 import at.fhv.teamb.symphoniacus.domain.Musician;
 import at.fhv.teamb.symphoniacus.domain.WishRequest;
 import at.fhv.teamb.symphoniacus.persistence.dao.NegativeDateWishDao;
@@ -10,6 +12,7 @@ import at.fhv.teamb.symphoniacus.persistence.dao.interfaces.INegativeDutyWishDao
 import at.fhv.teamb.symphoniacus.persistence.dao.interfaces.IPositiveWishDao;
 import at.fhv.teamb.symphoniacus.persistence.model.WishRequestable;
 import at.fhv.teamb.symphoniacus.persistence.model.interfaces.IDutyEntity;
+import at.fhv.teamb.symphoniacus.presentation.internal.MusicalPieceComboView;
 import java.util.LinkedHashSet;
 import java.util.Optional;
 import java.util.Set;
@@ -70,5 +73,30 @@ public class WishRequestManager {
             }
         }
         return musician;
+    }
+
+    public boolean hasWishRequestForGivenDutyAndMusicalPiece(
+        Musician m,
+        MusicalPiece selectedItem,
+        Duty duty
+    ) {
+        boolean hasRequest = false;
+
+        boolean hasPositiveRequest = this.positiveWishDao
+            .hasWishRequestForGivenDutyAndMusicalPiece(m.getEntity(),
+                selectedItem.getEntity(),
+                duty.getEntity());
+
+        boolean hasNegativeRequest = this.negDutyWishDao
+            .hasWishRequestForGivenDutyAndMusicalPiece(m.getEntity(),
+                selectedItem.getEntity(),
+                duty.getEntity());
+
+        if (hasPositiveRequest) {
+            hasRequest = true;
+        } else if (hasNegativeRequest) {
+            hasRequest = true;
+        }
+        return hasRequest;
     }
 }
