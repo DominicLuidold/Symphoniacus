@@ -23,6 +23,8 @@ steps:
       sonar.projectName=***REMOVED***
 
 - task: Gradle@2
+  displayName: 'Gradle'
+  condition: and(succeeded(), not(eq(variables['Build.SourceBranch'], 'refs/heads/develop')))
   inputs:
     gradleWrapperFile: 'gradlew'
     gradleOptions: '-Xmx3072m'
@@ -33,6 +35,22 @@ steps:
     testResultsFiles: '**/TEST-*.xml'
     checkStyleRunAnalysis: true
     tasks: 'build'
+    sonarQubeRunAnalysis: false
+
+- task: Gradle@2
+  displayName: 'Gradle with SonarQube'
+  condition: and(succeeded(), eq(variables['Build.SourceBranch'], 'refs/heads/develop'))
+  inputs:
+    gradleWrapperFile: 'gradlew'
+    gradleOptions: '-Xmx3072m'
+    javaHomeOption: 'JDKVersion'
+    jdkVersionOption: '1.11'
+    jdkArchitectureOption: 'x64'
+    publishJUnitResults: true
+    testResultsFiles: '**/TEST-*.xml'
+    checkStyleRunAnalysis: true
+    tasks: 'build'
+    sonarQubeRunAnalysis: true
 
 - task: PublishCodeCoverageResults@1
   inputs:
