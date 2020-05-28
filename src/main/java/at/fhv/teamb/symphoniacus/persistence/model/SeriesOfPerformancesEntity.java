@@ -6,6 +6,7 @@ import at.fhv.teamb.symphoniacus.persistence.model.interfaces.IMusicalPieceEntit
 import at.fhv.teamb.symphoniacus.persistence.model.interfaces.INegativeDutyWishEntity;
 import at.fhv.teamb.symphoniacus.persistence.model.interfaces.IPositiveWishEntity;
 import at.fhv.teamb.symphoniacus.persistence.model.interfaces.ISeriesOfPerformancesEntity;
+import at.fhv.teamb.symphoniacus.persistence.model.interfaces.IWishEntryEntity;
 import java.time.LocalDate;
 import java.util.LinkedHashSet;
 import java.util.LinkedList;
@@ -75,6 +76,9 @@ public class SeriesOfPerformancesEntity implements ISeriesOfPerformancesEntity {
 
     @OneToMany(mappedBy = "seriesOfPerformances", targetEntity = NegativeDutyWishEntity.class)
     private List<INegativeDutyWishEntity> negativeDutyWishes = new LinkedList<>();
+
+    @OneToMany(mappedBy = "seriesOfPerformances", targetEntity = WishEntryEntity.class)
+    private List<IWishEntryEntity> wishEntries = new LinkedList<>();
 
     @Override
     public void addPositiveWish(IPositiveWishEntity positiveWishEntity) {
@@ -244,5 +248,27 @@ public class SeriesOfPerformancesEntity implements ISeriesOfPerformancesEntity {
     public void removeMusicalPiece(IMusicalPieceEntity musicalPiece) {
         this.musicalPieces.remove(musicalPiece);
         musicalPiece.removeSeriesOfPerformance(this);
+    }
+
+    public List<IWishEntryEntity> getWishEntries() {
+        return wishEntries;
+    }
+
+    @Override
+    public void setWishEntries(
+        List<IWishEntryEntity> wishEntries) {
+        this.wishEntries = wishEntries;
+    }
+
+    @Override
+    public void addWishEntry(IWishEntryEntity wishEntry) {
+        this.wishEntries.add(wishEntry);
+        wishEntry.setSeriesOfPerformances(this);
+    }
+
+    @Override
+    public void removeWishEntry(IWishEntryEntity wishEntry) {
+        this.wishEntries.remove(wishEntry);
+        wishEntry.setSeriesOfPerformances(null);
     }
 }
