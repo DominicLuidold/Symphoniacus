@@ -297,23 +297,23 @@ public class DutyDao extends BaseDao<IDutyEntity> implements IDutyDao {
      */
     public List<IDutyEntity> findFutureUnscheduledDuties(ISectionEntity section) {
         TypedQuery<DutyEntity> query = entityManager.createQuery(
-                "SELECT d FROM DutyEntity d "
-                        + "INNER JOIN d.sectionMonthlySchedules sms "
-                        + "INNER JOIN sms.monthlySchedule ms "
-                        + "INNER JOIN sms.section s "
-                        + "JOIN FETCH d.dutyCategory dc "
-                        + "LEFT JOIN FETCH d.seriesOfPerformances sop "
-                        + "WHERE d.start >= :start "
-                        + "AND s.sectionId = :sectionId "
-                        + "AND sms.isReadyForDutyScheduler = :isReadyForDutyScheduler "
-                        + "AND sms.isReadyForOrganisationManager = :isReadyForOrganisationManager "
-                        + "AND sms.isPublished = :isPublished "
-                        + "AND ms.endWish >= :start",
-                DutyEntity.class
+            "SELECT d FROM DutyEntity d "
+                    + "INNER JOIN d.sectionMonthlySchedules sms "
+                    + "INNER JOIN sms.monthlySchedule ms "
+                    + "INNER JOIN sms.section s "
+                    + "JOIN FETCH d.dutyCategory dc "
+                    + "LEFT JOIN FETCH d.seriesOfPerformances sop "
+                    + "WHERE d.start >= :start "
+                    + "AND s.sectionId = :sectionId "
+                    + "AND sms.isReadyForDutyScheduler = :isReadyForDutyScheduler "
+                    + "AND sms.isReadyForOrganisationManager = :isReadyForOrganisationManager "
+                    + "AND sms.isPublished = :isPublished "
+                    + "AND ms.endWish >= :start",
+            DutyEntity.class
         );
 
         query.setMaxResults(300);
-        query.setParameter("start", LocalDate.now());
+        query.setParameter("start", LocalDateTime.now());
         query.setParameter("sectionId", section.getSectionId());
         query.setParameter("isReadyForDutyScheduler", true);
         query.setParameter("isReadyForOrganisationManager", false);

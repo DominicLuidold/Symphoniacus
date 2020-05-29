@@ -193,6 +193,22 @@ public class SeriesOfPerformancesManager {
         return musicalPieces;
     }
 
+    /**
+     * Converts a {@link ISeriesOfPerformancesEntity} to a {@link SeriesOfPerformancesDto}.
+     * @param entity Entity to convert
+     * @return Converted DTO
+     */
+    public SeriesOfPerformancesDto convertSopToDto(ISeriesOfPerformancesEntity entity) {
+        return new SeriesOfPerformancesDto.SeriesOfPerformancesDtoBuilder(entity.getSeriesOfPerformancesId())
+                .withMusicalPieces(
+                        convertMusicalPiecesToDto(entity.getMusicalPieces())
+                )
+                .withDescription(entity.getDescription())
+                .withStartDate(entity.getStartDate())
+                .withEndDate(entity.getEndDate())
+                .build();
+    }
+
     private Set<DutyDto> convertDutyToDto(Set<DutyEntity> duties) {
         Set<DutyDto> dutyDtos = new LinkedHashSet<>();
         for (DutyEntity d : duties) {

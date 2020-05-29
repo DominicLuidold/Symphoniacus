@@ -61,6 +61,7 @@ public class DutyManager {
     private final DutyPositionManager dutyPositionManager;
     private final MonthlyScheduleManager monthlyScheduleManager;
     private final SectionMonthlyScheduleManager sectionMonthlyScheduleManager;
+    private final SeriesOfPerformancesManager seriesOfPerformancesManager;
     private final WeeklyScheduleManager weeklyScheduleManager;
     private final IDutyCategoryChangeLogDao changeLogDao;
     private final ISeriesOfPerformancesDao seriesDao;
@@ -76,6 +77,7 @@ public class DutyManager {
         this.dutyPositionManager = new DutyPositionManager();
         this.monthlyScheduleManager = new MonthlyScheduleManager();
         this.sectionMonthlyScheduleManager = new SectionMonthlyScheduleManager();
+        this.seriesOfPerformancesManager = new SeriesOfPerformancesManager();
         this.weeklyScheduleManager = new WeeklyScheduleManager();
         this.changeLogDao = new DutyCategoryChangeLogDao();
         this.dutyDao = new DutyDao();
@@ -570,9 +572,9 @@ public class DutyManager {
 
                 if (categories.contains(ice)) {
                     LOG.debug(
-                            "DutyPosition {} fits for category",
-                            dpe.getInstrumentationPosition().getPositionDescription(),
-                            ice.getDescription());
+                        "DutyPosition {} fits for {}",
+                        dpe.getInstrumentationPosition().getPositionDescription(),
+                        ice.getDescription());
                     dutiesForMusician.add(dutyEntity);
                     break;
                 }
@@ -580,6 +582,32 @@ public class DutyManager {
         }
 
         LOG.debug("Found {} duties for musician", dutiesForMusician.size());
-        return new HashSet<>();
+
+        // Convert to DTO
+        Set<DutyDto> result = new HashSet<>();
+        for (IDutyEntity dutyEntity : dutiesForMusician) {
+            DutyDto dutyDto = new DutyDto.DutyDtoBuilder()
+                .withDutyId(dutyEntity.getDutyId())
+                .withDescription(dutyEntity.getDescription())
+                .withDutyCategory(
+                    new DutyCategoryDto.DutyCategoryDtoBuilder(dutyEntity.getDutyId())
+                        .withType(dutyEntity.getDutyCategory().getType())
+                        .withPoints(dutyEntity.getDutyCategory().getPoints())
+                        .build()
+                )
+                .withStart(dutyEntity.getStart())
+                .withEnd(dutyEntity.getEnd())
+                .withSeriesOfPerformances(
+                    this.seriesOfPerformancesManager.convertSopToDto(
+                        dutyEntity.getSeriesOfPerformances()
+                    )
+                )
+
+                .build();
+            result.add(dutyDto);
+        }
+        return result;
     }
+
+
 }
