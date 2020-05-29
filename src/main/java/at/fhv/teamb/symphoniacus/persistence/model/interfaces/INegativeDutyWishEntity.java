@@ -22,4 +22,8 @@ public interface INegativeDutyWishEntity {
     LocalDate getStartDate();
 
     LocalDate getEndDate();
+
+    void addWishEntry(IWishEntryEntity wishEntry);
+
+    void removeWishEntry(IWishEntryEntity wishEntry);
 }

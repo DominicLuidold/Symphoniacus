@@ -5,6 +5,8 @@ import at.fhv.teamb.symphoniacus.persistence.dao.interfaces.INegativeDutyWishDao
 import at.fhv.teamb.symphoniacus.persistence.model.NegativeDutyWishEntity;
 import at.fhv.teamb.symphoniacus.persistence.model.WishRequestable;
 import at.fhv.teamb.symphoniacus.persistence.model.interfaces.IDutyEntity;
+import at.fhv.teamb.symphoniacus.persistence.model.interfaces.IMusicalPieceEntity;
+import at.fhv.teamb.symphoniacus.persistence.model.interfaces.IMusicianEntity;
 import at.fhv.teamb.symphoniacus.persistence.model.interfaces.INegativeDutyWishEntity;
 import java.util.List;
 import java.util.Optional;
@@ -58,5 +60,24 @@ public class NegativeDutyWishDao extends BaseDao<INegativeDutyWishEntity>
         query.setParameter("duty", duty);
 
         return query.getResultList();
+    }
+
+    @Override
+    public boolean hasWishRequestForGivenDutyAndMusicalPiece(IMusicianEntity musician,
+                                                             IMusicalPieceEntity musicalPiece,
+                                                             IDutyEntity duty) {
+        TypedQuery<Long> query = entityManager
+            .createQuery("SELECT COUNT(nw) FROM NegativeDutyWishEntity nw "
+                + "JOIN nw.wishEntries we "
+                + "JOIN we.musicalPieces mp "
+                + "WHERE we.duty = :duty "
+                + "AND nw.musician = :musician "
+                + "AND mp =: musicalPiece", Long.class);
+
+        query.setParameter("duty", duty);
+        query.setParameter("musicalPiece", musicalPiece);
+        query.setParameter("musician", musician);
+
+        return (query.getSingleResult() >= 1);
     }
 }

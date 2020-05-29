@@ -49,4 +49,8 @@ public interface IDutyEntity {
     void removeSectionMonthlySchedule(ISectionMonthlyScheduleEntity sms);
 
     void setSectionMonthlySchedules(Set<ISectionMonthlyScheduleEntity> sectionMonthlySchedules);
+
+    void addWishEntry(IWishEntryEntity wishEntry);
+
+    void removeWishEntry(IWishEntryEntity wishEntry);
 }

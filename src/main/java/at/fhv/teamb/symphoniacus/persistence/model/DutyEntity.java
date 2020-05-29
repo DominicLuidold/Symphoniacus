@@ -6,8 +6,11 @@ import at.fhv.teamb.symphoniacus.persistence.model.interfaces.IDutyPositionEntit
 import at.fhv.teamb.symphoniacus.persistence.model.interfaces.ISectionMonthlyScheduleEntity;
 import at.fhv.teamb.symphoniacus.persistence.model.interfaces.ISeriesOfPerformancesEntity;
 import at.fhv.teamb.symphoniacus.persistence.model.interfaces.IWeeklyScheduleEntity;
+import at.fhv.teamb.symphoniacus.persistence.model.interfaces.IWishEntryEntity;
 import java.time.LocalDateTime;
 import java.util.HashSet;
+import java.util.LinkedList;
+import java.util.List;
 import java.util.Set;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
@@ -86,6 +89,9 @@ public class DutyEntity implements IDutyEntity {
         }
     )
     private Set<ISectionMonthlyScheduleEntity> sectionMonthlySchedules = new HashSet<>();
+
+    @OneToMany(mappedBy = "duty", targetEntity = WishEntryEntity.class)
+    private List<IWishEntryEntity> wishEntries = new LinkedList<>();
 
     @Override
     public Integer getDutyId() {
@@ -205,5 +211,26 @@ public class DutyEntity implements IDutyEntity {
     public void setSectionMonthlySchedules(
         Set<ISectionMonthlyScheduleEntity> sectionMonthlySchedules) {
         this.sectionMonthlySchedules = sectionMonthlySchedules;
+    }
+
+    public List<IWishEntryEntity> getWishEntries() {
+        return wishEntries;
+    }
+
+    public void setWishEntries(
+        List<IWishEntryEntity> wishEntries) {
+        this.wishEntries = wishEntries;
+    }
+
+    @Override
+    public void addWishEntry(IWishEntryEntity wishEntry) {
+        this.wishEntries.add(wishEntry);
+        wishEntry.setDuty(this);
+    }
+
+    @Override
+    public void removeWishEntry(IWishEntryEntity wishEntry) {
+        this.wishEntries.remove(wishEntry);
+        wishEntry.setDuty(null);
     }
 }

@@ -29,12 +29,14 @@
         <class>at.fhv.teamb.symphoniacus.persistence.model.UserEntity</class>
         <class>at.fhv.teamb.symphoniacus.persistence.model.VacationEntity</class>
         <class>at.fhv.teamb.symphoniacus.persistence.model.WeeklyScheduleEntity</class>
+        <class>at.fhv.teamb.symphoniacus.persistence.model.WishEntryEntity</class>
         <!-- Properties -->
         <properties>
             <property name="javax.persistence.jdbc.driver" value="com.mysql.jdbc.Driver" />
             <property name="javax.persistence.jdbc.url" value="***REMOVED***" />
             <property name="javax.persistence.jdbc.user" value="***REMOVED***" />
             <property name="javax.persistence.jdbc.password" value="***REMOVED***" />
+
 
             <property name="hibernate.dialect" value="org.hibernate.dialect.MySQLDialect" />
             <property name="hibernate.show_sql" value="true" />
