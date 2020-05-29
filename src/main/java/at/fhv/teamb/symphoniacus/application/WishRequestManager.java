@@ -16,6 +16,9 @@ import at.fhv.teamb.symphoniacus.persistence.model.WishRequestable;
 import at.fhv.teamb.symphoniacus.persistence.model.interfaces.IDutyEntity;
 import at.fhv.teamb.symphoniacus.persistence.model.interfaces.IMusicalPieceEntity;
 import at.fhv.teamb.symphoniacus.persistence.model.interfaces.IWishEntryEntity;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Optional;
@@ -28,13 +31,14 @@ import java.util.Set;
  * @author Nino Heinzle
  */
 public class WishRequestManager {
+
+    private static final Logger LOG = LogManager.getLogger(WishRequestManager.class);
     private final IPositiveWishDao positiveWishDao;
     private final INegativeDutyWishDao negDutyWishDao;
     private final INegativeDateWishDao negDateWishDao;
     private final IWishEntryDao wishEntryDao;
     private Set<WishRequestable> allWishRequests;
     private List<IWishEntryEntity> wishEntries;
-
 
     /**
      * Initializes the WishRequestManager.
@@ -73,8 +77,8 @@ public class WishRequestManager {
             //  falls man das laden vergisst, nicht zwingend Notwendig
         } else {
             Optional<WishRequest> wishRequest =
-                WishRequest
-                    .getWishRequestToMusician(musician.getEntity(), this.allWishRequests);
+                    WishRequest
+                            .getWishRequestToMusician(musician.getEntity(), this.allWishRequests);
             if (wishRequest.isPresent()) {
                 musician.setWishRequest(wishRequest.get());
             } else {
@@ -88,77 +92,102 @@ public class WishRequestManager {
         this.wishEntries = this.wishEntryDao.loadAllWishEntriesForGivenDuty();
     }
 
+    private boolean checkSopOrMusicalPieceWish(
+            IWishEntryEntity wishEntry,
+            int wishMusicianId,
+            int musicianId,
+            IDutyEntity duty,
+            IMusicalPieceEntity musicalPiece
+    ) {
+        LOG.debug("Checking SOP or MusicalPiece wish");
+        if (wishMusicianId == musicianId) {
+            LOG.debug("Wish {} has musician: {}", wishEntry.getWishEntryId(), musicianId);
+            // This wish is for the given musician
+            for (IMusicalPieceEntity mp : wishEntry.getMusicalPieces()) {
+                // Wish for whole SOP
+                boolean isSopRequest = isWishEntryDutySopSame(wishEntry, duty);
+                if (isSopRequest) {
+                    LOG.debug(
+                        "WishEntry {} is for whole series {}",
+                        wishEntry.getWishEntryId(),
+                        duty.getSeriesOfPerformances().getDescription()
+                    );
+                    return true;
+                }
+                // Wish for this musical piece
+                if (duty.getDutyId().equals(wishEntry.getDuty().getDutyId())
+                        && mp.getMusicalPieceId().equals(musicalPiece.getMusicalPieceId())) {
+                    LOG.debug(
+                            "WishEntry {} is for Musical Piece {}",
+                            wishEntry.getWishEntryId(),
+                            mp.getName()
+                    );
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+
     /**
-     * Chechks if WishRequest exists for given User to given Duty and given Musical Piece.
+     * Checks if a WishRequest exists for the given User, Duty and Musical Piece.
      *
      * @param m            given Musician
-     * @param musicalPiece given musical piece
-     * @param duty         given duty
-     * @return boolean if WishRequest exists for given duty and musical piece
+     * @param musicalPiece given Musical Piece
+     * @param duty         given Duty
+     * @return boolean     If WishRequest exists for given Duty and Musical Piece
      */
     public boolean hasWishRequestForGivenDutyAndMusicalPiece(
-        Musician m,
-        MusicalPiece musicalPiece,
-        Duty duty
+            Musician m,
+            MusicalPiece musicalPiece,
+            Duty duty
     ) {
-
         boolean hasRequest = false;
 
-        boolean hasPositiveRequest = false;
-        boolean hasNegativeRequest = false;
-        boolean hasSeriesRequest = false;
-
         for (IWishEntryEntity wishEntry : this.wishEntries) {
+            int wishMusicianId = -1;
             if (wishEntry.getPositiveWish() != null) {
-                if (wishEntry.getPositiveWish().getMusician().getMusicianId()
-                    .equals(m.getEntity().getMusicianId())) {
-                    for (IMusicalPieceEntity mp : wishEntry.getMusicalPieces()) {
-                        hasSeriesRequest = isWishEntryDutySopSame(wishEntry, duty.getEntity());
-                        if (duty.getEntity().getDutyId().equals(wishEntry.getDuty().getDutyId())
-                            && mp.getMusicalPieceId()
-                            .equals(musicalPiece.getEntity().getMusicalPieceId())) {
-                            hasPositiveRequest = true;
-                        }
-                    }
-                }
+                wishMusicianId = wishEntry
+                        .getPositiveWish()
+                        .getMusician()
+                        .getMusicianId();
+            } else if (wishEntry.getNegativeDutyWish() != null) {
+                wishMusicianId = wishEntry
+                        .getNegativeDutyWish()
+                        .getMusician()
+                        .getMusicianId();
+            }
+            hasRequest = checkSopOrMusicalPieceWish(
+                    wishEntry,
+                    wishMusicianId,
+                    m.getEntity().getMusicianId(),
+                    duty.getEntity(),
+                    musicalPiece.getEntity()
+            );
+            if (hasRequest) {
+                return true;
             }
         }
 
-        for (IWishEntryEntity wishEntry : this.wishEntries) {
-            if (wishEntry.getNegativeDutyWish() != null) {
-                if (wishEntry.getNegativeDutyWish().getMusician().getMusicianId()
-                    .equals(m.getEntity().getMusicianId())) {
-                    for (IMusicalPieceEntity mp : wishEntry.getMusicalPieces()) {
-                        hasSeriesRequest = isWishEntryDutySopSame(wishEntry, duty.getEntity());
-                        if (duty.getEntity().getDutyId().equals(wishEntry.getDuty().getDutyId())
-                            && mp.getMusicalPieceId()
-                            .equals(musicalPiece.getEntity().getMusicalPieceId())) {
-                            hasNegativeRequest = true;
-                        }
-                    }
-                }
-            }
-        }
-
-        if (hasPositiveRequest) {
-            hasRequest = true;
-        } else if (hasNegativeRequest) {
-            hasRequest = true;
-        } else if (hasSeriesRequest) {
-            hasRequest = true;
-        }
-
+        LOG.debug(
+                "Does Musician {} have a wish for Duty {} with MusicalPiece {}? {}",
+                m.getFullName(),
+                duty.getTitle(),
+                musicalPiece.getEntity().getName(),
+                hasRequest
+        );
         //if a wishrequest is set for a whole series of performances
         // the wish should display on every duty of the sop
-
         return hasRequest;
     }
 
     private boolean isWishEntryDutySopSame(IWishEntryEntity wishEntry, IDutyEntity duty) {
         if (wishEntry.getSeriesOfPerformances() != null
-            && wishEntry.getSeriesOfPerformances().getSeriesOfPerformancesId().equals(
-                duty.getSeriesOfPerformances()
-                    .getSeriesOfPerformancesId())) {
+                && wishEntry.getSeriesOfPerformances().getSeriesOfPerformancesId()
+                .equals(
+                    duty.getSeriesOfPerformances().getSeriesOfPerformancesId()
+                )
+        ) {
             return true;
         }
         return false;
