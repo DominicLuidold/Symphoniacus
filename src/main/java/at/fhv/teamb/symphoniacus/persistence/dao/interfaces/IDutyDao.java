@@ -140,4 +140,12 @@ public interface IDutyDao extends Dao<IDutyEntity> {
         LocalDateTime endingDate,
         IDutyCategoryEntity category
     );
+
+    /**
+     * Finds future unscheduled duties where wishes can still be made for a
+     * given Musician's section.
+     * @param section Section of User
+     * @return List of Duties
+     */
+    public List<IDutyEntity> findFutureUnscheduledDuties(ISectionEntity section);
 }

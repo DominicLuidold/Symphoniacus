@@ -12,11 +12,13 @@ import at.fhv.teamb.symphoniacus.persistence.dao.DutyCategoryChangeLogDao;
 import at.fhv.teamb.symphoniacus.persistence.dao.DutyCategoryDao;
 import at.fhv.teamb.symphoniacus.persistence.dao.DutyDao;
 import at.fhv.teamb.symphoniacus.persistence.dao.InstrumentationDao;
+import at.fhv.teamb.symphoniacus.persistence.dao.MusicianDao;
 import at.fhv.teamb.symphoniacus.persistence.dao.SeriesOfPerformancesDao;
 import at.fhv.teamb.symphoniacus.persistence.dao.interfaces.IDutyCategoryChangeLogDao;
 import at.fhv.teamb.symphoniacus.persistence.dao.interfaces.IDutyCategoryDao;
 import at.fhv.teamb.symphoniacus.persistence.dao.interfaces.IDutyDao;
 import at.fhv.teamb.symphoniacus.persistence.dao.interfaces.IInstrumentationDao;
+import at.fhv.teamb.symphoniacus.persistence.dao.interfaces.IMusicianDao;
 import at.fhv.teamb.symphoniacus.persistence.dao.interfaces.ISeriesOfPerformancesDao;
 import at.fhv.teamb.symphoniacus.persistence.model.DutyCategoryChangelogEntity;
 import at.fhv.teamb.symphoniacus.persistence.model.DutyEntity;
@@ -24,22 +26,26 @@ import at.fhv.teamb.symphoniacus.persistence.model.SectionEntity;
 import at.fhv.teamb.symphoniacus.persistence.model.interfaces.IDutyCategoryChangelogEntity;
 import at.fhv.teamb.symphoniacus.persistence.model.interfaces.IDutyCategoryEntity;
 import at.fhv.teamb.symphoniacus.persistence.model.interfaces.IDutyEntity;
+import at.fhv.teamb.symphoniacus.persistence.model.interfaces.IDutyPositionEntity;
+import at.fhv.teamb.symphoniacus.persistence.model.interfaces.IInstrumentCategoryEntity;
 import at.fhv.teamb.symphoniacus.persistence.model.interfaces.IInstrumentationEntity;
 import at.fhv.teamb.symphoniacus.persistence.model.interfaces.IMonthlyScheduleEntity;
+import at.fhv.teamb.symphoniacus.persistence.model.interfaces.IMusicianEntity;
 import at.fhv.teamb.symphoniacus.persistence.model.interfaces.ISectionMonthlyScheduleEntity;
 import at.fhv.teamb.symphoniacus.persistence.model.interfaces.ISeriesOfPerformancesEntity;
 import at.fhv.teamb.symphoniacus.persistence.model.interfaces.IWeeklyScheduleEntity;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import java.time.DayOfWeek;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.YearMonth;
+import java.util.HashSet;
 import java.util.LinkedHashSet;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
 
 /**
  * This class is responsible for finding {@link DutyEntity} objects based on a range of time and
@@ -54,11 +60,13 @@ public class DutyManager {
     private final DutyPositionManager dutyPositionManager;
     private final MonthlyScheduleManager monthlyScheduleManager;
     private final SectionMonthlyScheduleManager sectionMonthlyScheduleManager;
+    private final SeriesOfPerformancesManager seriesOfPerformancesManager;
     private final WeeklyScheduleManager weeklyScheduleManager;
     private final IDutyCategoryChangeLogDao changeLogDao;
     private final ISeriesOfPerformancesDao seriesDao;
     private final IDutyCategoryDao dutyCategoryDao;
     private final IInstrumentationDao instrumentationDao;
+    private final IMusicianDao musicianDao;
     protected IDutyDao dutyDao;
 
     /**
@@ -68,12 +76,14 @@ public class DutyManager {
         this.dutyPositionManager = new DutyPositionManager();
         this.monthlyScheduleManager = new MonthlyScheduleManager();
         this.sectionMonthlyScheduleManager = new SectionMonthlyScheduleManager();
+        this.seriesOfPerformancesManager = new SeriesOfPerformancesManager();
         this.weeklyScheduleManager = new WeeklyScheduleManager();
         this.changeLogDao = new DutyCategoryChangeLogDao();
         this.dutyDao = new DutyDao();
         this.seriesDao = new SeriesOfPerformancesDao();
         this.dutyCategoryDao = new DutyCategoryDao();
         this.instrumentationDao = new InstrumentationDao();
+        this.musicianDao = new MusicianDao();
     }
 
     /**
@@ -524,4 +534,79 @@ public class DutyManager {
             return null;
         }
     }
+
+    /**
+     * Finds all unscheduled duties for a musician.
+     * @param userId User Identifier of Musician
+     * @return Duties found
+     */
+    public Set<DutyDto> findFutureUnscheduledDutiesForMusician(Integer userId) {
+        LOG.debug(userId);
+        Optional<IMusicianEntity> musicianEntity = this.musicianDao.findMusicianByUserId(userId);
+
+        if (musicianEntity.isEmpty()) {
+            LOG.error("Did not find user");
+            return new HashSet<>();
+        }
+
+        // Get instrument categories of User
+        IMusicianEntity musician = musicianEntity.get();
+        List<IInstrumentCategoryEntity> categories = musician.getInstrumentCategories();
+
+        // Planned duties for this section
+        // where we can still make wishes
+        // still need to check instrument category of Musician!
+        List<IDutyEntity> plannedDutyEntities = this.dutyDao.findFutureUnscheduledDuties(
+            musician.getSection()
+        );
+        LOG.debug("Found {} planned duties", plannedDutyEntities.size());
+
+        Set<IDutyEntity> dutiesForMusician = new HashSet<>();
+        for (IDutyEntity dutyEntity : plannedDutyEntities) {
+            Set<IDutyPositionEntity> dutyPositionEntities = dutyEntity.getDutyPositions();
+            for (IDutyPositionEntity dpe : dutyPositionEntities) {
+                IInstrumentCategoryEntity ice = dpe
+                    .getInstrumentationPosition()
+                    .getInstrumentCategory();
+
+                if (categories.contains(ice)) {
+                    LOG.debug(
+                        "DutyPosition {} fits for {}",
+                        dpe.getInstrumentationPosition().getPositionDescription(),
+                        ice.getDescription());
+                    dutiesForMusician.add(dutyEntity);
+                    break;
+                }
+            }
+        }
+
+        LOG.debug("Found {} duties for musician", dutiesForMusician.size());
+
+        // Convert to DTO
+        Set<DutyDto> result = new HashSet<>();
+        for (IDutyEntity dutyEntity : dutiesForMusician) {
+            DutyDto dutyDto = new DutyDto.DutyDtoBuilder()
+                .withDutyId(dutyEntity.getDutyId())
+                .withDescription(dutyEntity.getDescription())
+                .withDutyCategory(
+                    new DutyCategoryDto.DutyCategoryDtoBuilder(dutyEntity.getDutyId())
+                        .withType(dutyEntity.getDutyCategory().getType())
+                        .withPoints(dutyEntity.getDutyCategory().getPoints())
+                        .build()
+                )
+                .withStart(dutyEntity.getStart())
+                .withEnd(dutyEntity.getEnd())
+                .withSeriesOfPerformances(
+                    this.seriesOfPerformancesManager.convertSopToDto(
+                        dutyEntity.getSeriesOfPerformances()
+                    )
+                )
+
+                .build();
+            result.add(dutyDto);
+        }
+        return result;
+    }
+
+
 }

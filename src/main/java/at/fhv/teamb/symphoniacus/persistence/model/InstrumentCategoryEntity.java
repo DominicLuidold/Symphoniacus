@@ -2,9 +2,8 @@ package at.fhv.teamb.symphoniacus.persistence.model;
 
 import at.fhv.teamb.symphoniacus.persistence.model.interfaces.IContractualObligationEntity;
 import at.fhv.teamb.symphoniacus.persistence.model.interfaces.IInstrumentCategoryEntity;
+import at.fhv.teamb.symphoniacus.persistence.model.interfaces.IInstrumentationPositionEntity;
 import at.fhv.teamb.symphoniacus.persistence.model.interfaces.IMusicianEntity;
-import java.util.LinkedList;
-import java.util.List;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -13,6 +12,8 @@ import javax.persistence.Id;
 import javax.persistence.ManyToMany;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
+import java.util.LinkedList;
+import java.util.List;
 
 @Entity
 @Table(name = "instrumentCategory")
@@ -30,6 +31,9 @@ public class InstrumentCategoryEntity implements IInstrumentCategoryEntity {
 
     @ManyToMany(mappedBy = "instrumentCategories", targetEntity = MusicianEntity.class)
     private List<IMusicianEntity> musicians = new LinkedList<>();
+
+    @OneToMany(mappedBy = "instrumentCategory", targetEntity = InstrumentationPositionEntity.class)
+    private List<IInstrumentationPositionEntity> instrumentationPositions = new LinkedList<>();
 
     @Override
     public Integer getInstrumentCategoryId() {
@@ -85,7 +89,22 @@ public class InstrumentCategoryEntity implements IInstrumentCategoryEntity {
     }
 
     public void setMusicians(
-        List<IMusicianEntity> musicians) {
+        List<IMusicianEntity> musicians
+    ) {
         this.musicians = musicians;
+    }
+
+    @Override
+    public void addInstrumentationPosition(IInstrumentationPositionEntity instrumentationPosition) {
+        this.instrumentationPositions.add(instrumentationPosition);
+        instrumentationPosition.setInstrumentCategory(this);
+    }
+
+    @Override
+    public void removeInstrumentationPosition(
+        IInstrumentationPositionEntity instrumentationPosition
+    ) {
+        this.instrumentationPositions.remove(instrumentationPosition);
+        instrumentationPosition.setInstrumentCategory(null);
     }
 }
