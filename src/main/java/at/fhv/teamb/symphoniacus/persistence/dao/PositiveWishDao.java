@@ -78,7 +78,6 @@ public class PositiveWishDao extends BaseDao<IPositiveWishEntity>
         query.setParameter("musicalPiece", musicalPiece);
         query.setParameter("musician", musician);
 
-        System.out.println("---------------RESULT " + query.getSingleResult());
         return (query.getSingleResult() >= 1);
     }
 }

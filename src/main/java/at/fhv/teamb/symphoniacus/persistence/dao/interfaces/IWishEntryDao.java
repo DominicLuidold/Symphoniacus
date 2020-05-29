@@ -14,5 +14,5 @@ public interface IWishEntryDao extends Dao<IWishEntryEntity> {
 
     Optional<IWishEntryEntity> update(IWishEntryEntity elem);
 
-    List<IWishEntryEntity> loadAllWishEntriesForGivenDuty(IDutyEntity duty);
+    List<IWishEntryEntity> loadAllWishEntriesForGivenDuty();
 }

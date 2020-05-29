@@ -51,16 +51,16 @@ public class WishEntryDao extends BaseDao<IWishEntryEntity> implements IWishEntr
 
     /**
      * Preloading all WishEntries.
+     * //@param duty given duty
      *
-     * @param duty given duty
      * @return list of wishentries
      */
-    public List<IWishEntryEntity> loadAllWishEntriesForGivenDuty(IDutyEntity duty) {
+    public List<IWishEntryEntity> loadAllWishEntriesForGivenDuty() {
         TypedQuery<WishEntryEntity> query = entityManager
-            .createQuery("SELECT we FROM WishEntryEntity we WHERE we.duty = :duty",
+            .createQuery("SELECT we FROM WishEntryEntity we",
                 WishEntryEntity.class);
 
-        query.setParameter("duty", duty);
+        //query.setParameter("duty", duty);
         return new LinkedList<>(query.getResultList());
     }
 

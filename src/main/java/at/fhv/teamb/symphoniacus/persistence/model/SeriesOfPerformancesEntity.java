@@ -271,4 +271,5 @@ public class SeriesOfPerformancesEntity implements ISeriesOfPerformancesEntity {
         this.wishEntries.remove(wishEntry);
         wishEntry.setSeriesOfPerformances(null);
     }
+
 }

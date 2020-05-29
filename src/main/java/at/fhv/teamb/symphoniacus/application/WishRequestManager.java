@@ -85,7 +85,7 @@ public class WishRequestManager {
     }
 
     public void loadAllWishEntriesForDuty(Duty duty) {
-        this.wishEntries = this.wishEntryDao.loadAllWishEntriesForGivenDuty(duty.getEntity());
+        this.wishEntries = this.wishEntryDao.loadAllWishEntriesForGivenDuty();
     }
 
     /**
@@ -106,15 +106,17 @@ public class WishRequestManager {
 
         boolean hasPositiveRequest = false;
         boolean hasNegativeRequest = false;
+        boolean hasSeriesRequest = false;
 
         for (IWishEntryEntity wishEntry : this.wishEntries) {
             if (wishEntry.getPositiveWish() != null) {
                 if (wishEntry.getPositiveWish().getMusician().getMusicianId()
                     .equals(m.getEntity().getMusicianId())) {
                     for (IMusicalPieceEntity mp : wishEntry.getMusicalPieces()) {
+                        hasSeriesRequest = isWishEntryDutySopSame(wishEntry, duty.getEntity());
                         if (duty.getEntity().getDutyId().equals(wishEntry.getDuty().getDutyId())
                             && mp.getMusicalPieceId()
-                                .equals(musicalPiece.getEntity().getMusicalPieceId())) {
+                            .equals(musicalPiece.getEntity().getMusicalPieceId())) {
                             hasPositiveRequest = true;
                         }
                     }
@@ -127,9 +129,10 @@ public class WishRequestManager {
                 if (wishEntry.getNegativeDutyWish().getMusician().getMusicianId()
                     .equals(m.getEntity().getMusicianId())) {
                     for (IMusicalPieceEntity mp : wishEntry.getMusicalPieces()) {
+                        hasSeriesRequest = isWishEntryDutySopSame(wishEntry, duty.getEntity());
                         if (duty.getEntity().getDutyId().equals(wishEntry.getDuty().getDutyId())
                             && mp.getMusicalPieceId()
-                                .equals(musicalPiece.getEntity().getMusicalPieceId())) {
+                            .equals(musicalPiece.getEntity().getMusicalPieceId())) {
                             hasNegativeRequest = true;
                         }
                     }
@@ -141,7 +144,23 @@ public class WishRequestManager {
             hasRequest = true;
         } else if (hasNegativeRequest) {
             hasRequest = true;
+        } else if (hasSeriesRequest) {
+            hasRequest = true;
         }
+
+        //if a wishrequest is set for a whole series of performances
+        // the wish should display on every duty of the sop
+
         return hasRequest;
+    }
+
+    private boolean isWishEntryDutySopSame(IWishEntryEntity wishEntry, IDutyEntity duty) {
+        if (wishEntry.getSeriesOfPerformances() != null
+            && wishEntry.getSeriesOfPerformances().getSeriesOfPerformancesId().equals(
+                duty.getSeriesOfPerformances()
+                    .getSeriesOfPerformancesId())) {
+            return true;
+        }
+        return false;
     }
 }
