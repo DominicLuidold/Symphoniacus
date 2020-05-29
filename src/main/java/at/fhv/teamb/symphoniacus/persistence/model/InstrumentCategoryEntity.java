@@ -4,7 +4,6 @@ import at.fhv.teamb.symphoniacus.persistence.model.interfaces.IContractualObliga
 import at.fhv.teamb.symphoniacus.persistence.model.interfaces.IInstrumentCategoryEntity;
 import at.fhv.teamb.symphoniacus.persistence.model.interfaces.IInstrumentationPositionEntity;
 import at.fhv.teamb.symphoniacus.persistence.model.interfaces.IMusicianEntity;
-
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;

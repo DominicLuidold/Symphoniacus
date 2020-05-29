@@ -9,7 +9,6 @@ import at.fhv.teamb.symphoniacus.persistence.model.interfaces.IInstrumentationEn
 import at.fhv.teamb.symphoniacus.persistence.model.interfaces.IMusicianEntity;
 import at.fhv.teamb.symphoniacus.persistence.model.interfaces.ISectionEntity;
 import at.fhv.teamb.symphoniacus.persistence.model.interfaces.ISeriesOfPerformancesEntity;
-
 import javax.persistence.TypedQuery;
 import java.time.LocalDate;
 import java.time.LocalDateTime;

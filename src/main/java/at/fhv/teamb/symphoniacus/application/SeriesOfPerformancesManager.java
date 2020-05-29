@@ -199,7 +199,9 @@ public class SeriesOfPerformancesManager {
      * @return Converted DTO
      */
     public SeriesOfPerformancesDto convertSopToDto(ISeriesOfPerformancesEntity entity) {
-        return new SeriesOfPerformancesDto.SeriesOfPerformancesDtoBuilder(entity.getSeriesOfPerformancesId())
+        return new SeriesOfPerformancesDto.SeriesOfPerformancesDtoBuilder(
+                entity.getSeriesOfPerformancesId()
+        )
                 .withMusicalPieces(
                         convertMusicalPiecesToDto(entity.getMusicalPieces())
                 )

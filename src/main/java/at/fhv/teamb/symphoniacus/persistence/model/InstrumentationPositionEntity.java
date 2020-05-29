@@ -5,7 +5,6 @@ import at.fhv.teamb.symphoniacus.persistence.model.interfaces.IInstrumentCategor
 import at.fhv.teamb.symphoniacus.persistence.model.interfaces.IInstrumentationEntity;
 import at.fhv.teamb.symphoniacus.persistence.model.interfaces.IInstrumentationPositionEntity;
 import at.fhv.teamb.symphoniacus.persistence.model.interfaces.ISectionInstrumentationEntity;
-
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;

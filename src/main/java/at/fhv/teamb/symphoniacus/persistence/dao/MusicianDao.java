@@ -5,7 +5,6 @@ import at.fhv.teamb.symphoniacus.persistence.dao.interfaces.IMusicianDao;
 import at.fhv.teamb.symphoniacus.persistence.model.MusicianEntity;
 import at.fhv.teamb.symphoniacus.persistence.model.interfaces.IMusicianEntity;
 import at.fhv.teamb.symphoniacus.persistence.model.interfaces.ISectionEntity;
-
 import javax.persistence.TypedQuery;
 import java.time.LocalDate;
 import java.util.LinkedList;

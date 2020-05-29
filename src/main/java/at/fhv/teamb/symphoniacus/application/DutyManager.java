@@ -36,7 +36,6 @@ import at.fhv.teamb.symphoniacus.persistence.model.interfaces.ISeriesOfPerforman
 import at.fhv.teamb.symphoniacus.persistence.model.interfaces.IWeeklyScheduleEntity;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-
 import java.time.DayOfWeek;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
