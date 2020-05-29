@@ -397,6 +397,8 @@ public class DutyScheduleController
                 } else {
                     this.actualSectionInstrumentation = currentAsi.get();
                     this.duty = this.actualSectionInstrumentation.getDuty();
+                    //preload wishEntries for further working
+                    this.wishRequestManager.loadAllWishEntriesForDuty(this.duty);
                     LOG.debug("Musical Pieces? {}", this.duty.getMusicalPieces().size());
 
                     if (this.duty.getMusicalPieces().size() > 1) {

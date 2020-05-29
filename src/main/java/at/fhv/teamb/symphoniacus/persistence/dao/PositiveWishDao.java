@@ -66,6 +66,7 @@ public class PositiveWishDao extends BaseDao<IPositiveWishEntity>
     public boolean hasWishRequestForGivenDutyAndMusicalPiece(IMusicianEntity musician,
                                                              IMusicalPieceEntity musicalPiece,
                                                              IDutyEntity duty) {
+
         TypedQuery<Long> query = entityManager
             .createQuery("SELECT COUNT(pw) FROM PositiveWishEntity pw "
                 + "JOIN pw.wishEntries we "
@@ -77,6 +78,7 @@ public class PositiveWishDao extends BaseDao<IPositiveWishEntity>
         query.setParameter("musicalPiece", musicalPiece);
         query.setParameter("musician", musician);
 
+        System.out.println("---------------RESULT " + query.getSingleResult());
         return (query.getSingleResult() >= 1);
     }
 }

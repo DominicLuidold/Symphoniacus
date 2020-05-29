@@ -7,13 +7,17 @@ import at.fhv.teamb.symphoniacus.domain.WishRequest;
 import at.fhv.teamb.symphoniacus.persistence.dao.NegativeDateWishDao;
 import at.fhv.teamb.symphoniacus.persistence.dao.NegativeDutyWishDao;
 import at.fhv.teamb.symphoniacus.persistence.dao.PositiveWishDao;
+import at.fhv.teamb.symphoniacus.persistence.dao.WishEntryDao;
 import at.fhv.teamb.symphoniacus.persistence.dao.interfaces.INegativeDateWishDao;
 import at.fhv.teamb.symphoniacus.persistence.dao.interfaces.INegativeDutyWishDao;
 import at.fhv.teamb.symphoniacus.persistence.dao.interfaces.IPositiveWishDao;
+import at.fhv.teamb.symphoniacus.persistence.dao.interfaces.IWishEntryDao;
 import at.fhv.teamb.symphoniacus.persistence.model.WishRequestable;
 import at.fhv.teamb.symphoniacus.persistence.model.interfaces.IDutyEntity;
-import at.fhv.teamb.symphoniacus.presentation.internal.MusicalPieceComboView;
+import at.fhv.teamb.symphoniacus.persistence.model.interfaces.IMusicalPieceEntity;
+import at.fhv.teamb.symphoniacus.persistence.model.interfaces.IWishEntryEntity;
 import java.util.LinkedHashSet;
+import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 
@@ -27,7 +31,10 @@ public class WishRequestManager {
     private final IPositiveWishDao positiveWishDao;
     private final INegativeDutyWishDao negDutyWishDao;
     private final INegativeDateWishDao negDateWishDao;
+    private final IWishEntryDao wishEntryDao;
     private Set<WishRequestable> allWishRequests;
+    private List<IWishEntryEntity> wishEntries;
+
 
     /**
      * Initializes the WishRequestManager.
@@ -36,6 +43,7 @@ public class WishRequestManager {
         this.positiveWishDao = new PositiveWishDao();
         this.negDutyWishDao = new NegativeDutyWishDao();
         this.negDateWishDao = new NegativeDateWishDao();
+        this.wishEntryDao = new WishEntryDao();
     }
 
     /**
@@ -49,6 +57,7 @@ public class WishRequestManager {
         this.allWishRequests.addAll(negDateWishDao.getAllNegativeDateWishes(duty));
         this.allWishRequests.addAll(negDutyWishDao.getAllNegativeDutyWishes(duty));
     }
+
 
     /**
      * Sets the Attribute 'wishRequest' of the musician domain object.
@@ -75,30 +84,58 @@ public class WishRequestManager {
         return musician;
     }
 
+    public void loadAllWishEntriesForDuty(Duty duty) {
+        this.wishEntries = this.wishEntryDao.loadAllWishEntriesForGivenDuty(duty.getEntity());
+    }
+
     /**
-     *  Chechks if WishRequest exists for given User to given Duty and given Musical Piece.
+     * Chechks if WishRequest exists for given User to given Duty and given Musical Piece.
      *
-     * @param m given Musician
-     * @param selectedItem given musical piece
-     * @param duty given duty
+     * @param m            given Musician
+     * @param musicalPiece given musical piece
+     * @param duty         given duty
      * @return boolean if WishRequest exists for given duty and musical piece
      */
     public boolean hasWishRequestForGivenDutyAndMusicalPiece(
         Musician m,
-        MusicalPiece selectedItem,
+        MusicalPiece musicalPiece,
         Duty duty
     ) {
+
         boolean hasRequest = false;
 
-        boolean hasPositiveRequest = this.positiveWishDao
-            .hasWishRequestForGivenDutyAndMusicalPiece(m.getEntity(),
-                selectedItem.getEntity(),
-                duty.getEntity());
+        boolean hasPositiveRequest = false;
+        boolean hasNegativeRequest = false;
 
-        boolean hasNegativeRequest = this.negDutyWishDao
-            .hasWishRequestForGivenDutyAndMusicalPiece(m.getEntity(),
-                selectedItem.getEntity(),
-                duty.getEntity());
+        for (IWishEntryEntity wishEntry : this.wishEntries) {
+            if (wishEntry.getPositiveWish() != null) {
+                if (wishEntry.getPositiveWish().getMusician().getMusicianId()
+                    .equals(m.getEntity().getMusicianId())) {
+                    for (IMusicalPieceEntity mp : wishEntry.getMusicalPieces()) {
+                        if (duty.getEntity().getDutyId().equals(wishEntry.getDuty().getDutyId())
+                            && mp.getMusicalPieceId()
+                                .equals(musicalPiece.getEntity().getMusicalPieceId())) {
+                            hasPositiveRequest = true;
+                        }
+                    }
+                }
+            }
+        }
+
+        for (IWishEntryEntity wishEntry : this.wishEntries) {
+            if (wishEntry.getNegativeDutyWish() != null) {
+                if (wishEntry.getNegativeDutyWish().getMusician().getMusicianId()
+                    .equals(m.getEntity().getMusicianId())) {
+                    for (IMusicalPieceEntity mp : wishEntry.getMusicalPieces()) {
+                        if (duty.getEntity().getDutyId().equals(wishEntry.getDuty().getDutyId())
+                            && mp.getMusicalPieceId()
+                                .equals(musicalPiece.getEntity().getMusicalPieceId())) {
+                            hasNegativeRequest = true;
+                        }
+                    }
+                }
+            }
+        }
 
         if (hasPositiveRequest) {
             hasRequest = true;
