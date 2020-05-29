@@ -1,5 +1,6 @@
 package at.fhv.teamb.symphoniacus.persistence.model.interfaces;
 
+import at.fhv.teamb.symphoniacus.persistence.model.WishEntryEntity;
 import java.util.List;
 import java.util.Set;
 
@@ -35,4 +36,12 @@ public interface IMusicalPieceEntity {
     void addSeriesOfPerformance(ISeriesOfPerformancesEntity seriesOfPerformancesEntity);
 
     void removeSeriesOfPerformance(ISeriesOfPerformancesEntity seriesOfPerformancesEntity);
+
+    List<IWishEntryEntity> getWishEntries();
+
+    void setWishEntries(List<IWishEntryEntity> wishEntries);
+
+    void addWishEntry(IWishEntryEntity wishEntryEntity);
+
+    void removeWishEntry(IWishEntryEntity wishEntryEntity);
 }
