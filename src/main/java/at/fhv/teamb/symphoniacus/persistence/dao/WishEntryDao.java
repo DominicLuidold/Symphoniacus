@@ -4,7 +4,6 @@ import at.fhv.teamb.symphoniacus.persistence.BaseDao;
 import at.fhv.teamb.symphoniacus.persistence.dao.interfaces.IWishEntryDao;
 import at.fhv.teamb.symphoniacus.persistence.model.WishEntryEntity;
 import at.fhv.teamb.symphoniacus.persistence.model.interfaces.IWishEntryEntity;
-
 import javax.persistence.TypedQuery;
 import java.util.LinkedList;
 import java.util.List;
