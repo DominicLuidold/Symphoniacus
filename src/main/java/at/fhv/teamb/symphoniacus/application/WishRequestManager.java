@@ -89,7 +89,7 @@ public class WishRequestManager {
     }
 
     public void loadAllWishEntriesForDuty(Duty duty) {
-        this.wishEntries = this.wishEntryDao.loadAllWishEntriesForGivenDuty();
+        this.wishEntries = this.wishEntryDao.findAll();
     }
 
     private boolean checkSopOrMusicalPieceWish(

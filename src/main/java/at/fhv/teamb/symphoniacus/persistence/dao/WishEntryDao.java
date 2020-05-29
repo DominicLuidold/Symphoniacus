@@ -3,12 +3,12 @@ package at.fhv.teamb.symphoniacus.persistence.dao;
 import at.fhv.teamb.symphoniacus.persistence.BaseDao;
 import at.fhv.teamb.symphoniacus.persistence.dao.interfaces.IWishEntryDao;
 import at.fhv.teamb.symphoniacus.persistence.model.WishEntryEntity;
-import at.fhv.teamb.symphoniacus.persistence.model.interfaces.IDutyEntity;
 import at.fhv.teamb.symphoniacus.persistence.model.interfaces.IWishEntryEntity;
+
+import javax.persistence.TypedQuery;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Optional;
-import javax.persistence.TypedQuery;
 
 public class WishEntryDao extends BaseDao<IWishEntryEntity> implements IWishEntryDao {
     /**
@@ -55,7 +55,7 @@ public class WishEntryDao extends BaseDao<IWishEntryEntity> implements IWishEntr
      *
      * @return list of wishentries
      */
-    public List<IWishEntryEntity> loadAllWishEntriesForGivenDuty() {
+    public List<IWishEntryEntity> findAll() {
         TypedQuery<WishEntryEntity> query = entityManager
             .createQuery("SELECT we FROM WishEntryEntity we",
                 WishEntryEntity.class);
