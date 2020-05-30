@@ -306,12 +306,21 @@ public class WishRequestManager {
      * API - Persists a given DutyWish with all dependencies to the DB.
      *
      * @param dutyWish   given Dto
-     * @param musicianId given musician Id of the wish giver
+     * @param UserId  given musician Id of the wish giver
      * @return filled Dto with all Id's or empty if something went wrong.
      */
     public Optional<WishDto<DutyWishDto>> addNewDutyWish(WishDto<DutyWishDto> dutyWish,
-                                                         Integer musicianId) {
-        IMusicianDao musicianDao = new MusicianDao();
+                                                         Integer userId) {
+
+        Optional<IMusicianEntity> opMusician = this.musicianDao.findMusicianByUserId(userId);
+        Integer musicianId = null;
+        if (opMusician.isPresent()) {
+            musicianId = opMusician.get().getMusicianId();
+        } else {
+            LOG.error("There is no Musician to the given User id:{}", userId);
+            return Optional.empty();
+        }
+
         Optional<IMusicianEntity> musician = musicianDao.find(musicianId);
         if (musician.isEmpty()) {
             LOG.error("MusicianId {} did not deliver a result @addNewDutyWish", musicianId);
@@ -429,5 +438,24 @@ public class WishRequestManager {
         }
         return result.build();
     }
+
+
+    public Optional<WishDto<DutyWishDto>> updateDutyWish(WishDto<DutyWishDto> dutyWish, Integer userId) {
+        if (dutyWish.getWishId() == null || dutyWish.getWishType() == null
+            || dutyWish.getReason() == null
+            || dutyWish.getDetails().getDutyId() == null) {
+            LOG.error("Some value @update was null @updateDutyWish");
+            return Optional.empty();
+        }
+
+        IWishEntryEntity wishEntry = new WishEntryEntity();
+        wishEntry.setWishEntryId(dutyWish.getWishId());
+
+    }
+
+    public IWishEntryEntity fillInWishEntry(WishDto<DutyWishDto> dutyWish) {
+
+    }
+
 
 }
