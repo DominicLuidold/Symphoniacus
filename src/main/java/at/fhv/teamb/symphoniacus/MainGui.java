@@ -60,14 +60,6 @@ public class MainGui extends Application {
                     "images/icon.png"
                 )
             );
-            WishRequestManager manager = new WishRequestManager();
-            IWishEntryDao dao = new WishEntryDao();
-            Optional<IWishEntryEntity> opWish = dao.find(13);
-            dao.remove(opWish.get());
-            manager.removeDutyWish(13);
-            System.out.println("test");
-            stage.show();
-
         } catch (IOException e) {
             LOG.error(e);
         }
