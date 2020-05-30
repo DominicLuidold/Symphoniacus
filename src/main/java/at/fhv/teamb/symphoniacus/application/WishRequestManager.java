@@ -473,5 +473,19 @@ public class WishRequestManager {
         return Optional.of(wishEntry);
     }
 
-
+    /**
+     * Removes a WishEntry to given Id.
+     *
+     * @param dutyWishId id of given WishEntry
+     * @return true if removed, false if removing failed
+     */
+    public boolean removeDutyWish(Integer dutyWishId) {
+        Optional<IWishEntryEntity> opWishEntry = this.wishEntryDao.find(dutyWishId);
+        if (opWishEntry.isPresent()) {
+            return wishEntryDao.remove(opWishEntry.get());
+        } else {
+            LOG.debug("Given Wish Entry Id by API does not exist in DB:{} ",dutyWishId);
+            return false;
+        }
+    }
 }

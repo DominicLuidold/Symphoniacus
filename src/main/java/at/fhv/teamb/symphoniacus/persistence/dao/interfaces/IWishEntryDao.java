@@ -15,4 +15,6 @@ public interface IWishEntryDao extends Dao<IWishEntryEntity> {
     Optional<IWishEntryEntity> update(IWishEntryEntity elem);
 
     List<IWishEntryEntity> findAll();
+
+    boolean remove(IWishEntryEntity elem);
 }
