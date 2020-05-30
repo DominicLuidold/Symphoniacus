@@ -1,7 +1,7 @@
 package at.fhv.teamb.symphoniacus.application.dto.wishdtos;
 
 /**
- * Model class for {@link WishDto}.
+ * Dto class for all kinds of wishes.
  *
  * @author Tobias Moser
  */
@@ -9,7 +9,7 @@ public class WishDto<T> {
     private Integer wishId;
     private WishType wishType;
     private WishTargetType target;
-    private String status;
+    private WishStatus status;
     private String reason;
     private T details;
 
@@ -23,7 +23,7 @@ public class WishDto<T> {
             Integer wishId,
             WishType wishType,
             WishTargetType target,
-            String status,
+            WishStatus status,
             String reason,
             T details
     ) {
@@ -47,7 +47,7 @@ public class WishDto<T> {
         this.target = target;
     }
 
-    public void setStatus(String status) {
+    public void setStatus(WishStatus status) {
         this.status = status;
     }
 
@@ -71,7 +71,7 @@ public class WishDto<T> {
         return this.target;
     }
 
-    public String getStatus() {
+    public WishStatus getStatus() {
         return this.status;
     }
 
@@ -89,7 +89,7 @@ public class WishDto<T> {
         private Integer wishId;
         private WishType wishtype;
         private WishTargetType target;
-        private String status;
+        private WishStatus status;
         private String reason;
         private T details;
 
@@ -108,7 +108,7 @@ public class WishDto<T> {
             return this;
         }
 
-        public WishBuilder<T> withStatus(String status) {
+        public WishBuilder<T> withStatus(WishStatus status) {
             this.status = status;
             return this;
         }
