@@ -246,8 +246,8 @@ public class WishRequestManager {
             for (IPositiveWishEntity wish : posWishes) {
 
                 Optional<IWishEntryEntity> wishEntryEntity = this.positiveWishDao
-                        .getWishEntryByPositiveWish(
-                        wish,dutyEntity.get());
+                    .getWishEntryByPositiveWish(
+                        wish, dutyEntity.get());
 
                 if (wishEntryEntity.isPresent()) {
                     DutyWishDto dutyWishDto = new DutyWishDto();
@@ -270,8 +270,8 @@ public class WishRequestManager {
             for (INegativeDutyWishEntity wish : negWishes) {
 
                 Optional<IWishEntryEntity> wishEntryEntity = this.negDutyWishDao
-                        .getWishEntryByNegativeDutyWish(
-                        wish,dutyEntity.get());
+                    .getWishEntryByNegativeDutyWish(
+                        wish, dutyEntity.get());
                 if (wishEntryEntity.isPresent()) {
                     DutyWishDto dutyWishDto = new DutyWishDto();
                     dutyWishDto.setDutyId(dutyId);
@@ -374,7 +374,7 @@ public class WishRequestManager {
      *
      * @param dutyWish given DutyWishDto !MUST! contain WishEntry Id (wishId)
      * @param userId   given User Id is needed because musician id is needed
-     *                for a wish to be made or updated
+     *                 for a wish to be made or updated
      * @return Optional.empty if values are missing, optional of same dto if success
      */
     public Optional<WishDto<DutyWishDto>> updateDutyWish(WishDto<DutyWishDto> dutyWish,
@@ -394,6 +394,22 @@ public class WishRequestManager {
             return Optional.empty();
         }
         wishEntry.setWishEntryId(dutyWish.getWishId());
+
+        // Set correct Wish Id's
+        Optional<IWishEntryEntity> opOriginalEntry = wishEntryDao.find(dutyWish.getWishId());
+        IWishEntryEntity originalEntry = null;
+        if (opOriginalEntry.isPresent()) {
+            originalEntry = opOriginalEntry.get();
+            if (originalEntry.getPositiveWish() != null) {
+                wishEntry.getPositiveWish()
+                    .setPositiveWishId(originalEntry.getPositiveWish().getPositiveWishId());
+            } else if (originalEntry.getNegativeDutyWish() != null) {
+                wishEntry.getNegativeDutyWish()
+                    .setNegativeDutyId(originalEntry.getNegativeDutyWish().getNegativeDutyId());
+            } else {
+                return Optional.empty();
+            }
+        }
         wishEntryDao.update(wishEntry);
         return Optional.of(dutyWish);
     }
@@ -484,7 +500,7 @@ public class WishRequestManager {
         if (opWishEntry.isPresent()) {
             return wishEntryDao.remove(opWishEntry.get());
         } else {
-            LOG.debug("Given Wish Entry Id by API does not exist in DB:{} ",dutyWishId);
+            LOG.debug("Given Wish Entry Id by API does not exist in DB:{} ", dutyWishId);
             return false;
         }
     }
