@@ -1,7 +1,8 @@
 package at.fhv.teamb.symphoniacus.application.dto.wishdtos;
 
-import java.util.HashMap;
-import java.util.Map;
+import at.fhv.teamb.symphoniacus.application.dto.MusicalPieceDto;
+
+import java.util.List;
 
 /**
  * API class for {@link DutyWishDto}.
@@ -10,7 +11,7 @@ import java.util.Map;
  */
 public class DutyWishDto {
     private Integer dutyId;
-    private Map<Integer, String> musicalPieces;
+    private List<MusicalPieceDto> musicalPieces;
     private Boolean forEntireSop;
 
     public DutyWishDto() {}
@@ -20,24 +21,8 @@ public class DutyWishDto {
         this.forEntireSop = forEntireSop;
     }
 
-    /**
-     * Add a muscialPiece to a Dutywish.
-     *
-     * @param musicalPieceId to add
-     */
-    public void addMusicalPiece(Integer musicalPieceId, String name) {
-        if (musicalPieces == null) {
-            musicalPieces = new HashMap<>();
-        }
-        musicalPieces.put(musicalPieceId, name);
-    }
-
     public void setDutyId(Integer dutyId) {
         this.dutyId = dutyId;
-    }
-
-    public void setMusicalPieces(Map<Integer, String> musicalPieces) {
-        this.musicalPieces = musicalPieces;
     }
 
     public void setForEntireSop(Boolean forEntireSop) {
@@ -48,11 +33,15 @@ public class DutyWishDto {
         return dutyId;
     }
 
-    public Map<Integer, String> getMusicalPieces() {
+    public Boolean getForEntireSop() {
+        return forEntireSop;
+    }
+
+    public List<MusicalPieceDto> getMusicalPieces() {
         return musicalPieces;
     }
 
-    public Boolean getForEntireSop() {
-        return forEntireSop;
+    public void setMusicalPieces(List<MusicalPieceDto> musicalPieces) {
+        this.musicalPieces = musicalPieces;
     }
 }
