@@ -35,13 +35,13 @@ public class WishEntryEntity implements IWishEntryEntity {
     @JoinColumn(name = "seriesOfPerformancesId")
     private ISeriesOfPerformancesEntity seriesOfPerformances;
 
-    @ManyToOne(cascade = {CascadeType.PERSIST}, fetch = FetchType.LAZY,
+    @ManyToOne(cascade = {CascadeType.MERGE, CascadeType.PERSIST}, fetch = FetchType.LAZY,
         targetEntity = PositiveWishEntity.class,
         optional = true)
     @JoinColumn(name = "positiveWishId")
     private IPositiveWishEntity positiveWish;
 
-    @ManyToOne(cascade = {CascadeType.PERSIST}, fetch = FetchType.LAZY,
+    @ManyToOne(cascade = {CascadeType.MERGE, CascadeType.PERSIST}, fetch = FetchType.LAZY,
         targetEntity = NegativeDutyWishEntity.class,
         optional = true)
     @JoinColumn(name = "negativeWishId")
