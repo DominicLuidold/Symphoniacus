@@ -90,6 +90,11 @@ public class PositiveWishEntity implements IPositiveWishEntity, WishRequestable 
         return null;
     }
 
+    @Override
+    public Integer getID() {
+        return this.positiveWishId;
+    }
+
     public List<IWishEntryEntity> getWishEntries() {
         return wishEntries;
     }

@@ -91,6 +91,11 @@ public class NegativeDutyWishEntity implements INegativeDutyWishEntity, WishRequ
         return null;
     }
 
+    @Override
+    public Integer getID() {
+        return this.negativeDutyId;
+    }
+
     public List<IWishEntryEntity> getWishEntries() {
         return wishEntries;
     }

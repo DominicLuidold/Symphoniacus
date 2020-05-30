@@ -11,4 +11,6 @@ public interface WishRequestable {
     LocalDate getStartDate();
 
     LocalDate getEndDate();
+
+    Integer getID();
 }

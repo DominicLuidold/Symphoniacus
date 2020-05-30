@@ -6,6 +6,7 @@ import at.fhv.teamb.symphoniacus.persistence.model.interfaces.IDutyEntity;
 import at.fhv.teamb.symphoniacus.persistence.model.interfaces.IMusicalPieceEntity;
 import at.fhv.teamb.symphoniacus.persistence.model.interfaces.IMusicianEntity;
 import at.fhv.teamb.symphoniacus.persistence.model.interfaces.INegativeDutyWishEntity;
+
 import java.util.List;
 
 public interface INegativeDutyWishDao extends Dao<INegativeDutyWishEntity> {
@@ -22,4 +23,16 @@ public interface INegativeDutyWishDao extends Dao<INegativeDutyWishEntity> {
         IMusicianEntity entity,
         IMusicalPieceEntity entity1,
         IDutyEntity entity2);
+
+    /**
+     * Finds all NegativeDutyWishes for a given duty and musician.
+     *
+     * @param duty given duty
+     * @param musician given musician
+     * @return List of all negative Duty wishes
+     */
+    List<INegativeDutyWishEntity> getAllNegativeDutyWishesForMusician(
+            IDutyEntity duty,
+            IMusicianEntity musician
+    );
 }

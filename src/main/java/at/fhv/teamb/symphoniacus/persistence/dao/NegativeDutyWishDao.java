@@ -8,6 +8,8 @@ import at.fhv.teamb.symphoniacus.persistence.model.interfaces.IDutyEntity;
 import at.fhv.teamb.symphoniacus.persistence.model.interfaces.IMusicalPieceEntity;
 import at.fhv.teamb.symphoniacus.persistence.model.interfaces.IMusicianEntity;
 import at.fhv.teamb.symphoniacus.persistence.model.interfaces.INegativeDutyWishEntity;
+
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Optional;
 import javax.persistence.TypedQuery;
@@ -79,5 +81,26 @@ public class NegativeDutyWishDao extends BaseDao<INegativeDutyWishEntity>
         query.setParameter("musician", musician);
 
         return (query.getSingleResult() >= 1);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public List<INegativeDutyWishEntity> getAllNegativeDutyWishesForMusician(
+            IDutyEntity duty,
+            IMusicianEntity musician
+    ) {
+        TypedQuery<INegativeDutyWishEntity> query = entityManager
+                .createQuery("SELECT nw FROM NegativeDutyWishEntity nw "
+                        + "JOIN nw.wishEntries we "
+                        + "WHERE we.duty = :duty "
+                        + "AND nw.musician = :musician ", INegativeDutyWishEntity.class);
+
+        query.setParameter("duty", duty);
+        query.setParameter("musician", musician);
+
+        return new LinkedList<>(query.getResultList());
+
     }
 }
