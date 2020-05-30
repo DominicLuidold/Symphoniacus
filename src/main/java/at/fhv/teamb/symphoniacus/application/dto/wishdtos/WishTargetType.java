@@ -1,4 +1,4 @@
-package at.fhv.teamb.symphoniacus.application.dto.wishDtos;
+package at.fhv.teamb.symphoniacus.application.dto.wishdtos;
 
 /**
  * Type class for {@link WishTargetType}.

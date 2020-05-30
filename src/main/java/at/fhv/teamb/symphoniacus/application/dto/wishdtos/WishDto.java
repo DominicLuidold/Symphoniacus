@@ -1,4 +1,4 @@
-package at.fhv.teamb.symphoniacus.application.dto.wishDtos;
+package at.fhv.teamb.symphoniacus.application.dto.wishdtos;
 
 /**
  * Model class for {@link WishDto}.
@@ -20,12 +20,12 @@ public class WishDto<T> {
      * Constructor for WishDto.
      */
     public WishDto(
-                 Integer wishId,
-                 WishType wishType,
-                 WishTargetType target,
-                 String status,
-                 String reason,
-                 T details
+            Integer wishId,
+            WishType wishType,
+            WishTargetType target,
+            String status,
+            String reason,
+            T details
     ) {
         this.wishId = wishId;
         this.wishType = wishType;
@@ -60,27 +60,27 @@ public class WishDto<T> {
     }
 
     public Integer getWishId() {
-        return wishId;
+        return this.wishId;
     }
 
     public WishType getWishType() {
-        return wishType;
+        return this.wishType;
     }
 
     public WishTargetType getTarget() {
-        return target;
+        return this.target;
     }
 
     public String getStatus() {
-        return status;
+        return this.status;
     }
 
     public String getReason() {
-        return reason;
+        return this.reason;
     }
 
     public T getDetails() {
-        return details;
+        return this.details;
     }
 
 

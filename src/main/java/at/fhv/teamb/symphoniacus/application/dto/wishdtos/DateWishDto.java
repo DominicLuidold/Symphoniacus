@@ -1,4 +1,4 @@
-package at.fhv.teamb.symphoniacus.application.dto.wishDtos;
+package at.fhv.teamb.symphoniacus.application.dto.wishdtos;
 
 import java.time.LocalDate;
 
