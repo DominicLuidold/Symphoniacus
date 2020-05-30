@@ -6,8 +6,11 @@ import at.fhv.teamb.symphoniacus.persistence.model.interfaces.IDutyEntity;
 import at.fhv.teamb.symphoniacus.persistence.model.interfaces.IMusicalPieceEntity;
 import at.fhv.teamb.symphoniacus.persistence.model.interfaces.IMusicianEntity;
 import at.fhv.teamb.symphoniacus.persistence.model.interfaces.INegativeDutyWishEntity;
+import at.fhv.teamb.symphoniacus.persistence.model.interfaces.IWishEntryEntity;
 
+import javax.swing.text.html.Option;
 import java.util.List;
+import java.util.Optional;
 
 public interface INegativeDutyWishDao extends Dao<INegativeDutyWishEntity> {
 
@@ -35,4 +38,15 @@ public interface INegativeDutyWishDao extends Dao<INegativeDutyWishEntity> {
             IDutyEntity duty,
             IMusicianEntity musician
     );
+
+    /**
+     * Finds all WishEntry for a given negativeDutyWish and duty.
+     *
+     * @param wish given negativeDutyWish
+     * @param dutyEntity given Duty
+     * @return WishEntry matching given negativeDutyWish
+     */
+    Optional<IWishEntryEntity> getWishEntryByNegativeDutyWish(
+            INegativeDutyWishEntity wish,
+            IDutyEntity dutyEntity);
 }
