@@ -45,8 +45,16 @@ public class WishEntryDao extends BaseDao<IWishEntryEntity> implements IWishEntr
 
     @Override
     public boolean remove(IWishEntryEntity elem) {
-        return false;
+        try {
+            entityManager.getTransaction().begin();
+            entityManager.remove(elem);
+            entityManager.getTransaction().commit();
+        } catch (Exception e) {
+            return false;
+        }
+        return true;
     }
+
 
     /**
      * Preloading all WishEntries.
@@ -62,7 +70,4 @@ public class WishEntryDao extends BaseDao<IWishEntryEntity> implements IWishEntr
         //query.setParameter("duty", duty);
         return new LinkedList<>(query.getResultList());
     }
-
-
-
 }
