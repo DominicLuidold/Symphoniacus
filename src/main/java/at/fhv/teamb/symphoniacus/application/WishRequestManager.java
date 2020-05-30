@@ -8,6 +8,7 @@ import at.fhv.teamb.symphoniacus.persistence.dao.PositiveWishDao;
 import at.fhv.teamb.symphoniacus.persistence.dao.interfaces.INegativeDateWishDao;
 import at.fhv.teamb.symphoniacus.persistence.dao.interfaces.INegativeDutyWishDao;
 import at.fhv.teamb.symphoniacus.persistence.dao.interfaces.IPositiveWishDao;
+import at.fhv.teamb.symphoniacus.persistence.model.UserEntity;
 import at.fhv.teamb.symphoniacus.persistence.model.WishRequestable;
 import at.fhv.teamb.symphoniacus.persistence.model.interfaces.IDutyEntity;
 import java.util.LinkedHashSet;
@@ -70,5 +71,11 @@ public class WishRequestManager {
             }
         }
         return musician;
+    }
+
+    public List<NegativeDateWishDto> getAllDateWishesForUser(Integer userId){
+        LinkedList<NegativeDateWishDto> dateWishRequests = new LinkedList<>();
+        this.dateWishRequests.addAll(negDateWishDao.getAllNegativeDateWishesOfUser(new UserEntity().find(userId));
+        //Todo: rausfinden wie userentity zu ner id gefunden wird
     }
 }
