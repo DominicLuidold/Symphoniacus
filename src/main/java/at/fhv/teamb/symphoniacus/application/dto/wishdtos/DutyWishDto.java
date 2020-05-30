@@ -1,7 +1,8 @@
 package at.fhv.teamb.symphoniacus.application.dto.wishdtos;
 
-import at.fhv.teamb.symphoniacus.application.dto.MusicalPieceDto;
+import at.fhv.teamb.symphoniacus.application.dto.MusicalPieceApiDto;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -11,7 +12,7 @@ import java.util.List;
  */
 public class DutyWishDto {
     private Integer dutyId;
-    private List<MusicalPieceDto> musicalPieces;
+    private List<MusicalPieceApiDto> musicalPieces;
     private Boolean forEntireSop;
 
     public DutyWishDto() {}
@@ -21,27 +22,37 @@ public class DutyWishDto {
         this.forEntireSop = forEntireSop;
     }
 
+    /**
+     * Add a musical Piece to Duty wish.
+     */
+    public void addMusicalPiece(Integer musicalPieceId, String name) {
+        if (musicalPieces == null) {
+            musicalPieces = new ArrayList<>();
+        }
+        musicalPieces.add(new MusicalPieceApiDto(musicalPieceId, name));
+    }
+
     public void setDutyId(Integer dutyId) {
         this.dutyId = dutyId;
+    }
+
+    public Integer getDutyId() {
+        return this.dutyId;
+    }
+
+    public List<MusicalPieceApiDto> getMusicalPieces() {
+        return this.musicalPieces;
+    }
+
+    public void setMusicalPieces(List<MusicalPieceApiDto> musicalPieces) {
+        this.musicalPieces = musicalPieces;
     }
 
     public void setForEntireSop(Boolean forEntireSop) {
         this.forEntireSop = forEntireSop;
     }
 
-    public Integer getDutyId() {
-        return dutyId;
-    }
-
     public Boolean getForEntireSop() {
-        return forEntireSop;
-    }
-
-    public List<MusicalPieceDto> getMusicalPieces() {
-        return musicalPieces;
-    }
-
-    public void setMusicalPieces(List<MusicalPieceDto> musicalPieces) {
-        this.musicalPieces = musicalPieces;
+        return this.forEntireSop;
     }
 }
