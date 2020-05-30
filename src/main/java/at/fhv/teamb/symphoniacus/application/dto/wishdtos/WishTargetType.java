@@ -1,7 +1,7 @@
 package at.fhv.teamb.symphoniacus.application.dto.wishdtos;
 
 /**
- * Type class for {@link WishTargetType}.
+ * Type class for {@link WishDto}.
  *
  * @author Tobias Moser
  */
