@@ -230,7 +230,6 @@ public class WishRequestManager {
                             dutyEntity.get(), musicianEntity.get()));
 
             Set<WishDto<DutyWishDto>> wishDtos = new LinkedHashSet<>();
-
             //add positive Duty wishes
             for (IPositiveWishEntity wish : posWishes) {
 
@@ -275,6 +274,7 @@ public class WishRequestManager {
                             .withDetails(dutyWishDto).build());
                 }
             }
+            return wishDtos;
         }
         return new LinkedHashSet<>();
     }

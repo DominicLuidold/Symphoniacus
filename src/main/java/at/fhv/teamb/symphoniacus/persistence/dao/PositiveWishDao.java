@@ -92,11 +92,11 @@ public class PositiveWishDao extends BaseDao<IPositiveWishEntity>
             IDutyEntity duty,
             IMusicianEntity musician
     ) {
-        TypedQuery<IPositiveWishEntity> query = entityManager
-                .createQuery("SELECT pw FROM NegativeDutyWishEntity pw "
+        TypedQuery<PositiveWishEntity> query = entityManager
+                .createQuery("SELECT pw FROM PositiveWishEntity pw "
                         + "JOIN pw.wishEntries we "
                         + "WHERE we.duty = :duty "
-                        + "AND pw.musician = :musician ", IPositiveWishEntity.class);
+                        + "AND pw.musician = :musician ", PositiveWishEntity.class);
 
         query.setParameter("duty", duty);
         query.setParameter("musician", musician);

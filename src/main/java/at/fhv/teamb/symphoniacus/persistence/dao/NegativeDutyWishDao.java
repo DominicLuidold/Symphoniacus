@@ -91,11 +91,11 @@ public class NegativeDutyWishDao extends BaseDao<INegativeDutyWishEntity>
             IDutyEntity duty,
             IMusicianEntity musician
     ) {
-        TypedQuery<INegativeDutyWishEntity> query = entityManager
+        TypedQuery<NegativeDutyWishEntity> query = entityManager
                 .createQuery("SELECT nw FROM NegativeDutyWishEntity nw "
                         + "JOIN nw.wishEntries we "
                         + "WHERE we.duty = :duty "
-                        + "AND nw.musician = :musician ", INegativeDutyWishEntity.class);
+                        + "AND nw.musician = :musician ", NegativeDutyWishEntity.class);
 
         query.setParameter("duty", duty);
         query.setParameter("musician", musician);
