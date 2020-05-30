@@ -69,15 +69,14 @@ public class NegativeDateWishDao extends BaseDao<INegativeDateWishEntity>
     /**
      * {@inheritDoc}
      */
-    //TODO: im interface definieren
     @Override
-    public List<WishRequestable> getAllNegativeDateWishesOfUser(IUserEntity user) {
-        TypedQuery<WishRequestable> query = entityManager.createQuery(
+    public List<INegativeDateWishEntity> getAllNegativeDateWishesOfUser(IUserEntity user) {
+        TypedQuery<INegativeDateWishEntity> query = entityManager.createQuery(
                 "SELECT nd FROM NegativeDateWishEntity nd "
                         + "JOIN nd.musician mu "
                         + "JOIN mu.user usr "
                         + "WHERE usr = :user ",
-                WishRequestable.class
+                INegativeDateWishEntity.class
         );
 
         query.setParameter("user", user);

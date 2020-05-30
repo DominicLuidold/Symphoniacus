@@ -1,7 +1,7 @@
 package at.fhv.orchestraria.UserInterface.Usermanagement;
 
-import at.fhv.orchestraria.application.FormValidator;
 import at.fhv.orchestraria.application.UserManagementController;
+import at.fhv.orchestraria.application.ValidationController;
 import at.fhv.orchestraria.domain.Imodel.IMusicianRole;
 import at.fhv.teamb.symphoniacus.application.type.AdministrativeAssistantType;
 import at.fhv.teamb.symphoniacus.persistence.model.interfaces.IAdministrativeAssistantEntity;
@@ -337,7 +337,7 @@ public class UserEditWindowController implements Parentable<TabPaneController> {
      */
     public void setInputChangeListener() {
         // FormValidator checks the TextFieldInput with Regular Expressions
-        FormValidator formValidator = new FormValidator();
+        ValidationController validationController = new ValidationController();
         // RequiredFieldValidator checks if there is any Input in the TextField
         RequiredFieldValidator validator = new RequiredFieldValidator();
         validator.setMessage("No Input Given");
@@ -350,7 +350,7 @@ public class UserEditWindowController implements Parentable<TabPaneController> {
             }
 
             private void evalEmail() {
-                if (formValidator.validateEmail(emailField.getText())) {
+                if (validationController.validateEmail(emailField.getText())) {
                     hasErrors.set(false);
                 } else {
                     hasErrors.set(true);
@@ -365,7 +365,7 @@ public class UserEditWindowController implements Parentable<TabPaneController> {
             }
 
             private void evalPhone() {
-                if (formValidator.validatePhone(phoneField.getText())) {
+                if (validationController.validatePhone(phoneField.getText())) {
                     hasErrors.set(false);
                 } else {
                     hasErrors.set(true);
@@ -427,32 +427,32 @@ public class UserEditWindowController implements Parentable<TabPaneController> {
      * of our implemented FormValidator Class
      */
     public void validateRegex() {
-        FormValidator formValidator = new FormValidator();
+        ValidationController validationController = new ValidationController();
         ArrayList<String> alerts = new ArrayList<String>();
         validateForm = true;
 
-        if (!formValidator.validateFname(fnameField.getText())) {
+        if (!validationController.validateFname(fnameField.getText())) {
             alerts.add("- First Name should start with capital letter\n\n");
             setIsNotValidatedColor(fnameField);
             validateForm = false;
         } else {
             setIsValidatedColor(fnameField);
         }
-        if (!formValidator.validateLname(lnameField.getText())) {
+        if (!validationController.validateLname(lnameField.getText())) {
             alerts.add("- Last Name should start with capital letter\n\n");
             setIsNotValidatedColor(lnameField);
             validateForm = false;
         } else {
             setIsValidatedColor(lnameField);
         }
-        if (!formValidator.validateEmail(emailField.getText())) {
+        if (!validationController.validateEmail(emailField.getText())) {
             alerts.add("- The given E-Mail is not valid\n\n");
             setIsNotValidatedColor(emailField);
             validateForm = false;
         } else {
             setIsValidatedColor(emailField);
         }
-        if (!formValidator.validatePhone(phoneField.getText())) {
+        if (!validationController.validatePhone(phoneField.getText())) {
             alerts.add("- Phone number is not in correct syntax\n" +
                 "  Please start with prefix '+'\n\n");
             setIsNotValidatedColor(phoneField);
@@ -460,35 +460,35 @@ public class UserEditWindowController implements Parentable<TabPaneController> {
         } else {
             setIsValidatedColor(phoneField);
         }
-        if (!formValidator.validateCountry(countryField.getText())) {
+        if (!validationController.validateCountry(countryField.getText())) {
             alerts.add("- Please check if the Country Name is correct: no digits!\n\n");
             setIsNotValidatedColor(countryField);
             validateForm = false;
         } else {
             setIsValidatedColor(countryField);
         }
-        if (!formValidator.validateCity(cityField.getText())) {
+        if (!validationController.validateCity(cityField.getText())) {
             alerts.add("- Please check if the City Name is correct: no digits!\n\n");
             setIsNotValidatedColor(cityField);
             validateForm = false;
         } else {
             setIsValidatedColor(cityField);
         }
-        if (!formValidator.validateZip(zipField.getText())) {
+        if (!validationController.validateZip(zipField.getText())) {
             alerts.add("- Please check the Zip-Code: only digits\n\n");
             setIsNotValidatedColor(zipField);
             validateForm = false;
         } else {
             setIsValidatedColor(zipField);
         }
-        if (!formValidator.validateStreet(streetField.getText())) {
+        if (!validationController.validateStreet(streetField.getText())) {
             alerts.add("- Please check if the Street Name is correct: no digits!\n\n");
             setIsNotValidatedColor(streetField);
             validateForm = false;
         } else {
             setIsValidatedColor(streetField);
         }
-        if (!formValidator.validateStreetNr(streetNrField.getText())) {
+        if (!validationController.validateStreetNr(streetNrField.getText())) {
             alerts.add("- Please check if the Street number is correct: only digits!\n\n");
             setIsNotValidatedColor(streetNrField);
             validateForm = false;
@@ -535,7 +535,7 @@ public class UserEditWindowController implements Parentable<TabPaneController> {
                 alerts.add("- Please select an instrument!\n\n");
             }
 
-            if (!formValidator.validateDate(contractStartPicker.getEditor().getText())) {
+            if (!validationController.validateDate(contractStartPicker.getEditor().getText())) {
                 alerts.add("- Please select contract Start Date!\n\n");
                 contractStartPicker.setDefaultColor(Color.RED);
                 validateForm = false;
@@ -543,7 +543,7 @@ public class UserEditWindowController implements Parentable<TabPaneController> {
                 contractStartPicker.setDefaultColor(Color.GREEN);
             }
 
-            if (!formValidator.validateDate(contractEndPicker.getEditor().getText())) {
+            if (!validationController.validateDate(contractEndPicker.getEditor().getText())) {
                 alerts.add("- Please select contract End Date!\n\n");
                 contractEndPicker.setDefaultColor(Color.RED);
                 validateForm = false;
@@ -551,7 +551,16 @@ public class UserEditWindowController implements Parentable<TabPaneController> {
                 contractEndPicker.setDefaultColor(Color.GREEN);
             }
 
-            if (!formValidator.validatePoints(pointsPerMonthField.getText())) {
+            if (contractStartPicker.getValue() != null && contractEndPicker.getValue() != null) {
+                if (contractStartPicker.getValue().compareTo(contractEndPicker.getValue()) > 0) {
+                    alerts.add("- Contract Start Date should be before End Date!\n\n");
+                    contractStartPicker.setDefaultColor(Color.RED);
+                    contractEndPicker.setDefaultColor(Color.RED);
+                    validateForm = false;
+                }
+            }
+
+            if (!validationController.validatePoints(pointsPerMonthField.getText())) {
                 alerts.add("- Please specify the needed points: only digits!\n\n");
                 setIsNotValidatedColor(pointsPerMonthField);
                 validateForm = false;

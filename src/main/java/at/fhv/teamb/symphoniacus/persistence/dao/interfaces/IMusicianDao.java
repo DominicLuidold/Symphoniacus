@@ -35,4 +35,11 @@ public interface IMusicianDao extends Dao<IMusicianEntity> {
      * @return Musician
      */
     Optional<IMusicianEntity> findMusicianByUserId(int id);
+
+    /**
+     * Returns Musician matching given userSHortcut.
+     * @param userShortcut Shortcut of Musician
+     * @return Musician if found, else Optional empty
+     */
+    Optional<IMusicianEntity> findMusicianByShortcut(String userShortcut);
 }

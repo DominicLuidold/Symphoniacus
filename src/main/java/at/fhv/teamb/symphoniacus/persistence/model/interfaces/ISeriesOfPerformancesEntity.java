@@ -68,4 +68,13 @@ public interface ISeriesOfPerformancesEntity {
     void addMusicalPiece(IMusicalPieceEntity musicalPiece);
 
     void removeMusicalPiece(IMusicalPieceEntity musicalPiece);
+
+    List<IWishEntryEntity> getWishEntries();
+
+    void setWishEntries(
+        List<IWishEntryEntity> wishEntries);
+
+    void addWishEntry(IWishEntryEntity wishEntry);
+
+    void removeWishEntry(IWishEntryEntity wishEntry);
 }
