@@ -141,7 +141,7 @@ public class MusicalPieceEntity implements IMusicalPieceEntity {
     @Override
     public void addWishEntry(IWishEntryEntity wishEntryEntity) {
         this.wishEntries.add(wishEntryEntity);
-        wishEntryEntity.addMusicalPieces(this);
+        wishEntryEntity.getMusicalPieces().add(this);
     }
 
     @Override

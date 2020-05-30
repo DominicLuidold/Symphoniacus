@@ -35,13 +35,13 @@ public class WishEntryEntity implements IWishEntryEntity {
     @JoinColumn(name = "seriesOfPerformancesId")
     private ISeriesOfPerformancesEntity seriesOfPerformances;
 
-    @ManyToOne(fetch = FetchType.LAZY,
+    @ManyToOne(cascade = {CascadeType.PERSIST}, fetch = FetchType.LAZY,
         targetEntity = PositiveWishEntity.class,
         optional = true)
     @JoinColumn(name = "positiveWishId")
     private IPositiveWishEntity positiveWish;
 
-    @ManyToOne(fetch = FetchType.LAZY,
+    @ManyToOne(cascade = {CascadeType.PERSIST}, fetch = FetchType.LAZY,
         targetEntity = NegativeDutyWishEntity.class,
         optional = true)
     @JoinColumn(name = "negativeWishId")
@@ -53,7 +53,8 @@ public class WishEntryEntity implements IWishEntryEntity {
     @JoinColumn(name = "dutyId")
     private IDutyEntity duty;
 
-    @ManyToMany(cascade = {CascadeType.MERGE}, targetEntity = MusicalPieceEntity.class)
+    @ManyToMany(cascade = {CascadeType.MERGE,
+        CascadeType.PERSIST}, targetEntity = MusicalPieceEntity.class)
     @JoinTable(
         name = "WishEntry_MusicalPieces",
         joinColumns = {
@@ -117,7 +118,7 @@ public class WishEntryEntity implements IWishEntryEntity {
     }
 
     @Override
-    public void addMusicalPieces(IMusicalPieceEntity musicalPiece) {
+    public void addMusicalPiece(IMusicalPieceEntity musicalPiece) {
         this.musicalPieces.add(musicalPiece);
         musicalPiece.getWishEntries().add(this);
     }

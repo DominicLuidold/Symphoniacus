@@ -63,4 +63,6 @@ public class WishEntryDao extends BaseDao<IWishEntryEntity> implements IWishEntr
         return new LinkedList<>(query.getResultList());
     }
 
+
+
 }

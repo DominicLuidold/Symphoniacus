@@ -1,7 +1,14 @@
 package at.fhv.teamb.symphoniacus;
 
+import at.fhv.teamb.symphoniacus.application.WishRequestManager;
+import at.fhv.teamb.symphoniacus.application.dto.wishdtos.DutyWishDto;
+import at.fhv.teamb.symphoniacus.application.dto.wishdtos.WishDto;
+import at.fhv.teamb.symphoniacus.application.dto.wishdtos.WishTargetType;
+import at.fhv.teamb.symphoniacus.application.dto.wishdtos.WishType;
 import java.io.IOException;
+import java.util.HashMap;
 import java.util.Locale;
+import java.util.Map;
 import java.util.ResourceBundle;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
@@ -53,6 +60,9 @@ public class MainGui extends Application {
             LOG.error(e);
         }
     }
+
+
+
 
     public static void main() {
         launch();

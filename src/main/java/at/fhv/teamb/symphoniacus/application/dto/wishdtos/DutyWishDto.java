@@ -15,11 +15,20 @@ public class DutyWishDto {
     private List<MusicalPieceApiDto> musicalPieces;
     private Boolean forEntireSop;
 
-    public DutyWishDto() {}
+    public DutyWishDto() {
+        this.musicalPieces = null;
+    }
 
+    /**
+     * Constructor of DutyWishDto.
+     *
+     * @param dutyId Duty id of the duty which the wish is set for
+     * @param forEntireSop boolean if wish is set for whole Series
+     */
     public DutyWishDto(Integer dutyId, Boolean forEntireSop) {
         this.dutyId = dutyId;
         this.forEntireSop = forEntireSop;
+        this.musicalPieces = null;
     }
 
     /**
