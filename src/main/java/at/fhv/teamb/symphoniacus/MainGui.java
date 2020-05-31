@@ -5,10 +5,15 @@ import at.fhv.teamb.symphoniacus.application.dto.wishdtos.DutyWishDto;
 import at.fhv.teamb.symphoniacus.application.dto.wishdtos.WishDto;
 import at.fhv.teamb.symphoniacus.application.dto.wishdtos.WishTargetType;
 import at.fhv.teamb.symphoniacus.application.dto.wishdtos.WishType;
+import at.fhv.teamb.symphoniacus.persistence.dao.WishEntryDao;
+import at.fhv.teamb.symphoniacus.persistence.dao.interfaces.IWishEntryDao;
+import at.fhv.teamb.symphoniacus.persistence.model.WishEntryEntity;
+import at.fhv.teamb.symphoniacus.persistence.model.interfaces.IWishEntryEntity;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
+import java.util.Optional;
 import java.util.ResourceBundle;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
@@ -55,7 +60,6 @@ public class MainGui extends Application {
                     "images/icon.png"
                 )
             );
-            stage.show();
         } catch (IOException e) {
             LOG.error(e);
         }

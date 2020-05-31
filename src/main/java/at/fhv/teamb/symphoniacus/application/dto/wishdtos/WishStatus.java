@@ -3,9 +3,10 @@ package at.fhv.teamb.symphoniacus.application.dto.wishdtos;
 /**
  * Type class for {@link WishDto}.
  *
- * @author Tobias Moser
+ * @author Theresa Gierer
  */
-public enum WishType {
-    NEGATIVE,
-    POSITIVE
+public enum WishStatus {
+    REVIEW,
+    APPROVED,
+    REJECTED
 }
