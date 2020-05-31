@@ -258,7 +258,7 @@ public class WishRequestManager {
                         dutyWishDto.addMusicalPiece(mp.getMusicalPieceId(), mp.getName());
                     }
                     wishDtos.add(new WishDto.WishBuilder<DutyWishDto>()
-                        .withWishId(wish.getPositiveWishId())
+                        .withWishId(wishEntryEntity.get().getWishEntryId())
                         .withReason(wish.getDescription())
                         .withWishType(WishType.POSITIVE)
                         .withTarget(WishTargetType.DUTY)
@@ -281,7 +281,7 @@ public class WishRequestManager {
                         dutyWishDto.addMusicalPiece(mp.getMusicalPieceId(), mp.getName());
                     }
                     wishDtos.add(new WishDto.WishBuilder<DutyWishDto>()
-                        .withWishId(wish.getNegativeDutyId())
+                        .withWishId(wishEntryEntity.get().getWishEntryId())
                         .withReason(wish.getDescription())
                         .withWishType(WishType.NEGATIVE)
                         .withTarget(WishTargetType.DUTY)
