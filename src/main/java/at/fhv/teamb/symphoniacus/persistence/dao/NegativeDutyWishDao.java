@@ -3,11 +3,15 @@ package at.fhv.teamb.symphoniacus.persistence.dao;
 import at.fhv.teamb.symphoniacus.persistence.BaseDao;
 import at.fhv.teamb.symphoniacus.persistence.dao.interfaces.INegativeDutyWishDao;
 import at.fhv.teamb.symphoniacus.persistence.model.NegativeDutyWishEntity;
+import at.fhv.teamb.symphoniacus.persistence.model.WishEntryEntity;
 import at.fhv.teamb.symphoniacus.persistence.model.WishRequestable;
 import at.fhv.teamb.symphoniacus.persistence.model.interfaces.IDutyEntity;
 import at.fhv.teamb.symphoniacus.persistence.model.interfaces.IMusicalPieceEntity;
 import at.fhv.teamb.symphoniacus.persistence.model.interfaces.IMusicianEntity;
 import at.fhv.teamb.symphoniacus.persistence.model.interfaces.INegativeDutyWishEntity;
+import at.fhv.teamb.symphoniacus.persistence.model.interfaces.IWishEntryEntity;
+
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Optional;
 import javax.persistence.TypedQuery;
@@ -79,5 +83,47 @@ public class NegativeDutyWishDao extends BaseDao<INegativeDutyWishEntity>
         query.setParameter("musician", musician);
 
         return (query.getSingleResult() >= 1);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public List<INegativeDutyWishEntity> getAllNegativeDutyWishesForMusician(
+            IDutyEntity duty,
+            IMusicianEntity musician
+    ) {
+        TypedQuery<NegativeDutyWishEntity> query = entityManager
+                .createQuery("SELECT nw FROM NegativeDutyWishEntity nw "
+                        + "JOIN nw.wishEntries we "
+                        + "WHERE we.duty = :duty "
+                        + "AND nw.musician = :musician ", NegativeDutyWishEntity.class);
+
+        query.setParameter("duty", duty);
+        query.setParameter("musician", musician);
+
+        return new LinkedList<>(query.getResultList());
+
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public Optional<IWishEntryEntity> getWishEntryByNegativeDutyWish(
+            INegativeDutyWishEntity wish,
+            IDutyEntity dutyEntity
+    ) {
+
+        TypedQuery<WishEntryEntity> query = entityManager
+                .createQuery("SELECT we FROM NegativeDutyWishEntity nw "
+                        + "JOIN nw.wishEntries we "
+                        + "WHERE we.duty = :duty "
+                        + "AND nw = :negWish ", WishEntryEntity.class);
+
+        query.setParameter("duty", dutyEntity);
+        query.setParameter("negWish", wish);
+
+        return Optional.of(query.getSingleResult());
+
     }
 }

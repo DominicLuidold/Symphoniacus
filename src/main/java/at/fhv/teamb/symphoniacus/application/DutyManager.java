@@ -3,6 +3,7 @@ package at.fhv.teamb.symphoniacus.application;
 import at.fhv.teamb.symphoniacus.application.dto.DutyCategoryDto;
 import at.fhv.teamb.symphoniacus.application.dto.DutyDto;
 import at.fhv.teamb.symphoniacus.application.dto.InstrumentationDto;
+import at.fhv.teamb.symphoniacus.application.dto.MusicalPieceDto;
 import at.fhv.teamb.symphoniacus.application.dto.SectionDto;
 import at.fhv.teamb.symphoniacus.application.dto.SeriesOfPerformancesDto;
 import at.fhv.teamb.symphoniacus.domain.Duty;
@@ -30,12 +31,14 @@ import at.fhv.teamb.symphoniacus.persistence.model.interfaces.IDutyPositionEntit
 import at.fhv.teamb.symphoniacus.persistence.model.interfaces.IInstrumentCategoryEntity;
 import at.fhv.teamb.symphoniacus.persistence.model.interfaces.IInstrumentationEntity;
 import at.fhv.teamb.symphoniacus.persistence.model.interfaces.IMonthlyScheduleEntity;
+import at.fhv.teamb.symphoniacus.persistence.model.interfaces.IMusicalPieceEntity;
 import at.fhv.teamb.symphoniacus.persistence.model.interfaces.IMusicianEntity;
 import at.fhv.teamb.symphoniacus.persistence.model.interfaces.ISectionMonthlyScheduleEntity;
 import at.fhv.teamb.symphoniacus.persistence.model.interfaces.ISeriesOfPerformancesEntity;
 import at.fhv.teamb.symphoniacus.persistence.model.interfaces.IWeeklyScheduleEntity;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+
 import java.time.DayOfWeek;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -120,6 +123,21 @@ public class DutyManager {
     public Optional<Duty> loadDutyDetails(Integer dutyId) {
         Optional<IDutyEntity> dutyEntity = this.dutyDao.find(dutyId);
         return dutyEntity.map(Duty::new);
+    }
+
+    /**
+     * Returns a loaded duty from its id.
+     *
+     * @param dutyId The identifier of this duty
+     * @return A minimal-loaded duty
+     */
+    public Optional<DutyDto> loadDutyDetailsDto(Integer dutyId) {
+        Optional<IDutyEntity> dutyEntity = this.dutyDao.find(dutyId);
+        Optional<Duty> duty = dutyEntity.map(Duty::new);
+        if (duty.isPresent()) {
+            return Optional.of(dutyToDto(duty.get()));
+        }
+        return Optional.empty();
     }
 
     /**
@@ -537,6 +555,7 @@ public class DutyManager {
 
     /**
      * Finds all unscheduled duties for a musician.
+     *
      * @param userId User Identifier of Musician
      * @return Duties found
      */
@@ -608,5 +627,52 @@ public class DutyManager {
         return result;
     }
 
+    /**
+     * Convert a Duty to a DutyDto.
+     *
+     * @param duty to convert.
+     * @return Dto of given Duty.
+     */
+    private DutyDto dutyToDto(Duty duty) {
+        Set<MusicalPieceDto> musicalPieces = new HashSet<>();
+
+        for (IMusicalPieceEntity mp : duty
+            .getEntity().getSeriesOfPerformances().getMusicalPieces()) {
+            MusicalPieceDto musicalPieceDto =
+                new MusicalPieceDto.MusicalPieceDtoBuilder(mp.getMusicalPieceId())
+                    .withName(mp.getName())
+                    .withCategory(mp.getCategory())
+                    .build();
+            musicalPieces.add(musicalPieceDto);
+        }
+
+
+        SeriesOfPerformancesDto seriesOfPerformancesDto =
+            new SeriesOfPerformancesDto.SeriesOfPerformancesDtoBuilder(
+                duty.getEntity().getSeriesOfPerformances().getSeriesOfPerformancesId()
+            )
+                .withDescription(duty.getEntity().getSeriesOfPerformances().getDescription())
+                .withMusicalPieces(musicalPieces)
+                .build();
+
+        DutyCategoryDto dutyCategory =
+            new DutyCategoryDto.DutyCategoryDtoBuilder(
+                duty.getEntity().getDutyCategory().getDutyCategoryId()
+            )
+                .withType(duty.getEntity().getDutyCategory().getType())
+                .build();
+
+        DutyDto dutyDto = new DutyDto.DutyDtoBuilder()
+            .withDutyId(duty.getEntity().getDutyId())
+            .withDescription(duty.getEntity().getDescription())
+            .withTimeOfDay(duty.getEntity().getTimeOfDay())
+            .withDutyCategory(dutyCategory)
+            .withStart(duty.getEntity().getStart())
+            .withEnd(duty.getEntity().getEnd())
+            .withSeriesOfPerformances(seriesOfPerformancesDto)
+            .build();
+
+        return dutyDto;
+    }
 
 }
