@@ -10,8 +10,6 @@ import at.fhv.teamb.symphoniacus.persistence.model.interfaces.IMusicalPieceEntit
 import at.fhv.teamb.symphoniacus.persistence.model.interfaces.IMusicianEntity;
 import at.fhv.teamb.symphoniacus.persistence.model.interfaces.IPositiveWishEntity;
 import at.fhv.teamb.symphoniacus.persistence.model.interfaces.IWishEntryEntity;
-
-
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Optional;

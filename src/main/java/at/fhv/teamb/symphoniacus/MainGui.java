@@ -55,9 +55,6 @@ public class MainGui extends Application {
         }
     }
 
-
-
-
     public static void main() {
         launch();
     }
