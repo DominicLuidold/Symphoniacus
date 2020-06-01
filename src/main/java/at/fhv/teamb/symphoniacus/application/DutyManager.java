@@ -555,6 +555,7 @@ public class DutyManager {
 
     /**
      * Finds all unscheduled duties for a musician.
+     *
      * @param userId User Identifier of Musician
      * @return Duties found
      */
@@ -628,6 +629,7 @@ public class DutyManager {
 
     /**
      * Convert a Duty to a DutyDto.
+     *
      * @param duty to convert.
      * @return Dto of given Duty.
      */
@@ -635,40 +637,40 @@ public class DutyManager {
         Set<MusicalPieceDto> musicalPieces = new HashSet<>();
 
         for (IMusicalPieceEntity mp : duty
-                .getEntity().getSeriesOfPerformances().getMusicalPieces()) {
+            .getEntity().getSeriesOfPerformances().getMusicalPieces()) {
             MusicalPieceDto musicalPieceDto =
-                    new MusicalPieceDto.MusicalPieceDtoBuilder(mp.getMusicalPieceId())
-                            .withName(mp.getName())
-                            .withCategory(mp.getCategory())
-                            .build();
+                new MusicalPieceDto.MusicalPieceDtoBuilder(mp.getMusicalPieceId())
+                    .withName(mp.getName())
+                    .withCategory(mp.getCategory())
+                    .build();
             musicalPieces.add(musicalPieceDto);
         }
 
 
         SeriesOfPerformancesDto seriesOfPerformancesDto =
-                new SeriesOfPerformancesDto.SeriesOfPerformancesDtoBuilder(
-                        duty.getEntity().getSeriesOfPerformances().getSeriesOfPerformancesId()
-                )
-                        .withDescription(duty.getEntity().getSeriesOfPerformances().getDescription())
-                        .withMusicalPieces(musicalPieces)
-                        .build();
+            new SeriesOfPerformancesDto.SeriesOfPerformancesDtoBuilder(
+                duty.getEntity().getSeriesOfPerformances().getSeriesOfPerformancesId()
+            )
+                .withDescription(duty.getEntity().getSeriesOfPerformances().getDescription())
+                .withMusicalPieces(musicalPieces)
+                .build();
 
         DutyCategoryDto dutyCategory =
-                new DutyCategoryDto.DutyCategoryDtoBuilder(
-                        duty.getEntity().getDutyCategory().getDutyCategoryId()
-                )
-                        .withType(duty.getEntity().getDutyCategory().getType())
-                        .build();
+            new DutyCategoryDto.DutyCategoryDtoBuilder(
+                duty.getEntity().getDutyCategory().getDutyCategoryId()
+            )
+                .withType(duty.getEntity().getDutyCategory().getType())
+                .build();
 
         DutyDto dutyDto = new DutyDto.DutyDtoBuilder()
-                .withDutyId(duty.getEntity().getDutyId())
-                .withDescription(duty.getEntity().getDescription())
-                .withTimeOfDay(duty.getEntity().getTimeOfDay())
-                .withDutyCategory(dutyCategory)
-                .withStart(duty.getEntity().getStart())
-                .withEnd(duty.getEntity().getEnd())
-                .withSeriesOfPerformances(seriesOfPerformancesDto)
-                .build();
+            .withDutyId(duty.getEntity().getDutyId())
+            .withDescription(duty.getEntity().getDescription())
+            .withTimeOfDay(duty.getEntity().getTimeOfDay())
+            .withDutyCategory(dutyCategory)
+            .withStart(duty.getEntity().getStart())
+            .withEnd(duty.getEntity().getEnd())
+            .withSeriesOfPerformances(seriesOfPerformancesDto)
+            .build();
 
         return dutyDto;
     }
