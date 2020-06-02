@@ -229,7 +229,6 @@ public class WishRequestManager {
      * @return all dutyWishes for a given duty and musician
      */
     public Set<WishDto<DutyWishDto>> getAllDutyWishesForUser(Integer userId, Integer dutyId) {
-
         Optional<IDutyEntity> dutyEntity = this.dutyDao.find(dutyId);
         Optional<IMusicianEntity> musicianEntity = this.musicianDao.findMusicianByUserId(userId);
 
@@ -300,8 +299,10 @@ public class WishRequestManager {
      * @param userId   given user Id of the wish giver, musician id is needed for creating a wish
      * @return filled Dto with all Id's or empty if something went wrong.
      */
-    public Optional<WishDto<DutyWishDto>> addNewDutyWish(WishDto<DutyWishDto> dutyWish,
-                                                         Integer userId) {
+    public Optional<WishDto<DutyWishDto>> addNewDutyWish(
+        WishDto<DutyWishDto> dutyWish,
+        Integer userId
+    ) {
 
         Optional<IWishEntryEntity> opWishEntry = fillInWishEntry(dutyWish, userId);
         IWishEntryEntity wishEntry = null;
@@ -377,8 +378,10 @@ public class WishRequestManager {
      *                 for a wish to be made or updated
      * @return Optional.empty if values are missing, optional of same dto if success
      */
-    public Optional<WishDto<DutyWishDto>> updateDutyWish(WishDto<DutyWishDto> dutyWish,
-                                                         Integer userId) {
+    public Optional<WishDto<DutyWishDto>> updateDutyWish(
+        WishDto<DutyWishDto> dutyWish,
+        Integer userId
+    ) {
         if (dutyWish.getWishId() == null || dutyWish.getWishType() == null
             || dutyWish.getReason() == null
             || dutyWish.getDetails().getDutyId() == null) {
@@ -416,8 +419,10 @@ public class WishRequestManager {
 
     // creates of given Dto a WishEntryEntity
     // BEWARE! Id of entity wont be set
-    private Optional<IWishEntryEntity> fillInWishEntry(WishDto<DutyWishDto> dutyWish,
-                                                       Integer userId) {
+    private Optional<IWishEntryEntity> fillInWishEntry(
+        WishDto<DutyWishDto> dutyWish,
+        Integer userId
+    ) {
 
         Optional<IMusicianEntity> opMusician = this.musicianDao.findMusicianByUserId(userId);
         Integer musicianId = null;
