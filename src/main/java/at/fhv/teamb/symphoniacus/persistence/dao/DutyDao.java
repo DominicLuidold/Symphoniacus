@@ -314,7 +314,7 @@ public class DutyDao extends BaseDao<IDutyEntity> implements IDutyDao {
         query.setMaxResults(300);
         query.setParameter("start", LocalDateTime.now());
         query.setParameter("sectionId", section.getSectionId());
-        query.setParameter("isReadyForDutyScheduler", true);
+        query.setParameter("isReadyForDutyScheduler", false);
         query.setParameter("isReadyForOrganisationManager", false);
         query.setParameter("isPublished", false);
 
