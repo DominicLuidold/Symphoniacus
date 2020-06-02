@@ -475,10 +475,11 @@ public class WishRequestManager {
             wishEntry.setNegativeDutyWish(negativeWish);
         }
 
-        Optional<IMusicalPieceEntity> opMusicalPiece = Optional.empty();
         // Iterate through musical Pieces
         for (MusicalPieceApiDto musicalPieceDto : dutyWish.getDetails().getMusicalPieces()) {
-            opMusicalPiece = musicalPieceDao.find(musicalPieceDto.getMusicalPieceId());
+            Optional<IMusicalPieceEntity> opMusicalPiece = musicalPieceDao.find(
+                musicalPieceDto.getMusicalPieceId()
+            );
             if (opMusicalPiece.isPresent()) {
                 wishEntry.addMusicalPiece(opMusicalPiece.get());
             } else {
