@@ -539,7 +539,7 @@ public class WishRequestManager {
             );
             LOG.debug(
                 "Found {} duty wishes duties for user {} and duty {}",
-                result.size(),
+                wishes.size(),
                 userId,
                 dto.getDutyId()
             );
