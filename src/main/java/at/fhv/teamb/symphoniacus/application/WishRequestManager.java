@@ -228,7 +228,10 @@ public class WishRequestManager {
      * @param dutyId given Duty Id
      * @return all dutyWishes for a given duty and musician
      */
-    public Set<WishDto<DutyWishDto>> getAllDutyWishesForUser(Integer userId, Integer dutyId) {
+    public Set<WishDto<DutyWishDto>> getAllDutyWishesForUserAndDuty(
+        Integer userId,
+        Integer dutyId
+    ) {
         Optional<IDutyEntity> dutyEntity = this.dutyDao.find(dutyId);
         Optional<IMusicianEntity> musicianEntity = this.musicianDao.findMusicianByUserId(userId);
 
