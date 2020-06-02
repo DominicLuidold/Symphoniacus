@@ -1,6 +1,5 @@
 package at.fhv.teamb.symphoniacus.application;
 
-import at.fhv.teamb.symphoniacus.application.dto.NegativeDateWishDto;
 import at.fhv.teamb.symphoniacus.application.dto.wishdtos.DateWishDto;
 import at.fhv.teamb.symphoniacus.application.dto.wishdtos.WishDto;
 import at.fhv.teamb.symphoniacus.application.dto.wishdtos.WishTargetType;
@@ -17,7 +16,6 @@ import at.fhv.teamb.symphoniacus.persistence.dao.WishEntryDao;
 import at.fhv.teamb.symphoniacus.persistence.dao.interfaces.INegativeDateWishDao;
 import at.fhv.teamb.symphoniacus.persistence.dao.interfaces.INegativeDutyWishDao;
 import at.fhv.teamb.symphoniacus.persistence.dao.interfaces.IPositiveWishDao;
-import at.fhv.teamb.symphoniacus.persistence.model.UserEntity;
 import at.fhv.teamb.symphoniacus.persistence.dao.interfaces.IWishEntryDao;
 import at.fhv.teamb.symphoniacus.persistence.model.WishRequestable;
 import at.fhv.teamb.symphoniacus.persistence.model.interfaces.IDutyEntity;
@@ -98,11 +96,17 @@ public class WishRequestManager {
         return musician;
     }
 
-    public List<WishDto<DateWishDto>> getAllDateWishesForUser(Integer userId){
+    /**
+     * Creates Dtos for all DateWishes of a specific User and returns them as a List.
+     * @param userId given unique User Identification Number
+     * @return List of DateWishDtos
+     */
+    public List<WishDto<DateWishDto>> getAllDateWishesForUser(Integer userId) {
         Optional<IUserEntity> userEntity = new UserDao().find(userId);
-        if(userEntity.isPresent()){
+        if (userEntity.isPresent()) {
             LinkedList<WishDto<DateWishDto>> dateWishRequests = new LinkedList<>();
-            for(INegativeDateWishEntity ndwe : negDateWishDao.getAllNegativeDateWishesOfUser(userEntity.get())){
+            for (INegativeDateWishEntity ndwe :
+                negDateWishDao.getAllNegativeDateWishesOfUser(userEntity.get())) {
                 DateWishDto dateWishDto = new DateWishDto(ndwe.getStartDate(), ndwe.getEndDate());
                 WishDto<DateWishDto> wishDto = new WishDto.WishBuilder<DateWishDto>()
                     .withWishId(ndwe.getNegativeDateId())
@@ -115,11 +119,37 @@ public class WishRequestManager {
 
                 dateWishRequests.add(wishDto);
             }
+            return dateWishRequests;
 
         } else {
             return null;
         }
+    }
 
+    /**
+     * Creates Dto for a given DateWish with Id.
+     * @param dateWishId Identification Number of the DateWish
+     * @return Dto Object
+     */
+    public WishDto<DateWishDto> getDateWish(Integer dateWishId) {
+        Optional<INegativeDateWishEntity> ndwe = new NegativeDateWishDao().find(dateWishId);
+        if (ndwe.isPresent()) {
+            DateWishDto dateWishDto = new DateWishDto(
+                    ndwe.get().getStartDate(),
+                    ndwe.get().getEndDate()
+            );
+            WishDto<DateWishDto> wishDto = new WishDto.WishBuilder<DateWishDto>()
+                    .withWishId(ndwe.get().getNegativeDateId())
+                    .withWishType(WishType.NEGATIVE)
+                    .withTarget(WishTargetType.DATE)
+                    .withStatus("REVIEW")
+                    .withReason(ndwe.get().getDescription())
+                    .withDetails(dateWishDto)
+                    .build();
+
+            return wishDto;
+        }
+        return null;
     }
     
     public void loadAllWishEntriesForDuty(Duty duty) {
