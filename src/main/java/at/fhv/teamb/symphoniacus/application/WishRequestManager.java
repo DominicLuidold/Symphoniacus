@@ -1,5 +1,6 @@
 package at.fhv.teamb.symphoniacus.application;
 
+import at.fhv.teamb.symphoniacus.application.dto.DutyDto;
 import at.fhv.teamb.symphoniacus.application.dto.MusicalPieceApiDto;
 import at.fhv.teamb.symphoniacus.application.dto.wishdtos.DutyWishDto;
 import at.fhv.teamb.symphoniacus.application.dto.wishdtos.WishDto;
@@ -38,6 +39,7 @@ import at.fhv.teamb.symphoniacus.persistence.model.interfaces.IWishEntryEntity;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import java.util.HashSet;
 import java.util.LinkedHashSet;
 import java.util.LinkedList;
 import java.util.List;
@@ -63,6 +65,7 @@ public class WishRequestManager {
     private final IMusicalPieceDao musicalPieceDao;
     private Set<WishRequestable> allWishRequests;
     private List<IWishEntryEntity> wishEntries;
+    private DutyManager dutyManager;
 
     /**
      * Initializes the WishRequestManager.
@@ -76,6 +79,7 @@ public class WishRequestManager {
         this.musicianDao = new MusicianDao();
         this.seriesOfPerformancesDao = new SeriesOfPerformancesDao();
         this.musicalPieceDao = new MusicalPieceDao();
+        this.dutyManager = new DutyManager();
     }
 
     /**
@@ -512,5 +516,38 @@ public class WishRequestManager {
             LOG.debug("Given Wish Entry Id by API does not exist in DB:{} ", dutyWishId);
             return false;
         }
+    }
+
+    /**
+     * Get all future duty wishes of given user.
+     * @param userId Identifier of user
+     * @return Set of all Duty Wishes
+     */
+    public Set<WishDto<DutyWishDto>> getAllFutureDutyWishesOfUser(int userId) {
+        // Find all future unscheduled duties of user
+        Set<DutyDto> duties = this.dutyManager.findFutureUnscheduledDutiesForMusician(userId);
+        LOG.debug("Found {} future unscheduled duties for user", duties.size());
+
+        // Store all wishes here
+        Set<WishDto<DutyWishDto>> result = new HashSet<>();
+
+        // get duty wishes from those duties
+        for (DutyDto dto : duties) {
+            Set<WishDto<DutyWishDto>> wishes = getAllDutyWishesForUserAndDuty(
+                userId,
+                dto.getDutyId()
+            );
+            LOG.debug(
+                "Found {} duty wishes duties for user {} and duty {}",
+                result.size(),
+                userId,
+                dto.getDutyId()
+            );
+
+            result.addAll(wishes);
+        }
+
+        LOG.debug("Found {} duty wishes for user", result.size());
+        return result;
     }
 }
