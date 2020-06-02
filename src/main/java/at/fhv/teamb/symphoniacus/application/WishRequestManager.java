@@ -1,5 +1,6 @@
 package at.fhv.teamb.symphoniacus.application;
 
+import at.fhv.teamb.symphoniacus.application.dto.DutyDto;
 import at.fhv.teamb.symphoniacus.application.dto.MusicalPieceApiDto;
 import at.fhv.teamb.symphoniacus.application.dto.wishdtos.DutyWishDto;
 import at.fhv.teamb.symphoniacus.application.dto.wishdtos.WishDto;
@@ -38,6 +39,7 @@ import at.fhv.teamb.symphoniacus.persistence.model.interfaces.IWishEntryEntity;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import java.util.HashSet;
 import java.util.LinkedHashSet;
 import java.util.LinkedList;
 import java.util.List;
@@ -63,6 +65,7 @@ public class WishRequestManager {
     private final IMusicalPieceDao musicalPieceDao;
     private Set<WishRequestable> allWishRequests;
     private List<IWishEntryEntity> wishEntries;
+    private DutyManager dutyManager;
 
     /**
      * Initializes the WishRequestManager.
@@ -76,6 +79,7 @@ public class WishRequestManager {
         this.musicianDao = new MusicianDao();
         this.seriesOfPerformancesDao = new SeriesOfPerformancesDao();
         this.musicalPieceDao = new MusicalPieceDao();
+        this.dutyManager = new DutyManager();
     }
 
     /**
@@ -228,8 +232,10 @@ public class WishRequestManager {
      * @param dutyId given Duty Id
      * @return all dutyWishes for a given duty and musician
      */
-    public Set<WishDto<DutyWishDto>> getAllDutyWishesForUser(Integer userId, Integer dutyId) {
-
+    public Set<WishDto<DutyWishDto>> getAllDutyWishesForUserAndDuty(
+        Integer userId,
+        Integer dutyId
+    ) {
         Optional<IDutyEntity> dutyEntity = this.dutyDao.find(dutyId);
         Optional<IMusicianEntity> musicianEntity = this.musicianDao.findMusicianByUserId(userId);
 
@@ -300,8 +306,10 @@ public class WishRequestManager {
      * @param userId   given user Id of the wish giver, musician id is needed for creating a wish
      * @return filled Dto with all Id's or empty if something went wrong.
      */
-    public Optional<WishDto<DutyWishDto>> addNewDutyWish(WishDto<DutyWishDto> dutyWish,
-                                                         Integer userId) {
+    public Optional<WishDto<DutyWishDto>> addNewDutyWish(
+        WishDto<DutyWishDto> dutyWish,
+        Integer userId
+    ) {
 
         Optional<IWishEntryEntity> opWishEntry = fillInWishEntry(dutyWish, userId);
         IWishEntryEntity wishEntry = null;
@@ -377,8 +385,10 @@ public class WishRequestManager {
      *                 for a wish to be made or updated
      * @return Optional.empty if values are missing, optional of same dto if success
      */
-    public Optional<WishDto<DutyWishDto>> updateDutyWish(WishDto<DutyWishDto> dutyWish,
-                                                         Integer userId) {
+    public Optional<WishDto<DutyWishDto>> updateDutyWish(
+        WishDto<DutyWishDto> dutyWish,
+        Integer userId
+    ) {
         if (dutyWish.getWishId() == null || dutyWish.getWishType() == null
             || dutyWish.getReason() == null
             || dutyWish.getDetails().getDutyId() == null) {
@@ -416,8 +426,10 @@ public class WishRequestManager {
 
     // creates of given Dto a WishEntryEntity
     // BEWARE! Id of entity wont be set
-    private Optional<IWishEntryEntity> fillInWishEntry(WishDto<DutyWishDto> dutyWish,
-                                                       Integer userId) {
+    private Optional<IWishEntryEntity> fillInWishEntry(
+        WishDto<DutyWishDto> dutyWish,
+        Integer userId
+    ) {
 
         Optional<IMusicianEntity> opMusician = this.musicianDao.findMusicianByUserId(userId);
         Integer musicianId = null;
@@ -475,10 +487,11 @@ public class WishRequestManager {
             wishEntry.setNegativeDutyWish(negativeWish);
         }
 
-        Optional<IMusicalPieceEntity> opMusicalPiece = Optional.empty();
         // Iterate through musical Pieces
         for (MusicalPieceApiDto musicalPieceDto : dutyWish.getDetails().getMusicalPieces()) {
-            opMusicalPiece = musicalPieceDao.find(musicalPieceDto.getMusicalPieceId());
+            Optional<IMusicalPieceEntity> opMusicalPiece = musicalPieceDao.find(
+                musicalPieceDto.getMusicalPieceId()
+            );
             if (opMusicalPiece.isPresent()) {
                 wishEntry.addMusicalPiece(opMusicalPiece.get());
             } else {
@@ -503,5 +516,38 @@ public class WishRequestManager {
             LOG.debug("Given Wish Entry Id by API does not exist in DB:{} ", dutyWishId);
             return false;
         }
+    }
+
+    /**
+     * Get all future duty wishes of given user.
+     * @param userId Identifier of user
+     * @return Set of all Duty Wishes
+     */
+    public Set<WishDto<DutyWishDto>> getAllFutureDutyWishesOfUser(int userId) {
+        // Find all future unscheduled duties of user
+        Set<DutyDto> duties = this.dutyManager.findFutureUnscheduledDutiesForMusician(userId);
+        LOG.debug("Found {} future unscheduled duties for user", duties.size());
+
+        // Store all wishes here
+        Set<WishDto<DutyWishDto>> result = new HashSet<>();
+
+        // get duty wishes from those duties
+        for (DutyDto dto : duties) {
+            Set<WishDto<DutyWishDto>> wishes = getAllDutyWishesForUserAndDuty(
+                userId,
+                dto.getDutyId()
+            );
+            LOG.debug(
+                "Found {} duty wishes duties for user {} and duty {}",
+                wishes.size(),
+                userId,
+                dto.getDutyId()
+            );
+
+            result.addAll(wishes);
+        }
+
+        LOG.debug("Found {} duty wishes for user", result.size());
+        return result;
     }
 }
