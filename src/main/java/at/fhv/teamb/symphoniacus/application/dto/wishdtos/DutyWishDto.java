@@ -1,7 +1,9 @@
 package at.fhv.teamb.symphoniacus.application.dto.wishdtos;
 
-import java.util.HashMap;
-import java.util.Map;
+import at.fhv.teamb.symphoniacus.application.dto.MusicalPieceApiDto;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * API class for {@link DutyWishDto}.
@@ -10,33 +12,48 @@ import java.util.Map;
  */
 public class DutyWishDto {
     private Integer dutyId;
-    private Map<Integer, String> musicalPieces;
+    private List<MusicalPieceApiDto> musicalPieces;
     private Boolean forEntireSop;
 
-    public DutyWishDto() {}
-
-    public DutyWishDto(Integer dutyId, Boolean forEntireSop) {
-        this.dutyId = dutyId;
-        this.forEntireSop = forEntireSop;
+    public DutyWishDto() {
+        this.musicalPieces = null;
     }
 
     /**
-     * Add a muscialPiece to a Dutywish.
+     * Constructor of DutyWishDto.
      *
-     * @param musicalPieceId to add
+     * @param dutyId Duty id of the duty which the wish is set for
+     * @param forEntireSop boolean if wish is set for whole Series
+     */
+    public DutyWishDto(Integer dutyId, Boolean forEntireSop) {
+        this.dutyId = dutyId;
+        this.forEntireSop = forEntireSop;
+        this.musicalPieces = null;
+    }
+
+    /**
+     * Add a musical Piece to Duty wish.
      */
     public void addMusicalPiece(Integer musicalPieceId, String name) {
         if (musicalPieces == null) {
-            musicalPieces = new HashMap<>();
+            musicalPieces = new ArrayList<>();
         }
-        musicalPieces.put(musicalPieceId, name);
+        musicalPieces.add(new MusicalPieceApiDto(musicalPieceId, name));
     }
 
     public void setDutyId(Integer dutyId) {
         this.dutyId = dutyId;
     }
 
-    public void setMusicalPieces(Map<Integer, String> musicalPieces) {
+    public Integer getDutyId() {
+        return this.dutyId;
+    }
+
+    public List<MusicalPieceApiDto> getMusicalPieces() {
+        return this.musicalPieces;
+    }
+
+    public void setMusicalPieces(List<MusicalPieceApiDto> musicalPieces) {
         this.musicalPieces = musicalPieces;
     }
 
@@ -44,15 +61,7 @@ public class DutyWishDto {
         this.forEntireSop = forEntireSop;
     }
 
-    public Integer getDutyId() {
-        return dutyId;
-    }
-
-    public Map<Integer, String> getMusicalPieces() {
-        return musicalPieces;
-    }
-
     public Boolean getForEntireSop() {
-        return forEntireSop;
+        return this.forEntireSop;
     }
 }

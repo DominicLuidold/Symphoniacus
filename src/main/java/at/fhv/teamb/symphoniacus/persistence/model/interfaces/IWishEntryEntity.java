@@ -25,7 +25,7 @@ public interface IWishEntryEntity {
 
     void setNegativeDutyWish(INegativeDutyWishEntity negativeDutyWish);
 
-    void addMusicalPieces(IMusicalPieceEntity musicalPiece);
+    void addMusicalPiece(IMusicalPieceEntity musicalPiece);
 
     void removeMusicalPiece(IMusicalPieceEntity musicalPiece);
 
