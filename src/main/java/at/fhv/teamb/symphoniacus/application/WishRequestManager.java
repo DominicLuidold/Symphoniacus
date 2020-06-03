@@ -158,7 +158,7 @@ public class WishRequestManager {
      * Creates Dto for a given NegativeDateWish with Id.
      *
      * @param dateWishId Identification Number of the NegativeDateWish
-     * @return Optional.empty if values are missing, optional of Dto Object WishDto<DateWishDto> if Success
+     * @return Optional.empty if values are missing, optional of Dto Object if Success
      */
     public Optional<WishDto<DateWishDto>> getNegativeDateWish(Integer dateWishId) {
         Optional<INegativeDateWishEntity> ndwe = this.negDateWishDao.find(dateWishId);
@@ -167,7 +167,8 @@ public class WishRequestManager {
                     ndwe.get().getStartDate(),
                     ndwe.get().getEndDate()
             );
-            Optional<WishDto<DateWishDto>> wishDto = Optional.of(new WishDto.WishBuilder<DateWishDto>()
+            Optional<WishDto<DateWishDto>> wishDto
+                = Optional.of(new WishDto.WishBuilder<DateWishDto>()
                     .withWishId(ndwe.get().getNegativeDateId())
                     .withWishType(WishType.NEGATIVE)
                     .withTarget(WishTargetType.DATE)
@@ -507,10 +508,10 @@ public class WishRequestManager {
      * Delivers a filled WishDto.
      *
      * @param wishId Id of the needed WishEntry (DB)
-     * @return Optional.empty if values are missing, optional Dto of WishDto<DutyWishDto/> if success
+     * @return Optional.empty if values are missing,
+     *         optional Dto of WishDto<DutyWishDto/> if success
      */
     public Optional<WishDto<DutyWishDto>> getDutyWish(Integer wishId) {
-
         // Get the WishEntry from DB
         Optional<IWishEntryEntity> opWishEntry = this.wishEntryDao.find(wishId);
         IWishEntryEntity wishEntry = null;
