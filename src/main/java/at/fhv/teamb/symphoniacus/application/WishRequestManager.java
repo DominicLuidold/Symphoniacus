@@ -506,7 +506,7 @@ public class WishRequestManager {
      * Delivers a filled WishDto.
      *
      * @param wishId Id of the needed WishEntry (DB)
-     * @return Dto of WishDto<DutyWishDto>
+     * @return Dto of WishDto<DutyWishDto/>
      */
     public WishDto<DutyWishDto> getDutyWish(Integer wishId) {
         // Get the WishEntry from DB
