@@ -1,6 +1,5 @@
 package at.fhv.teamb.symphoniacus.application;
 
-import at.fhv.orchestraria.domain.Imodel.INegativeDateWish;
 import at.fhv.teamb.symphoniacus.application.dto.wishdtos.DateWishDto;
 import at.fhv.teamb.symphoniacus.application.dto.MusicalPieceApiDto;
 import at.fhv.teamb.symphoniacus.application.dto.wishdtos.DutyWishDto;
@@ -19,7 +18,6 @@ import at.fhv.teamb.symphoniacus.persistence.dao.MusicianDao;
 import at.fhv.teamb.symphoniacus.persistence.dao.NegativeDateWishDao;
 import at.fhv.teamb.symphoniacus.persistence.dao.NegativeDutyWishDao;
 import at.fhv.teamb.symphoniacus.persistence.dao.PositiveWishDao;
-import at.fhv.teamb.symphoniacus.persistence.dao.UserDao;
 import at.fhv.teamb.symphoniacus.persistence.dao.SeriesOfPerformancesDao;
 import at.fhv.teamb.symphoniacus.persistence.dao.WishEntryDao;
 import at.fhv.teamb.symphoniacus.persistence.dao.interfaces.IDutyDao;
@@ -38,7 +36,6 @@ import at.fhv.teamb.symphoniacus.persistence.model.WishRequestable;
 import at.fhv.teamb.symphoniacus.persistence.model.interfaces.IDutyEntity;
 import at.fhv.teamb.symphoniacus.persistence.model.interfaces.IMusicalPieceEntity;
 import at.fhv.teamb.symphoniacus.persistence.model.interfaces.INegativeDateWishEntity;
-import at.fhv.teamb.symphoniacus.persistence.model.interfaces.IUserEntity;
 import at.fhv.teamb.symphoniacus.persistence.model.interfaces.IMusicianEntity;
 import at.fhv.teamb.symphoniacus.persistence.model.interfaces.INegativeDutyWishEntity;
 import at.fhv.teamb.symphoniacus.persistence.model.interfaces.IPositiveWishEntity;
@@ -131,14 +128,14 @@ public class WishRequestManager {
      * Creates Dtos for all DateWishes of a specific User and returns them as a List.
      *
      * @param userId given unique User Identification Number
-     * @return List of DateWishDtos
+     * @return Set of DateWishDtos
      */
-    public List<WishDto<DateWishDto>> getAllDateWishesForUser(Integer userId) {
-        Optional<IUserEntity> userEntity = new UserDao().find(userId);
-        if (userEntity.isPresent()) {
-            LinkedList<WishDto<DateWishDto>> dateWishRequests = new LinkedList<>();
+    public Set<WishDto<DateWishDto>> getAllDateWishesForUser(Integer userId) {
+        Optional<IMusicianEntity> musicianEntity = this.musicianDao.findMusicianByUserId(userId);
+        if (musicianEntity.isPresent()) {
+            Set<WishDto<DateWishDto>> dateWishRequests = new LinkedHashSet<>();
             for (INegativeDateWishEntity ndwe :
-                    negDateWishDao.getAllNegativeDateWishesOfUser(userEntity.get())) {
+                negDateWishDao.getAllNegativeDateWishesOfMusician(musicianEntity.get())) {
                 DateWishDto dateWishDto = new DateWishDto(ndwe.getStartDate(), ndwe.getEndDate());
                 WishDto<DateWishDto> wishDto = new WishDto.WishBuilder<DateWishDto>()
                         .withWishId(ndwe.getNegativeDateId())
@@ -155,7 +152,7 @@ public class WishRequestManager {
 
         }
         LOG.error("Delivered User Id:{} could not be found @getAllDateWishesForUser");
-        return null;
+        return new LinkedHashSet<>();
     }
 
     /**
@@ -252,7 +249,7 @@ public class WishRequestManager {
      * @param dateWishId id of given WishEntry
      * @return true if removed, false if removing failed
      */
-    public boolean deleteDateWish(Integer dateWishId) {
+    public boolean removeDateWish(Integer dateWishId) {
         Optional<INegativeDateWishEntity> opDateWishEntity = this.negDateWishDao.find(dateWishId);
         if (opDateWishEntity.isPresent()) {
             return negDateWishDao.remove(opDateWishEntity.get());

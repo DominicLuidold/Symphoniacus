@@ -110,7 +110,7 @@ public class MusicianDao extends BaseDao<IMusicianEntity>
     }
 
     /**
-     * Returns Musician matching given userSHortcut.
+     * Returns Musician matching given userShortcut.
      * @param userShortcut Shortcut of Musician
      * @return Musician if found, else Optional empty
      */

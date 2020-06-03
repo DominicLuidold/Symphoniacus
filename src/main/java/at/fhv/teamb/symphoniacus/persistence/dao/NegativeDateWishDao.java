@@ -5,6 +5,7 @@ import at.fhv.teamb.symphoniacus.persistence.dao.interfaces.INegativeDateWishDao
 import at.fhv.teamb.symphoniacus.persistence.model.NegativeDateWishEntity;
 import at.fhv.teamb.symphoniacus.persistence.model.WishRequestable;
 import at.fhv.teamb.symphoniacus.persistence.model.interfaces.IDutyEntity;
+import at.fhv.teamb.symphoniacus.persistence.model.interfaces.IMusicianEntity;
 import at.fhv.teamb.symphoniacus.persistence.model.interfaces.INegativeDateWishEntity;
 import at.fhv.teamb.symphoniacus.persistence.model.interfaces.IUserEntity;
 
@@ -70,16 +71,14 @@ public class NegativeDateWishDao extends BaseDao<INegativeDateWishEntity>
      * {@inheritDoc}
      */
     @Override
-    public List<INegativeDateWishEntity> getAllNegativeDateWishesOfUser(IUserEntity user) {
+    public List<INegativeDateWishEntity> getAllNegativeDateWishesOfMusician(IMusicianEntity musician) {
         TypedQuery<INegativeDateWishEntity> query = entityManager.createQuery(
                 "SELECT nd FROM NegativeDateWishEntity nd "
-                        + "JOIN nd.musician mu "
-                        + "JOIN mu.user usr "
-                        + "WHERE usr = :user ",
+                        + "WHERE nd.musician = :musician ",
                 INegativeDateWishEntity.class
         );
 
-        query.setParameter("user", user);
+        query.setParameter("musician", musician);
 
         return query.getResultList();
     }

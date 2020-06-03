@@ -3,6 +3,7 @@ package at.fhv.teamb.symphoniacus.persistence.dao.interfaces;
 import at.fhv.teamb.symphoniacus.persistence.Dao;
 import at.fhv.teamb.symphoniacus.persistence.model.WishRequestable;
 import at.fhv.teamb.symphoniacus.persistence.model.interfaces.IDutyEntity;
+import at.fhv.teamb.symphoniacus.persistence.model.interfaces.IMusicianEntity;
 import at.fhv.teamb.symphoniacus.persistence.model.interfaces.INegativeDateWishEntity;
 import at.fhv.teamb.symphoniacus.persistence.model.interfaces.IUserEntity;
 
@@ -19,10 +20,10 @@ public interface INegativeDateWishDao extends Dao<INegativeDateWishEntity> {
     List<WishRequestable> getAllNegativeDateWishes(IDutyEntity duty);
 
     /**
-     * Finds all NegativeDateWishes for a given user.
+     * Finds all NegativeDateWishes for a given musician.
      *
-     * @param user user
+     * @param musician musician
      * @return List of (Interface)WishRequestable
      */
-    List<INegativeDateWishEntity> getAllNegativeDateWishesOfUser(IUserEntity user);
+    List<INegativeDateWishEntity> getAllNegativeDateWishesOfMusician(IMusicianEntity musician);
 }
