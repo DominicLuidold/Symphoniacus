@@ -246,6 +246,22 @@ public class WishRequestManager {
         return Optional.of(dateWish);
     }
 
+    /**
+     * Removes a DateWish to given Id.
+     *
+     * @param dateWishId id of given WishEntry
+     * @return true if removed, false if removing failed
+     */
+    public boolean deleteDateWish(Integer dateWishId) {
+        Optional<INegativeDateWishEntity> opDateWishEntity = this.negDateWishDao.find(dateWishId);
+        if (opDateWishEntity.isPresent()) {
+            return negDateWishDao.remove(opDateWishEntity.get());
+        } else {
+            LOG.debug("Given DateWish Id by API does not exist in DB:{} ", dateWishId);
+            return false;
+        }
+    }
+
     // creates of given Dto a DateWishEntity
     // BEWARE! Id of entity wont be set
     private Optional<INegativeDateWishEntity> fillInDateWish(
@@ -493,7 +509,7 @@ public class WishRequestManager {
      * Delivers a filled WishDto.
      *
      * @param wishId Id of the needed WishEntry (DB)
-     * @return Dto of WishDto<DutyWishDto/>
+     * @return Dto of WishDto<DutyWishDto>
      */
     public WishDto<DutyWishDto> getDutyWish(Integer wishId) {
         // Get the WishEntry from DB
