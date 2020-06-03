@@ -81,7 +81,7 @@ public class NegativeDateWishDao extends BaseDao<INegativeDateWishEntity>
     ) {
         TypedQuery<INegativeDateWishEntity> query = entityManager.createQuery(
                 "SELECT nd FROM NegativeDateWishEntity nd "
-                        + "WHERE nd.musician = :musician ",
+                + "WHERE nd.musician = :musician ",
                 INegativeDateWishEntity.class
         );
 

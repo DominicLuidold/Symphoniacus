@@ -91,7 +91,7 @@ public class WishRequestManager {
      * @param duty duty
      */
     public void loadAllWishRequests(IDutyEntity duty) {
-        allWishRequests = new LinkedHashSet<>();
+        this.allWishRequests = new LinkedHashSet<>();
         this.allWishRequests.addAll(positiveWishDao.getAllPositiveWishes(duty));
         this.allWishRequests.addAll(negDateWishDao.getAllNegativeDateWishes(duty));
         this.allWishRequests.addAll(negDutyWishDao.getAllNegativeDutyWishes(duty));
@@ -134,7 +134,7 @@ public class WishRequestManager {
         if (musicianEntity.isPresent()) {
             Set<WishDto<DateWishDto>> dateWishRequests = new LinkedHashSet<>();
             for (INegativeDateWishEntity ndwe :
-                negDateWishDao.getAllNegativeDateWishesOfMusician(musicianEntity.get())) {
+                this.negDateWishDao.getAllNegativeDateWishesOfMusician(musicianEntity.get())) {
                 DateWishDto dateWishDto = new DateWishDto(ndwe.getStartDate(), ndwe.getEndDate());
                 WishDto<DateWishDto> wishDto = new WishDto.WishBuilder<DateWishDto>()
                         .withWishId(ndwe.getNegativeDateId())
@@ -158,28 +158,28 @@ public class WishRequestManager {
      * Creates Dto for a given NegativeDateWish with Id.
      *
      * @param dateWishId Identification Number of the NegativeDateWish
-     * @return Dto Object
+     * @return Optional.empty if values are missing, optional of Dto Object WishDto<DateWishDto> if Success
      */
-    public WishDto<DateWishDto> getNegativeDateWish(Integer dateWishId) {
-        Optional<INegativeDateWishEntity> ndwe = negDateWishDao.find(dateWishId);
+    public Optional<WishDto<DateWishDto>> getNegativeDateWish(Integer dateWishId) {
+        Optional<INegativeDateWishEntity> ndwe = this.negDateWishDao.find(dateWishId);
         if (ndwe.isPresent()) {
             DateWishDto dateWishDto = new DateWishDto(
                     ndwe.get().getStartDate(),
                     ndwe.get().getEndDate()
             );
-            WishDto<DateWishDto> wishDto = new WishDto.WishBuilder<DateWishDto>()
+            Optional<WishDto<DateWishDto>> wishDto = Optional.of(new WishDto.WishBuilder<DateWishDto>()
                     .withWishId(ndwe.get().getNegativeDateId())
                     .withWishType(WishType.NEGATIVE)
                     .withTarget(WishTargetType.DATE)
                     .withStatus(WishStatus.REVIEW)
                     .withReason(ndwe.get().getDescription())
                     .withDetails(dateWishDto)
-                    .build();
+                    .build());
 
             return wishDto;
         }
         LOG.error("Delivered Date Id:{} could not be found @getNegativeDateWish");
-        return null;
+        return Optional.empty();
     }
 
     /**
@@ -187,7 +187,7 @@ public class WishRequestManager {
      *
      * @param dateWish given Dto
      * @param userId   given user Id of the wish giver, musician id is needed for creating a wish
-     * @return filled Dto with all Id's or empty if something went wrong.
+     * @return Optional of filled Dto with all Id's or empty if something went wrong.
      */
     public Optional<WishDto<DateWishDto>> addNewNegativeDateWish(
         WishDto<DateWishDto> dateWish,
@@ -202,9 +202,9 @@ public class WishRequestManager {
         } else {
             return Optional.empty();
         }
-        Optional<INegativeDateWishEntity> result = negDateWishDao.persist(dateWishEntity);
+        Optional<INegativeDateWishEntity> result = this.negDateWishDao.persist(dateWishEntity);
         if (result.isPresent()) {
-            return Optional.ofNullable(getNegativeDateWish(result.get().getNegativeDateId()));
+            return getNegativeDateWish(result.get().getNegativeDateId());
         } else {
             LOG.error("NegativeDateWish couldn't be persisted");
             return Optional.empty();
@@ -240,7 +240,7 @@ public class WishRequestManager {
             return Optional.empty();
         }
         dateWishEntity.setNegativeDateId(dateWish.getWishId());
-        negDateWishDao.update(dateWishEntity);
+        this.negDateWishDao.update(dateWishEntity);
         return Optional.of(dateWish);
     }
 
@@ -253,7 +253,7 @@ public class WishRequestManager {
     public boolean removeNegativeDateWish(Integer dateWishId) {
         Optional<INegativeDateWishEntity> opDateWishEntity = this.negDateWishDao.find(dateWishId);
         if (opDateWishEntity.isPresent()) {
-            return negDateWishDao.remove(opDateWishEntity.get());
+            return this.negDateWishDao.remove(opDateWishEntity.get());
         } else {
             LOG.debug("Given DateWish Id by API does not exist in DB:{} ", dateWishId);
             return false;
@@ -276,7 +276,7 @@ public class WishRequestManager {
             return Optional.empty();
         }
 
-        Optional<IMusicianEntity> musician = musicianDao.find(musicianId);
+        Optional<IMusicianEntity> musician = this.musicianDao.find(musicianId);
         if (musician.isEmpty()) {
             LOG.error("MusicianId {} did not deliver a result @addNewDateWish", musicianId);
             return Optional.empty();
@@ -494,11 +494,11 @@ public class WishRequestManager {
         } else {
             return Optional.empty();
         }
-        Optional<IWishEntryEntity> result = wishEntryDao.persist(wishEntry);
+        Optional<IWishEntryEntity> result = this.wishEntryDao.persist(wishEntry);
         if (result.isPresent()) {
-            return Optional.ofNullable(getDutyWish(result.get().getWishEntryId()));
+            return getDutyWish(result.get().getWishEntryId());
         } else {
-            LOG.error("Wishentry couldn't be persisted");
+            LOG.error("WishEntry couldn't be persisted");
             return Optional.empty();
         }
     }
@@ -507,18 +507,18 @@ public class WishRequestManager {
      * Delivers a filled WishDto.
      *
      * @param wishId Id of the needed WishEntry (DB)
-     * @return Dto of WishDto<DutyWishDto/>
+     * @return Optional.empty if values are missing, optional Dto of WishDto<DutyWishDto/> if success
      */
-    public WishDto<DutyWishDto> getDutyWish(Integer wishId) {
+    public Optional<WishDto<DutyWishDto>> getDutyWish(Integer wishId) {
 
         // Get the WishEntry from DB
-        Optional<IWishEntryEntity> opWishEntry = wishEntryDao.find(wishId);
+        Optional<IWishEntryEntity> opWishEntry = this.wishEntryDao.find(wishId);
         IWishEntryEntity wishEntry = null;
         if (opWishEntry.isPresent()) {
             wishEntry = opWishEntry.get();
         } else {
             LOG.error("Wish entry Id:{} could not be found", wishId);
-            return null;
+            return Optional.empty();
         }
 
         //Build DutyWishDto
@@ -550,7 +550,7 @@ public class WishRequestManager {
                     "WishEntry id:{} cointaines neither a positive, nor negative wish @getDutyWish",
                     wishEntry.getWishEntryId());
         }
-        return result.build();
+        return Optional.of(result.build());
     }
 
 
@@ -583,7 +583,7 @@ public class WishRequestManager {
         wishEntry.setWishEntryId(dutyWish.getWishId());
 
         // Set correct Wish Id's
-        Optional<IWishEntryEntity> opOriginalEntry = wishEntryDao.find(dutyWish.getWishId());
+        Optional<IWishEntryEntity> opOriginalEntry = this.wishEntryDao.find(dutyWish.getWishId());
         IWishEntryEntity originalEntry = null;
         if (opOriginalEntry.isPresent()) {
             originalEntry = opOriginalEntry.get();
@@ -597,7 +597,7 @@ public class WishRequestManager {
                 return Optional.empty();
             }
         }
-        wishEntryDao.update(wishEntry);
+        this.wishEntryDao.update(wishEntry);
         return Optional.of(dutyWish);
     }
 
@@ -617,7 +617,7 @@ public class WishRequestManager {
             return Optional.empty();
         }
 
-        Optional<IMusicianEntity> musician = musicianDao.find(musicianId);
+        Optional<IMusicianEntity> musician = this.musicianDao.find(musicianId);
         if (musician.isEmpty()) {
             LOG.error("MusicianId {} did not deliver a result @addNewDutyWish", musicianId);
             return Optional.empty();
@@ -628,7 +628,7 @@ public class WishRequestManager {
             return Optional.empty();
         }
 
-        Optional<IDutyEntity> opDuty = dutyDao.find(dutyWish.getDetails().getDutyId());
+        Optional<IDutyEntity> opDuty = this.dutyDao.find(dutyWish.getDetails().getDutyId());
         if (opDuty.isEmpty()) {
             LOG.error("Delivered Duty Id:{} could not be found @addNewDutyWish",
                     dutyWish.getDetails().getDutyId());
@@ -666,7 +666,7 @@ public class WishRequestManager {
 
         // Iterate through musical Pieces
         for (MusicalPieceApiDto musicalPieceDto : dutyWish.getDetails().getMusicalPieces()) {
-            Optional<IMusicalPieceEntity> opMusicalPiece = musicalPieceDao.find(
+            Optional<IMusicalPieceEntity> opMusicalPiece = this.musicalPieceDao.find(
                     musicalPieceDto.getMusicalPieceId()
             );
             if (opMusicalPiece.isPresent()) {
@@ -688,7 +688,7 @@ public class WishRequestManager {
     public boolean removeDutyWish(Integer dutyWishId) {
         Optional<IWishEntryEntity> opWishEntry = this.wishEntryDao.find(dutyWishId);
         if (opWishEntry.isPresent()) {
-            return wishEntryDao.remove(opWishEntry.get());
+            return this.wishEntryDao.remove(opWishEntry.get());
         } else {
             LOG.debug("Given Wish Entry Id by API does not exist in DB:{} ", dutyWishId);
             return false;
