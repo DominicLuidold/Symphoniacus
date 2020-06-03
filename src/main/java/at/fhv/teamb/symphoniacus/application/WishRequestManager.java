@@ -42,7 +42,6 @@ import at.fhv.teamb.symphoniacus.persistence.model.interfaces.IPositiveWishEntit
 import at.fhv.teamb.symphoniacus.persistence.model.interfaces.IWishEntryEntity;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-
 import java.util.HashSet;
 import java.util.LinkedHashSet;
 import java.util.LinkedList;
@@ -125,12 +124,12 @@ public class WishRequestManager {
     }
 
     /**
-     * Creates Dtos for all DateWishes of a specific User and returns them as a List.
+     * Creates Dtos for all NegativeDateWishes of a specific User and returns them as a List.
      *
      * @param userId given unique User Identification Number
      * @return Set of DateWishDtos
      */
-    public Set<WishDto<DateWishDto>> getAllDateWishesForUser(Integer userId) {
+    public Set<WishDto<DateWishDto>> getAllNegativeDateWishesForUser(Integer userId) {
         Optional<IMusicianEntity> musicianEntity = this.musicianDao.findMusicianByUserId(userId);
         if (musicianEntity.isPresent()) {
             Set<WishDto<DateWishDto>> dateWishRequests = new LinkedHashSet<>();
@@ -151,17 +150,17 @@ public class WishRequestManager {
             return dateWishRequests;
 
         }
-        LOG.error("Delivered User Id:{} could not be found @getAllDateWishesForUser");
+        LOG.error("Delivered User Id:{} could not be found @getAllNegativeDateWishesForUser");
         return new LinkedHashSet<>();
     }
 
     /**
-     * Creates Dto for a given DateWish with Id.
+     * Creates Dto for a given NegativeDateWish with Id.
      *
-     * @param dateWishId Identification Number of the DateWish
+     * @param dateWishId Identification Number of the NegativeDateWish
      * @return Dto Object
      */
-    public WishDto<DateWishDto> getDateWish(Integer dateWishId) {
+    public WishDto<DateWishDto> getNegativeDateWish(Integer dateWishId) {
         Optional<INegativeDateWishEntity> ndwe = negDateWishDao.find(dateWishId);
         if (ndwe.isPresent()) {
             DateWishDto dateWishDto = new DateWishDto(
@@ -179,23 +178,24 @@ public class WishRequestManager {
 
             return wishDto;
         }
-        LOG.error("Delivered Date Id:{} could not be found @getDateWish");
+        LOG.error("Delivered Date Id:{} could not be found @getNegativeDateWish");
         return null;
     }
 
     /**
-     * API - Persists a given DateWish with all dependencies to the DB.
+     * API - Persists a given NegativeDateWish with all dependencies to the DB.
      *
      * @param dateWish given Dto
      * @param userId   given user Id of the wish giver, musician id is needed for creating a wish
      * @return filled Dto with all Id's or empty if something went wrong.
      */
-    public Optional<WishDto<DateWishDto>> addNewDateWish(
-            WishDto<DateWishDto> dateWish,
-            Integer userId
+    public Optional<WishDto<DateWishDto>> addNewNegativeDateWish(
+        WishDto<DateWishDto> dateWish,
+        Integer userId
     ) {
 
-        Optional<INegativeDateWishEntity> opDateWishEntity = fillInDateWish(dateWish, userId);
+        Optional<INegativeDateWishEntity> opDateWishEntity
+            = fillInNegativeDateWish(dateWish, userId);
         INegativeDateWishEntity dateWishEntity = null;
         if (opDateWishEntity.isPresent()) {
             dateWishEntity = opDateWishEntity.get();
@@ -204,7 +204,7 @@ public class WishRequestManager {
         }
         Optional<INegativeDateWishEntity> result = negDateWishDao.persist(dateWishEntity);
         if (result.isPresent()) {
-            return Optional.ofNullable(getDateWish(result.get().getNegativeDateId()));
+            return Optional.ofNullable(getNegativeDateWish(result.get().getNegativeDateId()));
         } else {
             LOG.error("NegativeDateWish couldn't be persisted");
             return Optional.empty();
@@ -212,14 +212,14 @@ public class WishRequestManager {
     }
 
     /**
-     * Updates a Wish by given DateWishDto in DB.
+     * Updates a NegativeDateWish by given DateWishDto in DB.
      *
      * @param dateWish given DateWishDto
      * @param userId   given User Id is needed because musician id is needed
      *                 for a wish to be made or updated
      * @return Optional.empty if values are missing, optional of same dto if success
      */
-    public Optional<WishDto<DateWishDto>> updateDateWish(
+    public Optional<WishDto<DateWishDto>> updateNegativeDateWish(
             WishDto<DateWishDto> dateWish,
             Integer userId
     ) {
@@ -228,10 +228,11 @@ public class WishRequestManager {
                 || dateWish.getDetails().getStart() == null
                 || dateWish.getDetails().getEnd() == null
         ) {
-            LOG.error("Some value @update was null @updateDateWish");
+            LOG.error("Some value @update was null @updateNegativeDateWish");
             return Optional.empty();
         }
-        Optional<INegativeDateWishEntity> opDateWishEntity = fillInDateWish(dateWish, userId);
+        Optional<INegativeDateWishEntity> opDateWishEntity
+            = fillInNegativeDateWish(dateWish, userId);
         INegativeDateWishEntity dateWishEntity = null;
         if (opDateWishEntity.isPresent()) {
             dateWishEntity = opDateWishEntity.get();
@@ -244,12 +245,12 @@ public class WishRequestManager {
     }
 
     /**
-     * Removes a DateWish to given Id.
+     * Removes a NegativeDateWish with given Id.
      *
-     * @param dateWishId id of given WishEntry
+     * @param dateWishId id of given NegativeDateWish
      * @return true if removed, false if removing failed
      */
-    public boolean removeDateWish(Integer dateWishId) {
+    public boolean removeNegativeDateWish(Integer dateWishId) {
         Optional<INegativeDateWishEntity> opDateWishEntity = this.negDateWishDao.find(dateWishId);
         if (opDateWishEntity.isPresent()) {
             return negDateWishDao.remove(opDateWishEntity.get());
@@ -261,9 +262,9 @@ public class WishRequestManager {
 
     // creates of given Dto a DateWishEntity
     // BEWARE! Id of entity wont be set
-    private Optional<INegativeDateWishEntity> fillInDateWish(
-            WishDto<DateWishDto> dateWish,
-            Integer userId
+    private Optional<INegativeDateWishEntity> fillInNegativeDateWish(
+        WishDto<DateWishDto> dateWish,
+        Integer userId
     ) {
 
         Optional<IMusicianEntity> opMusician = this.musicianDao.findMusicianByUserId(userId);
@@ -289,7 +290,7 @@ public class WishRequestManager {
         INegativeDateWishEntity dateWishEntity = new NegativeDateWishEntity();
         dateWishEntity.setStartDate(dateWish.getDetails().getStart());
         dateWishEntity.setEndDate(dateWish.getDetails().getEnd());
-        dateWishEntity.setMusician(musician.get()); //theoretisch nullable
+        dateWishEntity.setMusician(musician.get());
         dateWishEntity.setDescription(dateWish.getReason());
 
         return Optional.of(dateWishEntity);
@@ -509,6 +510,7 @@ public class WishRequestManager {
      * @return Dto of WishDto<DutyWishDto/>
      */
     public WishDto<DutyWishDto> getDutyWish(Integer wishId) {
+
         // Get the WishEntry from DB
         Optional<IWishEntryEntity> opWishEntry = wishEntryDao.find(wishId);
         IWishEntryEntity wishEntry = null;
@@ -602,8 +604,8 @@ public class WishRequestManager {
     // creates of given Dto a WishEntryEntity
     // BEWARE! Id of entity wont be set
     private Optional<IWishEntryEntity> fillInWishEntry(
-            WishDto<DutyWishDto> dutyWish,
-            Integer userId
+        WishDto<DutyWishDto> dutyWish,
+        Integer userId
     ) {
 
         Optional<IMusicianEntity> opMusician = this.musicianDao.findMusicianByUserId(userId);

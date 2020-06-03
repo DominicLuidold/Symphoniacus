@@ -5,8 +5,6 @@ import at.fhv.teamb.symphoniacus.persistence.model.WishRequestable;
 import at.fhv.teamb.symphoniacus.persistence.model.interfaces.IDutyEntity;
 import at.fhv.teamb.symphoniacus.persistence.model.interfaces.IMusicianEntity;
 import at.fhv.teamb.symphoniacus.persistence.model.interfaces.INegativeDateWishEntity;
-import at.fhv.teamb.symphoniacus.persistence.model.interfaces.IUserEntity;
-
 import java.util.List;
 
 public interface INegativeDateWishDao extends Dao<INegativeDateWishEntity> {
