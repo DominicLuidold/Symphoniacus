@@ -5,6 +5,7 @@ import at.fhv.teamb.symphoniacus.persistence.dao.interfaces.INegativeDateWishDao
 import at.fhv.teamb.symphoniacus.persistence.model.NegativeDateWishEntity;
 import at.fhv.teamb.symphoniacus.persistence.model.WishRequestable;
 import at.fhv.teamb.symphoniacus.persistence.model.interfaces.IDutyEntity;
+import at.fhv.teamb.symphoniacus.persistence.model.interfaces.IMusicianEntity;
 import at.fhv.teamb.symphoniacus.persistence.model.interfaces.INegativeDateWishEntity;
 import java.util.List;
 import java.util.Optional;
@@ -39,7 +40,14 @@ public class NegativeDateWishDao extends BaseDao<INegativeDateWishEntity>
 
     @Override
     public boolean remove(INegativeDateWishEntity elem) {
-        return false;
+        try {
+            entityManager.getTransaction().begin();
+            entityManager.remove(elem);
+            entityManager.getTransaction().commit();
+        } catch (Exception e) {
+            return false;
+        }
+        return true;
     }
 
     /**
@@ -60,6 +68,24 @@ public class NegativeDateWishDao extends BaseDao<INegativeDateWishEntity>
         query.setParameter("duty", duty);
         query.setParameter("startDate", duty.getStart().toLocalDate());
         query.setParameter("endDate", duty.getEnd().toLocalDate());
+
+        return query.getResultList();
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public List<INegativeDateWishEntity> getAllNegativeDateWishesOfMusician(
+            IMusicianEntity musician
+    ) {
+        TypedQuery<INegativeDateWishEntity> query = entityManager.createQuery(
+                "SELECT nd FROM NegativeDateWishEntity nd "
+                + "WHERE nd.musician = :musician ",
+                INegativeDateWishEntity.class
+        );
+
+        query.setParameter("musician", musician);
 
         return query.getResultList();
     }
