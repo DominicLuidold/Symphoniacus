@@ -12,7 +12,6 @@ import at.fhv.teamb.symphoniacus.domain.Duty;
 import at.fhv.teamb.symphoniacus.domain.MusicalPiece;
 import at.fhv.teamb.symphoniacus.domain.Musician;
 import at.fhv.teamb.symphoniacus.domain.Wish;
-import at.fhv.teamb.symphoniacus.domain.WishBuilder;
 import at.fhv.teamb.symphoniacus.domain.WishRequest;
 import at.fhv.teamb.symphoniacus.persistence.dao.DutyDao;
 import at.fhv.teamb.symphoniacus.persistence.dao.MusicalPieceDao;
@@ -197,15 +196,20 @@ public class WishRequestManager {
         WishDto<DateWishDto> dateWish,
         Integer userId
     ) {
-
         Optional<INegativeDateWishEntity> opDateWishEntity
             = fillInNegativeDateWish(dateWish, userId);
-        INegativeDateWishEntity dateWishEntity = null;
-        if (opDateWishEntity.isPresent()) {
-            dateWishEntity = opDateWishEntity.get();
-        } else {
+
+        if (opDateWishEntity.isEmpty()) {
+            LOG.error("Could not fill in negative date wish details");
             return Optional.empty();
         }
+
+        INegativeDateWishEntity dateWishEntity = opDateWishEntity.get();
+        if (!validateDateRequest(dateWish, opDateWishEntity, dateWishEntity)) {
+            return Optional.empty();
+        }
+
+        // Persist
         Optional<INegativeDateWishEntity> result = this.negDateWishDao.persist(dateWishEntity);
         if (result.isPresent()) {
             return getNegativeDateWish(result.get().getNegativeDateId());
@@ -213,6 +217,32 @@ public class WishRequestManager {
             LOG.error("NegativeDateWish couldn't be persisted");
             return Optional.empty();
         }
+    }
+
+    private boolean validateDateRequest(
+        WishDto<DateWishDto> dateWish,
+        Optional<INegativeDateWishEntity> opDateWishEntity,
+        INegativeDateWishEntity dateWishEntity
+    ) {
+        Musician m = new Musician(opDateWishEntity.get().getMusician());
+
+        // Construct domain object and validate
+        Wish wish = getDateRequestDomainObject(dateWish, dateWishEntity, m);
+
+        boolean isValid = wish.isValid();
+        LOG.debug("Is wish valid? {}", isValid);
+        if (!isValid) {
+            LOG.debug("Wish is not valid");
+            return false;
+        }
+
+        boolean isEditable = wish.isEditable();
+        LOG.debug("Is wish editable? {}", isEditable);
+        if (!isEditable) {
+            LOG.debug("Wish is not editable");
+            return false;
+        }
+        return true;
     }
 
     /**
@@ -244,6 +274,11 @@ public class WishRequestManager {
             return Optional.empty();
         }
         dateWishEntity.setNegativeDateId(dateWish.getWishId());
+
+        if (!validateDateRequest(dateWish, opDateWishEntity, dateWishEntity)) {
+            return Optional.empty();
+        }
+
         this.negDateWishDao.update(dateWishEntity);
         return Optional.of(dateWish);
     }
@@ -270,19 +305,9 @@ public class WishRequestManager {
         WishDto<DateWishDto> dateWish,
         Integer userId
     ) {
-
-        Optional<IMusicianEntity> opMusician = this.musicianDao.findMusicianByUserId(userId);
-        Integer musicianId = null;
-        if (opMusician.isPresent()) {
-            musicianId = opMusician.get().getMusicianId();
-        } else {
-            LOG.error("There is no Musician to the given User id:{}", userId);
-            return Optional.empty();
-        }
-
-        Optional<IMusicianEntity> musician = this.musicianDao.find(musicianId);
+        Optional<IMusicianEntity> musician = this.musicianDao.findMusicianByUserId(userId);
         if (musician.isEmpty()) {
-            LOG.error("MusicianId {} did not deliver a result @addNewDateWish", musicianId);
+            LOG.error("There is no Musician to the given User id:{}", userId);
             return Optional.empty();
         }
 
@@ -508,7 +533,7 @@ public class WishRequestManager {
         }
 
         // Construct domain object
-        Wish<IWishEntryEntity> wish = getDutyRequestDomainObject(dutyWish, wishEntry, m);
+        Wish wish = getDutyRequestDomainObject(dutyWish, wishEntry, m);
         boolean isValid = wish.isValid();
         LOG.debug("Is wish valid? {}", isValid);
         if (!isValid) {
@@ -525,20 +550,38 @@ public class WishRequestManager {
         }
     }
 
-    private Wish<IWishEntryEntity> getDutyRequestDomainObject(
+    private Wish getDutyRequestDomainObject(
         WishDto<DutyWishDto> wishDto,
         IWishEntryEntity wishEntry,
         Musician musician
     ) {
-        WishBuilder<IWishEntryEntity> wishBuilder =
-            new WishBuilder<>(
+        Wish.WishBuilder wishBuilder =
+            new Wish.WishBuilder(
                 wishEntry.getWishEntryId(),
                 wishDto.getWishType(),
                 wishDto.getTarget(),
                 musician
             );
         wishBuilder.withDutyWish(wishEntry);
+        wishBuilder.withReason(wishDto.getReason());
         wishBuilder.withMusicalPieces(wishDto.getDetails().getMusicalPieces());
+        return wishBuilder.build();
+    }
+
+    private Wish getDateRequestDomainObject(
+        WishDto<DateWishDto> wishDto,
+        INegativeDateWishEntity negativeDateWish,
+        Musician musician
+    ) {
+        Wish.WishBuilder wishBuilder =
+            new Wish.WishBuilder(
+                -1, // not applicable in this state
+                wishDto.getWishType(),
+                wishDto.getTarget(),
+                musician
+            );
+        wishBuilder.withNegativeDateWish(negativeDateWish);
+        wishBuilder.withReason(wishDto.getReason());
         return wishBuilder.build();
     }
 
@@ -646,7 +689,7 @@ public class WishRequestManager {
         }
 
         // Construct domain object
-        Wish<IWishEntryEntity> wish = getDutyRequestDomainObject(dutyWish, wishEntry, m);
+        Wish wish = getDutyRequestDomainObject(dutyWish, wishEntry, m);
         boolean isValid = wish.isValid();
         LOG.debug("Is wish valid? {}", isValid);
         if (!isValid) {
@@ -671,19 +714,9 @@ public class WishRequestManager {
         WishDto<DutyWishDto> dutyWish,
         Integer userId
     ) {
-
-        Optional<IMusicianEntity> opMusician = this.musicianDao.findMusicianByUserId(userId);
-        Integer musicianId = null;
-        if (opMusician.isPresent()) {
-            musicianId = opMusician.get().getMusicianId();
-        } else {
-            LOG.error("There is no Musician to the given User id:{}", userId);
-            return Optional.empty();
-        }
-
-        Optional<IMusicianEntity> musician = this.musicianDao.find(musicianId);
+        Optional<IMusicianEntity> musician = this.musicianDao.findMusicianByUserId(userId);
         if (musician.isEmpty()) {
-            LOG.error("MusicianId {} did not deliver a result @addNewDutyWish", musicianId);
+            LOG.error("There is no Musician to the given User id:{}", userId);
             return Optional.empty();
         }
 

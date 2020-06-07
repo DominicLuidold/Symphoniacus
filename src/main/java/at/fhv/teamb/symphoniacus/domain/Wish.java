@@ -20,32 +20,32 @@ import java.util.Set;
 /**
  * Domain object for all kinds of wishes.
  *
- * @param <T> Generic type for Duty Request (Negative, Positive)
  * @author Valentin Goronjic
  */
-public class Wish<T extends IWishEntryEntity> {
+public class Wish {
 
     private static final Logger LOG = LogManager.getLogger(Wish.class);
     private static final int MAX_LENGTH_REASON = 45;
-
+    // Intentionally package modifier because of builder here
+    String reason;
+    IWishEntryEntity dutyRequest;
+    INegativeDateWishEntity negativeDateRequest;
+    List<MusicalPieceApiDto> musicalPieces;
     private Integer wishId;
     private Musician musician;
     private WishType wishType;
     private WishTargetType target;
-    // Intentionally package modifier because of builder here
-    String reason;
-    T dutyRequest;
-    INegativeDateWishEntity negativeDateRequest;
-    List<MusicalPieceApiDto> musicalPieces;
 
-    public Wish() {}
+    public Wish() {
+    }
 
     /**
      * Constructs a new wish.
-     * @param id Wish Id
-     * @param wt Wish type
+     *
+     * @param id  Wish Id
+     * @param wt  Wish type
      * @param wtt Wish Target Type
-     * @param m Musician
+     * @param m   Musician
      */
     public Wish(Integer id, WishType wt, WishTargetType wtt, Musician m) {
         this.wishId = id;
@@ -56,6 +56,7 @@ public class Wish<T extends IWishEntryEntity> {
 
     /**
      * Checks whether this wish is valid or not.
+     *
      * @return True if wish is valid
      */
     public boolean isValid() {
@@ -77,6 +78,7 @@ public class Wish<T extends IWishEntryEntity> {
 
     /**
      * Checks whether this wish is editable or not.
+     *
      * @return True if wish is editable
      */
     public boolean isEditable() {
@@ -157,7 +159,7 @@ public class Wish<T extends IWishEntryEntity> {
         }
         if (this.dutyRequest.getPositiveWish() != null
             && !this.dutyRequest.getPositiveWish().getMusician().getMusicianId().equals(
-                this.musician.getEntity().getMusicianId())
+            this.musician.getEntity().getMusicianId())
         ) {
             LOG.debug("Duty Request is for different Musician");
             return false;
@@ -194,5 +196,78 @@ public class Wish<T extends IWishEntryEntity> {
         }
 
         return hasCategory;
+    }
+
+    public static class WishBuilder {
+
+        private final Integer wishId;
+        private final WishTargetType wtt;
+        private final WishType wishType;
+        private final Musician musician;
+        private String reason;
+        private IWishEntryEntity positiveOrNegativeDutyRequest;
+        private INegativeDateWishEntity negativeDateRequest;
+        private List<MusicalPieceApiDto> musicalPieces;
+
+        /**
+         * Constructs a new WishBuilder.
+         *
+         * @param id  Wish Id
+         * @param wt  WishType (Positive, Negative)
+         * @param wtt WishTargetType (Duty, Date)
+         * @param m   Musician for this wish
+         */
+        public WishBuilder(Integer id, WishType wt, WishTargetType wtt, Musician m) {
+            this.wishId = id;
+            this.wtt = wtt;
+            this.wishType = wt;
+            this.musician = m;
+        }
+
+        public WishBuilder withReason(String reason) {
+            this.reason = reason;
+            return this;
+        }
+
+        public WishBuilder withDutyWish(IWishEntryEntity dutyWish) {
+            this.positiveOrNegativeDutyRequest = dutyWish;
+            return this;
+        }
+
+        public WishBuilder withNegativeDateWish(INegativeDateWishEntity negativeDateWish) {
+            this.negativeDateRequest = negativeDateWish;
+            return this;
+        }
+
+        public WishBuilder withMusicalPieces(List<MusicalPieceApiDto> musicalPieces) {
+            this.musicalPieces = musicalPieces;
+            return this;
+        }
+
+        /**
+         * Builds the wish.
+         *
+         * @return Built wish
+         */
+        public Wish build() {
+            Wish wish = new Wish(this.wishId, this.wishType, this.wtt, this.musician);
+
+            if (
+                this.wtt.equals(WishTargetType.DUTY)
+                    && this.positiveOrNegativeDutyRequest == null
+            ) {
+                throw new IllegalStateException("No DutyWish supplied");
+            }
+            if (this.wtt.equals(WishTargetType.DATE) && this.negativeDateRequest == null) {
+                throw new IllegalStateException("No NegativeDateWish supplied");
+            }
+
+            wish.dutyRequest = this.positiveOrNegativeDutyRequest;
+            wish.negativeDateRequest = this.negativeDateRequest;
+            wish.reason = this.reason;
+            wish.musicalPieces = this.musicalPieces;
+
+            return wish;
+        }
     }
 }
