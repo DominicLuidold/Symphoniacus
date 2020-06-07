@@ -36,9 +36,6 @@ public class Wish {
     private WishType wishType;
     private WishTargetType target;
 
-    public Wish() {
-    }
-
     /**
      * Constructs a new wish.
      *
