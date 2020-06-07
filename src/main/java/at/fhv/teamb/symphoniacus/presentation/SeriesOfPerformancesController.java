@@ -374,60 +374,60 @@ public class SeriesOfPerformancesController
      * persists after validated input the new seriesOfPerformances in the database.
      */
     private void save() {
-            SeriesOfPerformancesDto seriesDto = buildSeriesDto();
-            String validationResult = this.seriesManager.validate(seriesDto,this.resources);
+        SeriesOfPerformancesDto seriesDto = buildSeriesDto();
+        String validationResult = this.seriesManager.validate(seriesDto, this.resources);
 
-            if (validationResult.equals("VALIDATED")) {
-                boolean isSaved = this.seriesManager.save(seriesDto);
+        if (validationResult.equals("VALIDATED")) {
+            boolean isSaved = this.seriesManager.save(seriesDto);
 
-                if(isSaved) {
-                    // After saving show success dialog
-                    Alert successAlert = new Alert(Alert.AlertType.INFORMATION);
-                    successAlert.setTitle(resources.getString("seriesOfPerformances.success.title"));
-                    successAlert.setContentText(resources
-                            .getString("seriesOfPerformances.success.seriesOfPerformanceSuccessfullySaved")
-                    );
-                    successAlert.getButtonTypes()
-                            .setAll(new ButtonType(resources.getString("global.button.ok")));
+            if (isSaved) {
+                // After saving show success dialog
+                Alert successAlert = new Alert(Alert.AlertType.INFORMATION);
+                successAlert.setTitle(resources.getString("seriesOfPerformances.success.title"));
+                successAlert.setContentText(resources
+                    .getString("seriesOfPerformances.success.seriesOfPerformanceSuccessfullySaved")
+                );
+                successAlert.getButtonTypes()
+                    .setAll(new ButtonType(resources.getString("global.button.ok")));
 
-                    // Get custom success icon
-                    ImageView icon = new ImageView("images/successIcon.png");
-                    icon.setFitHeight(48);
-                    icon.setFitWidth(48);
-                    successAlert.setGraphic(icon);
-                    successAlert.setHeaderText(resources
-                            .getString("seriesOfPerformances.success.header"));
-                    successAlert.show();
-                    this.parentController.removeTab(TabPaneEntry.ADD_SOP);
-                    this.parentController.selectTab(TabPaneEntry.ADD_DUTY);
-                } else {
-                    LOG.error("Saving was not successful");
-                    MainController.showErrorAlert(
-                            this.resources.getString("seriesOfPerformances.error.title"),
-                            this.resources.getString(
-                                    "seriesOfPerformances.error.savingNotSuccessful"),
-                            this.resources.getString("global.button.ok")
-                    );
-                }
+                // Get custom success icon
+                ImageView icon = new ImageView("images/successIcon.png");
+                icon.setFitHeight(48);
+                icon.setFitWidth(48);
+                successAlert.setGraphic(icon);
+                successAlert.setHeaderText(resources
+                    .getString("seriesOfPerformances.success.header"));
+                successAlert.show();
+                this.parentController.removeTab(TabPaneEntry.ADD_SOP);
+                this.parentController.selectTab(TabPaneEntry.ADD_DUTY);
             } else {
+                LOG.error("Saving was not successful");
                 MainController.showErrorAlert(
-                        this.resources.getString("seriesOfPerformances.error.title"),
-                        validationResult,
-                        this.resources.getString("global.button.ok")
+                    this.resources.getString("seriesOfPerformances.error.title"),
+                    this.resources.getString(
+                        "seriesOfPerformances.error.savingNotSuccessful"),
+                    this.resources.getString("global.button.ok")
                 );
             }
+        } else {
+            MainController.showErrorAlert(
+                this.resources.getString("seriesOfPerformances.error.title"),
+                validationResult,
+                this.resources.getString("global.button.ok")
+            );
+        }
     }
 
     private SeriesOfPerformancesDto buildSeriesDto() {
         return new SeriesOfPerformancesDto.SeriesOfPerformancesDtoBuilder()
-                .withDescription(this.nameOfSeries.getText())
-                .withMusicalPieces(new LinkedHashSet<MusicalPieceDto>(
-                        this.musicalPieceCheckComboBox.getCheckModel().getCheckedItems()))
-                .withInstrumentations( new LinkedHashSet<InstrumentationDto>(
-                        this.instrumentationCheckComboBox.getCheckModel().getCheckedItems()))
-                .withStartDate(startingDate.getValue())
-                .withEndDate(endingDate.getValue())
-                .withIsTour(this.isTour.isSelected()).build();
+            .withDescription(this.nameOfSeries.getText())
+            .withMusicalPieces(new LinkedHashSet<MusicalPieceDto>(
+                this.musicalPieceCheckComboBox.getCheckModel().getCheckedItems()))
+            .withInstrumentations(new LinkedHashSet<InstrumentationDto>(
+                this.instrumentationCheckComboBox.getCheckModel().getCheckedItems()))
+            .withStartDate(startingDate.getValue())
+            .withEndDate(endingDate.getValue())
+            .withIsTour(this.isTour.isSelected()).build();
     }
 
     private void cancel() {

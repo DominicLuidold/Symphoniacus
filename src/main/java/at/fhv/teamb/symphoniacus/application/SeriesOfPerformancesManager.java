@@ -56,7 +56,7 @@ public class SeriesOfPerformancesManager {
         series.setDescription(seriesDto.getDescription());
         series.setMusicalPieces(convertMusicalPieceDtoToEntities(seriesDto.getMusicalPieces()));
         series.setInstrumentations(convertInstrumentationDtoToEntites(
-                seriesDto.getInstrumentations()));
+            seriesDto.getInstrumentations()));
         series.setStartDate(seriesDto.getStartDate());
         series.setEndDate(seriesDto.getEndDate());
         series.setIsTour(seriesDto.isTour());
@@ -73,14 +73,14 @@ public class SeriesOfPerformancesManager {
             entity.setCategory(dto.getCategory());
             entity.setName(dto.getName());
             entity
-                    .setInstrumentations(convertInstrumentationDtoToEntites(dto.getInstrumentations()));
+                .setInstrumentations(convertInstrumentationDtoToEntites(dto.getInstrumentations()));
             entities.add(entity);
         }
         return entities;
     }
 
     private Set<IInstrumentationEntity> convertInstrumentationDtoToEntites(
-            Set<InstrumentationDto> dtos) {
+        Set<InstrumentationDto> dtos) {
         Set<IInstrumentationEntity> entities = new LinkedHashSet<>();
         for (InstrumentationDto dto : dtos) {
             IInstrumentationEntity entity = new InstrumentationEntity();
@@ -101,9 +101,9 @@ public class SeriesOfPerformancesManager {
      * @return a boolean whether the seriesOfPerformances exists with the given parameters or not.
      */
     public boolean doesSeriesAlreadyExist(
-            String title,
-            LocalDate startingDate,
-            LocalDate endingDate
+        String title,
+        LocalDate startingDate,
+        LocalDate endingDate
     ) {
         return this.seriesOfPerformancesDao.doesSeriesAlreadyExist(title, startingDate, endingDate);
     }
@@ -116,15 +116,15 @@ public class SeriesOfPerformancesManager {
      * @return A Set of instrumentation entities
      */
     public Set<InstrumentationDto> getAllInstrumentations(
-            SeriesOfPerformancesDto series
+        SeriesOfPerformancesDto series
     ) {
 
         Optional<ISeriesOfPerformancesEntity> seriesOfPerf = this.seriesOfPerformancesDao
-                .find(series.getSeriesOfPerformancesId());
+            .find(series.getSeriesOfPerformancesId());
 
         if (seriesOfPerf.isPresent()) {
             Set<IInstrumentationEntity> instrumentations = this.instrumentationDao
-                    .getAllInstrumentationsToSeries(seriesOfPerf.get());
+                .getAllInstrumentationsToSeries(seriesOfPerf.get());
             return convertInstrumentationsToDto(instrumentations);
         } else {
             return new LinkedHashSet<>();
@@ -143,13 +143,13 @@ public class SeriesOfPerformancesManager {
         List<SeriesOfPerformancesDto> seriesDtoList = new LinkedList<>();
         for (ISeriesOfPerformancesEntity series : seriesList) {
             SeriesOfPerformancesDto seriesDto =
-                    new SeriesOfPerformancesDto
-                            .SeriesOfPerformancesDtoBuilder(series.getSeriesOfPerformancesId())
-                            .withDescription(series.getDescription())
-                            .withStartDate(series.getStartDate())
-                            .withEndDate(series.getEndDate())
-                            .withMusicalPieces(convertMusicalPiecesToDto(series.getMusicalPieces()))
-                            .build();
+                new SeriesOfPerformancesDto
+                    .SeriesOfPerformancesDtoBuilder(series.getSeriesOfPerformancesId())
+                    .withDescription(series.getDescription())
+                    .withStartDate(series.getStartDate())
+                    .withEndDate(series.getEndDate())
+                    .withMusicalPieces(convertMusicalPiecesToDto(series.getMusicalPieces()))
+                    .build();
             seriesDtoList.add(seriesDto);
         }
         return seriesDtoList;
@@ -166,9 +166,9 @@ public class SeriesOfPerformancesManager {
         List<SeriesOfPerformancesDto> filteredSeries = new LinkedList<>();
         for (SeriesOfPerformancesDto series : allSeries) {
             if ((series.getStartDate().isBefore(startedBeforeOrEqual)
-                    || series.getStartDate().isEqual(startedBeforeOrEqual))
-                    && (series.getEndDate().isAfter(startedBeforeOrEqual)
-                    || series.getEndDate().isEqual(startedBeforeOrEqual))) {
+                || series.getStartDate().isEqual(startedBeforeOrEqual))
+                && (series.getEndDate().isAfter(startedBeforeOrEqual)
+                || series.getEndDate().isEqual(startedBeforeOrEqual))) {
                 filteredSeries.add(series);
             }
         }
@@ -179,8 +179,8 @@ public class SeriesOfPerformancesManager {
         Set<MusicalPieceDto> musicalPieces = new LinkedHashSet<>();
         for (IMusicalPieceEntity m : mp) {
             MusicalPieceDto musicalPieceDto = new MusicalPieceDto
-                    .MusicalPieceDtoBuilder(m.getMusicalPieceId())
-                    .withName(m.getName()).build();
+                .MusicalPieceDtoBuilder(m.getMusicalPieceId())
+                .withName(m.getName()).build();
             musicalPieces.add(musicalPieceDto);
         }
         return musicalPieces;
@@ -194,24 +194,24 @@ public class SeriesOfPerformancesManager {
      */
     public SeriesOfPerformancesDto convertSopToDto(ISeriesOfPerformancesEntity entity) {
         return new SeriesOfPerformancesDto.SeriesOfPerformancesDtoBuilder(
-                entity.getSeriesOfPerformancesId()
+            entity.getSeriesOfPerformancesId()
         )
-                .withMusicalPieces(
-                        convertMusicalPiecesToDto(entity.getMusicalPieces())
-                )
-                .withDescription(entity.getDescription())
-                .withStartDate(entity.getStartDate())
-                .withEndDate(entity.getEndDate())
-                .build();
+            .withMusicalPieces(
+                convertMusicalPiecesToDto(entity.getMusicalPieces())
+            )
+            .withDescription(entity.getDescription())
+            .withStartDate(entity.getStartDate())
+            .withEndDate(entity.getEndDate())
+            .build();
     }
 
     private Set<DutyDto> convertDutyToDto(Set<DutyEntity> duties) {
         Set<DutyDto> dutyDtos = new LinkedHashSet<>();
         for (DutyEntity d : duties) {
             DutyDto dt = new DutyDto.DutyDtoBuilder()
-                    .withDescription(d.getDescription())
-                    .withStart(d.getStart())
-                    .withEnd(d.getEnd()).build();
+                .withDescription(d.getDescription())
+                .withStart(d.getStart())
+                .withEnd(d.getEnd()).build();
             dutyDtos.add(dt);
         }
         return dutyDtos;
@@ -221,14 +221,14 @@ public class SeriesOfPerformancesManager {
         Set<InstrumentationDto> instrumentations = new LinkedHashSet<>();
         for (IInstrumentationEntity i : inst) {
             InstrumentationDto instDto = new InstrumentationDto
-                    .InstrumentationDtoBuilder(i.getInstrumentationId())
-                    .withName(i.getName())
-                    .withMusicalPiece(new MusicalPieceDto
-                            .MusicalPieceDtoBuilder(i.getMusicalPiece().getMusicalPieceId())
-                            .withName(i.getMusicalPiece().getName())
-                            .build()
-                    )
-                    .build();
+                .InstrumentationDtoBuilder(i.getInstrumentationId())
+                .withName(i.getName())
+                .withMusicalPiece(new MusicalPieceDto
+                    .MusicalPieceDtoBuilder(i.getMusicalPiece().getMusicalPieceId())
+                    .withName(i.getMusicalPiece().getName())
+                    .build()
+                )
+                .build();
             instrumentations.add(instDto);
         }
         return instrumentations;
@@ -240,13 +240,13 @@ public class SeriesOfPerformancesManager {
      * @param seriesDto seriesDto containing all input form informations
      * @param bundle    language file
      * @return "VALIDATED" if validation was successful, else return the error
-     *         text for alert
+     *          text for alert
      */
     public String validate(SeriesOfPerformancesDto seriesDto, ResourceBundle bundle) {
         SeriesOfPerformances series
-                = new SeriesOfPerformances(seriesDto,
-                doesSeriesAlreadyExist(seriesDto.getDescription(),
-                        seriesDto.getStartDate(), seriesDto.getEndDate()), bundle);
+            = new SeriesOfPerformances(seriesDto,
+            doesSeriesAlreadyExist(seriesDto.getDescription(),
+                seriesDto.getStartDate(), seriesDto.getEndDate()), bundle);
         return series.validate();
     }
 }

@@ -12,10 +12,17 @@ public class SeriesOfPerformances {
     private ResourceBundle resources;
     private boolean doesSeriesAlreadyExist;
 
+    /**
+     * Constructor for domain object.
+     *
+     * @param series            the series of performances
+     * @param doesAlreadyExists boolean if series already exists
+     * @param bundle            resource bundle, for needed Strings
+     */
     public SeriesOfPerformances(
-            SeriesOfPerformancesDto series,
-            boolean doesAlreadyExists,
-            ResourceBundle bundle
+        SeriesOfPerformancesDto series,
+        boolean doesAlreadyExists,
+        ResourceBundle bundle
     ) {
         this.seriesDto = series;
         this.resources = bundle;
@@ -23,28 +30,29 @@ public class SeriesOfPerformances {
     }
 
     /**
+     * Input Validation of a Series of Performances.
      *
-     * @return "VALIDATED" if validation is successful, else return error text for alert
+     * @return "VALIDATED" if validation is successful, else return error text for alert.
      */
     public String validate() {
         if (doesSeriesAlreadyExist) {
             return this.resources.getString(
-                    "seriesOfPerformances.error.seriesAlreadyExists.message"
+                "seriesOfPerformances.error.seriesAlreadyExists.message"
             );
         } else if (seriesDto.getDescription().length() > 45) {
             return this.resources.getString(
-                    "seriesOfPerformances.error.nameOfSeriesOutOfBounds.message");
+                "seriesOfPerformances.error.nameOfSeriesOutOfBounds.message");
         } else if (seriesDto.getEndDate().isBefore(seriesDto.getStartDate())) {
             return this.resources.getString(
-                    "seriesOfPerformances.error.endingDateBeforeStartingDate.message"
+                "seriesOfPerformances.error.endingDateBeforeStartingDate.message"
             );
         } else if (seriesDto.getMusicalPieces().isEmpty()) {
             return this.resources.getString(
-                    "seriesOfPerformances.error.noMusicalPieceSelected.message"
+                "seriesOfPerformances.error.noMusicalPieceSelected.message"
             );
         } else if (!isInstrumentationForMusicalPieceSelected()) {
-            return  this.resources.getString(
-                    "seriesOfPerformances.error.selectedMusicalPieceWithoutInstrumentation.message"
+            return this.resources.getString(
+                "seriesOfPerformances.error.selectedMusicalPieceWithoutInstrumentation.message"
             );
         }
         return "VALIDATED";
