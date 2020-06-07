@@ -116,15 +116,10 @@ public class Wish<T extends IWishEntryEntity> {
     }
 
     private boolean isEditableDutyRequest() {
-        // DutyWish is in History
-        LocalDate requestEndDate = null;
-        if (this.dutyRequest.getPositiveWish() != null) {
-            requestEndDate = this.dutyRequest.getPositiveWish().getEndDate();
-        } else if (this.dutyRequest.getNegativeDutyWish() != null) {
-            requestEndDate = this.dutyRequest.getNegativeDutyWish().getEndDate();
-        }
-        if (LocalDate.now().isAfter(requestEndDate)) {
-            LOG.debug("DutyWish is in history, not valid anymore");
+        // Duty is in History
+        LocalDate dutyEndDate = this.dutyRequest.getDuty().getEnd().toLocalDate();
+        if (LocalDate.now().isAfter(dutyEndDate)) {
+            LOG.debug("Duty is in history, not valid anymore");
             return false;
         }
 
@@ -178,6 +173,10 @@ public class Wish<T extends IWishEntryEntity> {
         LOG.debug("Checking if Musician has an instrument category in this duty");
         IDutyEntity duty = this.dutyRequest.getDuty();
         Set<IDutyPositionEntity> dutyPositions = duty.getDutyPositions();
+        List<IInstrumentCategoryEntity> instrumentCategories =
+            this.musician.getEntity().getInstrumentCategories();
+
+        boolean hasCategory = false;
         for (IDutyPositionEntity dp : dutyPositions) {
             LOG.debug(
                 "Checking DutyPosition {} for Musician {}",
@@ -185,18 +184,15 @@ public class Wish<T extends IWishEntryEntity> {
                 this.musician.getFullName()
             );
             IInstrumentationPositionEntity ip = dp.getInstrumentationPosition();
-            List<IInstrumentCategoryEntity> instrumentCategories =
-                this.musician.getEntity().getInstrumentCategories();
-
-            if (!instrumentCategories.contains(ip.getInstrumentCategory())) {
-                LOG.debug("Duty does not contain Musician's instrument category");
-                return false;
-            } else {
+            if (instrumentCategories.contains(ip.getInstrumentCategory())) {
                 LOG.debug("Contains Musician's instrument category");
+                hasCategory = true;
                 break;
+            } else {
+                LOG.debug("DutyPosition does not contain Musician's instrument category");
             }
         }
 
-        return true;
+        return hasCategory;
     }
 }

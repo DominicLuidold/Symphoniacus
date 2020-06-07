@@ -636,6 +636,31 @@ public class WishRequestManager {
                 return Optional.empty();
             }
         }
+
+        Musician m = null;
+        if (dutyWish.getWishType().equals(WishType.POSITIVE)) {
+            m = new Musician(wishEntry.getPositiveWish().getMusician());
+
+        } else if (dutyWish.getWishType().equals(WishType.NEGATIVE)) {
+            m = new Musician(wishEntry.getNegativeDutyWish().getMusician());
+        }
+
+        // Construct domain object
+        Wish<IWishEntryEntity> wish = getDutyRequestDomainObject(dutyWish, wishEntry, m);
+        boolean isValid = wish.isValid();
+        LOG.debug("Is wish valid? {}", isValid);
+        if (!isValid) {
+            LOG.debug("Wish is not valid");
+            return Optional.empty();
+        }
+
+        boolean isEditable = wish.isEditable();
+        LOG.debug("Is wish editable? {}", isEditable);
+        if (!isEditable) {
+            LOG.debug("Wish is not editable");
+            return Optional.empty();
+        }
+
         this.wishEntryDao.update(wishEntry);
         return Optional.of(dutyWish);
     }
