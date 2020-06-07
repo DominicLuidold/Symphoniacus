@@ -205,7 +205,7 @@ public class WishRequestManager {
         }
 
         INegativeDateWishEntity dateWishEntity = opDateWishEntity.get();
-        if (!validateDateRequest(dateWish, opDateWishEntity, dateWishEntity)) {
+        if (!validateDateRequest(dateWish, dateWishEntity)) {
             return Optional.empty();
         }
 
@@ -221,10 +221,9 @@ public class WishRequestManager {
 
     private boolean validateDateRequest(
         WishDto<DateWishDto> dateWish,
-        Optional<INegativeDateWishEntity> opDateWishEntity,
         INegativeDateWishEntity dateWishEntity
     ) {
-        Musician m = new Musician(opDateWishEntity.get().getMusician());
+        Musician m = new Musician(dateWishEntity.getMusician());
 
         // Construct domain object and validate
         Wish wish = getDateRequestDomainObject(dateWish, dateWishEntity, m);
@@ -275,7 +274,7 @@ public class WishRequestManager {
         }
         dateWishEntity.setNegativeDateId(dateWish.getWishId());
 
-        if (!validateDateRequest(dateWish, opDateWishEntity, dateWishEntity)) {
+        if (!validateDateRequest(dateWish, dateWishEntity)) {
             return Optional.empty();
         }
 
@@ -292,6 +291,15 @@ public class WishRequestManager {
     public boolean removeNegativeDateWish(Integer dateWishId) {
         Optional<INegativeDateWishEntity> opDateWishEntity = this.negDateWishDao.find(dateWishId);
         if (opDateWishEntity.isPresent()) {
+
+            WishDto<DateWishDto> wishDto = new WishDto<>();
+            wishDto.setTarget(WishTargetType.DATE);
+            wishDto.setWishType(WishType.NEGATIVE);
+            if (!validateDateRequest(wishDto, opDateWishEntity.get())) {
+                LOG.debug("Cannot delete date request");
+                return false;
+            }
+
             return this.negDateWishDao.remove(opDateWishEntity.get());
         } else {
             LOG.debug("Given DateWish Id by API does not exist in DB:{} ", dateWishId);
@@ -524,6 +532,20 @@ public class WishRequestManager {
             return Optional.empty();
         }
 
+        if (!validateDutyRequest(dutyWish, wishEntry)) {
+            return Optional.empty();
+        }
+
+        Optional<IWishEntryEntity> result = this.wishEntryDao.persist(wishEntry);
+        if (result.isPresent()) {
+            return getDutyWish(result.get().getWishEntryId());
+        } else {
+            LOG.error("WishEntry couldn't be persisted");
+            return Optional.empty();
+        }
+    }
+
+    private boolean validateDutyRequest(WishDto<DutyWishDto> dutyWish, IWishEntryEntity wishEntry) {
         Musician m = null;
         if (dutyWish.getWishType().equals(WishType.POSITIVE)) {
             m = new Musician(wishEntry.getPositiveWish().getMusician());
@@ -538,16 +560,15 @@ public class WishRequestManager {
         LOG.debug("Is wish valid? {}", isValid);
         if (!isValid) {
             LOG.debug("Wish is not valid");
-            return Optional.empty();
+            return false;
         }
-
-        Optional<IWishEntryEntity> result = this.wishEntryDao.persist(wishEntry);
-        if (result.isPresent()) {
-            return getDutyWish(result.get().getWishEntryId());
-        } else {
-            LOG.error("WishEntry couldn't be persisted");
-            return Optional.empty();
+        boolean isEditable = wish.isEditable();
+        LOG.debug("Is wish editable? {}", isEditable);
+        if (!isEditable) {
+            LOG.debug("Wish is not editable");
+            return false;
         }
+        return true;
     }
 
     private Wish getDutyRequestDomainObject(
@@ -564,7 +585,10 @@ public class WishRequestManager {
             );
         wishBuilder.withDutyWish(wishEntry);
         wishBuilder.withReason(wishDto.getReason());
-        wishBuilder.withMusicalPieces(wishDto.getDetails().getMusicalPieces());
+        if (wishDto.getDetails() != null) {
+            // not needed for deleting
+            wishBuilder.withMusicalPieces(wishDto.getDetails().getMusicalPieces());
+        }
         return wishBuilder.build();
     }
 
@@ -590,7 +614,7 @@ public class WishRequestManager {
      *
      * @param wishId Id of the needed WishEntry (DB)
      * @return Optional.empty if values are missing,
-     * optional Dto of WishDto<DutyWishDto/> if success
+     *      optional Dto of WishDto<DutyWishDto/> if success
      */
     public Optional<WishDto<DutyWishDto>> getDutyWish(Integer wishId) {
         // Get the WishEntry from DB
@@ -680,27 +704,8 @@ public class WishRequestManager {
             }
         }
 
-        Musician m = null;
-        if (dutyWish.getWishType().equals(WishType.POSITIVE)) {
-            m = new Musician(wishEntry.getPositiveWish().getMusician());
-
-        } else if (dutyWish.getWishType().equals(WishType.NEGATIVE)) {
-            m = new Musician(wishEntry.getNegativeDutyWish().getMusician());
-        }
-
-        // Construct domain object
-        Wish wish = getDutyRequestDomainObject(dutyWish, wishEntry, m);
-        boolean isValid = wish.isValid();
-        LOG.debug("Is wish valid? {}", isValid);
-        if (!isValid) {
-            LOG.debug("Wish is not valid");
-            return Optional.empty();
-        }
-
-        boolean isEditable = wish.isEditable();
-        LOG.debug("Is wish editable? {}", isEditable);
-        if (!isEditable) {
-            LOG.debug("Wish is not editable");
+        // Validate with domain logic
+        if (!validateDutyRequest(dutyWish, wishEntry)) {
             return Optional.empty();
         }
 
@@ -784,7 +789,23 @@ public class WishRequestManager {
      */
     public boolean removeDutyWish(Integer dutyWishId) {
         Optional<IWishEntryEntity> opWishEntry = this.wishEntryDao.find(dutyWishId);
+
         if (opWishEntry.isPresent()) {
+            IWishEntryEntity wishEntryEntity = opWishEntry.get();
+
+            WishDto<DutyWishDto> wishDto = new WishDto<>();
+            wishDto.setTarget(WishTargetType.DUTY);
+            if (wishEntryEntity.getPositiveWish() != null) {
+                wishDto.setWishType(WishType.POSITIVE);
+            } else if (wishEntryEntity.getNegativeDutyWish() != null) {
+                wishDto.setWishType(WishType.NEGATIVE);
+            }
+            // Validate with domain logic
+            if (!validateDutyRequest(wishDto, opWishEntry.get())) {
+                LOG.debug("Cannot remove duty request");
+                return false;
+            }
+
             return this.wishEntryDao.remove(opWishEntry.get());
         } else {
             LOG.debug("Given Wish Entry Id by API does not exist in DB:{} ", dutyWishId);
