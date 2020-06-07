@@ -152,7 +152,10 @@ public class WishRequestManager {
             return dateWishRequests;
 
         }
-        LOG.error("Delivered User Id:{} could not be found @getAllNegativeDateWishesForUser");
+        LOG.error(
+                "Delivered User Id:{} could not be found @getAllNegativeDateWishesForUser",
+                 userId
+        );
         return new LinkedHashSet<>();
     }
 
@@ -181,7 +184,7 @@ public class WishRequestManager {
 
             return wishDto;
         }
-        LOG.error("Delivered Date Id:{} could not be found @getNegativeDateWish");
+        LOG.error("Delivered Date Id:{} could not be found @getNegativeDateWish", dateWishId);
         return Optional.empty();
     }
 
@@ -653,8 +656,9 @@ public class WishRequestManager {
             result.withReason(wishEntry.getNegativeDutyWish().getDescription());
         } else {
             LOG.error(
-                "WishEntry id:{} cointaines neither a positive, nor negative wish @getDutyWish",
-                wishEntry.getWishEntryId());
+                "WishEntry id:{} contains neither a positive, nor negative wish @getDutyWish",
+                wishEntry.getWishEntryId()
+            );
         }
         return Optional.of(result.build());
     }
