@@ -26,11 +26,10 @@ public class Wish {
 
     private static final Logger LOG = LogManager.getLogger(Wish.class);
     private static final int MAX_LENGTH_REASON = 45;
-    // Intentionally package modifier because of builder here
-    String reason;
-    IWishEntryEntity dutyRequest;
-    INegativeDateWishEntity negativeDateRequest;
-    List<MusicalPieceApiDto> musicalPieces;
+    private String reason;
+    private IWishEntryEntity dutyRequest;
+    private INegativeDateWishEntity negativeDateRequest;
+    private List<MusicalPieceApiDto> musicalPieces;
     private Integer wishId;
     private Musician musician;
     private WishType wishType;
@@ -46,7 +45,7 @@ public class Wish {
      */
     public Wish(Integer id, WishType wt, WishTargetType wtt, Musician m) {
         this.wishId = id;
-        this.wishType = wishType;
+        this.wishType = wt;
         this.target = wtt;
         this.musician = m;
     }
