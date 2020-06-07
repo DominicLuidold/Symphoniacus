@@ -32,10 +32,27 @@ public class Wish<T extends IWishEntryEntity> {
     private Musician musician;
     private WishType wishType;
     private WishTargetType target;
-    private String reason;
-    private T dutyRequest;
-    private INegativeDateWishEntity negativeDateRequest;
-    private List<MusicalPieceApiDto> musicalPieces;
+    // Intentionally package modifier because of builder here
+    String reason;
+    T dutyRequest;
+    INegativeDateWishEntity negativeDateRequest;
+    List<MusicalPieceApiDto> musicalPieces;
+
+    public Wish() {}
+
+    /**
+     * Constructs a new wish.
+     * @param id Wish Id
+     * @param wt Wish type
+     * @param wtt Wish Target Type
+     * @param m Musician
+     */
+    public Wish(Integer id, WishType wt, WishTargetType wtt, Musician m) {
+        this.wishId = id;
+        this.wishType = wishType;
+        this.target = wtt;
+        this.musician = m;
+    }
 
     /**
      * Checks whether this wish is valid or not.
@@ -167,77 +184,5 @@ public class Wish<T extends IWishEntryEntity> {
         }
 
         return true;
-    }
-
-    public static class WishBuilder<T extends IWishEntryEntity> {
-
-        private final Integer wishId;
-        private final WishTargetType wtt;
-        private final WishType wishType;
-        private final Musician musician;
-        private String reason;
-        private T dutyWish;
-        private INegativeDateWishEntity negativeDateWish;
-        private List<MusicalPieceApiDto> musicalPieces;
-
-        /**
-         * Constructs a new WishBuilder.
-         * @param id Wish Id
-         * @param wt WishType (Positive, Negative)
-         * @param wtt WishTargetType (Duty, Date)
-         * @param m Musician for this wish
-         */
-        public WishBuilder(Integer id, WishType wt, WishTargetType wtt, Musician m) {
-            this.wishId = id;
-            this.wtt = wtt;
-            this.wishType = wt;
-            this.musician = m;
-        }
-
-        public WishBuilder<T> withReason(String reason) {
-            this.reason = reason;
-            return this;
-        }
-
-        public WishBuilder<T> withDutyWish(T dutyWish) {
-            this.dutyWish = dutyWish;
-            return this;
-        }
-
-        public WishBuilder<T> withNegativeDateWish(INegativeDateWishEntity negativeDateWish) {
-            this.negativeDateWish = negativeDateWish;
-            return this;
-        }
-
-        public WishBuilder<T> withMusicalPieces(List<MusicalPieceApiDto> musicalPieces) {
-            this.musicalPieces = musicalPieces;
-            return this;
-        }
-
-        /**
-         * Builds the wish.
-         * @return Built with
-         */
-        public Wish<T> build() {
-            Wish<T> wish = new Wish<>();
-
-            if (this.wtt.equals(WishTargetType.DUTY) && this.dutyWish == null) {
-                throw new IllegalStateException("No DutyWish supplied");
-            }
-            if (this.wtt.equals(WishTargetType.DATE) && this.negativeDateWish == null) {
-                throw new IllegalStateException("No NegativeDateWish supplied");
-            }
-
-            wish.wishType = this.wishType;
-            wish.target = this.wtt;
-            wish.dutyRequest = this.dutyWish;
-            wish.negativeDateRequest = this.negativeDateWish;
-            wish.musician = this.musician;
-            wish.reason = this.reason;
-            wish.wishId = this.wishId;
-            wish.musicalPieces = this.musicalPieces;
-
-            return wish;
-        }
     }
 }

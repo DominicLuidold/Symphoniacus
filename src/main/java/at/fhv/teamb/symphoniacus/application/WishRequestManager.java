@@ -1,16 +1,18 @@
 package at.fhv.teamb.symphoniacus.application;
 
-import at.fhv.teamb.symphoniacus.application.dto.wishdtos.DateWishDto;
+import at.fhv.teamb.symphoniacus.application.dto.DutyDto;
 import at.fhv.teamb.symphoniacus.application.dto.MusicalPieceApiDto;
+import at.fhv.teamb.symphoniacus.application.dto.wishdtos.DateWishDto;
 import at.fhv.teamb.symphoniacus.application.dto.wishdtos.DutyWishDto;
 import at.fhv.teamb.symphoniacus.application.dto.wishdtos.WishDto;
 import at.fhv.teamb.symphoniacus.application.type.WishStatusType;
 import at.fhv.teamb.symphoniacus.application.type.WishTargetType;
 import at.fhv.teamb.symphoniacus.application.type.WishType;
-import at.fhv.teamb.symphoniacus.application.dto.DutyDto;
 import at.fhv.teamb.symphoniacus.domain.Duty;
 import at.fhv.teamb.symphoniacus.domain.MusicalPiece;
 import at.fhv.teamb.symphoniacus.domain.Musician;
+import at.fhv.teamb.symphoniacus.domain.Wish;
+import at.fhv.teamb.symphoniacus.domain.WishBuilder;
 import at.fhv.teamb.symphoniacus.domain.WishRequest;
 import at.fhv.teamb.symphoniacus.persistence.dao.DutyDao;
 import at.fhv.teamb.symphoniacus.persistence.dao.MusicalPieceDao;
@@ -35,13 +37,14 @@ import at.fhv.teamb.symphoniacus.persistence.model.WishEntryEntity;
 import at.fhv.teamb.symphoniacus.persistence.model.WishRequestable;
 import at.fhv.teamb.symphoniacus.persistence.model.interfaces.IDutyEntity;
 import at.fhv.teamb.symphoniacus.persistence.model.interfaces.IMusicalPieceEntity;
-import at.fhv.teamb.symphoniacus.persistence.model.interfaces.INegativeDateWishEntity;
 import at.fhv.teamb.symphoniacus.persistence.model.interfaces.IMusicianEntity;
+import at.fhv.teamb.symphoniacus.persistence.model.interfaces.INegativeDateWishEntity;
 import at.fhv.teamb.symphoniacus.persistence.model.interfaces.INegativeDutyWishEntity;
 import at.fhv.teamb.symphoniacus.persistence.model.interfaces.IPositiveWishEntity;
 import at.fhv.teamb.symphoniacus.persistence.model.interfaces.IWishEntryEntity;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+
 import java.util.HashSet;
 import java.util.LinkedHashSet;
 import java.util.LinkedList;
@@ -487,7 +490,7 @@ public class WishRequestManager {
             WishDto<DutyWishDto> dutyWish,
             Integer userId
     ) {
-
+        // Construct entity from DTO
         Optional<IWishEntryEntity> opWishEntry = fillInWishEntry(dutyWish, userId);
         IWishEntryEntity wishEntry = null;
         if (opWishEntry.isPresent()) {
@@ -495,6 +498,27 @@ public class WishRequestManager {
         } else {
             return Optional.empty();
         }
+
+        Musician m = null;
+        if (dutyWish.getWishType().equals(WishType.POSITIVE)) {
+            m = new Musician(wishEntry.getPositiveWish().getMusician());
+
+        } else if (dutyWish.getWishType().equals(WishType.NEGATIVE)) {
+            m = new Musician(wishEntry.getNegativeDutyWish().getMusician());
+        }
+
+        // Construct domain object
+        WishBuilder<IWishEntryEntity> wishBuilder =
+            new WishBuilder<>(wishEntry.getWishEntryId(), dutyWish.getWishType(),
+                dutyWish.getTarget(), m);
+        Wish<IWishEntryEntity> wish = wishBuilder.build();
+        boolean isValid = wish.isValid();
+        LOG.debug("Is wish valid? {}", isValid);
+        if (!isValid) {
+            LOG.debug("Wish is not valid");
+            return Optional.empty();
+        }
+
         Optional<IWishEntryEntity> result = this.wishEntryDao.persist(wishEntry);
         if (result.isPresent()) {
             return getDutyWish(result.get().getWishEntryId());
