@@ -17,7 +17,6 @@ public class Main {
             MainGui.main();
         } catch (Exception e) {
             LOG.error(e);
-            e.printStackTrace();
         }
     }
 }

@@ -51,7 +51,6 @@ public class MainGui extends Application {
             );
             stage.show();
         } catch (IOException e) {
-            e.printStackTrace();
             LOG.error(e);
         }
     }
