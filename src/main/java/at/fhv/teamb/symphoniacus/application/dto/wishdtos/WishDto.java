@@ -1,5 +1,9 @@
 package at.fhv.teamb.symphoniacus.application.dto.wishdtos;
 
+import at.fhv.teamb.symphoniacus.application.type.WishStatusType;
+import at.fhv.teamb.symphoniacus.application.type.WishTargetType;
+import at.fhv.teamb.symphoniacus.application.type.WishType;
+
 /**
  * Dto class for all kinds of wishes.
  *
@@ -9,7 +13,7 @@ public class WishDto<T> {
     private Integer wishId;
     private WishType wishType;
     private WishTargetType target;
-    private WishStatus status;
+    private WishStatusType status;
     private String reason;
     private T details;
 
@@ -23,7 +27,7 @@ public class WishDto<T> {
             Integer wishId,
             WishType wishType,
             WishTargetType target,
-            WishStatus status,
+            WishStatusType status,
             String reason,
             T details
     ) {
@@ -47,7 +51,7 @@ public class WishDto<T> {
         this.target = target;
     }
 
-    public void setStatus(WishStatus status) {
+    public void setStatus(WishStatusType status) {
         this.status = status;
     }
 
@@ -71,7 +75,7 @@ public class WishDto<T> {
         return this.target;
     }
 
-    public WishStatus getStatus() {
+    public WishStatusType getStatus() {
         return this.status;
     }
 
@@ -89,7 +93,7 @@ public class WishDto<T> {
         private Integer wishId;
         private WishType wishtype;
         private WishTargetType target;
-        private WishStatus status;
+        private WishStatusType status;
         private String reason;
         private T details;
 
@@ -108,7 +112,7 @@ public class WishDto<T> {
             return this;
         }
 
-        public WishBuilder<T> withStatus(WishStatus status) {
+        public WishBuilder<T> withStatus(WishStatusType status) {
             this.status = status;
             return this;
         }
