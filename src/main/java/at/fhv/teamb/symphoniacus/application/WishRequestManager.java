@@ -229,8 +229,12 @@ public class WishRequestManager {
         Musician m = new Musician(dateWishEntity.getMusician());
 
         // Construct domain object and validate
-        Wish wish = getDateRequestDomainObject(dateWish, dateWishEntity, m);
-
+        Optional<Wish> optWish = getDateRequestDomainObject(dateWish, dateWishEntity, m);
+        if (optWish.isEmpty()) {
+            LOG.error("Could not construct wish domain object");
+            return false;
+        }
+        Wish wish = optWish.get();
         boolean isValid = wish.isValid();
         LOG.debug("Is wish valid? {}", isValid);
         if (!isValid) {
@@ -558,7 +562,13 @@ public class WishRequestManager {
         }
 
         // Construct domain object
-        Wish wish = getDutyRequestDomainObject(dutyWish, wishEntry, m);
+        Optional<Wish> optWish = getDutyRequestDomainObject(dutyWish, wishEntry, m);
+        if (optWish.isEmpty()) {
+            LOG.error("Could not construct wish domain object");
+            return false;
+        }
+        Wish wish = optWish.get();
+
         boolean isValid = wish.isValid();
         LOG.debug("Is wish valid? {}", isValid);
         if (!isValid) {
@@ -574,7 +584,7 @@ public class WishRequestManager {
         return true;
     }
 
-    private Wish getDutyRequestDomainObject(
+    private Optional<Wish> getDutyRequestDomainObject(
         WishDto<DutyWishDto> wishDto,
         IWishEntryEntity wishEntry,
         Musician musician
@@ -595,7 +605,7 @@ public class WishRequestManager {
         return wishBuilder.build();
     }
 
-    private Wish getDateRequestDomainObject(
+    private Optional<Wish> getDateRequestDomainObject(
         WishDto<DateWishDto> wishDto,
         INegativeDateWishEntity negativeDateWish,
         Musician musician

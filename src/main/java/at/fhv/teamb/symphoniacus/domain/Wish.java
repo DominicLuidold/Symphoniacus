@@ -15,6 +15,7 @@ import org.apache.logging.log4j.Logger;
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Optional;
 import java.util.Set;
 
 /**
@@ -245,17 +246,19 @@ public class Wish {
          *
          * @return Built wish
          */
-        public Wish build() {
+        public Optional<Wish> build() {
             Wish wish = new Wish(this.wishId, this.wishType, this.wtt, this.musician);
 
             if (
                 this.wtt.equals(WishTargetType.DUTY)
                     && this.positiveOrNegativeDutyRequest == null
             ) {
-                throw new IllegalStateException("No DutyWish supplied");
+                LOG.error("No DutyWish supplied");
+                return Optional.empty();
             }
             if (this.wtt.equals(WishTargetType.DATE) && this.negativeDateRequest == null) {
-                throw new IllegalStateException("No NegativeDateWish supplied");
+                LOG.error("No NegativeDateWish supplied");
+                return Optional.empty();
             }
 
             wish.dutyRequest = this.positiveOrNegativeDutyRequest;
@@ -263,7 +266,7 @@ public class Wish {
             wish.reason = this.reason;
             wish.musicalPieces = this.musicalPieces;
 
-            return wish;
+            return Optional.of(wish);
         }
     }
 }
