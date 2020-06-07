@@ -5,6 +5,7 @@ import at.fhv.teamb.symphoniacus.application.SeriesOfPerformancesManager;
 import at.fhv.teamb.symphoniacus.application.dto.InstrumentationDto;
 import at.fhv.teamb.symphoniacus.application.dto.MusicalPieceDto;
 import at.fhv.teamb.symphoniacus.application.dto.SectionInstrumentationDto;
+import at.fhv.teamb.symphoniacus.application.dto.SeriesOfPerformancesDto;
 import at.fhv.teamb.symphoniacus.presentation.internal.Parentable;
 import at.fhv.teamb.symphoniacus.presentation.internal.TabPaneEntry;
 import at.fhv.teamb.symphoniacus.presentation.internal.UkTimeFormatter;
@@ -373,99 +374,60 @@ public class SeriesOfPerformancesController
      * persists after validated input the new seriesOfPerformances in the database.
      */
     private void save() {
-        if (validateInputs()) {
-            this.seriesManager.save(nameOfSeries.getText(),
-                new LinkedHashSet<MusicalPieceDto>(
-                    this.musicalPieceCheckComboBox.getCheckModel().getCheckedItems()),
-                new LinkedHashSet<InstrumentationDto>(
-                    this.instrumentationCheckComboBox.getCheckModel().getCheckedItems()),
-                this.startingDate.getValue(), endingDate.getValue(), isTour.isSelected()
-            );
+            SeriesOfPerformancesDto seriesDto = buildSeriesDto();
+            String validationResult = this.seriesManager.validate(seriesDto,this.resources);
 
-            // After saving show success dialog
-            Alert successAlert = new Alert(Alert.AlertType.INFORMATION);
-            successAlert.setTitle(resources.getString("seriesOfPerformances.success.title"));
-            successAlert.setContentText(resources
-                .getString("seriesOfPerformances.success.seriesOfPerformanceSuccessfullySaved")
-            );
-            successAlert.getButtonTypes()
-                .setAll(new ButtonType(resources.getString("global.button.ok")));
+            if (validationResult.equals("VALIDATED")) {
+                boolean isSaved = this.seriesManager.save(seriesDto);
 
-            // Get custom success icon
-            ImageView icon = new ImageView("images/successIcon.png");
-            icon.setFitHeight(48);
-            icon.setFitWidth(48);
-            successAlert.setGraphic(icon);
-            successAlert.setHeaderText(resources
-                .getString("seriesOfPerformances.success.header"));
-            successAlert.show();
-            this.parentController.removeTab(TabPaneEntry.ADD_SOP);
-            this.parentController.selectTab(TabPaneEntry.ADD_DUTY);
-        } else {
-            LOG.debug(
-                "Series of Performances could not be saved");
-        }
+                if(isSaved) {
+                    // After saving show success dialog
+                    Alert successAlert = new Alert(Alert.AlertType.INFORMATION);
+                    successAlert.setTitle(resources.getString("seriesOfPerformances.success.title"));
+                    successAlert.setContentText(resources
+                            .getString("seriesOfPerformances.success.seriesOfPerformanceSuccessfullySaved")
+                    );
+                    successAlert.getButtonTypes()
+                            .setAll(new ButtonType(resources.getString("global.button.ok")));
+
+                    // Get custom success icon
+                    ImageView icon = new ImageView("images/successIcon.png");
+                    icon.setFitHeight(48);
+                    icon.setFitWidth(48);
+                    successAlert.setGraphic(icon);
+                    successAlert.setHeaderText(resources
+                            .getString("seriesOfPerformances.success.header"));
+                    successAlert.show();
+                    this.parentController.removeTab(TabPaneEntry.ADD_SOP);
+                    this.parentController.selectTab(TabPaneEntry.ADD_DUTY);
+                } else {
+                    LOG.error("Saving was not successful");
+                    MainController.showErrorAlert(
+                            this.resources.getString("seriesOfPerformances.error.title"),
+                            this.resources.getString(
+                                    "seriesOfPerformances.error.savingNotSuccessful"),
+                            this.resources.getString("global.button.ok")
+                    );
+                }
+            } else {
+                MainController.showErrorAlert(
+                        this.resources.getString("seriesOfPerformances.error.title"),
+                        validationResult,
+                        this.resources.getString("global.button.ok")
+                );
+            }
     }
 
-    /**
-     * validates whether or not:
-     * -The title has no more than 45 characters.
-     * -The end date is after the start date.
-     * -whether the seriesOfPerformance already exists with the same name and time specification.
-     *
-     * @return a boolean whether the validation is successful or not
-     */
-    private boolean validateInputs() {
-        //gibts die series of performance bereits -> wenn ja fehlermeldung
-
-        if (this.seriesManager
-            .doesSeriesAlreadyExist(this.nameOfSeries.getText(), this.startingDate.getValue(),
-                endingDate.getValue())) {
-            MainController.showErrorAlert(
-                this.resources.getString("seriesOfPerformances.error.title"),
-                this.resources.getString(
-                    "seriesOfPerformances.error.seriesAlreadyExists.message"
-                ),
-                this.resources.getString("global.button.ok")
-            );
-            return false;
-        } else if (this.nameOfSeries.getText().length() > 45) {
-            MainController.showErrorAlert(
-                this.resources.getString("seriesOfPerformances.error.title"),
-                this.resources.getString(
-                    "seriesOfPerformances.error.nameOfSeriesOutOfBounds.message"),
-                this.resources.getString("global.button.ok")
-            );
-            return false;
-        } else if (this.endingDate.getValue().isBefore(this.startingDate.getValue())) {
-            MainController.showErrorAlert(
-                this.resources.getString("seriesOfPerformances.error.title"),
-                this.resources.getString(
-                    "seriesOfPerformances.error.endingDateBeforeStartingDate.message"
-                ),
-                this.resources.getString("global.button.ok")
-            );
-            return false;
-        } else if (this.musicalPieceCheckComboBox.getCheckModel().getCheckedItems().isEmpty()) {
-            MainController.showErrorAlert(
-                this.resources.getString("seriesOfPerformances.error.title"),
-                this.resources.getString(
-                    "seriesOfPerformances.error.noMusicalPieceSelected.message"
-                ),
-                this.resources.getString("global.button.ok")
-            );
-            return false;
-        } else if (!isInstrumentationForMusicalPieceSelected()) {
-            MainController.showErrorAlert(
-                this.resources.getString("seriesOfPerformances.error.title"),
-                this.resources.getString(
-                    "seriesOfPerformances.error.selectedMusicalPieceWithoutInstrumentation.message"
-                ),
-                this.resources.getString("global.button.ok")
-            );
-            return false;
-        }
-        return true;
+    private SeriesOfPerformancesDto buildSeriesDto() {
+        return new SeriesOfPerformancesDto.SeriesOfPerformancesDtoBuilder()
+                .withDescription(this.nameOfSeries.getText())
+                .withMusicalPieces(new LinkedHashSet<MusicalPieceDto>(
+                        this.musicalPieceCheckComboBox.getCheckModel().getCheckedItems()))
+                .withInstrumentations( new LinkedHashSet<InstrumentationDto>(
+                        this.instrumentationCheckComboBox.getCheckModel().getCheckedItems()))
+                .withStartDate(startingDate.getValue())
+                .withEndDate(endingDate.getValue())
+                .withIsTour(this.isTour.isSelected()).build();
     }
 
     private void cancel() {
@@ -483,27 +445,6 @@ public class SeriesOfPerformancesController
         alert.getButtonTypes()
             .setAll(new ButtonType(resources.getString("global.button.ok")));
         alert.show();
-    }
-
-    private boolean isInstrumentationForMusicalPieceSelected() {
-        for (MusicalPieceDto m : this.musicalPieceCheckComboBox
-            .getCheckModel().getCheckedItems()) {
-            boolean isSelected = false;
-
-            for (InstrumentationDto i : m.getInstrumentations()) {
-                for (InstrumentationDto instDto : this.instrumentationCheckComboBox
-                    .getCheckModel().getCheckedItems()) {
-                    if (instDto.getInstrumentationId() == (i.getInstrumentationId())) {
-                        isSelected = true;
-                        break;
-                    }
-                }
-            }
-            if (!isSelected) {
-                return false;
-            }
-        }
-        return true;
     }
 
     public JFXDatePicker getStartingDate() {
