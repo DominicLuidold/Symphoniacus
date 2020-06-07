@@ -508,7 +508,7 @@ public class WishRequestManager {
         }
 
         // Construct domain object
-        Wish<IWishEntryEntity> wish = getWishDomainObject(dutyWish, wishEntry, m);
+        Wish<IWishEntryEntity> wish = getDutyRequestDomainObject(dutyWish, wishEntry, m);
         boolean isValid = wish.isValid();
         LOG.debug("Is wish valid? {}", isValid);
         if (!isValid) {
@@ -525,7 +525,7 @@ public class WishRequestManager {
         }
     }
 
-    private Wish<IWishEntryEntity> getWishDomainObject(
+    private Wish<IWishEntryEntity> getDutyRequestDomainObject(
         WishDto<DutyWishDto> wishDto,
         IWishEntryEntity wishEntry,
         Musician musician
@@ -537,6 +537,8 @@ public class WishRequestManager {
                 wishDto.getTarget(),
                 musician
             );
+        wishBuilder.withDutyWish(wishEntry);
+        wishBuilder.withMusicalPieces(wishDto.getDetails().getMusicalPieces());
         return wishBuilder.build();
     }
 

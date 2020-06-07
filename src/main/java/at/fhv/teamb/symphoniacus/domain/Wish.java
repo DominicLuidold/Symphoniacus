@@ -117,7 +117,13 @@ public class Wish<T extends IWishEntryEntity> {
 
     private boolean isEditableDutyRequest() {
         // DutyWish is in History
-        if (LocalDate.now().isAfter(this.dutyRequest.getNegativeDutyWish().getEndDate())) {
+        LocalDate requestEndDate = null;
+        if (this.dutyRequest.getPositiveWish() != null) {
+            requestEndDate = this.dutyRequest.getPositiveWish().getEndDate();
+        } else if (this.dutyRequest.getNegativeDutyWish() != null) {
+            requestEndDate = this.dutyRequest.getNegativeDutyWish().getEndDate();
+        }
+        if (LocalDate.now().isAfter(requestEndDate)) {
             LOG.debug("DutyWish is in history, not valid anymore");
             return false;
         }
@@ -135,7 +141,7 @@ public class Wish<T extends IWishEntryEntity> {
 
     private boolean validateDateRequest() {
         // Not the correct Musician set
-        if (!this.dutyRequest.getNegativeDutyWish().getMusician().getMusicianId().equals(
+        if (!this.negativeDateRequest.getMusician().getMusicianId().equals(
             this.musician.getEntity().getMusicianId())
         ) {
             LOG.debug("DateWish is for different Musician");
@@ -147,15 +153,23 @@ public class Wish<T extends IWishEntryEntity> {
 
     private boolean validateDutyRequest() {
         // Not the correct Musician set
-        if (!this.dutyRequest.getNegativeDutyWish().getMusician().getMusicianId().equals(
+        if (this.dutyRequest.getNegativeDutyWish() != null
+            && !this.dutyRequest.getNegativeDutyWish().getMusician().getMusicianId().equals(
             this.musician.getEntity().getMusicianId())
         ) {
-            LOG.debug("DateWish is for different Musician");
+            LOG.debug("Duty Request is for different Musician");
+            return false;
+        }
+        if (this.dutyRequest.getPositiveWish() != null
+            && !this.dutyRequest.getPositiveWish().getMusician().getMusicianId().equals(
+                this.musician.getEntity().getMusicianId())
+        ) {
+            LOG.debug("Duty Request is for different Musician");
             return false;
         }
 
         // musical pieces check
-        if (this.musicalPieces.isEmpty()) {
+        if (this.musicalPieces != null && this.musicalPieces.isEmpty()) {
             LOG.debug("No Musical Piece defined for duty request");
             return false;
         }
