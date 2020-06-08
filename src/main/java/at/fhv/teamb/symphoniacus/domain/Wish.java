@@ -15,7 +15,9 @@ import org.apache.logging.log4j.Logger;
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Locale;
 import java.util.Optional;
+import java.util.ResourceBundle;
 import java.util.Set;
 
 /**
@@ -35,6 +37,7 @@ public class Wish {
     private Musician musician;
     private WishType wishType;
     private WishTargetType target;
+    private ResourceBundle resources;
 
     /**
      * Constructs a new wish.
@@ -49,6 +52,8 @@ public class Wish {
         this.wishType = wt;
         this.target = wtt;
         this.musician = m;
+        Locale locale = new Locale("en", "UK");
+        this.resources = ResourceBundle.getBundle("bundles.language", locale);
     }
 
     /**
@@ -56,11 +61,16 @@ public class Wish {
      *
      * @return True if wish is valid
      */
-    public boolean isValid() {
+    public ValidationResult isValid() {
         // max 45 characters
         if (this.reason != null && this.reason.length() > MAX_LENGTH_REASON) {
             LOG.debug("Reason is too long, max 45 chars");
-            return false;
+            return new ValidationResult(
+                this.resources.getString(
+                    "validation.request.reason.too.long"
+                ),
+                false
+            );
         }
 
         // Detail check for Date / Duty specific Request
@@ -70,7 +80,12 @@ public class Wish {
             return this.validateDutyRequest();
         }
         LOG.debug("Wish {} is not valid", this.wishId);
-        return false;
+        return new ValidationResult(
+            this.resources.getString(
+                "validation.request.not.valid"
+            ),
+            false
+        );
     }
 
     /**
@@ -78,7 +93,7 @@ public class Wish {
      *
      * @return True if wish is editable
      */
-    public boolean isEditable() {
+    public ValidationResult isEditable() {
         LOG.debug("Checking whether wish is editable or not");
         if (this.target.equals(WishTargetType.DATE)) {
             return this.isEditableDateRequest();
@@ -86,13 +101,23 @@ public class Wish {
             return this.isEditableDutyRequest();
         }
         LOG.error("Unknown Wish Target Type found");
-        return false;
+        return new ValidationResult(
+            this.resources.getString(
+                "validation.request.unknown.type"
+            ),
+            false
+        );
     }
 
-    private boolean isEditableDateRequest() {
+    private ValidationResult isEditableDateRequest() {
         if (LocalDate.now().isAfter(this.negativeDateRequest.getEndDate())) {
             LOG.debug("DateWish is in history, not valid anymore");
-            return false;
+            return new ValidationResult(
+                this.resources.getString(
+                    "validation.request.date.history"
+                ),
+                false
+            );
         }
 
         // Check if one of the schedule has the endwish date already over
@@ -108,18 +133,30 @@ public class Wish {
                     "Now is after schedule end wish date for monthly schedule {}",
                     schedule.getMonthlyScheduleId()
                 );
-                return false;
+                return new ValidationResult(
+                    this.resources.getString(
+                        "validation.request.date.schedule.endwishdate.reached"
+                    ),
+                    false
+                );
             }
         }
-        return true;
+        return new ValidationResult(
+            true
+        );
     }
 
-    private boolean isEditableDutyRequest() {
+    private ValidationResult isEditableDutyRequest() {
         // Duty is in History
         LocalDate dutyEndDate = this.dutyRequest.getDuty().getEnd().toLocalDate();
         if (LocalDate.now().isAfter(dutyEndDate)) {
             LOG.debug("Duty is in history, not valid anymore");
-            return false;
+            return new ValidationResult(
+                this.resources.getString(
+                    "validation.request.duty.history"
+                ),
+                false
+            );
         }
 
         // End Wish date for Monthly Schedule already over
@@ -127,45 +164,74 @@ public class Wish {
             this.dutyRequest.getDuty().getWeeklySchedule().getMonthlySchedule().getEndWish();
         if (LocalDate.now().isAfter(endWishDate)) {
             LOG.debug("Now is after past EndWishDate, not editable");
-            return false;
+            return new ValidationResult(
+                this.resources.getString(
+                    "validation.request.date.schedule.endwishdate.reached="
+                ),
+                false
+            );
         }
 
-        return true;
+        return new ValidationResult(
+            true
+        );
     }
 
-    private boolean validateDateRequest() {
+    private ValidationResult validateDateRequest() {
         // Not the correct Musician set
         if (!this.negativeDateRequest.getMusician().getMusicianId().equals(
             this.musician.getEntity().getMusicianId())
         ) {
             LOG.debug("DateWish is for different Musician");
-            return false;
+            return new ValidationResult(
+                this.resources.getString(
+                    "validation.request.different.musician"
+                ),
+                false
+            );
         }
 
-        return true;
+        return new ValidationResult(
+            true
+        );
     }
 
-    private boolean validateDutyRequest() {
+    private ValidationResult validateDutyRequest() {
         // Not the correct Musician set
         if (this.dutyRequest.getNegativeDutyWish() != null
             && !this.dutyRequest.getNegativeDutyWish().getMusician().getMusicianId().equals(
             this.musician.getEntity().getMusicianId())
         ) {
             LOG.debug("Duty Request is for different Musician");
-            return false;
+            return new ValidationResult(
+                this.resources.getString(
+                    "validation.request.different.musician"
+                ),
+                false
+            );
         }
         if (this.dutyRequest.getPositiveWish() != null
             && !this.dutyRequest.getPositiveWish().getMusician().getMusicianId().equals(
             this.musician.getEntity().getMusicianId())
         ) {
             LOG.debug("Duty Request is for different Musician");
-            return false;
+            return new ValidationResult(
+                this.resources.getString(
+                    "validation.request.different.musician"
+                ),
+                false
+            );
         }
 
         // musical pieces check
         if (this.musicalPieces != null && this.musicalPieces.isEmpty()) {
             LOG.debug("No Musical Piece defined for duty request");
-            return false;
+            return new ValidationResult(
+                this.resources.getString(
+                    "validation.request.duty.no.musical.pieces"
+                ),
+                false
+            );
         }
 
         // Check Musician instrument
@@ -192,7 +258,19 @@ public class Wish {
             }
         }
 
-        return hasCategory;
+        if (hasCategory) {
+            return new ValidationResult(
+                true
+            );
+        } else {
+            return new ValidationResult(
+                this.resources.getString(
+                    "validation.request.duty.position.instrument.category"
+                ),
+                false
+            );
+        }
+
     }
 
     public static class WishBuilder {

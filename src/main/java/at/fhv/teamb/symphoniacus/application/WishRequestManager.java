@@ -235,14 +235,14 @@ public class WishRequestManager {
             return false;
         }
         Wish wish = optWish.get();
-        boolean isValid = wish.isValid();
+        boolean isValid = wish.isValid().isValid();
         LOG.debug("Is wish valid? {}", isValid);
         if (!isValid) {
             LOG.debug("Wish is not valid");
             return false;
         }
 
-        boolean isEditable = wish.isEditable();
+        boolean isEditable = wish.isEditable().isValid();
         LOG.debug("Is wish editable? {}", isEditable);
         if (!isEditable) {
             LOG.debug("Wish is not editable");
@@ -569,13 +569,13 @@ public class WishRequestManager {
         }
         Wish wish = optWish.get();
 
-        boolean isValid = wish.isValid();
+        boolean isValid = wish.isValid().isValid();
         LOG.debug("Is wish valid? {}", isValid);
         if (!isValid) {
             LOG.debug("Wish is not valid");
             return false;
         }
-        boolean isEditable = wish.isEditable();
+        boolean isEditable = wish.isEditable().isValid();
         LOG.debug("Is wish editable? {}", isEditable);
         if (!isEditable) {
             LOG.debug("Wish is not editable");
