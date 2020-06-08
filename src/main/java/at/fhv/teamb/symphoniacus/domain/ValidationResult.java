@@ -10,8 +10,6 @@ public class ValidationResult {
         this.isValid = isValid;
     }
 
-
-
     public String getMessage() {
         return this.message;
     }
