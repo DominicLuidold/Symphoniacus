@@ -4,6 +4,8 @@ import at.fhv.teamb.symphoniacus.application.dto.DutyDto;
 import at.fhv.teamb.symphoniacus.application.dto.InstrumentationDto;
 import at.fhv.teamb.symphoniacus.application.dto.MusicalPieceDto;
 import at.fhv.teamb.symphoniacus.application.dto.SeriesOfPerformancesDto;
+import at.fhv.teamb.symphoniacus.domain.SeriesOfPerformances;
+import at.fhv.teamb.symphoniacus.domain.ValidationResult;
 import at.fhv.teamb.symphoniacus.persistence.dao.InstrumentationDao;
 import at.fhv.teamb.symphoniacus.persistence.dao.SeriesOfPerformancesDao;
 import at.fhv.teamb.symphoniacus.persistence.dao.interfaces.IInstrumentationDao;
@@ -16,11 +18,14 @@ import at.fhv.teamb.symphoniacus.persistence.model.SeriesOfPerformancesEntity;
 import at.fhv.teamb.symphoniacus.persistence.model.interfaces.IInstrumentationEntity;
 import at.fhv.teamb.symphoniacus.persistence.model.interfaces.IMusicalPieceEntity;
 import at.fhv.teamb.symphoniacus.persistence.model.interfaces.ISeriesOfPerformancesEntity;
+import at.fhv.teamb.symphoniacus.presentation.MainController;
+
 import java.time.LocalDate;
 import java.util.LinkedHashSet;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Optional;
+import java.util.ResourceBundle;
 import java.util.Set;
 
 /**
@@ -44,29 +49,18 @@ public class SeriesOfPerformancesManager {
     /**
      * Persists a seriesOfPerformances based on the entered data.
      *
-     * @param name             Given name of the seriesOfPerformances
-     * @param musicalPieces    Given musicalPieces
-     * @param instrumentations Given instrumentations to the musicalPieces
-     * @param startDate        Starting Date
-     * @param endDate          Ending Date
-     * @param isTour           Represents whether it's a tour or not
+     * @param seriesDto given DTO with all needed input
      * @return true if persisting was successful, false otherwise
      */
-    public boolean save(
-        String name,
-        Set<MusicalPieceDto> musicalPieces,
-        Set<InstrumentationDto> instrumentations,
-        LocalDate startDate,
-        LocalDate endDate,
-        boolean isTour
-    ) {
+    public boolean save(SeriesOfPerformancesDto seriesDto) {
         SeriesOfPerformancesEntity series = new SeriesOfPerformancesEntity();
-        series.setDescription(name);
-        series.setMusicalPieces(convertMusicalPieceDtoToEntities(musicalPieces));
-        series.setInstrumentations(convertInstrumentationDtoToEntites(instrumentations));
-        series.setStartDate(startDate);
-        series.setEndDate(endDate);
-        series.setIsTour(isTour);
+        series.setDescription(seriesDto.getDescription());
+        series.setMusicalPieces(convertMusicalPieceDtoToEntities(seriesDto.getMusicalPieces()));
+        series.setInstrumentations(convertInstrumentationDtoToEntites(
+            seriesDto.getInstrumentations()));
+        series.setStartDate(seriesDto.getStartDate());
+        series.setEndDate(seriesDto.getEndDate());
+        series.setIsTour(seriesDto.isTour());
 
         Optional<ISeriesOfPerformancesEntity> result = this.seriesOfPerformancesDao.persist(series);
         return result.isPresent();
@@ -195,20 +189,21 @@ public class SeriesOfPerformancesManager {
 
     /**
      * Converts a {@link ISeriesOfPerformancesEntity} to a {@link SeriesOfPerformancesDto}.
+     *
      * @param entity Entity to convert
      * @return Converted DTO
      */
     public SeriesOfPerformancesDto convertSopToDto(ISeriesOfPerformancesEntity entity) {
         return new SeriesOfPerformancesDto.SeriesOfPerformancesDtoBuilder(
-                entity.getSeriesOfPerformancesId()
+            entity.getSeriesOfPerformancesId()
         )
-                .withMusicalPieces(
-                        convertMusicalPiecesToDto(entity.getMusicalPieces())
-                )
-                .withDescription(entity.getDescription())
-                .withStartDate(entity.getStartDate())
-                .withEndDate(entity.getEndDate())
-                .build();
+            .withMusicalPieces(
+                convertMusicalPiecesToDto(entity.getMusicalPieces())
+            )
+            .withDescription(entity.getDescription())
+            .withStartDate(entity.getStartDate())
+            .withEndDate(entity.getEndDate())
+            .build();
     }
 
     private Set<DutyDto> convertDutyToDto(Set<DutyEntity> duties) {
@@ -238,5 +233,21 @@ public class SeriesOfPerformancesManager {
             instrumentations.add(instDto);
         }
         return instrumentations;
+    }
+
+    /**
+     * validates the input of the form for creating a new series of performances.
+     *
+     * @param seriesDto seriesDto containing all input form informations
+     * @param bundle    language file
+     * @return "VALIDATED" if validation was successful, else return the error
+     *          text for alert
+     */
+    public ValidationResult validate(SeriesOfPerformancesDto seriesDto, ResourceBundle bundle) {
+        SeriesOfPerformances series
+            = new SeriesOfPerformances(seriesDto,
+            doesSeriesAlreadyExist(seriesDto.getDescription(),
+                seriesDto.getStartDate(), seriesDto.getEndDate()), bundle);
+        return series.validate();
     }
 }
