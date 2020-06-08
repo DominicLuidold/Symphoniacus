@@ -95,6 +95,7 @@ public abstract class BaseDao<T> implements Dao<T> {
      * @param clazz Class of the object
      * @return A List of objects
      */
+    @SuppressWarnings("unchecked")
     public List<T> getAll(Class<?> clazz) {
         LOG.debug("Get All method called for class {}", clazz.getSimpleName());
         CriteriaBuilder cb = entityManager.getCriteriaBuilder();
