@@ -11,6 +11,7 @@ import at.fhv.teamb.symphoniacus.application.type.WishType;
 import at.fhv.teamb.symphoniacus.domain.Duty;
 import at.fhv.teamb.symphoniacus.domain.MusicalPiece;
 import at.fhv.teamb.symphoniacus.domain.Musician;
+import at.fhv.teamb.symphoniacus.domain.ValidationResult;
 import at.fhv.teamb.symphoniacus.domain.Wish;
 import at.fhv.teamb.symphoniacus.domain.WishRequest;
 import at.fhv.teamb.symphoniacus.persistence.dao.DutyDao;
@@ -48,7 +49,9 @@ import java.util.HashSet;
 import java.util.LinkedHashSet;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Locale;
 import java.util.Optional;
+import java.util.ResourceBundle;
 import java.util.Set;
 
 /**
@@ -71,6 +74,7 @@ public class WishRequestManager {
     private Set<WishRequestable> allWishRequests;
     private List<IWishEntryEntity> wishEntries;
     private DutyManager dutyManager;
+    private ResourceBundle bundle;
 
     /**
      * Initializes the WishRequestManager.
@@ -85,6 +89,9 @@ public class WishRequestManager {
         this.seriesOfPerformancesDao = new SeriesOfPerformancesDao();
         this.musicalPieceDao = new MusicalPieceDao();
         this.dutyManager = new DutyManager();
+        Locale locale = new Locale("en", "UK");
+        Locale.setDefault(locale);
+        this.bundle = ResourceBundle.getBundle("bundles.language", locale);
     }
 
     /**
@@ -153,8 +160,8 @@ public class WishRequestManager {
 
         }
         LOG.error(
-                "Delivered User Id:{} could not be found @getAllNegativeDateWishesForUser",
-                 userId
+            "Delivered User Id:{} could not be found @getAllNegativeDateWishesForUser",
+            userId
         );
         return new LinkedHashSet<>();
     }
@@ -208,7 +215,7 @@ public class WishRequestManager {
         }
 
         INegativeDateWishEntity dateWishEntity = opDateWishEntity.get();
-        if (!validateDateRequest(dateWish, dateWishEntity)) {
+        if (!validateDateRequest(dateWish, dateWishEntity).isValid()) {
             return Optional.empty();
         }
 
@@ -222,33 +229,38 @@ public class WishRequestManager {
         }
     }
 
-    private boolean validateDateRequest(
+    private ValidationResult validateDateRequest(
         WishDto<DateWishDto> dateWish,
         INegativeDateWishEntity dateWishEntity
     ) {
         Musician m = new Musician(dateWishEntity.getMusician());
-
         // Construct domain object and validate
         Optional<Wish> optWish = getDateRequestDomainObject(dateWish, dateWishEntity, m);
         if (optWish.isEmpty()) {
             LOG.error("Could not construct wish domain object");
-            return false;
+            return new ValidationResult(this.bundle.getString(
+                "validation.request.date.could.not.construct.domain.object"
+            ), false);
         }
         Wish wish = optWish.get();
         boolean isValid = wish.isValid();
         LOG.debug("Is wish valid? {}", isValid);
         if (!isValid) {
             LOG.debug("Wish is not valid");
-            return false;
+            return new ValidationResult(this.bundle.getString(
+                "validation.request.date.not.valid"
+            ), false);
         }
 
         boolean isEditable = wish.isEditable();
         LOG.debug("Is wish editable? {}", isEditable);
         if (!isEditable) {
             LOG.debug("Wish is not editable");
-            return false;
+            return new ValidationResult(this.bundle.getString(
+                "validation.request.date.not.editable"
+            ), false);
         }
-        return true;
+        return new ValidationResult("VALIDATED", true);
     }
 
     /**
@@ -281,7 +293,7 @@ public class WishRequestManager {
         }
         dateWishEntity.setNegativeDateId(dateWish.getWishId());
 
-        if (!validateDateRequest(dateWish, dateWishEntity)) {
+        if (!validateDateRequest(dateWish, dateWishEntity).isValid()) {
             return Optional.empty();
         }
 
@@ -302,7 +314,7 @@ public class WishRequestManager {
             WishDto<DateWishDto> wishDto = new WishDto<>();
             wishDto.setTarget(WishTargetType.DATE);
             wishDto.setWishType(WishType.NEGATIVE);
-            if (!validateDateRequest(wishDto, opDateWishEntity.get())) {
+            if (!validateDateRequest(wishDto, opDateWishEntity.get()).isValid()) {
                 LOG.debug("Cannot delete date request");
                 return false;
             }
@@ -539,7 +551,7 @@ public class WishRequestManager {
             return Optional.empty();
         }
 
-        if (!validateDutyRequest(dutyWish, wishEntry)) {
+        if (!validateDutyRequest(dutyWish, wishEntry).isValid()) {
             return Optional.empty();
         }
 
@@ -552,7 +564,10 @@ public class WishRequestManager {
         }
     }
 
-    private boolean validateDutyRequest(WishDto<DutyWishDto> dutyWish, IWishEntryEntity wishEntry) {
+    private ValidationResult validateDutyRequest(
+        WishDto<DutyWishDto> dutyWish,
+        IWishEntryEntity wishEntry
+    ) {
         Musician m = null;
         if (dutyWish.getWishType().equals(WishType.POSITIVE)) {
             m = new Musician(wishEntry.getPositiveWish().getMusician());
@@ -565,7 +580,10 @@ public class WishRequestManager {
         Optional<Wish> optWish = getDutyRequestDomainObject(dutyWish, wishEntry, m);
         if (optWish.isEmpty()) {
             LOG.error("Could not construct wish domain object");
-            return false;
+            return new ValidationResult(
+                this.bundle.getString("validation.request.duty.could.not.construct.domain.object"),
+                false
+            );
         }
         Wish wish = optWish.get();
 
@@ -573,15 +591,21 @@ public class WishRequestManager {
         LOG.debug("Is wish valid? {}", isValid);
         if (!isValid) {
             LOG.debug("Wish is not valid");
-            return false;
+            return new ValidationResult(
+                this.bundle.getString("validation.request.duty.not.valid"),
+                false
+            );
         }
         boolean isEditable = wish.isEditable();
         LOG.debug("Is wish editable? {}", isEditable);
         if (!isEditable) {
             LOG.debug("Wish is not editable");
-            return false;
+            return new ValidationResult(
+                this.bundle.getString("validation.request.duty.not.editable"),
+                false
+            );
         }
-        return true;
+        return new ValidationResult("VALIDATED", true);
     }
 
     private Optional<Wish> getDutyRequestDomainObject(
@@ -624,10 +648,10 @@ public class WishRequestManager {
 
     /**
      * Delivers a filled WishDto.
+     * optional Dto of WishDto<DutyWishDto/> if success
      *
      * @param wishId Id of the needed WishEntry (DB)
      * @return Optional.empty if values are missing,
-     *      optional Dto of WishDto<DutyWishDto/> if success
      */
     public Optional<WishDto<DutyWishDto>> getDutyWish(Integer wishId) {
         // Get the WishEntry from DB
@@ -719,7 +743,7 @@ public class WishRequestManager {
         }
 
         // Validate with domain logic
-        if (!validateDutyRequest(dutyWish, wishEntry)) {
+        if (!validateDutyRequest(dutyWish, wishEntry).isValid()) {
             return Optional.empty();
         }
 
@@ -815,7 +839,7 @@ public class WishRequestManager {
                 wishDto.setWishType(WishType.NEGATIVE);
             }
             // Validate with domain logic
-            if (!validateDutyRequest(wishDto, opWishEntry.get())) {
+            if (!validateDutyRequest(wishDto, opWishEntry.get()).isValid()) {
                 LOG.debug("Cannot remove duty request");
                 return false;
             }
