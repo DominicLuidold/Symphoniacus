@@ -6,6 +6,7 @@ import at.fhv.teamb.symphoniacus.application.dto.InstrumentationDto;
 import at.fhv.teamb.symphoniacus.application.dto.MusicalPieceDto;
 import at.fhv.teamb.symphoniacus.application.dto.SectionInstrumentationDto;
 import at.fhv.teamb.symphoniacus.application.dto.SeriesOfPerformancesDto;
+import at.fhv.teamb.symphoniacus.domain.ValidationResult;
 import at.fhv.teamb.symphoniacus.presentation.internal.Parentable;
 import at.fhv.teamb.symphoniacus.presentation.internal.TabPaneEntry;
 import at.fhv.teamb.symphoniacus.presentation.internal.UkTimeFormatter;
@@ -375,9 +376,9 @@ public class SeriesOfPerformancesController
      */
     private void save() {
         SeriesOfPerformancesDto seriesDto = buildSeriesDto();
-        String validationResult = this.seriesManager.validate(seriesDto, this.resources);
+        ValidationResult validationResult = this.seriesManager.validate(seriesDto, this.resources);
 
-        if (validationResult.equals("VALIDATED")) {
+        if (validationResult.isValid()) {
             boolean isSaved = this.seriesManager.save(seriesDto);
 
             if (isSaved) {
@@ -412,7 +413,7 @@ public class SeriesOfPerformancesController
         } else {
             MainController.showErrorAlert(
                 this.resources.getString("seriesOfPerformances.error.title"),
-                validationResult,
+                validationResult.getMessage(),
                 this.resources.getString("global.button.ok")
             );
         }

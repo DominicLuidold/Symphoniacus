@@ -34,28 +34,39 @@ public class SeriesOfPerformances {
      *
      * @return "VALIDATED" if validation is successful, else return error text for alert.
      */
-    public String validate() {
+    public ValidationResult validate() {
+        ValidationResult result;
         if (doesSeriesAlreadyExist) {
-            return this.resources.getString(
+            result = new ValidationResult(this.resources.getString(
                 "seriesOfPerformances.error.seriesAlreadyExists.message"
-            );
+            ),false);
+            return result;
         } else if (seriesDto.getDescription().length() > 45) {
-            return this.resources.getString(
-                "seriesOfPerformances.error.nameOfSeriesOutOfBounds.message");
+            result = new ValidationResult(this.resources.getString(
+                    "seriesOfPerformances.error.nameOfSeriesOutOfBounds.message"
+            ),false);
+            return result;
         } else if (seriesDto.getEndDate().isBefore(seriesDto.getStartDate())) {
-            return this.resources.getString(
-                "seriesOfPerformances.error.endingDateBeforeStartingDate.message"
-            );
+            result = new ValidationResult(this.resources.getString(
+                    "seriesOfPerformances.error.endingDateBeforeStartingDate.message"
+            ),false);
+            return result;
+
         } else if (seriesDto.getMusicalPieces().isEmpty()) {
-            return this.resources.getString(
-                "seriesOfPerformances.error.noMusicalPieceSelected.message"
-            );
+            result = new ValidationResult(this.resources.getString(
+                    "seriesOfPerformances.error.noMusicalPieceSelected.message"
+            ),false);
+            return result;
         } else if (!isInstrumentationForMusicalPieceSelected()) {
-            return this.resources.getString(
-                "seriesOfPerformances.error.selectedMusicalPieceWithoutInstrumentation.message"
-            );
+            result = new ValidationResult(this.resources.getString(
+                    "seriesOfPerformances.error.selectedMusicalPieceWithoutInstrumentation.message"
+            ),false);
+            return result;
         }
-        return "VALIDATED";
+        result = new ValidationResult(this.resources.getString(
+                "VALIDATED"
+        ),true);
+        return result;
     }
 
     private boolean isInstrumentationForMusicalPieceSelected() {

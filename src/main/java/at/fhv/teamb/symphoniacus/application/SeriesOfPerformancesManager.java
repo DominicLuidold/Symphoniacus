@@ -5,6 +5,7 @@ import at.fhv.teamb.symphoniacus.application.dto.InstrumentationDto;
 import at.fhv.teamb.symphoniacus.application.dto.MusicalPieceDto;
 import at.fhv.teamb.symphoniacus.application.dto.SeriesOfPerformancesDto;
 import at.fhv.teamb.symphoniacus.domain.SeriesOfPerformances;
+import at.fhv.teamb.symphoniacus.domain.ValidationResult;
 import at.fhv.teamb.symphoniacus.persistence.dao.InstrumentationDao;
 import at.fhv.teamb.symphoniacus.persistence.dao.SeriesOfPerformancesDao;
 import at.fhv.teamb.symphoniacus.persistence.dao.interfaces.IInstrumentationDao;
@@ -242,7 +243,7 @@ public class SeriesOfPerformancesManager {
      * @return "VALIDATED" if validation was successful, else return the error
      *          text for alert
      */
-    public String validate(SeriesOfPerformancesDto seriesDto, ResourceBundle bundle) {
+    public ValidationResult validate(SeriesOfPerformancesDto seriesDto, ResourceBundle bundle) {
         SeriesOfPerformances series
             = new SeriesOfPerformances(seriesDto,
             doesSeriesAlreadyExist(seriesDto.getDescription(),
