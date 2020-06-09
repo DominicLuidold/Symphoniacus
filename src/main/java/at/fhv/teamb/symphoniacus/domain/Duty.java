@@ -3,6 +3,8 @@ package at.fhv.teamb.symphoniacus.domain;
 import at.fhv.teamb.symphoniacus.persistence.PersistenceState;
 import at.fhv.teamb.symphoniacus.persistence.model.DutyEntity;
 import at.fhv.teamb.symphoniacus.persistence.model.interfaces.IDutyEntity;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.LinkedList;
@@ -159,6 +161,24 @@ public class Duty {
             this.title = sb.toString();
         }
         return this.title;
+    }
+
+    /**
+     * Calculates the time of day String for a given time.
+     *
+     * <p>Possible times are {@code MORNING}, {@code AFTERNOON}, {@code EVENING}.
+     *
+     * @param startTime The start time
+     * @return A String matching a predefined value for the start time
+     */
+    public static String calculateTimeOfDay(LocalDateTime startTime) {
+        if (startTime.toLocalTime().isBefore(LocalTime.of(10, 1))) {
+            return "MORNING";
+        }
+        if (startTime.toLocalTime().isBefore(LocalTime.of(17, 1))) {
+            return "AFTERNOON";
+        }
+        return "EVENING";
     }
 
     /**

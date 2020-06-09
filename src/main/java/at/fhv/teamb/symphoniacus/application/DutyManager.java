@@ -7,7 +7,7 @@ import at.fhv.teamb.symphoniacus.application.dto.MusicalPieceDto;
 import at.fhv.teamb.symphoniacus.application.dto.SectionDto;
 import at.fhv.teamb.symphoniacus.application.dto.SeriesOfPerformancesDto;
 import at.fhv.teamb.symphoniacus.domain.Duty;
-import at.fhv.teamb.symphoniacus.domain.DutyCategory;
+import at.fhv.teamb.symphoniacus.domain.Section;
 import at.fhv.teamb.symphoniacus.persistence.PersistenceState;
 import at.fhv.teamb.symphoniacus.persistence.dao.DutyCategoryChangeLogDao;
 import at.fhv.teamb.symphoniacus.persistence.dao.DutyCategoryDao;
@@ -36,9 +36,6 @@ import at.fhv.teamb.symphoniacus.persistence.model.interfaces.IMusicianEntity;
 import at.fhv.teamb.symphoniacus.persistence.model.interfaces.ISectionMonthlyScheduleEntity;
 import at.fhv.teamb.symphoniacus.persistence.model.interfaces.ISeriesOfPerformancesEntity;
 import at.fhv.teamb.symphoniacus.persistence.model.interfaces.IWeeklyScheduleEntity;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
-
 import java.time.DayOfWeek;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -49,6 +46,8 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 /**
  * This class is responsible for finding {@link DutyEntity} objects based on a range of time and
@@ -202,7 +201,7 @@ public class DutyManager {
                 sectionEntity,
                 start.atStartOfDay(),
                 end.atStartOfDay(),
-                true, // TODO - Add logic to determine which parameters are true
+                true,
                 false,
                 false
             )
@@ -226,9 +225,9 @@ public class DutyManager {
     }
 
     /**
-     * TODO JAVADOC.
+     * Returns a List of {@link Duty} objects for a {@link Section}.
      *
-     * @return
+     * @return A List of duties
      */
     public List<Duty> getOtherDutiesForSopOrSection(
         Duty duty,
@@ -254,10 +253,8 @@ public class DutyManager {
                 numberOfDuties
             );
         } else {
-
             SectionEntity sectionEntity = sectionDtoToSectionEntity(section);
             // get last duties of section
-            // TODO change this go get last 5 non-series of performances-duties
             resultList = this.dutyDao.getOtherDutiesForSection(
                 duty.getEntity(),
                 sectionEntity,
@@ -274,7 +271,7 @@ public class DutyManager {
     }
 
     /**
-     * Creates a new {@link Duty} domain object based on given data.
+     * Creates a new {@link DutyEntity} object based on given data.
      *
      * @param description The description to use
      * @param timeOfDay   The time of day description
@@ -282,7 +279,7 @@ public class DutyManager {
      * @param end         The end of the duty
      * @return A duty domain object
      */
-    private IDutyEntity createDuty(
+    private IDutyEntity createDutyEntity(
         String description,
         String timeOfDay,
         LocalDateTime start,
@@ -319,7 +316,7 @@ public class DutyManager {
             dutyEntity.addSectionMonthlySchedule(sectionMonthlySchedule);
         }
 
-        // Return domain object
+        // Return entity
         return dutyEntity;
     }
 
@@ -329,25 +326,28 @@ public class DutyManager {
      * <p>The method will subsequently change the {@link PersistenceState} of the object
      * from {@link PersistenceState#EDITED} to {@link PersistenceState#PERSISTED}, provided
      * that the database update was successful.
+     *
+     * @param newDuty       The new Duty to create
+     * @param pointsChanged Whether the points vary from default points
+     * @return A DutyDto that contains the newly created Duty data
      */
-    public DutyDto save(
-        boolean userPointsChanged,
-        Integer points,
-        Set<InstrumentationDto> instrumentations,
-        SeriesOfPerformancesDto seriesOfPerformances,
-        DutyCategoryDto dutyCategory,
-        String description,
-        String timeOfDay,
-        LocalDateTime start,
-        LocalDateTime end
+    public DutyDto createNewDuty(
+        DutyDto newDuty,
+        boolean pointsChanged
     ) {
+        IDutyEntity duty = createDutyEntity(
+            newDuty.getDescription(),
+            Duty.calculateTimeOfDay(newDuty.getStart()),
+            newDuty.getStart(),
+            newDuty.getEnd()
+        );
 
-        IDutyEntity duty = createDuty(description, timeOfDay, start, end);
-
-        Optional<ISeriesOfPerformancesEntity> newSeries = this.seriesDao
-            .find(seriesOfPerformances.getSeriesOfPerformancesId());
-        Optional<IDutyCategoryEntity> newCategory = this.dutyCategoryDao
-            .find(dutyCategory.getDutyCategoryId());
+        Optional<ISeriesOfPerformancesEntity> newSeries = this.seriesDao.find(
+            newDuty.getSeriesOfPerformances().getSeriesOfPerformancesId()
+        );
+        Optional<IDutyCategoryEntity> newCategory = this.dutyCategoryDao.find(
+            newDuty.getDutyCategory().getDutyCategoryId()
+        );
         if (newSeries.isPresent() && newCategory.isPresent()) {
             duty.setSeriesOfPerformances(newSeries.get());
             duty.setDutyCategory(newCategory.get());
@@ -360,17 +360,17 @@ public class DutyManager {
         }
 
         this.dutyPositionManager.createDutyPositions(
-            convertInstrumentationToEntityObjects(instrumentations),
+            convertInstrumentationToEntityObjects(newDuty.getInstrumentations()),
             duty
         );
         Optional<IDutyEntity> persistedDuty = this.dutyDao.persist(duty);
 
-        if (userPointsChanged) {
+        if (pointsChanged) {
             if (this.changeLogDao.doesLogAlreadyExists(duty)) {
                 Optional<IDutyCategoryChangelogEntity> changeLog =
                     this.changeLogDao.getChangelogByDetails(duty);
                 if (changeLog.isPresent()) {
-                    changeLog.get().setPoints(points);
+                    changeLog.get().setPoints(newDuty.getPoints());
                     changeLogDao.update(changeLog.get());
                 } else {
                     LOG.error("Returned changelog is null but shouldn't be null! @save");
@@ -378,7 +378,7 @@ public class DutyManager {
             } else {
                 IDutyCategoryChangelogEntity changeLog = new DutyCategoryChangelogEntity();
                 changeLog.setDutyCategory(duty.getDutyCategory());
-                changeLog.setPoints(points);
+                changeLog.setPoints(newDuty.getPoints());
                 changeLog.setStartDate(duty.getStart().toLocalDate());
                 changeLogDao.persist(changeLog);
             }
@@ -408,18 +408,7 @@ public class DutyManager {
                 duty.getDescription()
             );
             return fillNewDtoWithState(dutyDto, PersistenceState.EDITED);
-
         }
-    }
-
-    private DutyDto fillNewDtoWithState(DutyDto duty, PersistenceState state) {
-        return new DutyDto.DutyDtoBuilder()
-            .withDutyId(duty.getDutyId())
-            .withDescription(duty.getDescription())
-            .withTimeOfDay(duty.getTimeOfDay())
-            .withStart(duty.getStart())
-            .withPersistenceState(state)
-            .build();
     }
 
     /**
@@ -467,8 +456,9 @@ public class DutyManager {
         LocalDateTime endingDate,
         DutyCategoryDto category) {
 
-        Optional<IDutyCategoryEntity> dutyCat = this.dutyCategoryDao
-            .find(category.getDutyCategoryId());
+        Optional<IDutyCategoryEntity> dutyCat = this.dutyCategoryDao.find(
+            category.getDutyCategoryId()
+        );
 
         //Convert List of instDTO to instEntity
         List<IInstrumentationEntity> newInstrumentations = new LinkedList<>();
@@ -476,15 +466,12 @@ public class DutyManager {
 
         for (InstrumentationDto i : instrumentations) {
             inst = this.instrumentationDao.find(i.getInstrumentationId());
-            if (inst.isPresent()) {
-                newInstrumentations.add(inst.get());
-            }
+            inst.ifPresent(newInstrumentations::add);
         }
 
         Optional<ISeriesOfPerformancesEntity> series = this.seriesDao.find(
-            seriesOfPerformances.getSeriesOfPerformancesId());
-
-        System.out.println();
+            seriesOfPerformances.getSeriesOfPerformancesId()
+        );
 
         if (series.isPresent() && dutyCat.isPresent() && !newInstrumentations.isEmpty()) {
             return this.dutyDao.doesDutyAlreadyExists(
@@ -497,43 +484,6 @@ public class DutyManager {
         } else {
             return false;
         }
-
-    }
-
-    private SectionEntity sectionDtoToSectionEntity(SectionDto section) {
-        SectionEntity sectionEntity = new SectionEntity();
-        sectionEntity.setSectionId(section.getSectionId());
-        sectionEntity.setSectionShortcut(section.getSectionShortcut());
-        sectionEntity.setDescription(section.getDescription());
-        return sectionEntity;
-    }
-
-    private List<DutyCategoryDto> convertCategoriesToDto(List<DutyCategory> cats) {
-        List<DutyCategoryDto> dutyCategoryDtos = new LinkedList<>();
-        for (DutyCategory d : cats) {
-            DutyCategoryDto dc = new DutyCategoryDto
-                .DutyCategoryDtoBuilder(d.getEntity().getDutyCategoryId())
-                .withType(d.getEntity().getType())
-                .build();
-            dutyCategoryDtos.add(dc);
-        }
-        return dutyCategoryDtos;
-    }
-
-    private Set<IInstrumentationEntity> convertInstrumentationToEntityObjects(
-        Set<InstrumentationDto> instrumentations
-    ) {
-        Set<IInstrumentationEntity> newInstrumentations = new LinkedHashSet<>();
-        for (InstrumentationDto i : instrumentations) {
-            Optional<IInstrumentationEntity> newInst = this.instrumentationDao
-                .find(i.getInstrumentationId());
-
-            if (newInst.isPresent()) {
-                newInstrumentations.add(newInst.get());
-            }
-
-        }
-        return newInstrumentations;
     }
 
     /**
@@ -619,9 +569,7 @@ public class DutyManager {
                     this.seriesOfPerformancesManager.convertSopToDto(
                         dutyEntity.getSeriesOfPerformances()
                     )
-                )
-
-                .build();
+                ).build();
             result.add(dutyDto);
         }
         return result;
@@ -646,7 +594,6 @@ public class DutyManager {
             musicalPieces.add(musicalPieceDto);
         }
 
-
         SeriesOfPerformancesDto seriesOfPerformancesDto =
             new SeriesOfPerformancesDto.SeriesOfPerformancesDtoBuilder(
                 duty.getEntity().getSeriesOfPerformances().getSeriesOfPerformancesId()
@@ -655,14 +602,11 @@ public class DutyManager {
                 .withMusicalPieces(musicalPieces)
                 .build();
 
-        DutyCategoryDto dutyCategory =
-            new DutyCategoryDto.DutyCategoryDtoBuilder(
-                duty.getEntity().getDutyCategory().getDutyCategoryId()
-            )
-                .withType(duty.getEntity().getDutyCategory().getType())
-                .build();
+        DutyCategoryDto dutyCategory = new DutyCategoryDto.DutyCategoryDtoBuilder(
+            duty.getEntity().getDutyCategory().getDutyCategoryId()
+        ).withType(duty.getEntity().getDutyCategory().getType()).build();
 
-        DutyDto dutyDto = new DutyDto.DutyDtoBuilder()
+        return new DutyDto.DutyDtoBuilder()
             .withDutyId(duty.getEntity().getDutyId())
             .withDescription(duty.getEntity().getDescription())
             .withTimeOfDay(duty.getEntity().getTimeOfDay())
@@ -671,8 +615,35 @@ public class DutyManager {
             .withEnd(duty.getEntity().getEnd())
             .withSeriesOfPerformances(seriesOfPerformancesDto)
             .build();
-
-        return dutyDto;
     }
 
+    private Set<IInstrumentationEntity> convertInstrumentationToEntityObjects(
+        Set<InstrumentationDto> instrumentations
+    ) {
+        Set<IInstrumentationEntity> newInstrumentations = new LinkedHashSet<>();
+        for (InstrumentationDto i : instrumentations) {
+            Optional<IInstrumentationEntity> newInst = this.instrumentationDao
+                .find(i.getInstrumentationId());
+            newInst.ifPresent(newInstrumentations::add);
+        }
+        return newInstrumentations;
+    }
+
+    private DutyDto fillNewDtoWithState(DutyDto duty, PersistenceState state) {
+        return new DutyDto.DutyDtoBuilder()
+            .withDutyId(duty.getDutyId())
+            .withDescription(duty.getDescription())
+            .withTimeOfDay(duty.getTimeOfDay())
+            .withStart(duty.getStart())
+            .withPersistenceState(state)
+            .build();
+    }
+
+    private SectionEntity sectionDtoToSectionEntity(SectionDto section) {
+        SectionEntity sectionEntity = new SectionEntity();
+        sectionEntity.setSectionId(section.getSectionId());
+        sectionEntity.setSectionShortcut(section.getSectionShortcut());
+        sectionEntity.setDescription(section.getDescription());
+        return sectionEntity;
+    }
 }

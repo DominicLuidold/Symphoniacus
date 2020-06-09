@@ -506,7 +506,6 @@ public class NewDutyEntryController implements Initializable, Parentable<Calenda
         }
     }
 
-
     /**
      * Disables the {@link #scheduleSaveBtn} if not all requirements have been met.
      * Makes the button clickable otherwise.
@@ -530,24 +529,27 @@ public class NewDutyEntryController implements Initializable, Parentable<Calenda
     /**
      * Persists a new duty.
      */
-
     private void saveNewDutyEntry() {
         if (validateInputs()) {
             Set<InstrumentationDto> instrumentations = new LinkedHashSet<>(
                 this.instrumentationsSelect.getCheckModel().getCheckedItems()
             );
-            // Delegate domain object creation to manager
-            this.duty = this.dutyManager.save(
-                this.userEditedPoints,
-                Integer.parseInt(this.dutyPointsInput.getText()),
-                instrumentations,
-                this.seriesOfPerformancesSelect.getValue(),
-                this.dutyCategorySelect.getValue(),
-                this.dutyDescriptionInput.getText(),
-                this.calculateTimeOfDay(this.dutyStartTimeInput.getValue()),
-                this.dutyStartDateInput.getValue().atTime(this.dutyStartTimeInput.getValue()),
-                this.dutyEndDateInput.getValue().atTime(this.dutyEndTimeInput.getValue())
-            );
+
+            // Create a DutyDto with data from GUI
+            DutyDto newDuty = new DutyDto.DutyDtoBuilder()
+                .withDescription(this.dutyDescriptionInput.getText())
+                .withDutyCategory(this.dutyCategorySelect.getValue())
+                .withSeriesOfPerformances(this.seriesOfPerformancesSelect.getValue())
+                .withStart(
+                    this.dutyStartDateInput.getValue().atTime(this.dutyStartTimeInput.getValue())
+                )
+                .withEnd(this.dutyEndDateInput.getValue().atTime(this.dutyEndTimeInput.getValue()))
+                .withInstrumentations(instrumentations)
+                .withPoints(Integer.parseInt(this.dutyPointsInput.getText()))
+                .build();
+
+            // Delegate object creation to manager
+            this.duty = this.dutyManager.createNewDuty(newDuty, this.userEditedPoints);
 
             if (this.duty.getPersistenceState() != null) {
                 if (this.duty.getPersistenceState() == PersistenceState.PERSISTED) {
@@ -637,25 +639,6 @@ public class NewDutyEntryController implements Initializable, Parentable<Calenda
             label.setText("-");
         }
         return buttonType;
-    }
-
-
-    /**
-     * Calculates the time of day String for a given time.
-     *
-     * <p>Possible times are {@code MORNING}, {@code AFTERNOON}, {@code EVENING}.
-     *
-     * @param startTime The start time
-     * @return A String matching a predefined value for the start time
-     */
-    private String calculateTimeOfDay(LocalTime startTime) {
-        if (startTime.isBefore(LocalTime.of(10, 1))) {
-            return "MORNING";
-        }
-        if (startTime.isBefore(LocalTime.of(17, 1))) {
-            return "AFTERNOON";
-        }
-        return "EVENING";
     }
 
     /**
