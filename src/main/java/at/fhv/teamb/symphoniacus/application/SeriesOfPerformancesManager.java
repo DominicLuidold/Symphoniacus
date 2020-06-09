@@ -18,8 +18,6 @@ import at.fhv.teamb.symphoniacus.persistence.model.SeriesOfPerformancesEntity;
 import at.fhv.teamb.symphoniacus.persistence.model.interfaces.IInstrumentationEntity;
 import at.fhv.teamb.symphoniacus.persistence.model.interfaces.IMusicalPieceEntity;
 import at.fhv.teamb.symphoniacus.persistence.model.interfaces.ISeriesOfPerformancesEntity;
-import at.fhv.teamb.symphoniacus.presentation.MainController;
-
 import java.time.LocalDate;
 import java.util.LinkedHashSet;
 import java.util.LinkedList;
@@ -56,8 +54,9 @@ public class SeriesOfPerformancesManager {
         SeriesOfPerformancesEntity series = new SeriesOfPerformancesEntity();
         series.setDescription(seriesDto.getDescription());
         series.setMusicalPieces(convertMusicalPieceDtoToEntities(seriesDto.getMusicalPieces()));
-        series.setInstrumentations(convertInstrumentationDtoToEntites(
-            seriesDto.getInstrumentations()));
+        series.setInstrumentations(
+            convertInstrumentationDtoToEntites(seriesDto.getInstrumentations())
+        );
         series.setStartDate(seriesDto.getStartDate());
         series.setEndDate(seriesDto.getEndDate());
         series.setIsTour(seriesDto.isTour());
@@ -73,8 +72,9 @@ public class SeriesOfPerformancesManager {
             entity.setMusicalPieceId(dto.getMusicalPieceId());
             entity.setCategory(dto.getCategory());
             entity.setName(dto.getName());
-            entity
-                .setInstrumentations(convertInstrumentationDtoToEntites(dto.getInstrumentations()));
+            entity.setInstrumentations(
+                convertInstrumentationDtoToEntites(dto.getInstrumentations())
+            );
             entities.add(entity);
         }
         return entities;
@@ -91,7 +91,6 @@ public class SeriesOfPerformancesManager {
         }
         return entities;
     }
-
 
     /**
      * checks if the seriesOfPerformances exists with the given parameters or not.
@@ -119,18 +118,17 @@ public class SeriesOfPerformancesManager {
     public Set<InstrumentationDto> getAllInstrumentations(
         SeriesOfPerformancesDto series
     ) {
-
-        Optional<ISeriesOfPerformancesEntity> seriesOfPerf = this.seriesOfPerformancesDao
-            .find(series.getSeriesOfPerformancesId());
+        Optional<ISeriesOfPerformancesEntity> seriesOfPerf = this.seriesOfPerformancesDao.find(
+            series.getSeriesOfPerformancesId()
+        );
 
         if (seriesOfPerf.isPresent()) {
-            Set<IInstrumentationEntity> instrumentations = this.instrumentationDao
-                .getAllInstrumentationsToSeries(seriesOfPerf.get());
+            Set<IInstrumentationEntity> instrumentations =
+                this.instrumentationDao.getAllInstrumentationsToSeries(seriesOfPerf.get());
             return convertInstrumentationsToDto(instrumentations);
         } else {
             return new LinkedHashSet<>();
         }
-
     }
 
     /**
@@ -169,7 +167,8 @@ public class SeriesOfPerformancesManager {
             if ((series.getStartDate().isBefore(startedBeforeOrEqual)
                 || series.getStartDate().isEqual(startedBeforeOrEqual))
                 && (series.getEndDate().isAfter(startedBeforeOrEqual)
-                || series.getEndDate().isEqual(startedBeforeOrEqual))) {
+                || series.getEndDate().isEqual(startedBeforeOrEqual))
+            ) {
                 filteredSeries.add(series);
             }
         }
@@ -238,16 +237,21 @@ public class SeriesOfPerformancesManager {
     /**
      * validates the input of the form for creating a new series of performances.
      *
-     * @param seriesDto seriesDto containing all input form informations
+     * @param seriesDto seriesDto containing all input form information
      * @param bundle    language file
      * @return "VALIDATED" if validation was successful, else return the error
      *          text for alert
      */
     public ValidationResult validate(SeriesOfPerformancesDto seriesDto, ResourceBundle bundle) {
-        SeriesOfPerformances series
-            = new SeriesOfPerformances(seriesDto,
-            doesSeriesAlreadyExist(seriesDto.getDescription(),
-                seriesDto.getStartDate(), seriesDto.getEndDate()), bundle);
+        SeriesOfPerformances series  = new SeriesOfPerformances(
+            seriesDto,
+            doesSeriesAlreadyExist(
+                seriesDto.getDescription(),
+                seriesDto.getStartDate(),
+                seriesDto.getEndDate()
+            ),
+            bundle
+        );
         return series.validate();
     }
 }
