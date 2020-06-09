@@ -5,7 +5,6 @@ import at.fhv.teamb.symphoniacus.application.dto.InstrumentationDto;
 import at.fhv.teamb.symphoniacus.application.dto.MusicalPieceDto;
 import at.fhv.teamb.symphoniacus.application.dto.SeriesOfPerformancesDto;
 import at.fhv.teamb.symphoniacus.domain.SeriesOfPerformances;
-import at.fhv.teamb.symphoniacus.domain.ValidationResult;
 import at.fhv.teamb.symphoniacus.persistence.dao.InstrumentationDao;
 import at.fhv.teamb.symphoniacus.persistence.dao.SeriesOfPerformancesDao;
 import at.fhv.teamb.symphoniacus.persistence.dao.interfaces.IInstrumentationDao;
@@ -23,7 +22,6 @@ import java.util.LinkedHashSet;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Optional;
-import java.util.ResourceBundle;
 import java.util.Set;
 
 /**
@@ -50,19 +48,29 @@ public class SeriesOfPerformancesManager {
      * @param seriesDto given DTO with all needed input
      * @return true if persisting was successful, false otherwise
      */
-    public boolean save(SeriesOfPerformancesDto seriesDto) {
-        SeriesOfPerformancesEntity series = new SeriesOfPerformancesEntity();
-        series.setDescription(seriesDto.getDescription());
-        series.setMusicalPieces(convertMusicalPieceDtoToEntities(seriesDto.getMusicalPieces()));
-        series.setInstrumentations(
-            convertInstrumentationDtoToEntites(seriesDto.getInstrumentations())
-        );
-        series.setStartDate(seriesDto.getStartDate());
-        series.setEndDate(seriesDto.getEndDate());
-        series.setIsTour(seriesDto.isTour());
+    public ValidationResult<SeriesOfPerformancesDto> save(SeriesOfPerformancesDto seriesDto) {
+        ValidationResult<SeriesOfPerformancesDto> validationResult = this.validate(seriesDto);
 
-        Optional<ISeriesOfPerformancesEntity> result = this.seriesOfPerformancesDao.persist(series);
-        return result.isPresent();
+        if (validationResult.isValid()) {
+            SeriesOfPerformancesEntity series = new SeriesOfPerformancesEntity();
+            series.setDescription(seriesDto.getDescription());
+            series.setMusicalPieces(convertMusicalPieceDtoToEntities(seriesDto.getMusicalPieces()));
+            series.setInstrumentations(
+                convertInstrumentationDtoToEntites(seriesDto.getInstrumentations())
+            );
+            series.setStartDate(seriesDto.getStartDate());
+            series.setEndDate(seriesDto.getEndDate());
+            series.setIsTour(seriesDto.isTour());
+
+            Optional<ISeriesOfPerformancesEntity> result = this.seriesOfPerformancesDao.persist(
+                series
+            );
+            result.ifPresentOrElse(
+                persistedSeries -> validationResult.setPayload(convertSopToDto(persistedSeries)),
+                () -> validationResult.setValid(false)
+            );
+        }
+        return validationResult;
     }
 
     private Set<IMusicalPieceEntity> convertMusicalPieceDtoToEntities(Set<MusicalPieceDto> dtos) {
@@ -238,19 +246,17 @@ public class SeriesOfPerformancesManager {
      * validates the input of the form for creating a new series of performances.
      *
      * @param seriesDto seriesDto containing all input form information
-     * @param bundle    language file
      * @return "VALIDATED" if validation was successful, else return the error
      *          text for alert
      */
-    public ValidationResult validate(SeriesOfPerformancesDto seriesDto, ResourceBundle bundle) {
+    private ValidationResult<SeriesOfPerformancesDto> validate(SeriesOfPerformancesDto seriesDto) {
         SeriesOfPerformances series  = new SeriesOfPerformances(
             seriesDto,
             doesSeriesAlreadyExist(
                 seriesDto.getDescription(),
                 seriesDto.getStartDate(),
                 seriesDto.getEndDate()
-            ),
-            bundle
+            )
         );
         return series.validate();
     }
