@@ -2,6 +2,7 @@ package at.fhv.teamb.symphoniacus.application.dto;
 
 import at.fhv.teamb.symphoniacus.persistence.PersistenceState;
 import java.time.LocalDateTime;
+import java.util.Set;
 
 /**
  * DTO for Duty.
@@ -18,6 +19,8 @@ public class DutyDto {
     private final LocalDateTime end;
     private final SeriesOfPerformancesDto seriesOfPerformances;
     private final PersistenceState persistenceState;
+    private final int points;
+    private final Set<InstrumentationDto> instrumentations;
 
     private DutyDto(
         int dutyId,
@@ -27,6 +30,8 @@ public class DutyDto {
         LocalDateTime start,
         LocalDateTime end,
         SeriesOfPerformancesDto seriesOfPerformances,
+        Set<InstrumentationDto> instrumentations,
+        int points,
         PersistenceState persistenceState
     ) {
         this.dutyId = dutyId;
@@ -36,6 +41,8 @@ public class DutyDto {
         this.start = start;
         this.end = end;
         this.seriesOfPerformances = seriesOfPerformances;
+        this.instrumentations = instrumentations;
+        this.points = points;
         this.persistenceState = persistenceState;
     }
 
@@ -67,6 +74,14 @@ public class DutyDto {
         return this.seriesOfPerformances;
     }
 
+    public Set<InstrumentationDto> getInstrumentations() {
+        return this.instrumentations;
+    }
+
+    public int getPoints() {
+        return this.points;
+    }
+
     public PersistenceState getPersistenceState() {
         return this.persistenceState;
     }
@@ -79,6 +94,8 @@ public class DutyDto {
         private LocalDateTime start;
         private LocalDateTime end;
         private SeriesOfPerformancesDto seriesOfPerformances;
+        private Set<InstrumentationDto> instrumentations;
+        private int points;
         private PersistenceState persistenceState;
 
         public DutyDtoBuilder withDutyId(int dutyId) {
@@ -119,6 +136,16 @@ public class DutyDto {
             return this;
         }
 
+        public DutyDtoBuilder withInstrumentations(Set<InstrumentationDto> instrumentations) {
+            this.instrumentations = instrumentations;
+            return this;
+        }
+
+        public DutyDtoBuilder withPoints(int points) {
+            this.points = points;
+            return this;
+        }
+
         public DutyDtoBuilder withPersistenceState(PersistenceState persistenceState) {
             this.persistenceState = persistenceState;
             return this;
@@ -138,6 +165,8 @@ public class DutyDto {
                 this.start,
                 this.end,
                 this.seriesOfPerformances,
+                this.instrumentations,
+                this.points,
                 this.persistenceState
             );
         }

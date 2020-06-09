@@ -1,6 +1,8 @@
 package at.fhv.teamb.symphoniacus.domain;
 
+import at.fhv.teamb.symphoniacus.application.ValidationResult;
 import at.fhv.teamb.symphoniacus.application.dto.MusicalPieceApiDto;
+import at.fhv.teamb.symphoniacus.application.dto.wishdtos.WishDto;
 import at.fhv.teamb.symphoniacus.application.type.WishTargetType;
 import at.fhv.teamb.symphoniacus.application.type.WishType;
 import at.fhv.teamb.symphoniacus.persistence.model.interfaces.IDutyEntity;
@@ -10,46 +12,41 @@ import at.fhv.teamb.symphoniacus.persistence.model.interfaces.IInstrumentationPo
 import at.fhv.teamb.symphoniacus.persistence.model.interfaces.IMonthlyScheduleEntity;
 import at.fhv.teamb.symphoniacus.persistence.model.interfaces.INegativeDateWishEntity;
 import at.fhv.teamb.symphoniacus.persistence.model.interfaces.IWishEntryEntity;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
-
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Locale;
 import java.util.Optional;
 import java.util.ResourceBundle;
 import java.util.Set;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 /**
  * Domain object for all kinds of wishes.
  *
  * @author Valentin Goronjic
  */
-public class Wish {
-
+public class Wish implements Validatable {
     private static final Logger LOG = LogManager.getLogger(Wish.class);
     private static final int MAX_LENGTH_REASON = 45;
     private String reason;
     private IWishEntryEntity dutyRequest;
     private INegativeDateWishEntity negativeDateRequest;
     private List<MusicalPieceApiDto> musicalPieces;
-    private Integer wishId;
-    private Musician musician;
-    private WishType wishType;
-    private WishTargetType target;
-    private ResourceBundle resources;
+    private final Integer wishId;
+    private final Musician musician;
+    private final WishTargetType target;
+    private final ResourceBundle resources;
 
     /**
      * Constructs a new wish.
      *
      * @param id  Wish Id
-     * @param wt  Wish type
      * @param wtt Wish Target Type
      * @param m   Musician
      */
-    public Wish(Integer id, WishType wt, WishTargetType wtt, Musician m) {
+    public Wish(Integer id, WishTargetType wtt, Musician m) {
         this.wishId = id;
-        this.wishType = wt;
         this.target = wtt;
         this.musician = m;
         Locale locale = new Locale("en", "UK");
@@ -59,13 +56,13 @@ public class Wish {
     /**
      * Checks whether this wish is valid or not.
      *
-     * @return True if wish is valid
+     * @return A ValidationResult containing the validation result
      */
-    public ValidationResult isValid() {
+    public ValidationResult<WishDto<?>> isValid() {
         // max 45 characters
         if (this.reason != null && this.reason.length() > MAX_LENGTH_REASON) {
             LOG.debug("Reason is too long, max 45 chars");
-            return new ValidationResult(
+            return new ValidationResult<>(
                 this.resources.getString(
                     "validation.request.reason.too.long"
                 ),
@@ -80,7 +77,7 @@ public class Wish {
             return this.validateDutyRequest();
         }
         LOG.debug("Wish {} is not valid", this.wishId);
-        return new ValidationResult(
+        return new ValidationResult<>(
             this.resources.getString(
                 "validation.request.not.valid"
             ),
@@ -93,7 +90,7 @@ public class Wish {
      *
      * @return True if wish is editable
      */
-    public ValidationResult isEditable() {
+    public ValidationResult<WishDto<?>> isEditable() {
         LOG.debug("Checking whether wish is editable or not");
         if (this.target.equals(WishTargetType.DATE)) {
             return this.isEditableDateRequest();
@@ -101,7 +98,7 @@ public class Wish {
             return this.isEditableDutyRequest();
         }
         LOG.error("Unknown Wish Target Type found");
-        return new ValidationResult(
+        return new ValidationResult<>(
             this.resources.getString(
                 "validation.request.unknown.type"
             ),
@@ -109,10 +106,10 @@ public class Wish {
         );
     }
 
-    private ValidationResult isEditableDateRequest() {
+    private ValidationResult<WishDto<?>> isEditableDateRequest() {
         if (LocalDate.now().isAfter(this.negativeDateRequest.getEndDate())) {
             LOG.debug("DateWish is in history, not valid anymore");
-            return new ValidationResult(
+            return new ValidationResult<>(
                 this.resources.getString(
                     "validation.request.date.history"
                 ),
@@ -133,7 +130,7 @@ public class Wish {
                     "Now is after schedule end wish date for monthly schedule {}",
                     schedule.getMonthlyScheduleId()
                 );
-                return new ValidationResult(
+                return new ValidationResult<>(
                     this.resources.getString(
                         "validation.request.date.schedule.endwishdate.reached"
                     ),
@@ -141,17 +138,17 @@ public class Wish {
                 );
             }
         }
-        return new ValidationResult(
+        return new ValidationResult<>(
             true
         );
     }
 
-    private ValidationResult isEditableDutyRequest() {
+    private ValidationResult<WishDto<?>> isEditableDutyRequest() {
         // Duty is in History
         LocalDate dutyEndDate = this.dutyRequest.getDuty().getEnd().toLocalDate();
         if (LocalDate.now().isAfter(dutyEndDate)) {
             LOG.debug("Duty is in history, not valid anymore");
-            return new ValidationResult(
+            return new ValidationResult<>(
                 this.resources.getString(
                     "validation.request.duty.history"
                 ),
@@ -164,7 +161,7 @@ public class Wish {
             this.dutyRequest.getDuty().getWeeklySchedule().getMonthlySchedule().getEndWish();
         if (LocalDate.now().isAfter(endWishDate)) {
             LOG.debug("Now is after past EndWishDate, not editable");
-            return new ValidationResult(
+            return new ValidationResult<>(
                 this.resources.getString(
                     "validation.request.date.schedule.endwishdate.reached="
                 ),
@@ -172,18 +169,16 @@ public class Wish {
             );
         }
 
-        return new ValidationResult(
-            true
-        );
+        return new ValidationResult<>(true);
     }
 
-    private ValidationResult validateDateRequest() {
+    private ValidationResult<WishDto<?>> validateDateRequest() {
         // Not the correct Musician set
         if (!this.negativeDateRequest.getMusician().getMusicianId().equals(
             this.musician.getEntity().getMusicianId())
         ) {
             LOG.debug("DateWish is for different Musician");
-            return new ValidationResult(
+            return new ValidationResult<>(
                 this.resources.getString(
                     "validation.request.different.musician"
                 ),
@@ -191,19 +186,17 @@ public class Wish {
             );
         }
 
-        return new ValidationResult(
-            true
-        );
+        return new ValidationResult<>(true);
     }
 
-    private ValidationResult validateDutyRequest() {
+    private ValidationResult<WishDto<?>> validateDutyRequest() {
         // Not the correct Musician set
         if (this.dutyRequest.getNegativeDutyWish() != null
             && !this.dutyRequest.getNegativeDutyWish().getMusician().getMusicianId().equals(
             this.musician.getEntity().getMusicianId())
         ) {
             LOG.debug("Duty Request is for different Musician");
-            return new ValidationResult(
+            return new ValidationResult<>(
                 this.resources.getString(
                     "validation.request.different.musician"
                 ),
@@ -215,7 +208,7 @@ public class Wish {
             this.musician.getEntity().getMusicianId())
         ) {
             LOG.debug("Duty Request is for different Musician");
-            return new ValidationResult(
+            return new ValidationResult<>(
                 this.resources.getString(
                     "validation.request.different.musician"
                 ),
@@ -226,7 +219,7 @@ public class Wish {
         // musical pieces check
         if (this.musicalPieces != null && this.musicalPieces.isEmpty()) {
             LOG.debug("No Musical Piece defined for duty request");
-            return new ValidationResult(
+            return new ValidationResult<>(
                 this.resources.getString(
                     "validation.request.duty.no.musical.pieces"
                 ),
@@ -259,11 +252,11 @@ public class Wish {
         }
 
         if (hasCategory) {
-            return new ValidationResult(
+            return new ValidationResult<>(
                 true
             );
         } else {
-            return new ValidationResult(
+            return new ValidationResult<>(
                 this.resources.getString(
                     "validation.request.duty.position.instrument.category"
                 ),
@@ -325,7 +318,7 @@ public class Wish {
          * @return Built wish
          */
         public Optional<Wish> build() {
-            Wish wish = new Wish(this.wishId, this.wishType, this.wtt, this.musician);
+            Wish wish = new Wish(this.wishId, this.wtt, this.musician);
 
             if (
                 this.wtt.equals(WishTargetType.DUTY)

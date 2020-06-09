@@ -1,8 +1,12 @@
 package at.fhv.teamb.symphoniacus.domain;
 
+import at.fhv.teamb.symphoniacus.application.ValidationResult;
+import at.fhv.teamb.symphoniacus.application.dto.DutyDto;
 import at.fhv.teamb.symphoniacus.persistence.PersistenceState;
 import at.fhv.teamb.symphoniacus.persistence.model.DutyEntity;
 import at.fhv.teamb.symphoniacus.persistence.model.interfaces.IDutyEntity;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.LinkedList;
@@ -20,9 +24,10 @@ import org.apache.logging.log4j.Logger;
  * @author Valentin Goronjic
  * @author Dominic Luidold
  */
-public class Duty {
+public class Duty implements Validatable {
     private static final Logger LOG = LogManager.getLogger(Duty.class);
-    private IDutyEntity entity;
+    private final IDutyEntity entity;
+    private final ResourceBundle resources;
     private List<DutyPosition> dutyPositions;
     private String title;
     private PersistenceState persistenceState;
@@ -52,6 +57,10 @@ public class Duty {
         if (musicalPieces != null) {
             this.musicalPieces = Collections.unmodifiableList(musicalPieces);
         }
+
+        // Set resources
+        Locale locale = new Locale("en", "UK");
+        this.resources = ResourceBundle.getBundle("bundles.language", locale);
     }
 
     /**
@@ -117,17 +126,42 @@ public class Duty {
     }
 
     /**
+     * Checks whether this Duty is valid or not.
+     *
+     * @return A ValidationResult containing the validation result
+     */
+    public ValidationResult<DutyDto> isValid() {
+        // Start/End date/time not set
+        if (this.entity.getStart() == null || this.entity.getEnd() == null) {
+            LOG.debug("Duty is missing start and/or end date");
+            return new ValidationResult<>(
+                this.resources.getString("validation.duty.date.missing"),
+                false
+            );
+        }
+
+        // Start date/time before end date/time
+        if (this.entity.getStart().isAfter(this.entity.getEnd())) {
+            LOG.debug("Duty start date is after end date");
+            return new ValidationResult<>(
+                this.resources.getString("validation.duty.date.wrong"),
+                false
+            );
+        }
+
+        // Everything valid
+        return new ValidationResult<>(true);
+    }
+
+    /**
      * Generates a calendar-friendly title for Duty.
      *
      * @return String that looks like this: CATEGORY for SERIES (DESCRIPTION), where the
-     *      "for SERIES", "(DESCRIPTION)" parts are optional.
+     *     "for SERIES", "(DESCRIPTION)" parts are optional.
      */
     public String getTitle() {
         if (this.title == null) {
             LOG.debug("No title generated yet - generating");
-            Locale locale = new Locale("en", "UK");
-            Locale.setDefault(locale);
-            ResourceBundle bundle = ResourceBundle.getBundle("bundles.language", locale);
 
             StringBuilder sb = new StringBuilder();
             if (this.entity.getDutyCategory() != null) {
@@ -138,7 +172,7 @@ public class Duty {
             // for <SOP>
             if (this.entity.getSeriesOfPerformances() != null) {
                 sb.append(" ");
-                sb.append(bundle.getString("domain.duty.title.for"));
+                sb.append(this.resources.getString("domain.duty.title.for"));
                 sb.append(" ");
                 sb.append(this.entity.getSeriesOfPerformances().getDescription());
             }
@@ -159,6 +193,24 @@ public class Duty {
             this.title = sb.toString();
         }
         return this.title;
+    }
+
+    /**
+     * Calculates the time of day String for a given time.
+     *
+     * <p>Possible times are {@code MORNING}, {@code AFTERNOON}, {@code EVENING}.
+     *
+     * @param startTime The start time
+     * @return A String matching a predefined value for the start time
+     */
+    public static String calculateTimeOfDay(LocalDateTime startTime) {
+        if (startTime.toLocalTime().isBefore(LocalTime.of(10, 1))) {
+            return "MORNING";
+        }
+        if (startTime.toLocalTime().isBefore(LocalTime.of(17, 1))) {
+            return "AFTERNOON";
+        }
+        return "EVENING";
     }
 
     /**

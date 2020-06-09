@@ -6,7 +6,7 @@ import at.fhv.teamb.symphoniacus.application.dto.InstrumentationDto;
 import at.fhv.teamb.symphoniacus.application.dto.MusicalPieceDto;
 import at.fhv.teamb.symphoniacus.application.dto.SectionInstrumentationDto;
 import at.fhv.teamb.symphoniacus.application.dto.SeriesOfPerformancesDto;
-import at.fhv.teamb.symphoniacus.domain.ValidationResult;
+import at.fhv.teamb.symphoniacus.application.ValidationResult;
 import at.fhv.teamb.symphoniacus.presentation.internal.Parentable;
 import at.fhv.teamb.symphoniacus.presentation.internal.TabPaneEntry;
 import at.fhv.teamb.symphoniacus.presentation.internal.UkTimeFormatter;
@@ -376,12 +376,12 @@ public class SeriesOfPerformancesController
      */
     private void save() {
         SeriesOfPerformancesDto seriesDto = buildSeriesDto();
-        ValidationResult validationResult = this.seriesManager.validate(seriesDto, this.resources);
+        ValidationResult<SeriesOfPerformancesDto> validationResult = this.seriesManager.save(
+            seriesDto
+        );
 
         if (validationResult.isValid()) {
-            boolean isSaved = this.seriesManager.save(seriesDto);
-
-            if (isSaved) {
+            if (validationResult.getPayload().isPresent()) {
                 // After saving show success dialog
                 Alert successAlert = new Alert(Alert.AlertType.INFORMATION);
                 successAlert.setTitle(resources.getString("seriesOfPerformances.success.title"));
