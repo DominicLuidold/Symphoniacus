@@ -74,7 +74,7 @@ public class SeriesOfPerformances implements Validatable {
             );
             return result;
         }
-        result = new ValidationResult<>(this.resources.getString("VALIDATED"), true);
+        result = new ValidationResult<>(true);
         return result;
     }
 

@@ -3,6 +3,7 @@ package at.fhv.teamb.symphoniacus.presentation;
 import at.fhv.teamb.symphoniacus.application.DutyCategoryManager;
 import at.fhv.teamb.symphoniacus.application.DutyManager;
 import at.fhv.teamb.symphoniacus.application.SeriesOfPerformancesManager;
+import at.fhv.teamb.symphoniacus.application.ValidationResult;
 import at.fhv.teamb.symphoniacus.application.dto.DutyCategoryChangeLogDto;
 import at.fhv.teamb.symphoniacus.application.dto.DutyCategoryDto;
 import at.fhv.teamb.symphoniacus.application.dto.DutyDto;
@@ -203,7 +204,7 @@ public class NewDutyEntryController implements Initializable, Parentable<Calenda
         addIcon.getStyleClass().addAll("button-icon");
         this.newSeriesOfPerformancesBtn.setGraphic(addIcon);
 
-        this.editDutyPointsBtn.setOnAction(e -> setDutyPointsInputEditability());
+        this.editDutyPointsBtn.setOnAction(e -> setDutyPointsInputEdibility());
         FontIcon editIcon = new FontIcon(FontAwesome.EDIT);
         addIcon.getStyleClass().addAll("button-icon");
         this.editDutyPointsBtn.setGraphic(editIcon);
@@ -549,9 +550,24 @@ public class NewDutyEntryController implements Initializable, Parentable<Calenda
                 .build();
 
             // Delegate object creation to manager
-            this.duty = this.dutyManager.createNewDuty(newDuty, this.userEditedPoints);
+            ValidationResult<DutyDto> validationResult = this.dutyManager.createNewDuty(
+                newDuty,
+                this.userEditedPoints
+            );
 
-            if (this.duty.getPersistenceState() != null) {
+            // Check whether validation has succeeded
+            if (validationResult.isValid() && validationResult.getPayload().isPresent()) {
+                this.duty = validationResult.getPayload().get();
+            } else {
+                MainController.showErrorAlert(
+                    this.resources.getString("tab.duty.new.entry.error.title"),
+                    validationResult.getMessage(),
+                    this.resources.getString("global.button.ok")
+                );
+            }
+
+            // Continue with GUI logic after successful validation
+            if (this.duty != null && this.duty.getPersistenceState() != null) {
                 if (this.duty.getPersistenceState() == PersistenceState.PERSISTED) {
                     this.getParentController().addDuty(this.duty);
                     // Show success alert
@@ -587,7 +603,7 @@ public class NewDutyEntryController implements Initializable, Parentable<Calenda
         }
     }
 
-    private void setDutyPointsInputEditability() {
+    private void setDutyPointsInputEdibility() {
         if (this.dutyPointsInput.isDisable() && this.validStartDate.get() && validCategory.get()) {
             this.dutyPointsInput.setDisable(false);
         } else {

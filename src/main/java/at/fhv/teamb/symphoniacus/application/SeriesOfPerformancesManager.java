@@ -258,6 +258,6 @@ public class SeriesOfPerformancesManager {
                 seriesDto.getEndDate()
             )
         );
-        return series.validate();
+        return series.isValid();
     }
 }

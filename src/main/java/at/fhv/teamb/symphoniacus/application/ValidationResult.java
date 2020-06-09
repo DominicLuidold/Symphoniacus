@@ -3,7 +3,7 @@ package at.fhv.teamb.symphoniacus.application;
 import java.util.Optional;
 
 public class ValidationResult<T> {
-    private final String message;
+    private String message;
     private boolean isValid;
     private T payload;
 
@@ -20,6 +20,10 @@ public class ValidationResult<T> {
         return this.message;
     }
 
+    void setMessage(String message) { // Intentionally package-private
+        this.message = message;
+    }
+
     public boolean isValid() {
         return this.isValid;
     }
@@ -28,11 +32,11 @@ public class ValidationResult<T> {
         this.isValid = isValid;
     }
 
-    void setPayload(T payload) { // Intentionally package-private
-        this.payload = payload;
-    }
-
     public Optional<T> getPayload() {
         return Optional.ofNullable(payload);
+    }
+
+    void setPayload(T payload) { // Intentionally package-private
+        this.payload = payload;
     }
 }
