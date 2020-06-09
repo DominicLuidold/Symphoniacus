@@ -1,8 +1,5 @@
 package at.fhv.teamb.symphoniacus;
 
-import java.io.IOException;
-import java.util.Locale;
-import java.util.ResourceBundle;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.geometry.Rectangle2D;
@@ -13,6 +10,10 @@ import javafx.stage.Screen;
 import javafx.stage.Stage;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+
+import java.io.IOException;
+import java.util.Locale;
+import java.util.ResourceBundle;
 
 /**
  * Main GUI Controller.

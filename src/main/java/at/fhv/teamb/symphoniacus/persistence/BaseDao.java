@@ -1,13 +1,17 @@
 package at.fhv.teamb.symphoniacus.persistence;
 
-import java.util.List;
-import java.util.Optional;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.EntityTransaction;
 import javax.persistence.Persistence;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
+import javax.persistence.TypedQuery;
+import javax.persistence.criteria.CriteriaBuilder;
+import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.Root;
+import java.util.List;
+import java.util.Optional;
 
 /**
  * This class acts as a base for all DAOs by handling the {@link EntityManagerFactory} and
@@ -93,11 +97,14 @@ public abstract class BaseDao<T> implements Dao<T> {
      */
     @SuppressWarnings("unchecked")
     public List<T> getAll(Class<?> clazz) {
-        // Class simpleName can hopefully not be changed by the user
-        // so, we don't check for SQL injection here...
-        return (List<T>) entityManager.createQuery(
-            "Select t from " + clazz.getSimpleName() + " t",
-            clazz
-        ).getResultList();
+        LOG.debug("Get All method called for class {}", clazz.getSimpleName());
+        CriteriaBuilder cb = entityManager.getCriteriaBuilder();
+        CriteriaQuery<?> cq = cb.createQuery(clazz);
+        Root rootEntry = cq.from(clazz);
+        CriteriaQuery<?> all = cq.select(rootEntry);
+
+        TypedQuery<?> allQuery = entityManager.createQuery(all);
+        // cast is necessary here
+        return (List<T>) allQuery.getResultList();
     }
 }

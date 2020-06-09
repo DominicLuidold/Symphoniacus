@@ -24,4 +24,8 @@ public interface IInstrumentationPositionEntity {
     void addDutyPosition(IDutyPositionEntity dutyPosition);
 
     void removeDutyPosition(IDutyPositionEntity dutyPosition);
+
+    IInstrumentCategoryEntity getInstrumentCategory();
+
+    void setInstrumentCategory(IInstrumentCategoryEntity instrumentCategory);
 }

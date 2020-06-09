@@ -1,6 +1,7 @@
 package at.fhv.teamb.symphoniacus.persistence.model.interfaces;
 
 import java.time.LocalDate;
+import java.util.List;
 
 public interface IPositiveWishEntity {
     IMusicianEntity getMusician();
@@ -22,4 +23,13 @@ public interface IPositiveWishEntity {
     LocalDate getStartDate();
 
     LocalDate getEndDate();
+
+    List<IWishEntryEntity> getWishEntries();
+
+    void setWishEntries(
+        List<IWishEntryEntity> wishEntries);
+
+    void addWishEntry(IWishEntryEntity wishEntry);
+
+    void removeWishEntry(IWishEntryEntity wishEntry);
 }

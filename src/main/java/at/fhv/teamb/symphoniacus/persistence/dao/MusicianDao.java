@@ -5,11 +5,11 @@ import at.fhv.teamb.symphoniacus.persistence.dao.interfaces.IMusicianDao;
 import at.fhv.teamb.symphoniacus.persistence.model.MusicianEntity;
 import at.fhv.teamb.symphoniacus.persistence.model.interfaces.IMusicianEntity;
 import at.fhv.teamb.symphoniacus.persistence.model.interfaces.ISectionEntity;
+import javax.persistence.TypedQuery;
 import java.time.LocalDate;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Optional;
-import javax.persistence.TypedQuery;
 
 /**
  * DAO for Musicians.
@@ -105,6 +105,23 @@ public class MusicianDao extends BaseDao<IMusicianEntity>
         );
 
         query.setParameter("uid", id);
+
+        return Optional.of(query.getSingleResult());
+    }
+
+    /**
+     * Returns Musician matching given userShortcut.
+     * @param userShortcut Shortcut of Musician
+     * @return Musician if found, else Optional empty
+     */
+    public Optional<IMusicianEntity> findMusicianByShortcut(String userShortcut) {
+        TypedQuery<MusicianEntity> query = entityManager.createQuery(
+                "SELECT m FROM MusicianEntity m "
+                        + "WHERE m.user.shortcut = :us",
+                MusicianEntity.class
+        );
+
+        query.setParameter("us", userShortcut);
 
         return Optional.of(query.getSingleResult());
     }

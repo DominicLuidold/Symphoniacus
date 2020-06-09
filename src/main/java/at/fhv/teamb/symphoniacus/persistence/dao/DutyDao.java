@@ -9,6 +9,7 @@ import at.fhv.teamb.symphoniacus.persistence.model.interfaces.IInstrumentationEn
 import at.fhv.teamb.symphoniacus.persistence.model.interfaces.IMusicianEntity;
 import at.fhv.teamb.symphoniacus.persistence.model.interfaces.ISectionEntity;
 import at.fhv.teamb.symphoniacus.persistence.model.interfaces.ISeriesOfPerformancesEntity;
+import javax.persistence.TypedQuery;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.YearMonth;
@@ -17,7 +18,6 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
-import javax.persistence.TypedQuery;
 
 /**
  * DAO for Duty class.
@@ -286,5 +286,38 @@ public class DutyDao extends BaseDao<IDutyEntity> implements IDutyDao {
         query.setParameter("inst", instrumentations);
         query.setParameter("category", category);
         return (query.getSingleResult() >= 1);
+    }
+
+    /**
+     * Finds future unscheduled duties where wishes can still be made for a
+     * given Musician's section.
+     * @param section Section of User
+     * @return List of Duties
+     */
+    public List<IDutyEntity> findFutureUnscheduledDuties(ISectionEntity section) {
+        TypedQuery<DutyEntity> query = entityManager.createQuery(
+            "SELECT d FROM DutyEntity d "
+                    + "INNER JOIN d.sectionMonthlySchedules sms "
+                    + "INNER JOIN sms.monthlySchedule ms "
+                    + "INNER JOIN sms.section s "
+                    + "JOIN FETCH d.dutyCategory dc "
+                    + "LEFT JOIN FETCH d.seriesOfPerformances sop "
+                    + "WHERE d.start >= :start "
+                    + "AND s.sectionId = :sectionId "
+                    + "AND sms.isReadyForDutyScheduler = :isReadyForDutyScheduler "
+                    + "AND sms.isReadyForOrganisationManager = :isReadyForOrganisationManager "
+                    + "AND sms.isPublished = :isPublished "
+                    + "AND ms.endWish >= :start",
+            DutyEntity.class
+        );
+
+        query.setMaxResults(300);
+        query.setParameter("start", LocalDateTime.now());
+        query.setParameter("sectionId", section.getSectionId());
+        query.setParameter("isReadyForDutyScheduler", false);
+        query.setParameter("isReadyForOrganisationManager", false);
+        query.setParameter("isPublished", false);
+
+        return new LinkedList<>(query.getResultList());
     }
 }

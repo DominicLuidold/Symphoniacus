@@ -61,7 +61,8 @@ public class MainController implements Initializable {
      *
      * @param user Current login user
      */
-    public void setLoginUser(LoginUserDto user) {
+    @SuppressWarnings("checkstyle:FallThrough")
+    public synchronized void setLoginUser(LoginUserDto user) {
         this.currentUser = user;
 
         if (this.currentUser.getType().equals(DomainUserType.DOMAIN_MUSICIAN)) {
@@ -98,8 +99,28 @@ public class MainController implements Initializable {
         this.tabPaneController.initializeTabMenu();
         this.userHeaderMenuController.setUserShortcut(this.currentUser.getFullName());
         if (this.currentMusician != null) {
-            this.userHeaderMenuController
-                .setUserTxtRole(this.resources.getString("global.label.user.type.musician"));
+
+            StringBuilder sb = new StringBuilder();
+            sb.append("Musician");
+            for (IMusicianRoleEntity role : currentMusician.getEntity().getMusicianRoles()) {
+                switch (role.getDescription()) {
+                    case TUTTI:
+                        sb.append(" | ");
+                        sb.append("Tutti");
+                        break;
+                    case DUTY_SCHEDULER:
+                        sb.append(" | ");
+                        sb.append("Duty Scheduler");
+                        break;
+                    case SECTION_PRINCIPAL:
+                        sb.append(" | ");
+                        sb.append("Section Principal");
+                        break;
+                    default:
+                        sb.append("");
+                }
+                this.userHeaderMenuController.setUserTxtRole(sb.toString());
+            }
             this.userHeaderMenuController.setUserTxtSection(
                 this.getCurrentMusician().getSection().getEntity().getDescription().toString());
         } else if (this.currentAssistant != null) {

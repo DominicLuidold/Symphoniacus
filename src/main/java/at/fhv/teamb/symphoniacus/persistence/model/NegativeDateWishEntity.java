@@ -95,6 +95,11 @@ public class NegativeDateWishEntity implements INegativeDateWishEntity, WishRequ
     }
 
     @Override
+    public Integer getID() {
+        return this.negativeDateId;
+    }
+
+    @Override
     public void setEndDate(LocalDate endDate) {
         this.endDate = endDate;
     }

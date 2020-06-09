@@ -72,7 +72,7 @@ public class SeriesOfPerformancesDto {
     }
 
     public static class SeriesOfPerformancesDtoBuilder {
-        private final int seriesOfPerformancesId;
+        private int seriesOfPerformancesId;
         private String description;
         private LocalDate startDate;
         private LocalDate endDate;
@@ -83,6 +83,10 @@ public class SeriesOfPerformancesDto {
 
         public SeriesOfPerformancesDtoBuilder(int seriesId) {
             this.seriesOfPerformancesId = seriesId;
+        }
+
+        //default constructor for DTO in seriesOfPerformancesController
+        public SeriesOfPerformancesDtoBuilder() {
         }
 
         public SeriesOfPerformancesDtoBuilder withDescription(String desc) {

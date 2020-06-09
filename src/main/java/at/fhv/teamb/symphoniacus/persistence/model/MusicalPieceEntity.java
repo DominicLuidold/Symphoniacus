@@ -3,6 +3,7 @@ package at.fhv.teamb.symphoniacus.persistence.model;
 import at.fhv.teamb.symphoniacus.persistence.model.interfaces.IInstrumentationEntity;
 import at.fhv.teamb.symphoniacus.persistence.model.interfaces.IMusicalPieceEntity;
 import at.fhv.teamb.symphoniacus.persistence.model.interfaces.ISeriesOfPerformancesEntity;
+import at.fhv.teamb.symphoniacus.persistence.model.interfaces.IWishEntryEntity;
 import java.util.LinkedHashSet;
 import java.util.LinkedList;
 import java.util.List;
@@ -39,6 +40,9 @@ public class MusicalPieceEntity implements IMusicalPieceEntity {
 
     @ManyToMany(mappedBy = "musicalPieces", targetEntity = SeriesOfPerformancesEntity.class)
     private List<ISeriesOfPerformancesEntity> seriesOfPerformances = new LinkedList<>();
+
+    @ManyToMany(mappedBy = "musicalPieces", targetEntity = WishEntryEntity.class)
+    private List<IWishEntryEntity> wishEntries = new LinkedList<>();
 
     @Override
     public Integer getMusicalPieceId() {
@@ -122,5 +126,27 @@ public class MusicalPieceEntity implements IMusicalPieceEntity {
     public void removeSeriesOfPerformance(ISeriesOfPerformancesEntity seriesOfPerformancesEntity) {
         this.seriesOfPerformances.remove(seriesOfPerformancesEntity);
         seriesOfPerformancesEntity.removeMusicalPiece(this);
+    }
+
+    @Override
+    public List<IWishEntryEntity> getWishEntries() {
+        return this.wishEntries;
+    }
+
+    @Override
+    public void setWishEntries(List<IWishEntryEntity> wishEntries) {
+        this.wishEntries = wishEntries;
+    }
+
+    @Override
+    public void addWishEntry(IWishEntryEntity wishEntryEntity) {
+        this.wishEntries.add(wishEntryEntity);
+        wishEntryEntity.getMusicalPieces().add(this);
+    }
+
+    @Override
+    public void removeWishEntry(IWishEntryEntity wishEntryEntity) {
+        this.wishEntries.remove(wishEntryEntity);
+        wishEntryEntity.removeMusicalPiece(this);
     }
 }

@@ -3,6 +3,7 @@ package at.fhv.orchestraria.domain.model;
 import at.fhv.orchestraria.domain.Imodel.IDuty;
 import at.fhv.orchestraria.domain.Imodel.IWeeklySchedule;
 
+import at.fhv.orchestraria.domain.integrationInterfaces.IntegratableWeeklySchedule;
 import javax.persistence.*;
 import java.io.Serializable;
 import java.sql.Date;
@@ -20,7 +21,7 @@ import java.util.Objects;
 
 @Entity
 @Table(name = "weeklySchedule", schema = "ni128610_1sql8")
-public class WeeklyScheduleEntityC implements IWeeklySchedule, Serializable {
+public class WeeklyScheduleEntityC implements IWeeklySchedule, IntegratableWeeklySchedule, Serializable {
     private int weeklyScheduleId;
     private Date startDate;
     private Date endDate;

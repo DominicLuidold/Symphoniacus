@@ -17,6 +17,10 @@ public class MusicalPieceComboView {
         this.musicalPiece = musicalPiece;
     }
 
+    public MusicalPiece getMusicalPiece() {
+        return musicalPiece;
+    }
+
     public String getName() {
         return musicalPiece.getEntity().getName();
     }

@@ -29,6 +29,7 @@
         <class>at.fhv.teamb.symphoniacus.persistence.model.UserEntity</class>
         <class>at.fhv.teamb.symphoniacus.persistence.model.VacationEntity</class>
         <class>at.fhv.teamb.symphoniacus.persistence.model.WeeklyScheduleEntity</class>
+        <class>at.fhv.teamb.symphoniacus.persistence.model.WishEntryEntity</class>
         <!-- Properties -->
         <properties>
             <property name="javax.persistence.jdbc.driver" value="com.mysql.jdbc.Driver" />

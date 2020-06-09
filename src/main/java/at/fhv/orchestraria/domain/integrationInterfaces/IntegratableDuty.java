@@ -24,4 +24,6 @@ public interface IntegratableDuty {
     String getInstrumentationString();
 
     int getDutyId();
+
+    IntegratableWeeklySchedule getWeeklySchedule();
 }
