@@ -7,7 +7,7 @@ import at.fhv.teamb.symphoniacus.application.dto.SeriesOfPerformancesDto;
 import java.util.Locale;
 import java.util.ResourceBundle;
 
-public class SeriesOfPerformances {
+public class SeriesOfPerformances implements Validatable {
     private final SeriesOfPerformancesDto seriesDto;
     private final ResourceBundle resources;
     private final boolean doesSeriesAlreadyExist;
@@ -33,7 +33,7 @@ public class SeriesOfPerformances {
      *
      * @return "VALIDATED" if validation is successful, else return error text for alert.
      */
-    public ValidationResult<SeriesOfPerformancesDto> validate() {
+    public ValidationResult<SeriesOfPerformancesDto> isValid() {
         ValidationResult<SeriesOfPerformancesDto> result;
         if (doesSeriesAlreadyExist) {
             result = new ValidationResult<>(

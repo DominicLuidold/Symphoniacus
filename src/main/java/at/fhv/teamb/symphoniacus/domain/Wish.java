@@ -26,7 +26,7 @@ import org.apache.logging.log4j.Logger;
  *
  * @author Valentin Goronjic
  */
-public class Wish {
+public class Wish implements Validatable {
     private static final Logger LOG = LogManager.getLogger(Wish.class);
     private static final int MAX_LENGTH_REASON = 45;
     private String reason;
@@ -56,7 +56,7 @@ public class Wish {
     /**
      * Checks whether this wish is valid or not.
      *
-     * @return True if wish is valid
+     * @return A ValidationResult containing the validation result
      */
     public ValidationResult<WishDto<?>> isValid() {
         // max 45 characters
